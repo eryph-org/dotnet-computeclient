@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30406.217
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Haipa.ComputeClient", "src\Haipa.ComputeClient\Haipa.ComputeClient.csproj", "{8ED3922C-E3F8-441E-8863-303CEA28E7FB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8ED3922C-E3F8-441E-8863-303CEA28E7FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8ED3922C-E3F8-441E-8863-303CEA28E7FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8ED3922C-E3F8-441E-8863-303CEA28E7FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8ED3922C-E3F8-441E-8863-303CEA28E7FB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {31525E09-2238-4088-91CD-058B4CA43934}
+	EndGlobalSection
+EndGlobal
