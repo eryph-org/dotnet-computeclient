@@ -1,0 +1,13 @@
+{
+  "name": "dotnet-computeclient",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/haipa/dotnet-computeclient.git"
+  },
+  "author": "dbosoft",
+  "license": "MIT",
+  "dependencies": {
+    "autorest": "^2.0.4413"
+  }
+}
