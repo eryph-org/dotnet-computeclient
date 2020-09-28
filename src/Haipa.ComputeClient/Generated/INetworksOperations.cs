@@ -29,7 +29,7 @@ namespace Haipa.ComputeClient
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        /// <exception cref="Haipa.ClientRuntime.HaipaServiceException">
+        /// <exception cref="Haipa.ClientRuntime.ApiServiceException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
         Task<Haipa.ClientRuntime.HaipaOperationResponse> ListWithHttpMessagesAsync(string select = default(string), string expand = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
@@ -41,7 +41,7 @@ namespace Haipa.ComputeClient
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        /// <exception cref="Haipa.ClientRuntime.HaipaServiceException">
+        /// <exception cref="Haipa.ClientRuntime.ApiServiceException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
         Task<Haipa.ClientRuntime.HaipaOperationResponse> CreateWithHttpMessagesAsync(Network body = default(Network), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
@@ -60,7 +60,7 @@ namespace Haipa.ComputeClient
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        /// <exception cref="Haipa.ClientRuntime.HaipaServiceException">
+        /// <exception cref="Haipa.ClientRuntime.ApiServiceException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
         Task<Haipa.ClientRuntime.HaipaOperationResponse> GetWithHttpMessagesAsync(System.Guid key, string select = default(string), string expand = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
@@ -74,7 +74,7 @@ namespace Haipa.ComputeClient
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        /// <exception cref="Haipa.ClientRuntime.HaipaServiceException">
+        /// <exception cref="Haipa.ClientRuntime.ApiServiceException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
         Task<Haipa.ClientRuntime.HaipaOperationResponse> PatchWithHttpMessagesAsync(System.Guid key, Network body = default(Network), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
@@ -88,7 +88,7 @@ namespace Haipa.ComputeClient
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        /// <exception cref="Haipa.ClientRuntime.HaipaServiceException">
+        /// <exception cref="Haipa.ClientRuntime.ApiServiceException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
         Task<Haipa.ClientRuntime.HaipaOperationResponse> UpdateWithHttpMessagesAsync(System.Guid key, Network body = default(Network), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));

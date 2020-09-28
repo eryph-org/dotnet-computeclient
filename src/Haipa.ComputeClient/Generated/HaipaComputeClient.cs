@@ -346,7 +346,7 @@ namespace Haipa.ComputeClient
                     }
             };
             CustomInitialize();
-            DeserializationSettings.Converters.Add(new Haipa.ClientRuntime.HaipaErrorJsonConverter());
+            DeserializationSettings.Converters.Add(new Haipa.ClientRuntime.ApiErrorJsonConverter());
         }
     }
 }

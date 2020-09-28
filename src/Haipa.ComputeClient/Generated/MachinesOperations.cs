@@ -76,7 +76,7 @@ namespace Haipa.ComputeClient
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        /// <exception cref="Haipa.ClientRuntime.HaipaServiceException">
+        /// <exception cref="Haipa.ClientRuntime.ApiServiceException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
         /// <exception cref="SerializationException">
@@ -196,14 +196,14 @@ namespace Haipa.ComputeClient
             string _responseContent = null;
             if ((int)_statusCode != 200 && (int)_statusCode != 404)
             {
-                var ex = new Haipa.ClientRuntime.HaipaServiceException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
+                var ex = new Haipa.ClientRuntime.ApiServiceException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 try
                 {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    HaipaError _errorBody =  Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<HaipaError>(_responseContent, Client.DeserializationSettings);
+                    ApiError _errorBody =  Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<ApiError>(_responseContent, Client.DeserializationSettings);
                     if (_errorBody != null)
                     {
-                        ex = new Haipa.ClientRuntime.HaipaServiceException(_errorBody.Message);
+                        ex = new Haipa.ClientRuntime.ApiServiceException(_errorBody.Message);
                         ex.Body = _errorBody;
                     }
                 }
@@ -287,7 +287,7 @@ namespace Haipa.ComputeClient
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        /// <exception cref="Haipa.ClientRuntime.HaipaServiceException">
+        /// <exception cref="Haipa.ClientRuntime.ApiServiceException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
         /// <exception cref="SerializationException">
@@ -379,14 +379,14 @@ namespace Haipa.ComputeClient
             string _responseContent = null;
             if ((int)_statusCode != 200)
             {
-                var ex = new Haipa.ClientRuntime.HaipaServiceException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
+                var ex = new Haipa.ClientRuntime.ApiServiceException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 try
                 {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    HaipaError _errorBody =  Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<HaipaError>(_responseContent, Client.DeserializationSettings);
+                    ApiError _errorBody =  Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<ApiError>(_responseContent, Client.DeserializationSettings);
                     if (_errorBody != null)
                     {
-                        ex = new Haipa.ClientRuntime.HaipaServiceException(_errorBody.Message);
+                        ex = new Haipa.ClientRuntime.ApiServiceException(_errorBody.Message);
                         ex.Body = _errorBody;
                     }
                 }
@@ -459,7 +459,7 @@ namespace Haipa.ComputeClient
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        /// <exception cref="Haipa.ClientRuntime.HaipaServiceException">
+        /// <exception cref="Haipa.ClientRuntime.ApiServiceException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
         /// <exception cref="SerializationException">
@@ -556,14 +556,14 @@ namespace Haipa.ComputeClient
             string _responseContent = null;
             if ((int)_statusCode != 200 && (int)_statusCode != 404)
             {
-                var ex = new Haipa.ClientRuntime.HaipaServiceException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
+                var ex = new Haipa.ClientRuntime.ApiServiceException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 try
                 {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    HaipaError _errorBody =  Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<HaipaError>(_responseContent, Client.DeserializationSettings);
+                    ApiError _errorBody =  Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<ApiError>(_responseContent, Client.DeserializationSettings);
                     if (_errorBody != null)
                     {
-                        ex = new Haipa.ClientRuntime.HaipaServiceException(_errorBody.Message);
+                        ex = new Haipa.ClientRuntime.ApiServiceException(_errorBody.Message);
                         ex.Body = _errorBody;
                     }
                 }
@@ -647,7 +647,7 @@ namespace Haipa.ComputeClient
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        /// <exception cref="Haipa.ClientRuntime.HaipaServiceException">
+        /// <exception cref="Haipa.ClientRuntime.ApiServiceException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
         /// <exception cref="SerializationException">
@@ -734,14 +734,14 @@ namespace Haipa.ComputeClient
             string _responseContent = null;
             if ((int)_statusCode != 200)
             {
-                var ex = new Haipa.ClientRuntime.HaipaServiceException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
+                var ex = new Haipa.ClientRuntime.ApiServiceException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 try
                 {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    HaipaError _errorBody =  Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<HaipaError>(_responseContent, Client.DeserializationSettings);
+                    ApiError _errorBody =  Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<ApiError>(_responseContent, Client.DeserializationSettings);
                     if (_errorBody != null)
                     {
-                        ex = new Haipa.ClientRuntime.HaipaServiceException(_errorBody.Message);
+                        ex = new Haipa.ClientRuntime.ApiServiceException(_errorBody.Message);
                         ex.Body = _errorBody;
                     }
                 }
@@ -807,7 +807,7 @@ namespace Haipa.ComputeClient
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        /// <exception cref="Haipa.ClientRuntime.HaipaServiceException">
+        /// <exception cref="Haipa.ClientRuntime.ApiServiceException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
         /// <exception cref="SerializationException">
@@ -894,14 +894,14 @@ namespace Haipa.ComputeClient
             string _responseContent = null;
             if ((int)_statusCode != 200)
             {
-                var ex = new Haipa.ClientRuntime.HaipaServiceException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
+                var ex = new Haipa.ClientRuntime.ApiServiceException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 try
                 {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    HaipaError _errorBody =  Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<HaipaError>(_responseContent, Client.DeserializationSettings);
+                    ApiError _errorBody =  Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<ApiError>(_responseContent, Client.DeserializationSettings);
                     if (_errorBody != null)
                     {
-                        ex = new Haipa.ClientRuntime.HaipaServiceException(_errorBody.Message);
+                        ex = new Haipa.ClientRuntime.ApiServiceException(_errorBody.Message);
                         ex.Body = _errorBody;
                     }
                 }
@@ -967,7 +967,7 @@ namespace Haipa.ComputeClient
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        /// <exception cref="Haipa.ClientRuntime.HaipaServiceException">
+        /// <exception cref="Haipa.ClientRuntime.ApiServiceException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
         /// <exception cref="SerializationException">
@@ -1054,14 +1054,14 @@ namespace Haipa.ComputeClient
             string _responseContent = null;
             if ((int)_statusCode != 200)
             {
-                var ex = new Haipa.ClientRuntime.HaipaServiceException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
+                var ex = new Haipa.ClientRuntime.ApiServiceException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 try
                 {
                     _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    HaipaError _errorBody =  Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<HaipaError>(_responseContent, Client.DeserializationSettings);
+                    ApiError _errorBody =  Microsoft.Rest.Serialization.SafeJsonConvert.DeserializeObject<ApiError>(_responseContent, Client.DeserializationSettings);
                     if (_errorBody != null)
                     {
-                        ex = new Haipa.ClientRuntime.HaipaServiceException(_errorBody.Message);
+                        ex = new Haipa.ClientRuntime.ApiServiceException(_errorBody.Message);
                         ex.Body = _errorBody;
                     }
                 }

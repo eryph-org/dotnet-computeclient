@@ -48,7 +48,7 @@ namespace Haipa.ComputeClient
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        /// <exception cref="Haipa.ClientRuntime.HaipaServiceException">
+        /// <exception cref="Haipa.ClientRuntime.ApiServiceException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
         /// <exception cref="Microsoft.Rest.SerializationException">
@@ -70,7 +70,7 @@ namespace Haipa.ComputeClient
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        /// <exception cref="Haipa.ClientRuntime.HaipaServiceException">
+        /// <exception cref="Haipa.ClientRuntime.ApiServiceException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
         /// <exception cref="Microsoft.Rest.SerializationException">
@@ -111,7 +111,7 @@ namespace Haipa.ComputeClient
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        /// <exception cref="Haipa.ClientRuntime.HaipaServiceException">
+        /// <exception cref="Haipa.ClientRuntime.ApiServiceException">
         /// Thrown when the operation returned an invalid status code
         /// </exception>
         /// <exception cref="Microsoft.Rest.SerializationException">
