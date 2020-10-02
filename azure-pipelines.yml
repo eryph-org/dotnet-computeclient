@@ -6,6 +6,7 @@
 
 trigger:
 - master
+- refs/tags/v*
 
 pool:
   vmImage: windows-latest  
@@ -40,14 +41,13 @@ steps:
     projects: '**/*Tests/*.csproj'
     arguments: '--configuration $(buildConfiguration) --collect "Code coverage" --no-build'
   
-- - task: DotNetCoreCLI@2
+- task: DotNetCoreCLI@2
   displayName: dotnet pack
   inputs:
     command: 'pack'
     packagesToPack: '**/*.csproj'
     packDirectory: '$(Build.ArtifactStagingDirectory)\packages'
     versioningScheme: 'off'
-
 
 - task: PowerShell@2
   displayName: generate cmdlet
