@@ -16,7 +16,7 @@ namespace Haipa.ComputeClient
     using System.Net.Http;
 
     /// <summary>
-    /// Haipa management API
+    /// Compute Api
     /// </summary>
     public partial class HaipaComputeClient : ServiceClient<HaipaComputeClient>, IHaipaComputeClient, IHaipaClient
     {
@@ -61,11 +61,6 @@ namespace Haipa.ComputeClient
         /// Gets the INetworksOperations.
         /// </summary>
         public virtual INetworksOperations Networks { get; private set; }
-
-        /// <summary>
-        /// Gets the IOperations.
-        /// </summary>
-        public virtual IOperations Operations { get; private set; }
 
         /// <summary>
         /// Gets the ISubnetsOperations.
@@ -315,9 +310,8 @@ namespace Haipa.ComputeClient
         {
             Machines = new MachinesOperations(this);
             Networks = new NetworksOperations(this);
-            Operations = new Operations(this);
             Subnets = new SubnetsOperations(this);
-            BaseUri = new System.Uri("https://localhost:62189/api");
+            BaseUri = new System.Uri("https://localhost:62189/compute");
             AcceptLanguage = "en-US";
             GenerateClientRequestId = true;
             SerializationSettings = new JsonSerializerSettings

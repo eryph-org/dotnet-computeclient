@@ -10,7 +10,7 @@ namespace Haipa.ComputeClient
     using Newtonsoft.Json;
 
     /// <summary>
-    /// Haipa management API
+    /// Compute Api
     /// </summary>
     public partial interface IHaipaComputeClient : System.IDisposable
     {
@@ -56,11 +56,6 @@ namespace Haipa.ComputeClient
         /// Gets the INetworksOperations.
         /// </summary>
         INetworksOperations Networks { get; }
-
-        /// <summary>
-        /// Gets the IOperations.
-        /// </summary>
-        IOperations Operations { get; }
 
         /// <summary>
         /// Gets the ISubnetsOperations.

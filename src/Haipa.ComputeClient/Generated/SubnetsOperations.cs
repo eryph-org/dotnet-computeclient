@@ -79,7 +79,7 @@ namespace Haipa.ComputeClient
             }
             // Construct URL
             var _baseUrl = Client.BaseUri.AbsoluteUri;
-            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "odata/v1").ToString();
+            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/v1").ToString();
             List<string> _queryParameters = new List<string>();
             if (select != null)
             {

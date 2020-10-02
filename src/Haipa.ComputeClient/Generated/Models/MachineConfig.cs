@@ -22,12 +22,12 @@ namespace Haipa.ComputeClient.Models
         /// <summary>
         /// Initializes a new instance of the MachineConfig class.
         /// </summary>
-        public MachineConfig(string name = default(string), string id = default(string), string environment = default(string), string project = default(string), VirtualMachineConfig vm = default(VirtualMachineConfig), IList<MachineNetworkConfig> networks = default(IList<MachineNetworkConfig>), VirtualMachineProvisioningConfig provisioning = default(VirtualMachineProvisioningConfig))
+        public MachineConfig(string name = default(string), string environment = default(string), string project = default(string), MachineImageConfig image = default(MachineImageConfig), VirtualMachineConfig vm = default(VirtualMachineConfig), IList<MachineNetworkConfig> networks = default(IList<MachineNetworkConfig>), VirtualMachineProvisioningConfig provisioning = default(VirtualMachineProvisioningConfig))
         {
             Name = name;
-            Id = id;
             Environment = environment;
             Project = project;
+            Image = image;
             Vm = vm;
             Networks = networks;
             Provisioning = provisioning;
@@ -46,11 +46,6 @@ namespace Haipa.ComputeClient.Models
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "id")]
-        public string Id { get; set; }
-
-        /// <summary>
-        /// </summary>
         [JsonProperty(PropertyName = "environment")]
         public string Environment { get; set; }
 
@@ -58,6 +53,11 @@ namespace Haipa.ComputeClient.Models
         /// </summary>
         [JsonProperty(PropertyName = "project")]
         public string Project { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "image")]
+        public MachineImageConfig Image { get; set; }
 
         /// <summary>
         /// </summary>
