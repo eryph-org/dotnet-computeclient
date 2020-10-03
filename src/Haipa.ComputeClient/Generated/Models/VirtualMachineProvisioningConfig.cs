@@ -22,7 +22,9 @@ namespace Haipa.ComputeClient.Models
         /// Initializes a new instance of the VirtualMachineProvisioningConfig
         /// class.
         /// </summary>
-        public VirtualMachineProvisioningConfig(string hostname = default(string), object userData = default(object), int? method = default(int?))
+        /// <param name="method">Possible values include: 'None',
+        /// 'CloudInit'</param>
+        public VirtualMachineProvisioningConfig(string hostname = default(string), object userData = default(object), string method = default(string))
         {
             Hostname = hostname;
             UserData = userData;
@@ -46,9 +48,10 @@ namespace Haipa.ComputeClient.Models
         public object UserData { get; set; }
 
         /// <summary>
+        /// Gets or sets possible values include: 'None', 'CloudInit'
         /// </summary>
         [JsonProperty(PropertyName = "method")]
-        public int? Method { get; set; }
+        public string Method { get; set; }
 
     }
 }

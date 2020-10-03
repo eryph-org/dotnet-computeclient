@@ -79,7 +79,7 @@ namespace Haipa.ComputeClient
             }
             // Construct URL
             var _baseUrl = Client.BaseUri.AbsoluteUri;
-            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "odata/v1/Networks").ToString();
+            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/v1/Networks").ToString();
             List<string> _queryParameters = new List<string>();
             if (select != null)
             {
@@ -229,7 +229,7 @@ namespace Haipa.ComputeClient
             }
             // Construct URL
             var _baseUrl = Client.BaseUri.AbsoluteUri;
-            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "odata/v1/Networks").ToString();
+            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/v1/Networks").ToString();
             List<string> _queryParameters = new List<string>();
             if (_queryParameters.Count > 0)
             {
@@ -382,7 +382,7 @@ namespace Haipa.ComputeClient
             }
             // Construct URL
             var _baseUrl = Client.BaseUri.AbsoluteUri;
-            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "odata/v1/Networks/{key}").ToString();
+            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/v1/Networks/{key}").ToString();
             _url = _url.Replace("{key}", System.Uri.EscapeDataString(Microsoft.Rest.Serialization.SafeJsonConvert.SerializeObject(key, Client.SerializationSettings).Trim('"')));
             List<string> _queryParameters = new List<string>();
             if (select != null)
@@ -532,7 +532,7 @@ namespace Haipa.ComputeClient
             }
             // Construct URL
             var _baseUrl = Client.BaseUri.AbsoluteUri;
-            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "odata/v1/Networks/{key}").ToString();
+            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/v1/Networks/{key}").ToString();
             _url = _url.Replace("{key}", System.Uri.EscapeDataString(Microsoft.Rest.Serialization.SafeJsonConvert.SerializeObject(key, Client.SerializationSettings).Trim('"')));
             List<string> _queryParameters = new List<string>();
             if (_queryParameters.Count > 0)
@@ -684,7 +684,7 @@ namespace Haipa.ComputeClient
             }
             // Construct URL
             var _baseUrl = Client.BaseUri.AbsoluteUri;
-            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "odata/v1/Networks/{key}").ToString();
+            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/v1/Networks/{key}").ToString();
             _url = _url.Replace("{key}", System.Uri.EscapeDataString(Microsoft.Rest.Serialization.SafeJsonConvert.SerializeObject(key, Client.SerializationSettings).Trim('"')));
             List<string> _queryParameters = new List<string>();
             if (_queryParameters.Count > 0)
