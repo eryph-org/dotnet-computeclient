@@ -1,4 +1,5 @@
-﻿using System.Management.Automation;
+﻿using System;
+using System.Management.Automation;
 using Haipa.ClientRuntime;
 using Haipa.ComputeClient.Models;
 using JetBrains.Annotations;
@@ -7,7 +8,7 @@ namespace Haipa.ComputeClient.Commands
 {
     [PublicAPI]
     [Cmdlet(VerbsCommon.New, "HaipaMachine")]
-    [OutputType(typeof(Operation))]
+    [OutputType(typeof(Operation), typeof(Machine), typeof(VirtualMachine))]
     public class NewHaipaMachineCommand : MachineConfigCmdlet
     {
         [Parameter(
@@ -33,7 +34,11 @@ namespace Haipa.ComputeClient.Commands
             {
                 var config = DeserializeConfigString(inputObject);
 
-                WaitForOperation(ComputeClient.Machines.Create(config),_wait, true);
+                WaitForOperation(ComputeClient.Machines.Create(new MachineProvisioningSettings
+                {
+                    Configuration = config,
+                    CorrelationId = Guid.NewGuid()
+                }),_wait, true);
             }
 
         }

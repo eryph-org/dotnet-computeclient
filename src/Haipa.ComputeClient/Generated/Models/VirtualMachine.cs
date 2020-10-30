@@ -22,12 +22,16 @@ namespace Haipa.ComputeClient.Models
         /// <summary>
         /// Initializes a new instance of the VirtualMachine class.
         /// </summary>
-        public VirtualMachine(System.Guid? id = default(System.Guid?), string path = default(string), IList<VirtualMachineNetworkAdapter> networkAdapters = default(IList<VirtualMachineNetworkAdapter>), Machine machine = default(Machine))
+        /// <param name="status">Possible values include: 'Stopped', 'Running',
+        /// 'Pending', 'Error'</param>
+        public VirtualMachine(IList<VirtualMachineNetworkAdapter> networkAdapters = default(IList<VirtualMachineNetworkAdapter>), IList<VirtualMachineDrive> drives = default(IList<VirtualMachineDrive>), System.Guid? id = default(System.Guid?), string name = default(string), string status = default(string), IList<MachineNetwork> networks = default(IList<MachineNetwork>))
         {
-            Id = id;
-            Path = path;
             NetworkAdapters = networkAdapters;
-            Machine = machine;
+            Drives = drives;
+            Id = id;
+            Name = name;
+            Status = status;
+            Networks = networks;
             CustomInit();
         }
 
@@ -38,23 +42,35 @@ namespace Haipa.ComputeClient.Models
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "id")]
-        public System.Guid? Id { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "path")]
-        public string Path { get; set; }
-
-        /// <summary>
-        /// </summary>
         [JsonProperty(PropertyName = "networkAdapters")]
         public IList<VirtualMachineNetworkAdapter> NetworkAdapters { get; set; }
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "machine")]
-        public Machine Machine { get; set; }
+        [JsonProperty(PropertyName = "drives")]
+        public IList<VirtualMachineDrive> Drives { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "id")]
+        public System.Guid? Id { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "name")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets possible values include: 'Stopped', 'Running',
+        /// 'Pending', 'Error'
+        /// </summary>
+        [JsonProperty(PropertyName = "status")]
+        public string Status { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "networks")]
+        public IList<MachineNetwork> Networks { get; set; }
 
     }
 }

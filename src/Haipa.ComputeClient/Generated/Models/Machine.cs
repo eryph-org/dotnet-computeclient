@@ -24,14 +24,11 @@ namespace Haipa.ComputeClient.Models
         /// </summary>
         /// <param name="status">Possible values include: 'Stopped', 'Running',
         /// 'Pending', 'Error'</param>
-        public Machine(System.Guid? id = default(System.Guid?), string name = default(string), Agent agent = default(Agent), string agentName = default(string), string status = default(string), VirtualMachine vm = default(VirtualMachine), IList<MachineNetwork> networks = default(IList<MachineNetwork>))
+        public Machine(System.Guid? id = default(System.Guid?), string name = default(string), string status = default(string), IList<MachineNetwork> networks = default(IList<MachineNetwork>))
         {
             Id = id;
             Name = name;
-            Agent = agent;
-            AgentName = agentName;
             Status = status;
-            Vm = vm;
             Networks = networks;
             CustomInit();
         }
@@ -52,26 +49,11 @@ namespace Haipa.ComputeClient.Models
         public string Name { get; set; }
 
         /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "agent")]
-        public Agent Agent { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "agentName")]
-        public string AgentName { get; set; }
-
-        /// <summary>
         /// Gets or sets possible values include: 'Stopped', 'Running',
         /// 'Pending', 'Error'
         /// </summary>
         [JsonProperty(PropertyName = "status")]
         public string Status { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "vm")]
-        public VirtualMachine Vm { get; set; }
 
         /// <summary>
         /// </summary>

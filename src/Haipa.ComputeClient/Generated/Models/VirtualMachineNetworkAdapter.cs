@@ -22,13 +22,12 @@ namespace Haipa.ComputeClient.Models
         /// Initializes a new instance of the VirtualMachineNetworkAdapter
         /// class.
         /// </summary>
-        public VirtualMachineNetworkAdapter(System.Guid? machineId = default(System.Guid?), string name = default(string), string switchName = default(string), string macAddress = default(string), VirtualMachine vm = default(VirtualMachine))
+        public VirtualMachineNetworkAdapter(string id = default(string), string name = default(string), string switchName = default(string), string macAddress = default(string))
         {
-            MachineId = machineId;
+            Id = id;
             Name = name;
             SwitchName = switchName;
             MacAddress = macAddress;
-            Vm = vm;
             CustomInit();
         }
 
@@ -39,8 +38,8 @@ namespace Haipa.ComputeClient.Models
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "machineId")]
-        public System.Guid? MachineId { get; set; }
+        [JsonProperty(PropertyName = "id")]
+        public string Id { get; set; }
 
         /// <summary>
         /// </summary>
@@ -56,11 +55,6 @@ namespace Haipa.ComputeClient.Models
         /// </summary>
         [JsonProperty(PropertyName = "macAddress")]
         public string MacAddress { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "vm")]
-        public VirtualMachine Vm { get; set; }
 
     }
 }

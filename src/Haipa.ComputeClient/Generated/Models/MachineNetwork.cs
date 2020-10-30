@@ -22,10 +22,11 @@ namespace Haipa.ComputeClient.Models
         /// <summary>
         /// Initializes a new instance of the MachineNetwork class.
         /// </summary>
-        public MachineNetwork(System.Guid? machineId = default(System.Guid?), string adapterName = default(string), IList<string> ipV4Addresses = default(IList<string>), IList<string> ipV6Addresses = default(IList<string>), string iPv4DefaultGateway = default(string), string iPv6DefaultGateway = default(string), IList<string> dnsServerAddresses = default(IList<string>), IList<string> ipV4Subnets = default(IList<string>), IList<string> ipV6Subnets = default(IList<string>), Machine machine = default(Machine))
+        public MachineNetwork(System.Guid? id = default(System.Guid?), System.Guid? machineId = default(System.Guid?), string name = default(string), IList<string> ipV4Addresses = default(IList<string>), IList<string> ipV6Addresses = default(IList<string>), string iPv4DefaultGateway = default(string), string iPv6DefaultGateway = default(string), IList<string> dnsServerAddresses = default(IList<string>), IList<string> ipV4Subnets = default(IList<string>), IList<string> ipV6Subnets = default(IList<string>))
         {
+            Id = id;
             MachineId = machineId;
-            AdapterName = adapterName;
+            Name = name;
             IpV4Addresses = ipV4Addresses;
             IpV6Addresses = ipV6Addresses;
             IPv4DefaultGateway = iPv4DefaultGateway;
@@ -33,7 +34,6 @@ namespace Haipa.ComputeClient.Models
             DnsServerAddresses = dnsServerAddresses;
             IpV4Subnets = ipV4Subnets;
             IpV6Subnets = ipV6Subnets;
-            Machine = machine;
             CustomInit();
         }
 
@@ -44,13 +44,18 @@ namespace Haipa.ComputeClient.Models
 
         /// <summary>
         /// </summary>
+        [JsonProperty(PropertyName = "id")]
+        public System.Guid? Id { get; set; }
+
+        /// <summary>
+        /// </summary>
         [JsonProperty(PropertyName = "machineId")]
         public System.Guid? MachineId { get; set; }
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "adapterName")]
-        public string AdapterName { get; set; }
+        [JsonProperty(PropertyName = "name")]
+        public string Name { get; set; }
 
         /// <summary>
         /// </summary>
@@ -86,11 +91,6 @@ namespace Haipa.ComputeClient.Models
         /// </summary>
         [JsonProperty(PropertyName = "ipV6Subnets")]
         public IList<string> IpV6Subnets { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "machine")]
-        public Machine Machine { get; set; }
 
     }
 }

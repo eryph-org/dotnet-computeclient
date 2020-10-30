@@ -58,14 +58,14 @@ namespace Haipa.ComputeClient
         public virtual IMachinesOperations Machines { get; private set; }
 
         /// <summary>
-        /// Gets the INetworksOperations.
+        /// Gets the IVirtualDisksOperations.
         /// </summary>
-        public virtual INetworksOperations Networks { get; private set; }
+        public virtual IVirtualDisksOperations VirtualDisks { get; private set; }
 
         /// <summary>
-        /// Gets the ISubnetsOperations.
+        /// Gets the IVirtualMachinesOperations.
         /// </summary>
-        public virtual ISubnetsOperations Subnets { get; private set; }
+        public virtual IVirtualMachinesOperations VirtualMachines { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the HaipaComputeClient class.
@@ -309,8 +309,8 @@ namespace Haipa.ComputeClient
         private void Initialize()
         {
             Machines = new MachinesOperations(this);
-            Networks = new NetworksOperations(this);
-            Subnets = new SubnetsOperations(this);
+            VirtualDisks = new VirtualDisksOperations(this);
+            VirtualMachines = new VirtualMachinesOperations(this);
             BaseUri = new System.Uri("https://localhost:62189/compute");
             AcceptLanguage = "en-US";
             GenerateClientRequestId = true;

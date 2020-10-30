@@ -7,9 +7,9 @@ using JetBrains.Annotations;
 namespace Haipa.ComputeClient.Commands
 {
     [PublicAPI]
-    [Cmdlet(VerbsCommon.Set, "HaipaMachine")]
-    [OutputType(typeof(Operation))]
-    public class SetHaipaMachineCommand : MachineConfigCmdlet
+    [Cmdlet(VerbsData.Update, "HaipaMachine")]
+    [OutputType(typeof(Operation), typeof(Machine), typeof(VirtualMachine))]
+    public class UpdateHaipaVMCommand : MachineConfigCmdlet
     {
         [Parameter(
             Position = 0,
@@ -37,7 +37,11 @@ namespace Haipa.ComputeClient.Commands
             {
                 var config = DeserializeConfigString(MachineConfig);
 
-                WaitForOperation(ComputeClient.Machines.Update(id,config),_wait, true);
+                WaitForOperation(ComputeClient.Machines.Update(id, null, null, new MachineProvisioningSettings
+                {
+                    Configuration = config,
+                    CorrelationId = Guid.NewGuid(),
+                }),_wait, true);
             }
 
         }

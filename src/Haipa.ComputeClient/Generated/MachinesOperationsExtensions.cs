@@ -28,7 +28,7 @@ namespace Haipa.ComputeClient
             /// Indicates whether the total count of items within a collection are returned
             /// in the result.
             /// </param>
-            public static MachineList List(this IMachinesOperations operations, Haipa.ClientRuntime.OData.ODataQuery<Machine> odataQuery = default(Haipa.ClientRuntime.OData.ODataQuery<Machine>), string select = default(string), bool? count = false)
+            public static Haipa.ClientRuntime.IPage<Machine> List(this IMachinesOperations operations, Haipa.ClientRuntime.OData.ODataQuery<Machine> odataQuery = default(Haipa.ClientRuntime.OData.ODataQuery<Machine>), string select = default(string), bool? count = false)
             {
                 return operations.ListAsync(odataQuery, select, count).GetAwaiter().GetResult();
             }
@@ -49,35 +49,9 @@ namespace Haipa.ComputeClient
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<MachineList> ListAsync(this IMachinesOperations operations, Haipa.ClientRuntime.OData.ODataQuery<Machine> odataQuery = default(Haipa.ClientRuntime.OData.ODataQuery<Machine>), string select = default(string), bool? count = false, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<Haipa.ClientRuntime.IPage<Machine>> ListAsync(this IMachinesOperations operations, Haipa.ClientRuntime.OData.ODataQuery<Machine> odataQuery = default(Haipa.ClientRuntime.OData.ODataQuery<Machine>), string select = default(string), bool? count = false, CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.ListWithHttpMessagesAsync(odataQuery, select, count, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Body;
-                }
-            }
-
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='body'>
-            /// </param>
-            public static Operation Create(this IMachinesOperations operations, MachineConfig body = default(MachineConfig))
-            {
-                return operations.CreateAsync(body).GetAwaiter().GetResult();
-            }
-
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='body'>
-            /// </param>
-            /// <param name='cancellationToken'>
-            /// The cancellation token.
-            /// </param>
-            public static async Task<Operation> CreateAsync(this IMachinesOperations operations, MachineConfig body = default(MachineConfig), CancellationToken cancellationToken = default(CancellationToken))
-            {
-                using (var _result = await operations.CreateWithHttpMessagesAsync(body, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -152,13 +126,27 @@ namespace Haipa.ComputeClient
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='key'>
+            /// <param name='body'>
+            /// </param>
+            public static Operation Create(this IMachinesOperations operations, MachineProvisioningSettings body = default(MachineProvisioningSettings))
+            {
+                return operations.CreateAsync(body).GetAwaiter().GetResult();
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
             /// </param>
             /// <param name='body'>
             /// </param>
-            public static Operation Update(this IMachinesOperations operations, System.Guid key, MachineConfig body = default(MachineConfig))
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<Operation> CreateAsync(this IMachinesOperations operations, MachineProvisioningSettings body = default(MachineProvisioningSettings), CancellationToken cancellationToken = default(CancellationToken))
             {
-                return operations.UpdateAsync(key, body).GetAwaiter().GetResult();
+                using (var _result = await operations.CreateWithHttpMessagesAsync(body, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
             }
 
             /// <param name='operations'>
@@ -166,14 +154,40 @@ namespace Haipa.ComputeClient
             /// </param>
             /// <param name='key'>
             /// </param>
+            /// <param name='select'>
+            /// Limits the properties returned in the result.
+            /// </param>
+            /// <param name='expand'>
+            /// Indicates the related entities to be represented inline. The maximum depth
+            /// is 2.
+            /// </param>
+            /// <param name='body'>
+            /// </param>
+            public static Operation Update(this IMachinesOperations operations, System.Guid key, string select = default(string), string expand = default(string), MachineProvisioningSettings body = default(MachineProvisioningSettings))
+            {
+                return operations.UpdateAsync(key, select, expand, body).GetAwaiter().GetResult();
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='key'>
+            /// </param>
+            /// <param name='select'>
+            /// Limits the properties returned in the result.
+            /// </param>
+            /// <param name='expand'>
+            /// Indicates the related entities to be represented inline. The maximum depth
+            /// is 2.
+            /// </param>
             /// <param name='body'>
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<Operation> UpdateAsync(this IMachinesOperations operations, System.Guid key, MachineConfig body = default(MachineConfig), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<Operation> UpdateAsync(this IMachinesOperations operations, System.Guid key, string select = default(string), string expand = default(string), MachineProvisioningSettings body = default(MachineProvisioningSettings), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.UpdateWithHttpMessagesAsync(key, body, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.UpdateWithHttpMessagesAsync(key, select, expand, body, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -254,6 +268,34 @@ namespace Haipa.ComputeClient
             public static async Task<Operation> StopAsync(this IMachinesOperations operations, System.Guid key, string select = default(string), string expand = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.StopWithHttpMessagesAsync(key, select, expand, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='nextPageLink'>
+            /// The NextLink from the previous successful call to List operation.
+            /// </param>
+            public static Haipa.ClientRuntime.IPage<Machine> ListNext(this IMachinesOperations operations, string nextPageLink)
+            {
+                return operations.ListNextAsync(nextPageLink).GetAwaiter().GetResult();
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='nextPageLink'>
+            /// The NextLink from the previous successful call to List operation.
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<Haipa.ClientRuntime.IPage<Machine>> ListNextAsync(this IMachinesOperations operations, string nextPageLink, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.ListNextWithHttpMessagesAsync(nextPageLink, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }

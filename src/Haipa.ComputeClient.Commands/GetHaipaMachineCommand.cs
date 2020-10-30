@@ -8,7 +8,7 @@ namespace Haipa.ComputeClient.Commands
 {
     [PublicAPI]
     [Cmdlet(VerbsCommon.Get,"HaipaMachine", DefaultParameterSetName = "get")]
-    [OutputType(typeof(Machine))]
+    [OutputType(typeof(VirtualMachine))]
     public class GetHaipaMachineCommand : ComputeCmdLet
     {
         [Parameter(
@@ -30,9 +30,20 @@ namespace Haipa.ComputeClient.Commands
                 return;
             }
 
-            var query = new ODataQuery<Machine> { Expand = "vm,networks" };
+            var query = new ODataQuery<Machine>();
 
-            WriteObject(ComputeClient.Machines.List(query).Value, true);
+            var page = ComputeClient.Machines.List(query);
+
+            while (!Stopping)
+            {
+                WriteObject(page, true);
+
+                if (string.IsNullOrWhiteSpace(page.NextPageLink))
+                    break;
+
+                page = ComputeClient.Machines.ListNext(page.NextPageLink);
+
+            }
 
         }
 

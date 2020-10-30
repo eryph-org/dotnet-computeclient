@@ -53,14 +53,14 @@ namespace Haipa.ComputeClient
         IMachinesOperations Machines { get; }
 
         /// <summary>
-        /// Gets the INetworksOperations.
+        /// Gets the IVirtualDisksOperations.
         /// </summary>
-        INetworksOperations Networks { get; }
+        IVirtualDisksOperations VirtualDisks { get; }
 
         /// <summary>
-        /// Gets the ISubnetsOperations.
+        /// Gets the IVirtualMachinesOperations.
         /// </summary>
-        ISubnetsOperations Subnets { get; }
+        IVirtualMachinesOperations VirtualMachines { get; }
 
     }
 }

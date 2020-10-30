@@ -8,7 +8,7 @@ namespace Haipa.ComputeClient.Commands
 {
     [PublicAPI]
     [Cmdlet(VerbsLifecycle.Stop, "HaipaMachine")]
-    [OutputType(typeof(Operation))]
+    [OutputType(typeof(Operation), typeof(Machine))]
     public class StopHaipaMachineCommand : ComputeCmdLet
     {
         [Parameter(

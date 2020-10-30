@@ -29,8 +29,14 @@ namespace Haipa.ComputeClient.Commands
 
         protected Machine GetSingleMachine(Guid id)
         {
-            return ComputeClient.Machines.Get(id, null, "vm,networks");
+            return ComputeClient.Machines.Get(id);
         }
+
+        protected VirtualMachine GetSingleVM(Guid id)
+        {
+            return ComputeClient.VirtualMachines.Get(id);
+        }
+
 
         protected void WaitForOperation(Operation operation, bool wait, bool alwaysWriteMachine, Guid knownMachineId = default)
         {
