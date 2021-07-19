@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/haipa/dotnet-computeclient.git"
+    "url": "git+https://github.com/eryph-org/dotnet-computeclient.git"
   },
   "author": "dbosoft",
   "license": "MIT",
