@@ -20,14 +20,12 @@ namespace Eryph.ComputeClient.Models
         /// <summary>
         /// Initializes a new instance of the VirtualMachineDrive class.
         /// </summary>
-        /// <param name="type">Possible values include: 'VHD', 'SharedVHD',
-        /// 'PHD', 'DVD'</param>
-        public VirtualMachineDrive(string id = default(string), string type = default(string), System.Guid? attachedDiskId = default(System.Guid?), VirtualDisk attachedDisk = default(VirtualDisk))
+        /// <param name="type">Possible values include: 'VHD', 'DVD'</param>
+        public VirtualMachineDrive(string id = default(string), string type = default(string), System.Guid? attachedDiskId = default(System.Guid?))
         {
             Id = id;
             Type = type;
             AttachedDiskId = attachedDiskId;
-            AttachedDisk = attachedDisk;
             CustomInit();
         }
 
@@ -42,8 +40,7 @@ namespace Eryph.ComputeClient.Models
         public string Id { get; set; }
 
         /// <summary>
-        /// Gets or sets possible values include: 'VHD', 'SharedVHD', 'PHD',
-        /// 'DVD'
+        /// Gets or sets possible values include: 'VHD', 'DVD'
         /// </summary>
         [JsonProperty(PropertyName = "type")]
         public string Type { get; set; }
@@ -52,11 +49,6 @@ namespace Eryph.ComputeClient.Models
         /// </summary>
         [JsonProperty(PropertyName = "attachedDiskId")]
         public System.Guid? AttachedDiskId { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "attachedDisk")]
-        public VirtualDisk AttachedDisk { get; set; }
 
     }
 }

@@ -21,7 +21,7 @@ namespace Eryph.ComputeClient.Models
         /// <summary>
         /// Initializes a new instance of the NewMachineRequest class.
         /// </summary>
-        public NewMachineRequest(System.Guid correlationId, object configuration)
+        public NewMachineRequest(System.Guid correlationId, MachineConfig configuration)
         {
             CorrelationId = correlationId;
             Configuration = configuration;
@@ -41,7 +41,7 @@ namespace Eryph.ComputeClient.Models
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "configuration")]
-        public object Configuration { get; set; }
+        public MachineConfig Configuration { get; set; }
 
         /// <summary>
         /// Validate the object.

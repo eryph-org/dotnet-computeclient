@@ -53,14 +53,14 @@ namespace Eryph.ComputeClient
         IMachinesOperations Machines { get; }
 
         /// <summary>
-        /// Gets the IVirtualMachinesOperations.
-        /// </summary>
-        IVirtualMachinesOperations VirtualMachines { get; }
-
-        /// <summary>
         /// Gets the IVirtualDisksOperations.
         /// </summary>
         IVirtualDisksOperations VirtualDisks { get; }
+
+        /// <summary>
+        /// Gets the IVirtualMachinesOperations.
+        /// </summary>
+        IVirtualMachinesOperations VirtualMachines { get; }
 
     }
 }
