@@ -124,7 +124,7 @@ PrivateData = @{
         # RequireLicenseAcceptance = $false
 
         # External dependent modules of this module
-        ExternalModuleDependencies = @("Eryph.ClientRuntime.Configuration")
+        #ExternalModuleDependencies = @("Eryph.ClientRuntime.Configuration")
 
     } # End of PSData hashtable
 
