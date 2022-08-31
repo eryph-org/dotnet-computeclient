@@ -15,6 +15,44 @@ namespace Eryph.ComputeClient
     public static partial class VirtualDisksOperationsExtensions
     {
             /// <summary>
+            /// Deletes a virtual disk
+            /// </summary>
+            /// <remarks>
+            /// Deletes a virtual disk
+            /// </remarks>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='id'>
+            /// </param>
+            public static Operation Delete(this IVirtualDisksOperations operations, string id)
+            {
+                return operations.DeleteAsync(id).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Deletes a virtual disk
+            /// </summary>
+            /// <remarks>
+            /// Deletes a virtual disk
+            /// </remarks>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='id'>
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<Operation> DeleteAsync(this IVirtualDisksOperations operations, string id, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.DeleteWithHttpMessagesAsync(id, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <summary>
             /// Get a Virtual Disk
             /// </summary>
             /// <remarks>

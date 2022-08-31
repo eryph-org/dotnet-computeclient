@@ -131,7 +131,7 @@ namespace Eryph.ComputeClient
         /// <exception cref="Microsoft.Rest.ValidationException">
         /// Thrown when a required parameter is null
         /// </exception>
-        Task<Eryph.ClientRuntime.EryphOperationResponse<Operation>> UpdateWithHttpMessagesAsync(string id, System.Guid body, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<Eryph.ClientRuntime.EryphOperationResponse<Operation>> UpdateWithHttpMessagesAsync(string id, UpdateMachineRequest body = default(UpdateMachineRequest), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Starts a Machine
         /// </summary>

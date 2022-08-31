@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Management.Automation;
+using System.Text;
 using Eryph.ClientRuntime;
 using Eryph.ComputeClient.Models;
 using JetBrains.Annotations;
@@ -16,6 +18,7 @@ namespace Eryph.ComputeClient.Commands
             ValueFromPipeline = true,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true)]
+        [AllowEmptyString]
         public string[] InputObject { get; set; }
 
         [Parameter]
@@ -30,19 +33,28 @@ namespace Eryph.ComputeClient.Commands
 
         protected override void ProcessRecord()
         {
-            foreach (var inputObject in InputObject)
+            var sb = new StringBuilder();
+            foreach (var input in InputObject)
             {
-                var config = DeserializeConfigString(inputObject);
+                sb.AppendLine($"{input}");
 
-                WaitForOperation(ComputeClient.Machines.Create(new NewMachineRequest
-                {
-                    Configuration = config,
-                    CorrelationId = Guid.NewGuid()
-                }),_wait, true);
             }
+
+            var config = DeserializeConfigString(sb.ToString());
+
+
+            WaitForOperation(ComputeClient.Machines.Create(new NewMachineRequest
+            {
+                Configuration = ConfigModelToJObject(config),
+                CorrelationId = Guid.NewGuid()
+            }), _wait, true);
+
 
         }
 
 
     }
+
+
+
 }

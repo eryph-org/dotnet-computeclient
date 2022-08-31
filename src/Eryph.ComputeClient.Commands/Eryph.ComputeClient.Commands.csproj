@@ -1,21 +1,23 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netcoreapp3.0;net472</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netcoreapp3.1;net461</TargetFrameworks>
     <IsPackable>false</IsPackable>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GitVersion.MsBuild" Version="5.6.10">
+    <PackageReference Include="Eryph.ConfigModel.Machine" Version="0.1.0-ci.7" />
+    <PackageReference Include="Eryph.ConfigModel.System.Json" Version="0.1.0-ci.7" />
+    <PackageReference Include="GitVersion.MsBuild" Version="5.10.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Eryph.CommonClient.Commands" Version="0.1.1-PullRequest.10" />
-    <PackageReference Include="YamlDotNet" Version="8.1.2" />
+    <PackageReference Include="Eryph.CommonClient.Commands" Version="0.3.0" />
     <PackageReference Include="PowerShellStandard.Library" Version="5.1.0">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="SharpYaml" Version="1.9.1" />
   </ItemGroup>
 
   <ItemGroup>

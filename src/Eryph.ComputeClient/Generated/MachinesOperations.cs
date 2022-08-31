@@ -130,7 +130,7 @@ namespace Eryph.ComputeClient
             {
                 _requestContent = Microsoft.Rest.Serialization.SafeJsonConvert.SerializeObject(body, Client.SerializationSettings);
                 _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
-                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
+                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
             }
             // Set Credentials
             if (Client.Credentials != null)
@@ -771,11 +771,15 @@ namespace Eryph.ComputeClient
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<Eryph.ClientRuntime.EryphOperationResponse<Operation>> UpdateWithHttpMessagesAsync(string id, System.Guid body, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<Eryph.ClientRuntime.EryphOperationResponse<Operation>> UpdateWithHttpMessagesAsync(string id, UpdateMachineRequest body = default(UpdateMachineRequest), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (id == null)
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "id");
+            }
+            if (body != null)
+            {
+                body.Validate();
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -832,9 +836,12 @@ namespace Eryph.ComputeClient
 
             // Serialize Request
             string _requestContent = null;
-            _requestContent = Microsoft.Rest.Serialization.SafeJsonConvert.SerializeObject(body, Client.SerializationSettings);
-            _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
-            _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json-patch+json; charset=utf-8");
+            if(body != null)
+            {
+                _requestContent = Microsoft.Rest.Serialization.SafeJsonConvert.SerializeObject(body, Client.SerializationSettings);
+                _httpRequest.Content = new StringContent(_requestContent, System.Text.Encoding.UTF8);
+                _httpRequest.Content.Headers.ContentType =System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json; charset=utf-8");
+            }
             // Set Credentials
             if (Client.Credentials != null)
             {

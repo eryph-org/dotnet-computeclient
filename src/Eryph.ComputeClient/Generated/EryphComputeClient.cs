@@ -58,14 +58,14 @@ namespace Eryph.ComputeClient
         public virtual IMachinesOperations Machines { get; private set; }
 
         /// <summary>
-        /// Gets the IVirtualMachinesOperations.
-        /// </summary>
-        public virtual IVirtualMachinesOperations VirtualMachines { get; private set; }
-
-        /// <summary>
         /// Gets the IVirtualDisksOperations.
         /// </summary>
         public virtual IVirtualDisksOperations VirtualDisks { get; private set; }
+
+        /// <summary>
+        /// Gets the IVirtualMachinesOperations.
+        /// </summary>
+        public virtual IVirtualMachinesOperations VirtualMachines { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the EryphComputeClient class.
@@ -309,8 +309,8 @@ namespace Eryph.ComputeClient
         private void Initialize()
         {
             Machines = new MachinesOperations(this);
-            VirtualMachines = new VirtualMachinesOperations(this);
             VirtualDisks = new VirtualDisksOperations(this);
+            VirtualMachines = new VirtualMachinesOperations(this);
             BaseUri = new System.Uri("https://localhost:62189/compute");
             AcceptLanguage = "en-US";
             GenerateClientRequestId = true;
