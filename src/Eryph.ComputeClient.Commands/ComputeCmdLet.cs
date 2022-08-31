@@ -14,7 +14,8 @@ namespace Eryph.ComputeClient.Commands
         protected override void BeginProcessing()
         {
             base.BeginProcessing();
-            ComputeClient = new EryphComputeClient(GetCredentials("compute_api"));
+            ComputeClient = new EryphComputeClient(GetEndpointUri("compute"),
+                GetCredentials("compute_api"));
 
         }
 
