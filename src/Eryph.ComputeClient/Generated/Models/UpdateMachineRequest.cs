@@ -8,21 +8,22 @@ namespace Eryph.ComputeClient.Models
     using Newtonsoft.Json;
     using System.Linq;
 
-    public partial class NewMachineRequest
+    public partial class UpdateMachineRequest
     {
         /// <summary>
-        /// Initializes a new instance of the NewMachineRequest class.
+        /// Initializes a new instance of the UpdateMachineRequest class.
         /// </summary>
-        public NewMachineRequest()
+        public UpdateMachineRequest()
         {
             CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the NewMachineRequest class.
+        /// Initializes a new instance of the UpdateMachineRequest class.
         /// </summary>
-        public NewMachineRequest(System.Guid correlationId, object configuration)
+        public UpdateMachineRequest(System.Guid correlationId, object configuration, string id = default(string))
         {
+            Id = id;
             CorrelationId = correlationId;
             Configuration = configuration;
             CustomInit();
@@ -32,6 +33,11 @@ namespace Eryph.ComputeClient.Models
         /// An initialization method that performs custom operations like setting defaults
         /// </summary>
         partial void CustomInit();
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "id")]
+        public string Id { get; set; }
 
         /// <summary>
         /// </summary>

@@ -20,7 +20,8 @@ namespace Eryph.ComputeClient.Models
         /// <summary>
         /// Initializes a new instance of the VirtualMachineDrive class.
         /// </summary>
-        /// <param name="type">Possible values include: 'VHD', 'DVD'</param>
+        /// <param name="type">Possible values include: 'VHD', 'SharedVHD',
+        /// 'PHD', 'DVD'</param>
         public VirtualMachineDrive(string id = default(string), string type = default(string), System.Guid? attachedDiskId = default(System.Guid?))
         {
             Id = id;
@@ -40,7 +41,8 @@ namespace Eryph.ComputeClient.Models
         public string Id { get; set; }
 
         /// <summary>
-        /// Gets or sets possible values include: 'VHD', 'DVD'
+        /// Gets or sets possible values include: 'VHD', 'SharedVHD', 'PHD',
+        /// 'DVD'
         /// </summary>
         [JsonProperty(PropertyName = "type")]
         public string Type { get; set; }

@@ -179,7 +179,7 @@ namespace Eryph.ComputeClient
             /// </param>
             /// <param name='body'>
             /// </param>
-            public static Operation Update(this IMachinesOperations operations, string id, System.Guid body)
+            public static Operation Update(this IMachinesOperations operations, string id, UpdateMachineRequest body = default(UpdateMachineRequest))
             {
                 return operations.UpdateAsync(id, body).GetAwaiter().GetResult();
             }
@@ -200,7 +200,7 @@ namespace Eryph.ComputeClient
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<Operation> UpdateAsync(this IMachinesOperations operations, string id, System.Guid body, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<Operation> UpdateAsync(this IMachinesOperations operations, string id, UpdateMachineRequest body = default(UpdateMachineRequest), CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.UpdateWithHttpMessagesAsync(id, body, null, cancellationToken).ConfigureAwait(false))
                 {

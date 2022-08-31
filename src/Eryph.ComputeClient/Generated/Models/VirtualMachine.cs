@@ -24,14 +24,14 @@ namespace Eryph.ComputeClient.Models
         /// </summary>
         /// <param name="status">Possible values include: 'Stopped', 'Running',
         /// 'Pending', 'Error'</param>
-        public VirtualMachine(IList<VirtualMachineNetworkAdapter> networkAdapters = default(IList<VirtualMachineNetworkAdapter>), IList<VirtualMachineDrive> drives = default(IList<VirtualMachineDrive>), string id = default(string), string name = default(string), string status = default(string), IList<MachineNetwork> networks = default(IList<MachineNetwork>))
+        public VirtualMachine(string id = default(string), string name = default(string), string status = default(string), IList<MachineNetwork> networks = default(IList<MachineNetwork>), IList<VirtualMachineNetworkAdapter> networkAdapters = default(IList<VirtualMachineNetworkAdapter>), IList<VirtualMachineDrive> drives = default(IList<VirtualMachineDrive>))
         {
-            NetworkAdapters = networkAdapters;
-            Drives = drives;
             Id = id;
             Name = name;
             Status = status;
             Networks = networks;
+            NetworkAdapters = networkAdapters;
+            Drives = drives;
             CustomInit();
         }
 
@@ -39,16 +39,6 @@ namespace Eryph.ComputeClient.Models
         /// An initialization method that performs custom operations like setting defaults
         /// </summary>
         partial void CustomInit();
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "networkAdapters")]
-        public IList<VirtualMachineNetworkAdapter> NetworkAdapters { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "drives")]
-        public IList<VirtualMachineDrive> Drives { get; set; }
 
         /// <summary>
         /// </summary>
@@ -71,6 +61,16 @@ namespace Eryph.ComputeClient.Models
         /// </summary>
         [JsonProperty(PropertyName = "networks")]
         public IList<MachineNetwork> Networks { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "networkAdapters")]
+        public IList<VirtualMachineNetworkAdapter> NetworkAdapters { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "drives")]
+        public IList<VirtualMachineDrive> Drives { get; set; }
 
     }
 }

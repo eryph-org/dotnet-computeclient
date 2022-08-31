@@ -36,9 +36,8 @@ namespace Eryph.ComputeClient.Commands
             foreach (var id in Id)
             {
                 var config = DeserializeConfigString(MachineConfig);
-
-                //WaitForOperation(ComputeClient.Machines.Update(id, Guid.NewGuid(), config)
-                //    ,_wait, true);
+                WaitForOperation(ComputeClient.Machines.Update(id, new UpdateMachineRequest(Guid.NewGuid(), config))
+                    , _wait, true);
             }
 
         }
