@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Eryph.ConfigModel.Machine" Version="0.1.0-ci.28" />
-    <PackageReference Include="Eryph.ConfigModel.System.Json" Version="0.1.0-ci.28" />
+    <PackageReference Include="Eryph.ConfigModel.System.Json" Version="0.1.0-PullRequest0014.30" />
     <PackageReference Include="GitVersion.MsBuild" Version="5.10.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
