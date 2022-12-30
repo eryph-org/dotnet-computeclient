@@ -15,10 +15,6 @@ namespace Eryph.ComputeClient.Models
     {
         internal static CatletNetwork DeserializeCatletNetwork(JsonElement element)
         {
-            if (element.ValueKind == JsonValueKind.Null)
-            {
-                return null;
-            }
             Optional<string> name = default;
             Optional<string> provider = default;
             Optional<IReadOnlyList<string>> ipV4Addresses = default;
@@ -30,7 +26,7 @@ namespace Eryph.ComputeClient.Models
             Optional<IReadOnlyList<string>> ipV6Subnets = default;
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("name"u8))
+                if (property.NameEquals("name"))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -40,7 +36,7 @@ namespace Eryph.ComputeClient.Models
                     name = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("provider"u8))
+                if (property.NameEquals("provider"))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -50,10 +46,11 @@ namespace Eryph.ComputeClient.Models
                     provider = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("ipV4Addresses"u8))
+                if (property.NameEquals("ipV4Addresses"))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
+                        ipV4Addresses = null;
                         continue;
                     }
                     List<string> array = new List<string>();
@@ -64,10 +61,11 @@ namespace Eryph.ComputeClient.Models
                     ipV4Addresses = array;
                     continue;
                 }
-                if (property.NameEquals("ipV6Addresses"u8))
+                if (property.NameEquals("ipV6Addresses"))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
+                        ipV6Addresses = null;
                         continue;
                     }
                     List<string> array = new List<string>();
@@ -78,7 +76,7 @@ namespace Eryph.ComputeClient.Models
                     ipV6Addresses = array;
                     continue;
                 }
-                if (property.NameEquals("iPv4DefaultGateway"u8))
+                if (property.NameEquals("iPv4DefaultGateway"))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -88,7 +86,7 @@ namespace Eryph.ComputeClient.Models
                     iPv4DefaultGateway = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("iPv6DefaultGateway"u8))
+                if (property.NameEquals("iPv6DefaultGateway"))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -98,10 +96,11 @@ namespace Eryph.ComputeClient.Models
                     iPv6DefaultGateway = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("dnsServerAddresses"u8))
+                if (property.NameEquals("dnsServerAddresses"))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
+                        dnsServerAddresses = null;
                         continue;
                     }
                     List<string> array = new List<string>();
@@ -112,10 +111,11 @@ namespace Eryph.ComputeClient.Models
                     dnsServerAddresses = array;
                     continue;
                 }
-                if (property.NameEquals("ipV4Subnets"u8))
+                if (property.NameEquals("ipV4Subnets"))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
+                        ipV4Subnets = null;
                         continue;
                     }
                     List<string> array = new List<string>();
@@ -126,10 +126,11 @@ namespace Eryph.ComputeClient.Models
                     ipV4Subnets = array;
                     continue;
                 }
-                if (property.NameEquals("ipV6Subnets"u8))
+                if (property.NameEquals("ipV6Subnets"))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
+                        ipV6Subnets = null;
                         continue;
                     }
                     List<string> array = new List<string>();

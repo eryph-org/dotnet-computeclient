@@ -69,9 +69,12 @@ namespace Eryph.ComputeClient.Commands.Catlets
 
         private void WriteConfig(VirtualCatletConfiguration config)
         {
+            // a bit hacky as we have to map from newtonsoft json to System.Text.Json...
+            var catletConfigJObject = (JObject)config.Configuration;
+            var catletConfigJson = catletConfigJObject.ToString(Formatting.None);
 
             var catletConfig = CatletConfigDictionaryConverter.Convert(
-                ConfigModelJsonSerializer.DeserializeToDictionary(config.Configuration));
+                ConfigModelJsonSerializer.DeserializeToDictionary(catletConfigJson));
 
             var yaml = CatletConfigYamlSerializer.Serialize(catletConfig);
             WriteObject(yaml);

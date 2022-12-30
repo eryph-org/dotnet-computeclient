@@ -87,9 +87,37 @@ namespace Eryph.ComputeClient
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual AsyncPageable<Models.Operation> ListAsync(DateTimeOffset? logTimeStamp = null, string expand = null, bool? count = null, string project = null, CancellationToken cancellationToken = default)
         {
-            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(logTimeStamp, expand, count, project);
-            HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListNextPageRequest(nextLink, logTimeStamp, expand, count, project);
-            return PageableHelpers.CreateAsyncPageable(FirstPageRequest, NextPageRequest, Models.Operation.DeserializeOperation, _clientDiagnostics, _pipeline, "Client.List", "value", "nextLink", cancellationToken);
+            async Task<Page<Models.Operation>> FirstPageFunc(int? pageSizeHint)
+            {
+                using var scope = _clientDiagnostics.CreateScope("Client.List");
+                scope.Start();
+                try
+                {
+                    var response = await RestClient.ListAsync(logTimeStamp, expand, count, project, cancellationToken).ConfigureAwait(false);
+                    return Page.FromValues(response.Value.Value, response.Value.NextLink, response.GetRawResponse());
+                }
+                catch (Exception e)
+                {
+                    scope.Failed(e);
+                    throw;
+                }
+            }
+            async Task<Page<Models.Operation>> NextPageFunc(string nextLink, int? pageSizeHint)
+            {
+                using var scope = _clientDiagnostics.CreateScope("Client.List");
+                scope.Start();
+                try
+                {
+                    var response = await RestClient.ListNextPageAsync(nextLink, logTimeStamp, expand, count, project, cancellationToken).ConfigureAwait(false);
+                    return Page.FromValues(response.Value.Value, response.Value.NextLink, response.GetRawResponse());
+                }
+                catch (Exception e)
+                {
+                    scope.Failed(e);
+                    throw;
+                }
+            }
+            return PageableHelpers.CreateAsyncEnumerable(FirstPageFunc, NextPageFunc);
         }
 
         /// <summary> List all Operations. </summary>
@@ -100,9 +128,37 @@ namespace Eryph.ComputeClient
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Pageable<Models.Operation> List(DateTimeOffset? logTimeStamp = null, string expand = null, bool? count = null, string project = null, CancellationToken cancellationToken = default)
         {
-            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(logTimeStamp, expand, count, project);
-            HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListNextPageRequest(nextLink, logTimeStamp, expand, count, project);
-            return PageableHelpers.CreatePageable(FirstPageRequest, NextPageRequest, Models.Operation.DeserializeOperation, _clientDiagnostics, _pipeline, "Client.List", "value", "nextLink", cancellationToken);
+            Page<Models.Operation> FirstPageFunc(int? pageSizeHint)
+            {
+                using var scope = _clientDiagnostics.CreateScope("Client.List");
+                scope.Start();
+                try
+                {
+                    var response = RestClient.List(logTimeStamp, expand, count, project, cancellationToken);
+                    return Page.FromValues(response.Value.Value, response.Value.NextLink, response.GetRawResponse());
+                }
+                catch (Exception e)
+                {
+                    scope.Failed(e);
+                    throw;
+                }
+            }
+            Page<Models.Operation> NextPageFunc(string nextLink, int? pageSizeHint)
+            {
+                using var scope = _clientDiagnostics.CreateScope("Client.List");
+                scope.Start();
+                try
+                {
+                    var response = RestClient.ListNextPage(nextLink, logTimeStamp, expand, count, project, cancellationToken);
+                    return Page.FromValues(response.Value.Value, response.Value.NextLink, response.GetRawResponse());
+                }
+                catch (Exception e)
+                {
+                    scope.Failed(e);
+                    throw;
+                }
+            }
+            return PageableHelpers.CreateEnumerable(FirstPageFunc, NextPageFunc);
         }
     }
 }

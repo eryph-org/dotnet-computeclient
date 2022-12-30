@@ -15,10 +15,6 @@ namespace Eryph.ComputeClient.Models
     {
         internal static VirtualCatlet DeserializeVirtualCatlet(JsonElement element)
         {
-            if (element.ValueKind == JsonValueKind.Null)
-            {
-                return null;
-            }
             Optional<string> id = default;
             Optional<string> name = default;
             Optional<CatletStatus> status = default;
@@ -27,7 +23,7 @@ namespace Eryph.ComputeClient.Models
             Optional<IReadOnlyList<VirtualCatletDrive>> drives = default;
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("id"u8))
+                if (property.NameEquals("id"))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -37,7 +33,7 @@ namespace Eryph.ComputeClient.Models
                     id = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("name"u8))
+                if (property.NameEquals("name"))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -47,19 +43,21 @@ namespace Eryph.ComputeClient.Models
                     name = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("status"u8))
+                if (property.NameEquals("status"))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
+                        property.ThrowNonNullablePropertyIsNull();
                         continue;
                     }
                     status = new CatletStatus(property.Value.GetString());
                     continue;
                 }
-                if (property.NameEquals("networks"u8))
+                if (property.NameEquals("networks"))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
+                        networks = null;
                         continue;
                     }
                     List<CatletNetwork> array = new List<CatletNetwork>();
@@ -70,10 +68,11 @@ namespace Eryph.ComputeClient.Models
                     networks = array;
                     continue;
                 }
-                if (property.NameEquals("networkAdapters"u8))
+                if (property.NameEquals("networkAdapters"))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
+                        networkAdapters = null;
                         continue;
                     }
                     List<VirtualCatletNetworkAdapter> array = new List<VirtualCatletNetworkAdapter>();
@@ -84,10 +83,11 @@ namespace Eryph.ComputeClient.Models
                     networkAdapters = array;
                     continue;
                 }
-                if (property.NameEquals("drives"u8))
+                if (property.NameEquals("drives"))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
+                        drives = null;
                         continue;
                     }
                     List<VirtualCatletDrive> array = new List<VirtualCatletDrive>();

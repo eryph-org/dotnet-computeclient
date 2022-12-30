@@ -14,17 +14,14 @@ namespace Eryph.ComputeClient.Models
     {
         internal static ApiError DeserializeApiError(JsonElement element)
         {
-            if (element.ValueKind == JsonValueKind.Null)
-            {
-                return null;
-            }
             Optional<ApiErrorData> error = default;
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("error"u8))
+                if (property.NameEquals("error"))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
+                        property.ThrowNonNullablePropertyIsNull();
                         continue;
                     }
                     error = ApiErrorData.DeserializeApiErrorData(property.Value);

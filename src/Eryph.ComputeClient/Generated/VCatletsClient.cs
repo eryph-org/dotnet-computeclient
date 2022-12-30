@@ -119,9 +119,37 @@ namespace Eryph.ComputeClient
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual AsyncPageable<VirtualCatlet> ListAsync(bool? count = null, string project = null, CancellationToken cancellationToken = default)
         {
-            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(count, project);
-            HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListNextPageRequest(nextLink, count, project);
-            return PageableHelpers.CreateAsyncPageable(FirstPageRequest, NextPageRequest, VirtualCatlet.DeserializeVirtualCatlet, _clientDiagnostics, _pipeline, "VCatletsClient.List", "value", "nextLink", cancellationToken);
+            async Task<Page<VirtualCatlet>> FirstPageFunc(int? pageSizeHint)
+            {
+                using var scope = _clientDiagnostics.CreateScope("VCatletsClient.List");
+                scope.Start();
+                try
+                {
+                    var response = await RestClient.ListAsync(count, project, cancellationToken).ConfigureAwait(false);
+                    return Page.FromValues(response.Value.Value, response.Value.NextLink, response.GetRawResponse());
+                }
+                catch (Exception e)
+                {
+                    scope.Failed(e);
+                    throw;
+                }
+            }
+            async Task<Page<VirtualCatlet>> NextPageFunc(string nextLink, int? pageSizeHint)
+            {
+                using var scope = _clientDiagnostics.CreateScope("VCatletsClient.List");
+                scope.Start();
+                try
+                {
+                    var response = await RestClient.ListNextPageAsync(nextLink, count, project, cancellationToken).ConfigureAwait(false);
+                    return Page.FromValues(response.Value.Value, response.Value.NextLink, response.GetRawResponse());
+                }
+                catch (Exception e)
+                {
+                    scope.Failed(e);
+                    throw;
+                }
+            }
+            return PageableHelpers.CreateAsyncEnumerable(FirstPageFunc, NextPageFunc);
         }
 
         /// <summary> Get list of virtual catlets. </summary>
@@ -130,9 +158,37 @@ namespace Eryph.ComputeClient
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Pageable<VirtualCatlet> List(bool? count = null, string project = null, CancellationToken cancellationToken = default)
         {
-            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(count, project);
-            HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListNextPageRequest(nextLink, count, project);
-            return PageableHelpers.CreatePageable(FirstPageRequest, NextPageRequest, VirtualCatlet.DeserializeVirtualCatlet, _clientDiagnostics, _pipeline, "VCatletsClient.List", "value", "nextLink", cancellationToken);
+            Page<VirtualCatlet> FirstPageFunc(int? pageSizeHint)
+            {
+                using var scope = _clientDiagnostics.CreateScope("VCatletsClient.List");
+                scope.Start();
+                try
+                {
+                    var response = RestClient.List(count, project, cancellationToken);
+                    return Page.FromValues(response.Value.Value, response.Value.NextLink, response.GetRawResponse());
+                }
+                catch (Exception e)
+                {
+                    scope.Failed(e);
+                    throw;
+                }
+            }
+            Page<VirtualCatlet> NextPageFunc(string nextLink, int? pageSizeHint)
+            {
+                using var scope = _clientDiagnostics.CreateScope("VCatletsClient.List");
+                scope.Start();
+                try
+                {
+                    var response = RestClient.ListNextPage(nextLink, count, project, cancellationToken);
+                    return Page.FromValues(response.Value.Value, response.Value.NextLink, response.GetRawResponse());
+                }
+                catch (Exception e)
+                {
+                    scope.Failed(e);
+                    throw;
+                }
+            }
+            return PageableHelpers.CreateEnumerable(FirstPageFunc, NextPageFunc);
         }
     }
 }

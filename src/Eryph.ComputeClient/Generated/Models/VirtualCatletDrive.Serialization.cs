@@ -15,27 +15,25 @@ namespace Eryph.ComputeClient.Models
     {
         internal static VirtualCatletDrive DeserializeVirtualCatletDrive(JsonElement element)
         {
-            if (element.ValueKind == JsonValueKind.Null)
-            {
-                return null;
-            }
             Optional<VirtualCatletDriveType> type = default;
             Optional<Guid> attachedDiskId = default;
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("type"u8))
+                if (property.NameEquals("type"))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
+                        property.ThrowNonNullablePropertyIsNull();
                         continue;
                     }
                     type = new VirtualCatletDriveType(property.Value.GetString());
                     continue;
                 }
-                if (property.NameEquals("attachedDiskId"u8))
+                if (property.NameEquals("attachedDiskId"))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
+                        property.ThrowNonNullablePropertyIsNull();
                         continue;
                     }
                     attachedDiskId = property.Value.GetGuid();

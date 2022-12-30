@@ -104,8 +104,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
             WaitForOperation(Factory.CreateCatletsClient()
                 .Create(
                     new NewCatletRequest(Guid.NewGuid(),
-                       JsonSerializer.SerializeToElement(config, 
-                           ConfigModelJsonSerializer.DefaultOptions))), _wait, true);
+                       JsonSerializer.SerializeToElement(config))), _wait, true);
         }
     }
 

@@ -14,20 +14,21 @@ namespace Eryph.ComputeClient.Models
     {
         internal static VirtualNetworkConfiguration DeserializeVirtualNetworkConfiguration(JsonElement element)
         {
-            if (element.ValueKind == JsonValueKind.Null)
-            {
-                return null;
-            }
-            Optional<JsonElement> configuration = default;
+            Optional<object> configuration = default;
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("configuration"u8))
+                if (property.NameEquals("configuration"))
                 {
-                    configuration = property.Value.Clone();
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        property.ThrowNonNullablePropertyIsNull();
+                        continue;
+                    }
+                    configuration = property.Value.GetObject();
                     continue;
                 }
             }
-            return new VirtualNetworkConfiguration(configuration);
+            return new VirtualNetworkConfiguration(configuration.Value);
         }
     }
 }

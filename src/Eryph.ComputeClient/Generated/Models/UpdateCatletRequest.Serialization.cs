@@ -15,11 +15,11 @@ namespace Eryph.ComputeClient.Models
         void IUtf8JsonSerializable.Write(Utf8JsonWriter writer)
         {
             writer.WriteStartObject();
-            writer.WritePropertyName("correlationId"u8);
+            writer.WritePropertyName("correlationId");
             writer.WriteStringValue(CorrelationId);
-            writer.WritePropertyName("configuration"u8);
+            writer.WritePropertyName("configuration");
             Configuration.WriteTo(writer);
-            writer.WritePropertyName("id"u8);
+            writer.WritePropertyName("id");
             writer.WriteStringValue(Id);
             writer.WriteEndObject();
         }

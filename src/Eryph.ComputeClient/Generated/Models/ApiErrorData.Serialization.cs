@@ -15,10 +15,6 @@ namespace Eryph.ComputeClient.Models
     {
         internal static ApiErrorData DeserializeApiErrorData(JsonElement element)
         {
-            if (element.ValueKind == JsonValueKind.Null)
-            {
-                return null;
-            }
             string code = default;
             string message = default;
             Optional<string> target = default;
@@ -28,17 +24,17 @@ namespace Eryph.ComputeClient.Models
             Dictionary<string, object> additionalPropertiesDictionary = new Dictionary<string, object>();
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("code"u8))
+                if (property.NameEquals("code"))
                 {
                     code = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("message"u8))
+                if (property.NameEquals("message"))
                 {
                     message = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("target"u8))
+                if (property.NameEquals("target"))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -48,10 +44,11 @@ namespace Eryph.ComputeClient.Models
                     target = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("details"u8))
+                if (property.NameEquals("details"))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
+                        details = null;
                         continue;
                     }
                     List<ApiErrorBody> array = new List<ApiErrorBody>();
@@ -62,10 +59,11 @@ namespace Eryph.ComputeClient.Models
                     details = array;
                     continue;
                 }
-                if (property.NameEquals("innererror"u8))
+                if (property.NameEquals("innererror"))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
+                        property.ThrowNonNullablePropertyIsNull();
                         continue;
                     }
                     innererror = property.Value.GetObject();
