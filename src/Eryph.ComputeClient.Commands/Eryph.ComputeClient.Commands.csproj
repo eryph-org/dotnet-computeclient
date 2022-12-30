@@ -7,20 +7,24 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Eryph.ConfigModel.Machine" Version="0.1.0-ci.28" />
-    <PackageReference Include="Eryph.ConfigModel.System.Json" Version="0.1.0-ci.28" />
+    <PackageReference Include="Eryph.ClientRuntime.Powershell" Version="0.4.3-PullRequest0031.6" />
+    <PackageReference Include="Eryph.ConfigModel.Catlets" Version="1.0.0" />
+    <PackageReference Include="Eryph.ConfigModel.Catlets.Yaml" Version="0.1.0-ci.34" />
+    <PackageReference Include="Eryph.ConfigModel.System.Json" Version="1.0.0" />
     <PackageReference Include="GitVersion.MsBuild" Version="5.10.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Eryph.CommonClient.Commands" Version="0.4.0" />
     <PackageReference Include="PowerShellStandard.Library" Version="5.1.1">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="SharpYaml" Version="1.9.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Eryph.ComputeClient\Eryph.ComputeClient.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Networks\" />
   </ItemGroup>
 </Project>
