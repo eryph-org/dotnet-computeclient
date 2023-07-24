@@ -14,6 +14,10 @@
 
   <ItemGroup>
     <PackageReference Include="Eryph.ClientRuntime.Authentication" Version="0.4.3-ci.6" />
+    <PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.Azure.AutoRest.CSharp" Version="3.0.0-beta.20230723.1" PrivateAssets="All" />
   </ItemGroup>
 
