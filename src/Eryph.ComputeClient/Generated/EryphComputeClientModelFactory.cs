@@ -8,11 +8,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 
 namespace Eryph.ComputeClient.Models
 {
-    /// <summary> Model factory for read-only models. </summary>
-    public static partial class EryphComputeModelFactory
+    /// <summary> Model factory for models. </summary>
+    public static partial class EryphComputeClientModelFactory
     {
         /// <summary> Initializes a new instance of Operation. </summary>
         /// <param name="id"></param>
@@ -59,6 +60,20 @@ namespace Eryph.ComputeClient.Models
         public static Project Project(string id = null, string name = null, string tenantId = null)
         {
             return new Project(id, name, tenantId);
+        }
+
+        /// <summary> Initializes a new instance of VirtualNetwork. </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="projectId"></param>
+        /// <param name="projectName"></param>
+        /// <param name="tenantId"></param>
+        /// <param name="providerName"></param>
+        /// <param name="ipNetwork"></param>
+        /// <returns> A new <see cref="Models.VirtualNetwork"/> instance for mocking. </returns>
+        public static VirtualNetwork VirtualNetwork(string id = null, string name = null, string projectId = null, string projectName = null, string tenantId = null, string providerName = null, string ipNetwork = null)
+        {
+            return new VirtualNetwork(id, name, projectId, projectName, tenantId, providerName, ipNetwork);
         }
 
         /// <summary> Initializes a new instance of Catlet. </summary>
@@ -124,20 +139,6 @@ namespace Eryph.ComputeClient.Models
             return new VirtualCatletDrive(type, attachedDiskId);
         }
 
-        /// <summary> Initializes a new instance of VirtualNetwork. </summary>
-        /// <param name="id"></param>
-        /// <param name="name"></param>
-        /// <param name="projectId"></param>
-        /// <param name="projectName"></param>
-        /// <param name="tenantId"></param>
-        /// <param name="providerName"></param>
-        /// <param name="ipNetwork"></param>
-        /// <returns> A new <see cref="Models.VirtualNetwork"/> instance for mocking. </returns>
-        public static VirtualNetwork VirtualNetwork(string id = null, string name = null, string projectId = null, string projectName = null, string tenantId = null, string providerName = null, string ipNetwork = null)
-        {
-            return new VirtualNetwork(id, name, projectId, projectName, tenantId, providerName, ipNetwork);
-        }
-
         /// <summary> Initializes a new instance of VirtualCatlet. </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
@@ -167,7 +168,7 @@ namespace Eryph.ComputeClient.Models
         /// <summary> Initializes a new instance of VirtualCatletConfiguration. </summary>
         /// <param name="configuration"> Anything. </param>
         /// <returns> A new <see cref="Models.VirtualCatletConfiguration"/> instance for mocking. </returns>
-        public static VirtualCatletConfiguration VirtualCatletConfiguration(object configuration = null)
+        public static VirtualCatletConfiguration VirtualCatletConfiguration(JsonElement configuration = default)
         {
             return new VirtualCatletConfiguration(configuration);
         }
@@ -175,7 +176,7 @@ namespace Eryph.ComputeClient.Models
         /// <summary> Initializes a new instance of VirtualNetworkConfiguration. </summary>
         /// <param name="configuration"> Anything. </param>
         /// <returns> A new <see cref="Models.VirtualNetworkConfiguration"/> instance for mocking. </returns>
-        public static VirtualNetworkConfiguration VirtualNetworkConfiguration(object configuration = null)
+        public static VirtualNetworkConfiguration VirtualNetworkConfiguration(JsonElement configuration = default)
         {
             return new VirtualNetworkConfiguration(configuration);
         }

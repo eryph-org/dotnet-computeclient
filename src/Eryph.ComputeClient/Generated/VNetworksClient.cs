@@ -39,6 +39,44 @@ namespace Eryph.ComputeClient
             _pipeline = pipeline;
         }
 
+        /// <summary> Creates or updates virtual networks of project. </summary>
+        /// <param name="body"> The UpdateProjectNetworksRequest to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Creates or updates virtual networks. </remarks>
+        public virtual async Task<Response<Models.Operation>> CreateAsync(UpdateProjectNetworksRequest body = null, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("VNetworksClient.Create");
+            scope.Start();
+            try
+            {
+                return await RestClient.CreateAsync(body, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Creates or updates virtual networks of project. </summary>
+        /// <param name="body"> The UpdateProjectNetworksRequest to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Creates or updates virtual networks. </remarks>
+        public virtual Response<Models.Operation> Create(UpdateProjectNetworksRequest body = null, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("VNetworksClient.Create");
+            scope.Start();
+            try
+            {
+                return RestClient.Create(body, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
         /// <summary> Get a virtual network. </summary>
         /// <param name="id"> The String to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
@@ -119,37 +157,9 @@ namespace Eryph.ComputeClient
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual AsyncPageable<VirtualNetwork> ListAsync(bool? count = null, string project = null, CancellationToken cancellationToken = default)
         {
-            async Task<Page<VirtualNetwork>> FirstPageFunc(int? pageSizeHint)
-            {
-                using var scope = _clientDiagnostics.CreateScope("VNetworksClient.List");
-                scope.Start();
-                try
-                {
-                    var response = await RestClient.ListAsync(count, project, cancellationToken).ConfigureAwait(false);
-                    return Page.FromValues(response.Value.Value, response.Value.NextLink, response.GetRawResponse());
-                }
-                catch (Exception e)
-                {
-                    scope.Failed(e);
-                    throw;
-                }
-            }
-            async Task<Page<VirtualNetwork>> NextPageFunc(string nextLink, int? pageSizeHint)
-            {
-                using var scope = _clientDiagnostics.CreateScope("VNetworksClient.List");
-                scope.Start();
-                try
-                {
-                    var response = await RestClient.ListNextPageAsync(nextLink, count, project, cancellationToken).ConfigureAwait(false);
-                    return Page.FromValues(response.Value.Value, response.Value.NextLink, response.GetRawResponse());
-                }
-                catch (Exception e)
-                {
-                    scope.Failed(e);
-                    throw;
-                }
-            }
-            return PageableHelpers.CreateAsyncEnumerable(FirstPageFunc, NextPageFunc);
+            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(count, project);
+            HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListNextPageRequest(nextLink, count, project);
+            return PageableHelpers.CreateAsyncPageable(FirstPageRequest, NextPageRequest, VirtualNetwork.DeserializeVirtualNetwork, _clientDiagnostics, _pipeline, "VNetworksClient.List", "value", "nextLink", cancellationToken);
         }
 
         /// <summary> Get list of virtual networks. </summary>
@@ -158,37 +168,9 @@ namespace Eryph.ComputeClient
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Pageable<VirtualNetwork> List(bool? count = null, string project = null, CancellationToken cancellationToken = default)
         {
-            Page<VirtualNetwork> FirstPageFunc(int? pageSizeHint)
-            {
-                using var scope = _clientDiagnostics.CreateScope("VNetworksClient.List");
-                scope.Start();
-                try
-                {
-                    var response = RestClient.List(count, project, cancellationToken);
-                    return Page.FromValues(response.Value.Value, response.Value.NextLink, response.GetRawResponse());
-                }
-                catch (Exception e)
-                {
-                    scope.Failed(e);
-                    throw;
-                }
-            }
-            Page<VirtualNetwork> NextPageFunc(string nextLink, int? pageSizeHint)
-            {
-                using var scope = _clientDiagnostics.CreateScope("VNetworksClient.List");
-                scope.Start();
-                try
-                {
-                    var response = RestClient.ListNextPage(nextLink, count, project, cancellationToken);
-                    return Page.FromValues(response.Value.Value, response.Value.NextLink, response.GetRawResponse());
-                }
-                catch (Exception e)
-                {
-                    scope.Failed(e);
-                    throw;
-                }
-            }
-            return PageableHelpers.CreateEnumerable(FirstPageFunc, NextPageFunc);
+            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(count, project);
+            HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListNextPageRequest(nextLink, count, project);
+            return PageableHelpers.CreatePageable(FirstPageRequest, NextPageRequest, VirtualNetwork.DeserializeVirtualNetwork, _clientDiagnostics, _pipeline, "VNetworksClient.List", "value", "nextLink", cancellationToken);
         }
 
         /// <summary> Get list of virtual networks in a project. </summary>
@@ -199,42 +181,11 @@ namespace Eryph.ComputeClient
         /// <remarks> Get list of virtual networks in project. </remarks>
         public virtual AsyncPageable<VirtualNetwork> ListProjectAsync(string project, bool? count = null, CancellationToken cancellationToken = default)
         {
-            if (project == null)
-            {
-                throw new ArgumentNullException(nameof(project));
-            }
+            Argument.AssertNotNullOrEmpty(project, nameof(project));
 
-            async Task<Page<VirtualNetwork>> FirstPageFunc(int? pageSizeHint)
-            {
-                using var scope = _clientDiagnostics.CreateScope("VNetworksClient.ListProject");
-                scope.Start();
-                try
-                {
-                    var response = await RestClient.ListProjectAsync(project, count, cancellationToken).ConfigureAwait(false);
-                    return Page.FromValues(response.Value.Value, response.Value.NextLink, response.GetRawResponse());
-                }
-                catch (Exception e)
-                {
-                    scope.Failed(e);
-                    throw;
-                }
-            }
-            async Task<Page<VirtualNetwork>> NextPageFunc(string nextLink, int? pageSizeHint)
-            {
-                using var scope = _clientDiagnostics.CreateScope("VNetworksClient.ListProject");
-                scope.Start();
-                try
-                {
-                    var response = await RestClient.ListProjectNextPageAsync(nextLink, project, count, cancellationToken).ConfigureAwait(false);
-                    return Page.FromValues(response.Value.Value, response.Value.NextLink, response.GetRawResponse());
-                }
-                catch (Exception e)
-                {
-                    scope.Failed(e);
-                    throw;
-                }
-            }
-            return PageableHelpers.CreateAsyncEnumerable(FirstPageFunc, NextPageFunc);
+            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListProjectRequest(project, count);
+            HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListProjectNextPageRequest(nextLink, project, count);
+            return PageableHelpers.CreateAsyncPageable(FirstPageRequest, NextPageRequest, VirtualNetwork.DeserializeVirtualNetwork, _clientDiagnostics, _pipeline, "VNetworksClient.ListProject", "value", "nextLink", cancellationToken);
         }
 
         /// <summary> Get list of virtual networks in a project. </summary>
@@ -245,42 +196,11 @@ namespace Eryph.ComputeClient
         /// <remarks> Get list of virtual networks in project. </remarks>
         public virtual Pageable<VirtualNetwork> ListProject(string project, bool? count = null, CancellationToken cancellationToken = default)
         {
-            if (project == null)
-            {
-                throw new ArgumentNullException(nameof(project));
-            }
+            Argument.AssertNotNullOrEmpty(project, nameof(project));
 
-            Page<VirtualNetwork> FirstPageFunc(int? pageSizeHint)
-            {
-                using var scope = _clientDiagnostics.CreateScope("VNetworksClient.ListProject");
-                scope.Start();
-                try
-                {
-                    var response = RestClient.ListProject(project, count, cancellationToken);
-                    return Page.FromValues(response.Value.Value, response.Value.NextLink, response.GetRawResponse());
-                }
-                catch (Exception e)
-                {
-                    scope.Failed(e);
-                    throw;
-                }
-            }
-            Page<VirtualNetwork> NextPageFunc(string nextLink, int? pageSizeHint)
-            {
-                using var scope = _clientDiagnostics.CreateScope("VNetworksClient.ListProject");
-                scope.Start();
-                try
-                {
-                    var response = RestClient.ListProjectNextPage(nextLink, project, count, cancellationToken);
-                    return Page.FromValues(response.Value.Value, response.Value.NextLink, response.GetRawResponse());
-                }
-                catch (Exception e)
-                {
-                    scope.Failed(e);
-                    throw;
-                }
-            }
-            return PageableHelpers.CreateEnumerable(FirstPageFunc, NextPageFunc);
+            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListProjectRequest(project, count);
+            HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListProjectNextPageRequest(nextLink, project, count);
+            return PageableHelpers.CreatePageable(FirstPageRequest, NextPageRequest, VirtualNetwork.DeserializeVirtualNetwork, _clientDiagnostics, _pipeline, "VNetworksClient.ListProject", "value", "nextLink", cancellationToken);
         }
     }
 }

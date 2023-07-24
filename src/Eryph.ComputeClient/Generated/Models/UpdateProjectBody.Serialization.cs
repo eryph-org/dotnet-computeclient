@@ -19,7 +19,7 @@ namespace Eryph.ComputeClient.Models
             {
                 if (CorrelationId != null)
                 {
-                    writer.WritePropertyName("correlationId");
+                    writer.WritePropertyName("correlationId"u8);
                     writer.WriteStringValue(CorrelationId.Value);
                 }
                 else
@@ -31,7 +31,7 @@ namespace Eryph.ComputeClient.Models
             {
                 if (Name != null)
                 {
-                    writer.WritePropertyName("name");
+                    writer.WritePropertyName("name"u8);
                     writer.WriteStringValue(Name);
                 }
                 else

@@ -5,6 +5,8 @@
 
 #nullable disable
 
+using System.Text.Json;
+
 namespace Eryph.ComputeClient.Models
 {
     /// <summary> The VirtualNetworkConfiguration. </summary>
@@ -17,12 +19,9 @@ namespace Eryph.ComputeClient.Models
 
         /// <summary> Initializes a new instance of VirtualNetworkConfiguration. </summary>
         /// <param name="configuration"> Anything. </param>
-        internal VirtualNetworkConfiguration(object configuration)
+        internal VirtualNetworkConfiguration(JsonElement configuration)
         {
             Configuration = configuration;
         }
-
-        /// <summary> Anything. </summary>
-        public object Configuration { get; }
     }
 }

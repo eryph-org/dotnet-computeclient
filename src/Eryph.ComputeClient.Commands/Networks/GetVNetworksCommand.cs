@@ -4,27 +4,21 @@ using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.Json;
 using Eryph.ConfigModel.Yaml;
 using JetBrains.Annotations;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
-namespace Eryph.ComputeClient.Commands.Catlets
+namespace Eryph.ComputeClient.Commands.Networks
 {
     [PublicAPI]
-    [Cmdlet(VerbsCommon.Get, "VCatlet", DefaultParameterSetName = "get")]
-    [OutputType(typeof(VirtualCatlet), ParameterSetName = new[] { "get" })]
+    [Cmdlet(VerbsCommon.Get, "VNetwork", DefaultParameterSetName = "get")]
+    [OutputType(typeof(VirtualNetwork), ParameterSetName = new[] { "get" })]
     [OutputType(typeof(string), ParameterSetName = new[] { "getconfig" })]
-    public class GetVCatletCommand : CatletCmdLet
+    public class GetVNetworksCommand : NetworkCmdLet
     {
         [Parameter(
             ParameterSetName = "get",
             Position = 0,
             ValueFromPipeline = true,
             ValueFromPipelineByPropertyName = true)]
-        [Parameter(
-            ParameterSetName = "getconfig",
-            Position = 0,
-            ValueFromPipeline = true,
-            ValueFromPipelineByPropertyName = true)]
+
         public string[] Id { get; set; }
 
         [Parameter(
@@ -32,30 +26,40 @@ namespace Eryph.ComputeClient.Commands.Catlets
             Mandatory = true)]
         public SwitchParameter Config { get; set; }
 
+        [Parameter(
+            ParameterSetName = "getconfig",
+            Mandatory = true,
+            ValueFromPipeline = true,
+            ValueFromPipelineByPropertyName = true)]
+        public string ProjectName { get; set; }
+
         protected override void ProcessRecord()
         {
+            if (Config.IsPresent)
+            {
+                WriteConfig(Factory.CreateVNetworksClient().GetConfig(ProjectName).Value);
+                return;
+            }
+
 
             if (Id != null)
             {
                 foreach (var id in Id)
                 {
-                    if (Config.IsPresent)
-                        WriteConfig(Factory.CreateVCatletsClient().GetConfig(id));
-                    else
-                        WriteObject(GetSingleVM(id));
+                    WriteObject(GetSingleNetwork(id));
                 }
 
                 return;
             }
 
 
-            foreach (var virtualCatlet in Factory.CreateVCatletsClient().List())
+            foreach (var virtualCatlet in Factory.CreateVNetworksClient().List())
             {
                 if (Stopping) break;
 
                 if (Config.IsPresent)
                 {
-                    WriteConfig(Factory.CreateVCatletsClient().GetConfig(virtualCatlet.Id));
+                    WriteConfig(Factory.CreateVNetworksClient().GetConfig(virtualCatlet.Id));
 
                 }
                 else
@@ -67,13 +71,13 @@ namespace Eryph.ComputeClient.Commands.Catlets
 
         }
 
-        private void WriteConfig(VirtualCatletConfiguration config)
+        private void WriteConfig(VirtualNetworkConfiguration config)
         {
 
-            var catletConfig = CatletConfigDictionaryConverter.Convert(
+            var catletConfig = ProjectNetworksConfigDictionaryConverter.Convert(
                 ConfigModelJsonSerializer.DeserializeToDictionary(config.Configuration));
 
-            var yaml = CatletConfigYamlSerializer.Serialize(catletConfig);
+            var yaml = ProjectNetworkConfigYamlSerializer.Serialize(catletConfig);
             WriteObject(yaml);
 
         }

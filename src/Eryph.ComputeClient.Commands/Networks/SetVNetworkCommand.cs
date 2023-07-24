@@ -1,21 +1,18 @@
 ﻿using System;
-using System.Linq;
 using System.Management.Automation;
 using System.Text;
 using System.Text.Json;
-using Azure.Core.Serialization;
-using Eryph.ClientRuntime;
 using Eryph.ComputeClient.Models;
 using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.Json;
 using JetBrains.Annotations;
 
-namespace Eryph.ComputeClient.Commands.Catlets
+namespace Eryph.ComputeClient.Commands.Networks
 {
     [PublicAPI]
-    [Cmdlet(VerbsCommon.New, "Catlet")]
-    [OutputType(typeof(Operation), typeof(Catlet), typeof(VirtualCatlet))]
-    public class NewCatletCommand : CatletConfigCmdlet
+    [Cmdlet(VerbsCommon.Set, "VNetwork")]
+    [OutputType(typeof(Operation))]
+    public class SetVNetworkCommand : NetworkConfigCmdlet
     {
         [Parameter(
             ParameterSetName = "InputObject",
@@ -40,15 +37,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
 
         [Parameter]
         [ValidateNotNullOrEmpty]
-        public string Project { get; set; }
-
-        [Parameter(ParameterSetName = "Image")]
-        [ValidateNotNullOrEmpty]
-        public string Image { get; set; }
-
-        [Parameter]
-        [ValidateNotNullOrEmpty]
-        public string Name { get; set; }
+        public string ProjectName { get; set; }
 
         private bool _wait;
         private StringBuilder _input = new StringBuilder();
@@ -73,39 +62,24 @@ namespace Eryph.ComputeClient.Commands.Catlets
         protected override void EndProcessing()
         {
             var input = _input.ToString();
-            CatletConfig config = null;
+            ProjectNetworksConfig config = null;
 
             if (!string.IsNullOrWhiteSpace(input))
             {
                 config = DeserializeConfigString(input);
             }
 
-            if (!string.IsNullOrWhiteSpace(Image))
-            {
-                config = new CatletConfig
-                {
-                    VCatlet = new VirtualCatletConfig
-                    {
-                        Image = Image
-                    }
-                };
-            }
-
             if (config == null)
                 return;
 
-            if (!string.IsNullOrWhiteSpace(Project))
-                config.Project = Project;
-
-
-            if (!string.IsNullOrWhiteSpace(Name))
-                config.Name = Name;
-
-            WaitForOperation(Factory.CreateCatletsClient()
+            if (!string.IsNullOrWhiteSpace(ProjectName))
+                config.Project = ProjectName;
+            
+            WaitForOperation(Factory.CreateVNetworksClient()
                 .Create(
-                    new NewCatletRequest(Guid.NewGuid(),
+                    new UpdateProjectNetworksRequest(Guid.NewGuid(),
                        JsonSerializer.SerializeToElement(config, 
-                           ConfigModelJsonSerializer.DefaultOptions))), _wait, true);
+                           ConfigModelJsonSerializer.DefaultOptions))), _wait, false);
         }
     }
 
