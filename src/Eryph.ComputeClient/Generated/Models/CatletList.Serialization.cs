@@ -15,12 +15,16 @@ namespace Eryph.ComputeClient.Models
     {
         internal static CatletList DeserializeCatletList(JsonElement element)
         {
+            if (element.ValueKind == JsonValueKind.Null)
+            {
+                return null;
+            }
             Optional<string> count = default;
             Optional<string> nextLink = default;
             Optional<IReadOnlyList<Catlet>> value = default;
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("count"))
+                if (property.NameEquals("count"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -30,7 +34,7 @@ namespace Eryph.ComputeClient.Models
                     count = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("nextLink"))
+                if (property.NameEquals("nextLink"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -40,11 +44,10 @@ namespace Eryph.ComputeClient.Models
                     nextLink = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("value"))
+                if (property.NameEquals("value"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        value = null;
                         continue;
                     }
                     List<Catlet> array = new List<Catlet>();

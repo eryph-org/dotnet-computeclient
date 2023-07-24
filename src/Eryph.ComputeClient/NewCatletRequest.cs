@@ -15,4 +15,15 @@ namespace Eryph.ComputeClient.Models
     {
         public JsonElement Configuration { get; }
     }
+
+    public partial class VirtualCatletConfiguration
+    {
+
+        public JsonElement Configuration { get; }
+    }
+
+    public partial class VirtualNetworkConfiguration
+    {
+        public JsonElement Configuration { get; }
+    }
 }

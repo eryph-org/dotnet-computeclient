@@ -14,6 +14,10 @@ namespace Eryph.ComputeClient.Models
     {
         internal static VirtualNetwork DeserializeVirtualNetwork(JsonElement element)
         {
+            if (element.ValueKind == JsonValueKind.Null)
+            {
+                return null;
+            }
             Optional<string> id = default;
             Optional<string> name = default;
             Optional<string> projectId = default;
@@ -23,7 +27,7 @@ namespace Eryph.ComputeClient.Models
             Optional<string> ipNetwork = default;
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("id"))
+                if (property.NameEquals("id"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -33,7 +37,7 @@ namespace Eryph.ComputeClient.Models
                     id = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("name"))
+                if (property.NameEquals("name"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -43,7 +47,7 @@ namespace Eryph.ComputeClient.Models
                     name = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("projectId"))
+                if (property.NameEquals("projectId"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -53,7 +57,7 @@ namespace Eryph.ComputeClient.Models
                     projectId = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("projectName"))
+                if (property.NameEquals("projectName"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -63,7 +67,7 @@ namespace Eryph.ComputeClient.Models
                     projectName = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("tenantId"))
+                if (property.NameEquals("tenantId"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -73,7 +77,7 @@ namespace Eryph.ComputeClient.Models
                     tenantId = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("providerName"))
+                if (property.NameEquals("providerName"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -83,7 +87,7 @@ namespace Eryph.ComputeClient.Models
                     providerName = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("ipNetwork"))
+                if (property.NameEquals("ipNetwork"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {

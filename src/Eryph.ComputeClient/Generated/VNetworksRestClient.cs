@@ -33,145 +33,70 @@ namespace Eryph.ComputeClient
         {
             ClientDiagnostics = clientDiagnostics ?? throw new ArgumentNullException(nameof(clientDiagnostics));
             _pipeline = pipeline ?? throw new ArgumentNullException(nameof(pipeline));
-            _endpoint = endpoint ?? new Uri("https://localhost:50864/compute");
+            _endpoint = endpoint ?? new Uri("https://localhost:51129/compute");
         }
 
-        internal HttpMessage CreateGetRequest(string id)
+        internal HttpMessage CreateCreateRequest(UpdateProjectNetworksRequest body)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
-            request.Method = RequestMethod.Get;
+            request.Method = RequestMethod.Post;
             var uri = new RawRequestUriBuilder();
             uri.Reset(_endpoint);
-            uri.AppendPath("/v1/vnetworks/", false);
-            uri.AppendPath(id, true);
+            uri.AppendPath("/v1/vnetworks", false);
             request.Uri = uri;
             request.Headers.Add("Accept", "application/json, text/json");
+            if (body != null)
+            {
+                request.Headers.Add("Content-Type", "application/json");
+                var content = new Utf8JsonRequestContent();
+                content.JsonWriter.WriteObjectValue(body);
+                request.Content = content;
+            }
             return message;
         }
 
-        /// <summary> Get a virtual network. </summary>
-        /// <param name="id"> The String to use. </param>
+        /// <summary> Creates or updates virtual networks of project. </summary>
+        /// <param name="body"> The UpdateProjectNetworksRequest to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
-        public async Task<Response<VirtualNetwork>> GetAsync(string id, CancellationToken cancellationToken = default)
+        /// <remarks> Creates or updates virtual networks. </remarks>
+        public async Task<Response<Models.Operation>> CreateAsync(UpdateProjectNetworksRequest body = null, CancellationToken cancellationToken = default)
         {
-            if (id == null)
-            {
-                throw new ArgumentNullException(nameof(id));
-            }
-
-            using var message = CreateGetRequest(id);
+            using var message = CreateCreateRequest(body);
             await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             switch (message.Response.Status)
             {
-                case 200:
+                case 202:
                     {
-                        VirtualNetwork value = default;
+                        Models.Operation value = default;
                         using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
-                        value = VirtualNetwork.DeserializeVirtualNetwork(document.RootElement);
+                        value = Models.Operation.DeserializeOperation(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:
-                    throw await ClientDiagnostics.CreateRequestFailedExceptionAsync(message.Response).ConfigureAwait(false);
+                    throw new RequestFailedException(message.Response);
             }
         }
 
-        /// <summary> Get a virtual network. </summary>
-        /// <param name="id"> The String to use. </param>
+        /// <summary> Creates or updates virtual networks of project. </summary>
+        /// <param name="body"> The UpdateProjectNetworksRequest to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
-        public Response<VirtualNetwork> Get(string id, CancellationToken cancellationToken = default)
+        /// <remarks> Creates or updates virtual networks. </remarks>
+        public Response<Models.Operation> Create(UpdateProjectNetworksRequest body = null, CancellationToken cancellationToken = default)
         {
-            if (id == null)
-            {
-                throw new ArgumentNullException(nameof(id));
-            }
-
-            using var message = CreateGetRequest(id);
+            using var message = CreateCreateRequest(body);
             _pipeline.Send(message, cancellationToken);
             switch (message.Response.Status)
             {
-                case 200:
+                case 202:
                     {
-                        VirtualNetwork value = default;
+                        Models.Operation value = default;
                         using var document = JsonDocument.Parse(message.Response.ContentStream);
-                        value = VirtualNetwork.DeserializeVirtualNetwork(document.RootElement);
+                        value = Models.Operation.DeserializeOperation(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:
-                    throw ClientDiagnostics.CreateRequestFailedException(message.Response);
-            }
-        }
-
-        internal HttpMessage CreateGetConfigRequest(string project)
-        {
-            var message = _pipeline.CreateMessage();
-            var request = message.Request;
-            request.Method = RequestMethod.Get;
-            var uri = new RawRequestUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/v1/projects/", false);
-            uri.AppendPath(project, true);
-            uri.AppendPath("/vnetworks/config", false);
-            request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json");
-            return message;
-        }
-
-        /// <summary> Get project virtual networks configuration. </summary>
-        /// <param name="project"> The String to use. </param>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="project"/> is null. </exception>
-        /// <remarks> Get the configuration for all networks in a project. </remarks>
-        public async Task<Response<VirtualNetworkConfiguration>> GetConfigAsync(string project, CancellationToken cancellationToken = default)
-        {
-            if (project == null)
-            {
-                throw new ArgumentNullException(nameof(project));
-            }
-
-            using var message = CreateGetConfigRequest(project);
-            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
-            switch (message.Response.Status)
-            {
-                case 200:
-                    {
-                        VirtualNetworkConfiguration value = default;
-                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
-                        value = VirtualNetworkConfiguration.DeserializeVirtualNetworkConfiguration(document.RootElement);
-                        return Response.FromValue(value, message.Response);
-                    }
-                default:
-                    throw await ClientDiagnostics.CreateRequestFailedExceptionAsync(message.Response).ConfigureAwait(false);
-            }
-        }
-
-        /// <summary> Get project virtual networks configuration. </summary>
-        /// <param name="project"> The String to use. </param>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="project"/> is null. </exception>
-        /// <remarks> Get the configuration for all networks in a project. </remarks>
-        public Response<VirtualNetworkConfiguration> GetConfig(string project, CancellationToken cancellationToken = default)
-        {
-            if (project == null)
-            {
-                throw new ArgumentNullException(nameof(project));
-            }
-
-            using var message = CreateGetConfigRequest(project);
-            _pipeline.Send(message, cancellationToken);
-            switch (message.Response.Status)
-            {
-                case 200:
-                    {
-                        VirtualNetworkConfiguration value = default;
-                        using var document = JsonDocument.Parse(message.Response.ContentStream);
-                        value = VirtualNetworkConfiguration.DeserializeVirtualNetworkConfiguration(document.RootElement);
-                        return Response.FromValue(value, message.Response);
-                    }
-                default:
-                    throw ClientDiagnostics.CreateRequestFailedException(message.Response);
+                    throw new RequestFailedException(message.Response);
             }
         }
 
@@ -214,7 +139,7 @@ namespace Eryph.ComputeClient
                         return Response.FromValue(value, message.Response);
                     }
                 default:
-                    throw await ClientDiagnostics.CreateRequestFailedExceptionAsync(message.Response).ConfigureAwait(false);
+                    throw new RequestFailedException(message.Response);
             }
         }
 
@@ -236,7 +161,146 @@ namespace Eryph.ComputeClient
                         return Response.FromValue(value, message.Response);
                     }
                 default:
-                    throw ClientDiagnostics.CreateRequestFailedException(message.Response);
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        internal HttpMessage CreateGetRequest(string id)
+        {
+            var message = _pipeline.CreateMessage();
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/v1/vnetworks/", false);
+            uri.AppendPath(id, true);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json, text/json");
+            return message;
+        }
+
+        /// <summary> Get a virtual network. </summary>
+        /// <param name="id"> The String to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
+        public async Task<Response<VirtualNetwork>> GetAsync(string id, CancellationToken cancellationToken = default)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            using var message = CreateGetRequest(id);
+            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        VirtualNetwork value = default;
+                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
+                        value = VirtualNetwork.DeserializeVirtualNetwork(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        /// <summary> Get a virtual network. </summary>
+        /// <param name="id"> The String to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
+        public Response<VirtualNetwork> Get(string id, CancellationToken cancellationToken = default)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            using var message = CreateGetRequest(id);
+            _pipeline.Send(message, cancellationToken);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        VirtualNetwork value = default;
+                        using var document = JsonDocument.Parse(message.Response.ContentStream);
+                        value = VirtualNetwork.DeserializeVirtualNetwork(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        internal HttpMessage CreateGetConfigRequest(string project)
+        {
+            var message = _pipeline.CreateMessage();
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/v1/projects/", false);
+            uri.AppendPath(project, true);
+            uri.AppendPath("/vnetworks/config", false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json, text/json");
+            return message;
+        }
+
+        /// <summary> Get project virtual networks configuration. </summary>
+        /// <param name="project"> The String to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="project"/> is null. </exception>
+        /// <remarks> Get the configuration for all networks in a project. </remarks>
+        public async Task<Response<VirtualNetworkConfiguration>> GetConfigAsync(string project, CancellationToken cancellationToken = default)
+        {
+            if (project == null)
+            {
+                throw new ArgumentNullException(nameof(project));
+            }
+
+            using var message = CreateGetConfigRequest(project);
+            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        VirtualNetworkConfiguration value = default;
+                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
+                        value = VirtualNetworkConfiguration.DeserializeVirtualNetworkConfiguration(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        /// <summary> Get project virtual networks configuration. </summary>
+        /// <param name="project"> The String to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="project"/> is null. </exception>
+        /// <remarks> Get the configuration for all networks in a project. </remarks>
+        public Response<VirtualNetworkConfiguration> GetConfig(string project, CancellationToken cancellationToken = default)
+        {
+            if (project == null)
+            {
+                throw new ArgumentNullException(nameof(project));
+            }
+
+            using var message = CreateGetConfigRequest(project);
+            _pipeline.Send(message, cancellationToken);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        VirtualNetworkConfiguration value = default;
+                        using var document = JsonDocument.Parse(message.Response.ContentStream);
+                        value = VirtualNetworkConfiguration.DeserializeVirtualNetworkConfiguration(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
             }
         }
 
@@ -284,7 +348,7 @@ namespace Eryph.ComputeClient
                         return Response.FromValue(value, message.Response);
                     }
                 default:
-                    throw await ClientDiagnostics.CreateRequestFailedExceptionAsync(message.Response).ConfigureAwait(false);
+                    throw new RequestFailedException(message.Response);
             }
         }
 
@@ -313,7 +377,7 @@ namespace Eryph.ComputeClient
                         return Response.FromValue(value, message.Response);
                     }
                 default:
-                    throw ClientDiagnostics.CreateRequestFailedException(message.Response);
+                    throw new RequestFailedException(message.Response);
             }
         }
 
@@ -355,7 +419,7 @@ namespace Eryph.ComputeClient
                         return Response.FromValue(value, message.Response);
                     }
                 default:
-                    throw await ClientDiagnostics.CreateRequestFailedExceptionAsync(message.Response).ConfigureAwait(false);
+                    throw new RequestFailedException(message.Response);
             }
         }
 
@@ -384,7 +448,7 @@ namespace Eryph.ComputeClient
                         return Response.FromValue(value, message.Response);
                     }
                 default:
-                    throw ClientDiagnostics.CreateRequestFailedException(message.Response);
+                    throw new RequestFailedException(message.Response);
             }
         }
 
@@ -431,7 +495,7 @@ namespace Eryph.ComputeClient
                         return Response.FromValue(value, message.Response);
                     }
                 default:
-                    throw await ClientDiagnostics.CreateRequestFailedExceptionAsync(message.Response).ConfigureAwait(false);
+                    throw new RequestFailedException(message.Response);
             }
         }
 
@@ -465,7 +529,7 @@ namespace Eryph.ComputeClient
                         return Response.FromValue(value, message.Response);
                     }
                 default:
-                    throw ClientDiagnostics.CreateRequestFailedException(message.Response);
+                    throw new RequestFailedException(message.Response);
             }
         }
     }

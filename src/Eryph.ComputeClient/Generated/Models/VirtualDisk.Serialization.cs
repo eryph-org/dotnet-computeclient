@@ -16,6 +16,10 @@ namespace Eryph.ComputeClient.Models
     {
         internal static VirtualDisk DeserializeVirtualDisk(JsonElement element)
         {
+            if (element.ValueKind == JsonValueKind.Null)
+            {
+                return null;
+            }
             Optional<Guid> id = default;
             Optional<string> name = default;
             Optional<string> storageIdentifier = default;
@@ -28,17 +32,16 @@ namespace Eryph.ComputeClient.Models
             Optional<IReadOnlyList<VirtualCatletDrive>> attachedDrives = default;
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("id"))
+                if (property.NameEquals("id"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        property.ThrowNonNullablePropertyIsNull();
                         continue;
                     }
                     id = property.Value.GetGuid();
                     continue;
                 }
-                if (property.NameEquals("name"))
+                if (property.NameEquals("name"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -48,7 +51,7 @@ namespace Eryph.ComputeClient.Models
                     name = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("storageIdentifier"))
+                if (property.NameEquals("storageIdentifier"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -58,7 +61,7 @@ namespace Eryph.ComputeClient.Models
                     storageIdentifier = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("dataStore"))
+                if (property.NameEquals("dataStore"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -68,7 +71,7 @@ namespace Eryph.ComputeClient.Models
                     dataStore = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("project"))
+                if (property.NameEquals("project"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -78,7 +81,7 @@ namespace Eryph.ComputeClient.Models
                     project = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("environment"))
+                if (property.NameEquals("environment"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -88,7 +91,7 @@ namespace Eryph.ComputeClient.Models
                     environment = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("path"))
+                if (property.NameEquals("path"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -98,7 +101,7 @@ namespace Eryph.ComputeClient.Models
                     path = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("sizeBytes"))
+                if (property.NameEquals("sizeBytes"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -108,21 +111,19 @@ namespace Eryph.ComputeClient.Models
                     sizeBytes = property.Value.GetInt64();
                     continue;
                 }
-                if (property.NameEquals("parentId"))
+                if (property.NameEquals("parentId"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        property.ThrowNonNullablePropertyIsNull();
                         continue;
                     }
                     parentId = property.Value.GetGuid();
                     continue;
                 }
-                if (property.NameEquals("attachedDrives"))
+                if (property.NameEquals("attachedDrives"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        attachedDrives = null;
                         continue;
                     }
                     List<VirtualCatletDrive> array = new List<VirtualCatletDrive>();

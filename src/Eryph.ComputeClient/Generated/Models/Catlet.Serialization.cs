@@ -15,13 +15,17 @@ namespace Eryph.ComputeClient.Models
     {
         internal static Catlet DeserializeCatlet(JsonElement element)
         {
+            if (element.ValueKind == JsonValueKind.Null)
+            {
+                return null;
+            }
             Optional<string> id = default;
             Optional<string> name = default;
             Optional<CatletStatus> status = default;
             Optional<IReadOnlyList<CatletNetwork>> networks = default;
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("id"))
+                if (property.NameEquals("id"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -31,7 +35,7 @@ namespace Eryph.ComputeClient.Models
                     id = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("name"))
+                if (property.NameEquals("name"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -41,21 +45,19 @@ namespace Eryph.ComputeClient.Models
                     name = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("status"))
+                if (property.NameEquals("status"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        property.ThrowNonNullablePropertyIsNull();
                         continue;
                     }
                     status = new CatletStatus(property.Value.GetString());
                     continue;
                 }
-                if (property.NameEquals("networks"))
+                if (property.NameEquals("networks"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        networks = null;
                         continue;
                     }
                     List<CatletNetwork> array = new List<CatletNetwork>();

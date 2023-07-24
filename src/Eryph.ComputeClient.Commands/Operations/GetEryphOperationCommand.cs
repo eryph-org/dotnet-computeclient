@@ -17,19 +17,44 @@ namespace Eryph.ComputeClient.Commands.Operations
             ValueFromPipelineByPropertyName = true)]
         public string[] Id { get; set; }
 
+        [Parameter]
+        public SwitchParameter WithLogs { get; set; }
+
+        [Parameter]
+        public SwitchParameter WithResources { get; set; }
+
+        [Parameter]
+        public SwitchParameter WithTasks { get; set; }
+
+        [Parameter]
+        public SwitchParameter WithProjects { get; set; }
+
+
         protected override void ProcessRecord()
         {
+            var expandString = "";
+            if (WithLogs)
+                expandString += ",logs";
+            if (WithResources)
+                expandString += ",resources";
+            if (WithProjects)
+                expandString += ",projects";
+            if (WithTasks)
+                expandString += ",tasks";
+
+            expandString = expandString.TrimStart(',');
+
             if (Id != null)
             {
                 foreach (var id in Id)
                 {
-                    WriteObject(Factory.CreateOperationsClient().Get(id).Value);
+                    WriteObject(Factory.CreateOperationsClient().Get(id,expand: expandString).Value);
                 }
 
                 return;
             }
 
-            ListOutput(Factory.CreateOperationsClient().List());
+            ListOutput(Factory.CreateOperationsClient().List(expand: expandString));
 
 
         }

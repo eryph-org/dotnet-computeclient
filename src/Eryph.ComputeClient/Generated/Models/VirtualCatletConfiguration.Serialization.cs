@@ -14,21 +14,20 @@ namespace Eryph.ComputeClient.Models
     {
         internal static VirtualCatletConfiguration DeserializeVirtualCatletConfiguration(JsonElement element)
         {
-            Optional<object> configuration = default;
+            if (element.ValueKind == JsonValueKind.Null)
+            {
+                return null;
+            }
+            Optional<JsonElement> configuration = default;
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("configuration"))
+                if (property.NameEquals("configuration"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        property.ThrowNonNullablePropertyIsNull();
-                        continue;
-                    }
-                    configuration = property.Value.GetObject();
+                    configuration = property.Value.Clone();
                     continue;
                 }
             }
-            return new VirtualCatletConfiguration(configuration.Value);
+            return new VirtualCatletConfiguration(configuration);
         }
     }
 }

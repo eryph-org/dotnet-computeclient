@@ -5,6 +5,8 @@
 
 #nullable disable
 
+using System.Text.Json;
+
 namespace Eryph.ComputeClient.Models
 {
     /// <summary> The VirtualCatletConfiguration. </summary>
@@ -17,12 +19,9 @@ namespace Eryph.ComputeClient.Models
 
         /// <summary> Initializes a new instance of VirtualCatletConfiguration. </summary>
         /// <param name="configuration"> Anything. </param>
-        internal VirtualCatletConfiguration(object configuration)
+        internal VirtualCatletConfiguration(JsonElement configuration)
         {
             Configuration = configuration;
         }
-
-        /// <summary> Anything. </summary>
-        public object Configuration { get; }
     }
 }

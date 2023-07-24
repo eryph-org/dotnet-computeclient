@@ -15,6 +15,10 @@ namespace Eryph.ComputeClient.Models
     {
         internal static Operation DeserializeOperation(JsonElement element)
         {
+            if (element.ValueKind == JsonValueKind.Null)
+            {
+                return null;
+            }
             Optional<string> id = default;
             Optional<OperationStatus> status = default;
             Optional<string> statusMessage = default;
@@ -23,7 +27,7 @@ namespace Eryph.ComputeClient.Models
             Optional<IReadOnlyList<Project>> projects = default;
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("id"))
+                if (property.NameEquals("id"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -33,17 +37,16 @@ namespace Eryph.ComputeClient.Models
                     id = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("status"))
+                if (property.NameEquals("status"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        property.ThrowNonNullablePropertyIsNull();
                         continue;
                     }
                     status = new OperationStatus(property.Value.GetString());
                     continue;
                 }
-                if (property.NameEquals("statusMessage"))
+                if (property.NameEquals("statusMessage"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -53,11 +56,10 @@ namespace Eryph.ComputeClient.Models
                     statusMessage = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("resources"))
+                if (property.NameEquals("resources"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        resources = null;
                         continue;
                     }
                     List<OperationResource> array = new List<OperationResource>();
@@ -68,11 +70,10 @@ namespace Eryph.ComputeClient.Models
                     resources = array;
                     continue;
                 }
-                if (property.NameEquals("logEntries"))
+                if (property.NameEquals("logEntries"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        logEntries = null;
                         continue;
                     }
                     List<OperationLogEntry> array = new List<OperationLogEntry>();
@@ -83,11 +84,10 @@ namespace Eryph.ComputeClient.Models
                     logEntries = array;
                     continue;
                 }
-                if (property.NameEquals("projects"))
+                if (property.NameEquals("projects"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        projects = null;
                         continue;
                     }
                     List<Project> array = new List<Project>();

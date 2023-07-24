@@ -14,12 +14,16 @@ namespace Eryph.ComputeClient.Models
     {
         internal static OperationResource DeserializeOperationResource(JsonElement element)
         {
+            if (element.ValueKind == JsonValueKind.Null)
+            {
+                return null;
+            }
             Optional<string> id = default;
             Optional<string> resourceId = default;
             Optional<ResourceType> resourceType = default;
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("id"))
+                if (property.NameEquals("id"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -29,7 +33,7 @@ namespace Eryph.ComputeClient.Models
                     id = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("resourceId"))
+                if (property.NameEquals("resourceId"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -39,11 +43,10 @@ namespace Eryph.ComputeClient.Models
                     resourceId = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("resourceType"))
+                if (property.NameEquals("resourceType"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        property.ThrowNonNullablePropertyIsNull();
                         continue;
                     }
                     resourceType = new ResourceType(property.Value.GetString());
