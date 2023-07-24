@@ -5,4 +5,4 @@ $location = Get-Location
 $tag = $settings.tag
 $spec = $settings.spec
 
-autorest  ..\eryph-api-spec\specification\$spec --tag=$tag --csharp-src-folder=$location --use=..\autorest.csharp  --csharp --debug --legacy
+autorest  ..\eryph-api-spec\specification\$spec --tag=$tag --csharp-src-folder=$location --v3 --csharp --verbose

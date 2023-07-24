@@ -1,0 +1,88 @@
+﻿using System;
+using System.Management.Automation;
+using System.Text;
+using System.Text.Json;
+using Eryph.ComputeClient.Models;
+using Eryph.ConfigModel.Catlets;
+using Eryph.ConfigModel.Json;
+using JetBrains.Annotations;
+
+namespace Eryph.ComputeClient.Commands.Networks
+{
+    [PublicAPI]
+    [Cmdlet(VerbsCommon.Set, "VNetwork")]
+    [OutputType(typeof(Operation))]
+    public class SetVNetworkCommand : NetworkConfigCmdlet
+    {
+        [Parameter(
+            ParameterSetName = "InputObject",
+            Position = 0,
+            ValueFromPipeline = true,
+            Mandatory = true)]
+        [AllowEmptyString]
+        public string[] InputObject { get; set; }
+
+        [Parameter(
+            ParameterSetName = "Config",
+            Mandatory = true)]
+        [ValidateNotNullOrEmpty]
+        public string Config { get; set; }
+
+        [Parameter]
+        public SwitchParameter Wait
+        {
+            get => _wait;
+            set => _wait = value;
+        }
+
+        [Parameter]
+        [ValidateNotNullOrEmpty]
+        public string ProjectName { get; set; }
+
+        private bool _wait;
+        private StringBuilder _input = new StringBuilder();
+
+
+        protected override void ProcessRecord()
+        {
+            if (InputObject != null)
+            {
+                foreach (var input in InputObject)
+                {
+                    _input.AppendLine($"{input}");
+
+                }
+            }
+
+            if (Config != null)
+                _input.Append(Config);
+
+        }
+
+        protected override void EndProcessing()
+        {
+            var input = _input.ToString();
+            ProjectNetworksConfig config = null;
+
+            if (!string.IsNullOrWhiteSpace(input))
+            {
+                config = DeserializeConfigString(input);
+            }
+
+            if (config == null)
+                return;
+
+            if (!string.IsNullOrWhiteSpace(ProjectName))
+                config.Project = ProjectName;
+            
+            WaitForOperation(Factory.CreateVNetworksClient()
+                .Create(
+                    new UpdateProjectNetworksRequest(Guid.NewGuid(),
+                       JsonSerializer.SerializeToElement(config, 
+                           ConfigModelJsonSerializer.DefaultOptions))), _wait, false);
+        }
+    }
+
+
+
+}

@@ -1,61 +1,121 @@
 ﻿using System;
-using Eryph.ClientRuntime;
-using Eryph.CommonClient.Commands;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Management.Automation;
+using System.Threading.Tasks;
+using Azure;
+using Eryph.ClientRuntime.Configuration;
+using Eryph.ClientRuntime.Powershell;
 using Eryph.ComputeClient.Models;
 using JetBrains.Annotations;
+using Operation = Eryph.ComputeClient.Models.Operation;
 
 namespace Eryph.ComputeClient.Commands
 {
     [PublicAPI]
-    public abstract class ComputeCmdLet : ApiCmdLet
+    public abstract class ComputeCmdLet : EryphCmdLet
     {
-        protected EryphComputeClient ComputeClient;
+        protected ComputeClientsFactory Factory;
 
         protected override void BeginProcessing()
         {
             base.BeginProcessing();
-            ComputeClient = new EryphComputeClient(GetEndpointUri("compute"),
-                GetCredentials("compute_api"));
+            Factory = new ComputeClientsFactory(
+                new EryphComputeClientOptions(GetClientCredentials()), GetEndpointUri("compute"));
 
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
 
-            ComputeClient?.Dispose();
-            ComputeClient = null;
+        protected Uri GetEndpointUri(string endpoint)
+        {
+
+            var credentials = GetClientCredentials();
+            var endpointLookup = new EndpointLookup(new PowershellEnvironment(SessionState));
+            return endpointLookup.GetEndpoint(endpoint, credentials.Configuration);
 
         }
 
-        protected Machine GetSingleMachine(string id)
-        {
-            return ComputeClient.Machines.Get(id);
-        }
 
-        protected VirtualMachine GetSingleVM(string id)
+        protected void ResourceWriter(Operation operation, Action<ResourceType, string> resourceWriterDelegate)
         {
-            return ComputeClient.VirtualMachines.Get(id);
-        }
+            var resourceData =
+                Factory.CreateOperationsClient().Get(operation.Id, expand: "resources").Value;
 
-
-        protected void WaitForOperation(Operation operation, bool wait, bool alwaysWriteMachine, string knownMachineId = default)
-        {
-            if (!wait)
+            try
             {
-                if(knownMachineId == default || !alwaysWriteMachine)
-                    WriteObject(operation);
-                else
-                    WriteObject(GetSingleMachine(knownMachineId));
+
+                foreach (var resource in resourceData.Resources.Where(x => !string.IsNullOrWhiteSpace(x.ResourceId)))
+                {
+                    resourceWriterDelegate(resource.ResourceType.GetValueOrDefault(), resource.ResourceId);
+                }
+
+                if (resourceData.Resources.Count > 0)
+                    return;
+            }
+            catch
+            {
+                WriteObject(resourceData);
+            }
+
+        }
+
+        protected void ListOutput<T>(Pageable<T> pageable)
+        {
+            foreach (var page in pageable)
+            {
+                if (Stopping) break;
+                WriteObject(page, true);
+            }
+        }
+
+        protected void WaitForOperation(Operation operation, Action<Operation> writerDelegate = null)
+        {
+            var timeStamp = DateTime.Parse("2018-01-01", CultureInfo.InvariantCulture);
+
+
+            var processedLogIds = new List<string>();
+            while (!Stopping)
+            {
+                Task.Delay(1000).GetAwaiter().GetResult();
+
+                var currentOperation = Factory.CreateOperationsClient()
+                    .Get(operation.Id, timeStamp, expand: "logs").Value;
+
+                foreach (var logEntry in currentOperation.LogEntries)
+                {
+                    if (processedLogIds.Contains(logEntry.Id))
+                        continue;
+
+                    processedLogIds.Add(logEntry.Id);
+
+                    WriteVerbose($"Operation {currentOperation.Id}: {logEntry.Message}");
+                    timeStamp = logEntry.Timestamp.GetValueOrDefault().DateTime;
+                    Task.Delay(100).GetAwaiter().GetResult();
+                }
+
+                switch (currentOperation.Status.GetValueOrDefault().ToString())
+                {
+                    case "Queued":
+                    case "Running":
+                        continue;
+                    case "Failed":
+                        WriteError(new ErrorRecord(new Exception(currentOperation.StatusMessage),
+                            "EryphOperationFailed", ErrorCategory.InvalidResult, operation.Id));
+                        break;
+                }
+
+                break;
+            }
+
+
+            if (writerDelegate != null)
+            {
+                writerDelegate(operation);
                 return;
             }
 
-            void WriteMachine(string resourceName, string id)
-            {
-                if (resourceName == "Machine") WriteObject(GetSingleMachine(id));
-            }
-
-            WaitForOperation(operation, !alwaysWriteMachine ? null : (Action<string, string>) WriteMachine);
+            WriteObject(Factory.CreateOperationsClient().Get(operation.Id).Value);
         }
     }
 }

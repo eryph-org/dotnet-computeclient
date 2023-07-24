@@ -51,7 +51,7 @@ PowerShellVersion = '5.1'
 # ProcessorArchitecture = ''
 
 # Modules that must be imported into the global environment prior to importing this module
-RequiredModules = @( @{ModuleName = 'Eryph.ClientRuntime.Configuration'; ModuleVersion = '0.2.0' } )
+# RequiredModules = @( @{ModuleName = 'Eryph.ClientRuntime.Configuration'; ModuleVersion = '0.2.0' } )
 
 # Assemblies that must be loaded prior to importing this module
 # RequiredAssemblies = @()
@@ -73,14 +73,22 @@ FunctionsToExport = @()
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @(
-    "Get-EryphMachine", 
-    "New-EryphMachine", 
-    "Remove-EryphMachine", 
-    "Update-EryphMachine", 
-    "Start-EryphMachine", 
-    "Stop-EryphMachine", 
-    "Get-EryphVM", 
-    "Get-EryphVirtualDisk")
+    "Get-Catlet", 
+    "New-Catlet", 
+    "Remove-Catlet", 
+    "Update-Catlet", 
+    "Start-Catlet", 
+    "Stop-Catlet", 
+    "Get-VCatlet", 
+    "Get-VCatletDisk",
+    "Get-EryphOperation",
+    "Get-VNetwork",
+    "Set-VNetwork",
+    "Get-EryphProject",
+    "Set-EryphProject",
+    "New-EryphProject",
+    "Remove-EryphProject"
+)
 
 # Variables to export from this module
 VariablesToExport = '*'
