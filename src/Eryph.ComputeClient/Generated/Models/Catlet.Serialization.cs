@@ -23,6 +23,8 @@ namespace Eryph.ComputeClient.Models
             Optional<string> name = default;
             Optional<CatletStatus> status = default;
             Optional<IReadOnlyList<CatletNetwork>> networks = default;
+            Optional<IReadOnlyList<CatletNetworkAdapter>> networkAdapters = default;
+            Optional<IReadOnlyList<CatletDrive>> drives = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("id"u8))
@@ -68,8 +70,36 @@ namespace Eryph.ComputeClient.Models
                     networks = array;
                     continue;
                 }
+                if (property.NameEquals("networkAdapters"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    List<CatletNetworkAdapter> array = new List<CatletNetworkAdapter>();
+                    foreach (var item in property.Value.EnumerateArray())
+                    {
+                        array.Add(CatletNetworkAdapter.DeserializeCatletNetworkAdapter(item));
+                    }
+                    networkAdapters = array;
+                    continue;
+                }
+                if (property.NameEquals("drives"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    List<CatletDrive> array = new List<CatletDrive>();
+                    foreach (var item in property.Value.EnumerateArray())
+                    {
+                        array.Add(CatletDrive.DeserializeCatletDrive(item));
+                    }
+                    drives = array;
+                    continue;
+                }
             }
-            return new Catlet(id.Value, name.Value, Optional.ToNullable(status), Optional.ToList(networks));
+            return new Catlet(id.Value, name.Value, Optional.ToNullable(status), Optional.ToList(networks), Optional.ToList(networkAdapters), Optional.ToList(drives));
         }
     }
 }

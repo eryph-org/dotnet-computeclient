@@ -16,7 +16,7 @@ namespace Eryph.ComputeClient.Models
         public JsonElement Configuration { get; }
     }
 
-    public partial class VirtualCatletConfiguration
+    public partial class CatletConfiguration
     {
 
         public JsonElement Configuration { get; }

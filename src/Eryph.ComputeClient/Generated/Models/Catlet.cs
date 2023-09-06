@@ -17,6 +17,8 @@ namespace Eryph.ComputeClient.Models
         internal Catlet()
         {
             Networks = new ChangeTrackingList<CatletNetwork>();
+            NetworkAdapters = new ChangeTrackingList<CatletNetworkAdapter>();
+            Drives = new ChangeTrackingList<CatletDrive>();
         }
 
         /// <summary> Initializes a new instance of Catlet. </summary>
@@ -24,12 +26,16 @@ namespace Eryph.ComputeClient.Models
         /// <param name="name"></param>
         /// <param name="status"></param>
         /// <param name="networks"></param>
-        internal Catlet(string id, string name, CatletStatus? status, IReadOnlyList<CatletNetwork> networks)
+        /// <param name="networkAdapters"></param>
+        /// <param name="drives"></param>
+        internal Catlet(string id, string name, CatletStatus? status, IReadOnlyList<CatletNetwork> networks, IReadOnlyList<CatletNetworkAdapter> networkAdapters, IReadOnlyList<CatletDrive> drives)
         {
             Id = id;
             Name = name;
             Status = status;
             Networks = networks;
+            NetworkAdapters = networkAdapters;
+            Drives = drives;
         }
 
         /// <summary> Gets the id. </summary>
@@ -40,5 +46,9 @@ namespace Eryph.ComputeClient.Models
         public CatletStatus? Status { get; }
         /// <summary> Gets the networks. </summary>
         public IReadOnlyList<CatletNetwork> Networks { get; }
+        /// <summary> Gets the network adapters. </summary>
+        public IReadOnlyList<CatletNetworkAdapter> NetworkAdapters { get; }
+        /// <summary> Gets the drives. </summary>
+        public IReadOnlyList<CatletDrive> Drives { get; }
     }
 }
