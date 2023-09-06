@@ -12,11 +12,6 @@ namespace Eryph.ComputeClient.Commands.Catlets
             return Factory.CreateCatletsClient().Get(id);
         }
 
-        protected VirtualCatlet GetSingleVM(string id)
-        {
-            return Factory.CreateVCatletsClient().Get(id);
-        }
-
         protected void WaitForOperation(Operation operation, bool wait, bool alwaysWriteMachine, string knownMachineId = default)
         {
             if (!wait)

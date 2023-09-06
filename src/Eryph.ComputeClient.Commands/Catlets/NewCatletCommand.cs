@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Linq;
 using System.Management.Automation;
 using System.Text;
 using System.Text.Json;
-using Azure.Core.Serialization;
-using Eryph.ClientRuntime;
+using System.Text.RegularExpressions;
 using Eryph.ComputeClient.Models;
 using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.Json;
@@ -14,7 +12,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
 {
     [PublicAPI]
     [Cmdlet(VerbsCommon.New, "Catlet")]
-    [OutputType(typeof(Operation), typeof(Catlet), typeof(VirtualCatlet))]
+    [OutputType(typeof(Operation), typeof(Catlet), typeof(Catlet))]
     public class NewCatletCommand : CatletConfigCmdlet
     {
         [Parameter(
@@ -42,9 +40,9 @@ namespace Eryph.ComputeClient.Commands.Catlets
         [ValidateNotNullOrEmpty]
         public string Project { get; set; }
 
-        [Parameter(ParameterSetName = "Image")]
+        [Parameter(ParameterSetName = "Parent")]
         [ValidateNotNullOrEmpty]
-        public string Image { get; set; }
+        public string Parent { get; set; }
 
         [Parameter]
         [ValidateNotNullOrEmpty]
@@ -52,7 +50,6 @@ namespace Eryph.ComputeClient.Commands.Catlets
 
         private bool _wait;
         private StringBuilder _input = new StringBuilder();
-
 
         protected override void ProcessRecord()
         {
@@ -80,14 +77,11 @@ namespace Eryph.ComputeClient.Commands.Catlets
                 config = DeserializeConfigString(input);
             }
 
-            if (!string.IsNullOrWhiteSpace(Image))
+            if (!string.IsNullOrWhiteSpace(Parent))
             {
                 config = new CatletConfig
                 {
-                    VCatlet = new VirtualCatletConfig
-                    {
-                        Image = Image
-                    }
+                    Parent = Parent
                 };
             }
 
@@ -95,11 +89,13 @@ namespace Eryph.ComputeClient.Commands.Catlets
                 return;
 
             if (!string.IsNullOrWhiteSpace(Project))
-                config.Project = Project;
+                config.Society = Project;
 
 
             if (!string.IsNullOrWhiteSpace(Name))
                 config.Name = Name;
+
+
 
             WaitForOperation(Factory.CreateCatletsClient()
                 .Create(

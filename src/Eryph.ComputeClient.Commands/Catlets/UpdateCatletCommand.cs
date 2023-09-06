@@ -10,7 +10,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
 {
     [PublicAPI]
     [Cmdlet(VerbsData.Update, "Catlet")]
-    [OutputType(typeof(Operation), typeof(Catlet), typeof(VirtualCatlet))]
+    [OutputType(typeof(Operation), typeof(Catlet), typeof(Catlet))]
     public class UpdateCatletCommand : CatletConfigCmdlet
     {
         [Parameter(

@@ -33,136 +33,7 @@ namespace Eryph.ComputeClient
         {
             ClientDiagnostics = clientDiagnostics ?? throw new ArgumentNullException(nameof(clientDiagnostics));
             _pipeline = pipeline ?? throw new ArgumentNullException(nameof(pipeline));
-            _endpoint = endpoint ?? new Uri("https://localhost:51129/compute");
-        }
-
-        internal HttpMessage CreateCreateRequest(UpdateProjectNetworksRequest body)
-        {
-            var message = _pipeline.CreateMessage();
-            var request = message.Request;
-            request.Method = RequestMethod.Post;
-            var uri = new RawRequestUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/v1/vnetworks", false);
-            request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json");
-            if (body != null)
-            {
-                request.Headers.Add("Content-Type", "application/json");
-                var content = new Utf8JsonRequestContent();
-                content.JsonWriter.WriteObjectValue(body);
-                request.Content = content;
-            }
-            return message;
-        }
-
-        /// <summary> Creates or updates virtual networks of project. </summary>
-        /// <param name="body"> The UpdateProjectNetworksRequest to use. </param>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <remarks> Creates or updates virtual networks. </remarks>
-        public async Task<Response<Models.Operation>> CreateAsync(UpdateProjectNetworksRequest body = null, CancellationToken cancellationToken = default)
-        {
-            using var message = CreateCreateRequest(body);
-            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
-            switch (message.Response.Status)
-            {
-                case 202:
-                    {
-                        Models.Operation value = default;
-                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
-                        value = Models.Operation.DeserializeOperation(document.RootElement);
-                        return Response.FromValue(value, message.Response);
-                    }
-                default:
-                    throw new RequestFailedException(message.Response);
-            }
-        }
-
-        /// <summary> Creates or updates virtual networks of project. </summary>
-        /// <param name="body"> The UpdateProjectNetworksRequest to use. </param>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <remarks> Creates or updates virtual networks. </remarks>
-        public Response<Models.Operation> Create(UpdateProjectNetworksRequest body = null, CancellationToken cancellationToken = default)
-        {
-            using var message = CreateCreateRequest(body);
-            _pipeline.Send(message, cancellationToken);
-            switch (message.Response.Status)
-            {
-                case 202:
-                    {
-                        Models.Operation value = default;
-                        using var document = JsonDocument.Parse(message.Response.ContentStream);
-                        value = Models.Operation.DeserializeOperation(document.RootElement);
-                        return Response.FromValue(value, message.Response);
-                    }
-                default:
-                    throw new RequestFailedException(message.Response);
-            }
-        }
-
-        internal HttpMessage CreateListRequest(bool? count, string project)
-        {
-            var message = _pipeline.CreateMessage();
-            var request = message.Request;
-            request.Method = RequestMethod.Get;
-            var uri = new RawRequestUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/v1/vnetworks", false);
-            if (count != null)
-            {
-                uri.AppendQuery("count", count.Value, true);
-            }
-            if (project != null)
-            {
-                uri.AppendQuery("project", project, true);
-            }
-            request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json");
-            return message;
-        }
-
-        /// <summary> Get list of virtual networks. </summary>
-        /// <param name="count"> The Boolean to use. </param>
-        /// <param name="project"> The String to use. </param>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public async Task<Response<VirtualNetworkList>> ListAsync(bool? count = null, string project = null, CancellationToken cancellationToken = default)
-        {
-            using var message = CreateListRequest(count, project);
-            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
-            switch (message.Response.Status)
-            {
-                case 200:
-                    {
-                        VirtualNetworkList value = default;
-                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
-                        value = VirtualNetworkList.DeserializeVirtualNetworkList(document.RootElement);
-                        return Response.FromValue(value, message.Response);
-                    }
-                default:
-                    throw new RequestFailedException(message.Response);
-            }
-        }
-
-        /// <summary> Get list of virtual networks. </summary>
-        /// <param name="count"> The Boolean to use. </param>
-        /// <param name="project"> The String to use. </param>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public Response<VirtualNetworkList> List(bool? count = null, string project = null, CancellationToken cancellationToken = default)
-        {
-            using var message = CreateListRequest(count, project);
-            _pipeline.Send(message, cancellationToken);
-            switch (message.Response.Status)
-            {
-                case 200:
-                    {
-                        VirtualNetworkList value = default;
-                        using var document = JsonDocument.Parse(message.Response.ContentStream);
-                        value = VirtualNetworkList.DeserializeVirtualNetworkList(document.RootElement);
-                        return Response.FromValue(value, message.Response);
-                    }
-                default:
-                    throw new RequestFailedException(message.Response);
-            }
+            _endpoint = endpoint ?? new Uri("https://localhost:60632/compute");
         }
 
         internal HttpMessage CreateGetRequest(string id)
@@ -297,6 +168,135 @@ namespace Eryph.ComputeClient
                         VirtualNetworkConfiguration value = default;
                         using var document = JsonDocument.Parse(message.Response.ContentStream);
                         value = VirtualNetworkConfiguration.DeserializeVirtualNetworkConfiguration(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        internal HttpMessage CreateListRequest(bool? count, string project)
+        {
+            var message = _pipeline.CreateMessage();
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/v1/vnetworks", false);
+            if (count != null)
+            {
+                uri.AppendQuery("count", count.Value, true);
+            }
+            if (project != null)
+            {
+                uri.AppendQuery("project", project, true);
+            }
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json, text/json");
+            return message;
+        }
+
+        /// <summary> Get list of virtual networks. </summary>
+        /// <param name="count"> The Boolean to use. </param>
+        /// <param name="project"> The String to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public async Task<Response<VirtualNetworkList>> ListAsync(bool? count = null, string project = null, CancellationToken cancellationToken = default)
+        {
+            using var message = CreateListRequest(count, project);
+            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        VirtualNetworkList value = default;
+                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
+                        value = VirtualNetworkList.DeserializeVirtualNetworkList(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        /// <summary> Get list of virtual networks. </summary>
+        /// <param name="count"> The Boolean to use. </param>
+        /// <param name="project"> The String to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public Response<VirtualNetworkList> List(bool? count = null, string project = null, CancellationToken cancellationToken = default)
+        {
+            using var message = CreateListRequest(count, project);
+            _pipeline.Send(message, cancellationToken);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        VirtualNetworkList value = default;
+                        using var document = JsonDocument.Parse(message.Response.ContentStream);
+                        value = VirtualNetworkList.DeserializeVirtualNetworkList(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        internal HttpMessage CreateCreateRequest(UpdateProjectNetworksRequest body)
+        {
+            var message = _pipeline.CreateMessage();
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/v1/vnetworks", false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json, text/json");
+            if (body != null)
+            {
+                request.Headers.Add("Content-Type", "application/json");
+                var content = new Utf8JsonRequestContent();
+                content.JsonWriter.WriteObjectValue(body);
+                request.Content = content;
+            }
+            return message;
+        }
+
+        /// <summary> Creates or updates virtual networks of project. </summary>
+        /// <param name="body"> The UpdateProjectNetworksRequest to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Creates or updates virtual networks. </remarks>
+        public async Task<Response<Models.Operation>> CreateAsync(UpdateProjectNetworksRequest body = null, CancellationToken cancellationToken = default)
+        {
+            using var message = CreateCreateRequest(body);
+            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            switch (message.Response.Status)
+            {
+                case 202:
+                    {
+                        Models.Operation value = default;
+                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
+                        value = Models.Operation.DeserializeOperation(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        /// <summary> Creates or updates virtual networks of project. </summary>
+        /// <param name="body"> The UpdateProjectNetworksRequest to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Creates or updates virtual networks. </remarks>
+        public Response<Models.Operation> Create(UpdateProjectNetworksRequest body = null, CancellationToken cancellationToken = default)
+        {
+            using var message = CreateCreateRequest(body);
+            _pipeline.Send(message, cancellationToken);
+            switch (message.Response.Status)
+            {
+                case 202:
+                    {
+                        Models.Operation value = default;
+                        using var document = JsonDocument.Parse(message.Response.ContentStream);
+                        value = Models.Operation.DeserializeOperation(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:

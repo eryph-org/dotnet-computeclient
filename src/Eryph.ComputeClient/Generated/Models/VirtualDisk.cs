@@ -17,7 +17,7 @@ namespace Eryph.ComputeClient.Models
         /// <summary> Initializes a new instance of VirtualDisk. </summary>
         internal VirtualDisk()
         {
-            AttachedDrives = new ChangeTrackingList<VirtualCatletDrive>();
+            AttachedDrives = new ChangeTrackingList<CatletDrive>();
         }
 
         /// <summary> Initializes a new instance of VirtualDisk. </summary>
@@ -31,7 +31,7 @@ namespace Eryph.ComputeClient.Models
         /// <param name="sizeBytes"></param>
         /// <param name="parentId"></param>
         /// <param name="attachedDrives"></param>
-        internal VirtualDisk(Guid? id, string name, string storageIdentifier, string dataStore, string project, string environment, string path, long? sizeBytes, Guid? parentId, IReadOnlyList<VirtualCatletDrive> attachedDrives)
+        internal VirtualDisk(Guid? id, string name, string storageIdentifier, string dataStore, string project, string environment, string path, long? sizeBytes, Guid? parentId, IReadOnlyList<CatletDrive> attachedDrives)
         {
             Id = id;
             Name = name;
@@ -64,6 +64,6 @@ namespace Eryph.ComputeClient.Models
         /// <summary> Gets the parent id. </summary>
         public Guid? ParentId { get; }
         /// <summary> Gets the attached drives. </summary>
-        public IReadOnlyList<VirtualCatletDrive> AttachedDrives { get; }
+        public IReadOnlyList<CatletDrive> AttachedDrives { get; }
     }
 }

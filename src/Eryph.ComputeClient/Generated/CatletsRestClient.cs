@@ -33,7 +33,7 @@ namespace Eryph.ComputeClient
         {
             ClientDiagnostics = clientDiagnostics ?? throw new ArgumentNullException(nameof(clientDiagnostics));
             _pipeline = pipeline ?? throw new ArgumentNullException(nameof(pipeline));
-            _endpoint = endpoint ?? new Uri("https://localhost:51129/compute");
+            _endpoint = endpoint ?? new Uri("https://localhost:60632/compute");
         }
 
         internal HttpMessage CreateCreateRequest(NewCatletRequest body)
@@ -294,6 +294,77 @@ namespace Eryph.ComputeClient
                         Catlet value = default;
                         using var document = JsonDocument.Parse(message.Response.ContentStream);
                         value = Catlet.DeserializeCatlet(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        internal HttpMessage CreateGetConfigRequest(string id)
+        {
+            var message = _pipeline.CreateMessage();
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/v1/catlets/", false);
+            uri.AppendPath(id, true);
+            uri.AppendPath("/config", false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json, text/json");
+            return message;
+        }
+
+        /// <summary> Get catlet configuration. </summary>
+        /// <param name="id"> The String to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
+        /// <remarks> Get the configuration of a catlet. </remarks>
+        public async Task<Response<CatletConfiguration>> GetConfigAsync(string id, CancellationToken cancellationToken = default)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            using var message = CreateGetConfigRequest(id);
+            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        CatletConfiguration value = default;
+                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
+                        value = CatletConfiguration.DeserializeCatletConfiguration(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        /// <summary> Get catlet configuration. </summary>
+        /// <param name="id"> The String to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
+        /// <remarks> Get the configuration of a catlet. </remarks>
+        public Response<CatletConfiguration> GetConfig(string id, CancellationToken cancellationToken = default)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            using var message = CreateGetConfigRequest(id);
+            _pipeline.Send(message, cancellationToken);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        CatletConfiguration value = default;
+                        using var document = JsonDocument.Parse(message.Response.ContentStream);
+                        value = CatletConfiguration.DeserializeCatletConfiguration(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:

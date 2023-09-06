@@ -25,6 +25,7 @@ namespace Eryph.ComputeClient.Models
         private const string CatletValue = "Catlet";
         private const string VirtualDiskValue = "VirtualDisk";
         private const string VirtualNetworkValue = "VirtualNetwork";
+        private const string CatletFarmValue = "CatletFarm";
 
         /// <summary> Catlet. </summary>
         public static ResourceType Catlet { get; } = new ResourceType(CatletValue);
@@ -32,6 +33,8 @@ namespace Eryph.ComputeClient.Models
         public static ResourceType VirtualDisk { get; } = new ResourceType(VirtualDiskValue);
         /// <summary> VirtualNetwork. </summary>
         public static ResourceType VirtualNetwork { get; } = new ResourceType(VirtualNetworkValue);
+        /// <summary> CatletFarm. </summary>
+        public static ResourceType CatletFarm { get; } = new ResourceType(CatletFarmValue);
         /// <summary> Determines if two <see cref="ResourceType"/> values are the same. </summary>
         public static bool operator ==(ResourceType left, ResourceType right) => left.Equals(right);
         /// <summary> Determines if two <see cref="ResourceType"/> values are not the same. </summary>

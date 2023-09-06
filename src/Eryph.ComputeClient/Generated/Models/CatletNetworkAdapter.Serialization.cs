@@ -10,9 +10,9 @@ using Azure.Core;
 
 namespace Eryph.ComputeClient.Models
 {
-    public partial class VirtualCatletNetworkAdapter
+    public partial class CatletNetworkAdapter
     {
-        internal static VirtualCatletNetworkAdapter DeserializeVirtualCatletNetworkAdapter(JsonElement element)
+        internal static CatletNetworkAdapter DeserializeCatletNetworkAdapter(JsonElement element)
         {
             if (element.ValueKind == JsonValueKind.Null)
             {
@@ -43,7 +43,7 @@ namespace Eryph.ComputeClient.Models
                     continue;
                 }
             }
-            return new VirtualCatletNetworkAdapter(name.Value, macAddress.Value);
+            return new CatletNetworkAdapter(name.Value, macAddress.Value);
         }
     }
 }

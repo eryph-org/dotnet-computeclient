@@ -6,9 +6,9 @@ using JetBrains.Annotations;
 namespace Eryph.ComputeClient.Commands.Catlets
 {
     [PublicAPI]
-    [Cmdlet(VerbsCommon.Get, "VCatletDisk", DefaultParameterSetName = "get")]
+    [Cmdlet(VerbsCommon.Get, "CatletDisk", DefaultParameterSetName = "get")]
     [OutputType(typeof(VirtualDisk))]
-    public class GetVCatletDiskCommand : ComputeCmdLet
+    public class GetCatletDiskCommand : ComputeCmdLet
     {
         [Parameter(
             ParameterSetName = "get",

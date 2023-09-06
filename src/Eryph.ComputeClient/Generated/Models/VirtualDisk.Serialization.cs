@@ -29,7 +29,7 @@ namespace Eryph.ComputeClient.Models
             Optional<string> path = default;
             Optional<long?> sizeBytes = default;
             Optional<Guid> parentId = default;
-            Optional<IReadOnlyList<VirtualCatletDrive>> attachedDrives = default;
+            Optional<IReadOnlyList<CatletDrive>> attachedDrives = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("id"u8))
@@ -126,10 +126,10 @@ namespace Eryph.ComputeClient.Models
                     {
                         continue;
                     }
-                    List<VirtualCatletDrive> array = new List<VirtualCatletDrive>();
+                    List<CatletDrive> array = new List<CatletDrive>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(VirtualCatletDrive.DeserializeVirtualCatletDrive(item));
+                        array.Add(CatletDrive.DeserializeCatletDrive(item));
                     }
                     attachedDrives = array;
                     continue;

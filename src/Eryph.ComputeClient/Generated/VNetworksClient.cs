@@ -39,44 +39,6 @@ namespace Eryph.ComputeClient
             _pipeline = pipeline;
         }
 
-        /// <summary> Creates or updates virtual networks of project. </summary>
-        /// <param name="body"> The UpdateProjectNetworksRequest to use. </param>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <remarks> Creates or updates virtual networks. </remarks>
-        public virtual async Task<Response<Models.Operation>> CreateAsync(UpdateProjectNetworksRequest body = null, CancellationToken cancellationToken = default)
-        {
-            using var scope = _clientDiagnostics.CreateScope("VNetworksClient.Create");
-            scope.Start();
-            try
-            {
-                return await RestClient.CreateAsync(body, cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
-        }
-
-        /// <summary> Creates or updates virtual networks of project. </summary>
-        /// <param name="body"> The UpdateProjectNetworksRequest to use. </param>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <remarks> Creates or updates virtual networks. </remarks>
-        public virtual Response<Models.Operation> Create(UpdateProjectNetworksRequest body = null, CancellationToken cancellationToken = default)
-        {
-            using var scope = _clientDiagnostics.CreateScope("VNetworksClient.Create");
-            scope.Start();
-            try
-            {
-                return RestClient.Create(body, cancellationToken);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
-        }
-
         /// <summary> Get a virtual network. </summary>
         /// <param name="id"> The String to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
@@ -143,6 +105,44 @@ namespace Eryph.ComputeClient
             try
             {
                 return RestClient.GetConfig(project, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Creates or updates virtual networks of project. </summary>
+        /// <param name="body"> The UpdateProjectNetworksRequest to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Creates or updates virtual networks. </remarks>
+        public virtual async Task<Response<Models.Operation>> CreateAsync(UpdateProjectNetworksRequest body = null, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("VNetworksClient.Create");
+            scope.Start();
+            try
+            {
+                return await RestClient.CreateAsync(body, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Creates or updates virtual networks of project. </summary>
+        /// <param name="body"> The UpdateProjectNetworksRequest to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Creates or updates virtual networks. </remarks>
+        public virtual Response<Models.Operation> Create(UpdateProjectNetworksRequest body = null, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("VNetworksClient.Create");
+            scope.Start();
+            try
+            {
+                return RestClient.Create(body, cancellationToken);
             }
             catch (Exception e)
             {

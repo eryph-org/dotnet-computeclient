@@ -9,25 +9,25 @@ using System;
 
 namespace Eryph.ComputeClient.Models
 {
-    /// <summary> The VirtualCatletDrive. </summary>
-    public partial class VirtualCatletDrive
+    /// <summary> The CatletDrive. </summary>
+    public partial class CatletDrive
     {
-        /// <summary> Initializes a new instance of VirtualCatletDrive. </summary>
-        internal VirtualCatletDrive()
+        /// <summary> Initializes a new instance of CatletDrive. </summary>
+        internal CatletDrive()
         {
         }
 
-        /// <summary> Initializes a new instance of VirtualCatletDrive. </summary>
+        /// <summary> Initializes a new instance of CatletDrive. </summary>
         /// <param name="type"></param>
         /// <param name="attachedDiskId"></param>
-        internal VirtualCatletDrive(VirtualCatletDriveType? type, Guid? attachedDiskId)
+        internal CatletDrive(CatletDriveType? type, Guid? attachedDiskId)
         {
             Type = type;
             AttachedDiskId = attachedDiskId;
         }
 
         /// <summary> Gets the type. </summary>
-        public VirtualCatletDriveType? Type { get; }
+        public CatletDriveType? Type { get; }
         /// <summary> Gets the attached disk id. </summary>
         public Guid? AttachedDiskId { get; }
     }
