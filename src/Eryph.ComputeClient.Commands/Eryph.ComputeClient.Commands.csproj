@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netcoreapp3.1;net461</TargetFrameworks>
@@ -9,7 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Eryph.ClientRuntime.Powershell" Version="0.5.0" />
     <PackageReference Include="Eryph.ConfigModel.Catlets.Yaml" Version="0.1.0-PullRequest0037.44" />
-    <PackageReference Include="Eryph.ConfigModel.Networks.Yaml" Version="0.1.0-PullRequest0037.44" />
+    <PackageReference Include="Eryph.ConfigModel.Networks.Yaml" Version="0.1.0-PullRequest0037.48" />
     <PackageReference Include="Eryph.ConfigModel.System.Json" Version="0.1.0-PullRequest0037.44" />
     <PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
       <PrivateAssets>all</PrivateAssets>
