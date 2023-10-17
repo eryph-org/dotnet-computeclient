@@ -11,15 +11,15 @@ using Azure.Core;
 
 namespace Eryph.ComputeClient.Models
 {
-    public partial class VirtualCatletDrive
+    public partial class CatletDrive
     {
-        internal static VirtualCatletDrive DeserializeVirtualCatletDrive(JsonElement element)
+        internal static CatletDrive DeserializeCatletDrive(JsonElement element)
         {
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
-            Optional<VirtualCatletDriveType> type = default;
+            Optional<CatletDriveType> type = default;
             Optional<Guid> attachedDiskId = default;
             foreach (var property in element.EnumerateObject())
             {
@@ -29,7 +29,7 @@ namespace Eryph.ComputeClient.Models
                     {
                         continue;
                     }
-                    type = new VirtualCatletDriveType(property.Value.GetString());
+                    type = new CatletDriveType(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("attachedDiskId"u8))
@@ -42,7 +42,7 @@ namespace Eryph.ComputeClient.Models
                     continue;
                 }
             }
-            return new VirtualCatletDrive(Optional.ToNullable(type), Optional.ToNullable(attachedDiskId));
+            return new CatletDrive(Optional.ToNullable(type), Optional.ToNullable(attachedDiskId));
         }
     }
 }

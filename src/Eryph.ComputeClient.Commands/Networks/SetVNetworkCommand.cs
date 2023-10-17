@@ -5,6 +5,7 @@ using System.Text.Json;
 using Eryph.ComputeClient.Models;
 using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.Json;
+using Eryph.ConfigModel.Networks;
 using JetBrains.Annotations;
 
 namespace Eryph.ComputeClient.Commands.Networks

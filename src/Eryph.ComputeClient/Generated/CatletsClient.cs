@@ -149,6 +149,44 @@ namespace Eryph.ComputeClient
             }
         }
 
+        /// <summary> Get catlet configuration. </summary>
+        /// <param name="id"> The String to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Get the configuration of a catlet. </remarks>
+        public virtual async Task<Response<CatletConfiguration>> GetConfigAsync(string id, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("CatletsClient.GetConfig");
+            scope.Start();
+            try
+            {
+                return await RestClient.GetConfigAsync(id, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Get catlet configuration. </summary>
+        /// <param name="id"> The String to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Get the configuration of a catlet. </remarks>
+        public virtual Response<CatletConfiguration> GetConfig(string id, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("CatletsClient.GetConfig");
+            scope.Start();
+            try
+            {
+                return RestClient.GetConfig(id, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
         /// <summary> Starts a catlet. </summary>
         /// <param name="id"> The String to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>

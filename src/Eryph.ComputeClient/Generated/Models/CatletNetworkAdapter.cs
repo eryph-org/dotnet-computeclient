@@ -7,18 +7,18 @@
 
 namespace Eryph.ComputeClient.Models
 {
-    /// <summary> The VirtualCatletNetworkAdapter. </summary>
-    public partial class VirtualCatletNetworkAdapter
+    /// <summary> The CatletNetworkAdapter. </summary>
+    public partial class CatletNetworkAdapter
     {
-        /// <summary> Initializes a new instance of VirtualCatletNetworkAdapter. </summary>
-        internal VirtualCatletNetworkAdapter()
+        /// <summary> Initializes a new instance of CatletNetworkAdapter. </summary>
+        internal CatletNetworkAdapter()
         {
         }
 
-        /// <summary> Initializes a new instance of VirtualCatletNetworkAdapter. </summary>
+        /// <summary> Initializes a new instance of CatletNetworkAdapter. </summary>
         /// <param name="name"></param>
         /// <param name="macAddress"></param>
-        internal VirtualCatletNetworkAdapter(string name, string macAddress)
+        internal CatletNetworkAdapter(string name, string macAddress)
         {
             Name = name;
             MacAddress = macAddress;

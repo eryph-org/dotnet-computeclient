@@ -10,9 +10,9 @@ using Azure.Core;
 
 namespace Eryph.ComputeClient.Models
 {
-    public partial class VirtualCatletConfiguration
+    public partial class CatletConfiguration
     {
-        internal static VirtualCatletConfiguration DeserializeVirtualCatletConfiguration(JsonElement element)
+        internal static CatletConfiguration DeserializeCatletConfiguration(JsonElement element)
         {
             if (element.ValueKind == JsonValueKind.Null)
             {
@@ -27,7 +27,7 @@ namespace Eryph.ComputeClient.Models
                     continue;
                 }
             }
-            return new VirtualCatletConfiguration(configuration);
+            return new CatletConfiguration(configuration);
         }
     }
 }

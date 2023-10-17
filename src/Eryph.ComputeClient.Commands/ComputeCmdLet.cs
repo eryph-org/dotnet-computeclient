@@ -18,11 +18,38 @@ namespace Eryph.ComputeClient.Commands
     {
         protected ComputeClientsFactory Factory;
 
+        protected bool IsDebugEnabled
+        {
+            get
+            {
+                bool debug;
+                var containsDebug = MyInvocation.BoundParameters.ContainsKey("Debug");
+                if (containsDebug)
+                    debug = ((SwitchParameter)MyInvocation.BoundParameters["Debug"]).ToBool();
+                else
+                    debug = (ActionPreference)GetVariableValue("DebugPreference") != ActionPreference.SilentlyContinue;
+
+                return debug;
+            }
+        }
+
         protected override void BeginProcessing()
         {
             base.BeginProcessing();
+
+            var options = new EryphComputeClientOptions(GetClientCredentials())
+            {
+                Diagnostics =
+                {
+                    IsDistributedTracingEnabled = true,
+                    IsLoggingEnabled = IsDebugEnabled,
+                    IsLoggingContentEnabled = IsDebugEnabled
+                }
+            };
+
+
             Factory = new ComputeClientsFactory(
-                new EryphComputeClientOptions(GetClientCredentials()), GetEndpointUri("compute"));
+                options, GetEndpointUri("compute"));
 
         }
 

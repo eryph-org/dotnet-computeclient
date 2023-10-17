@@ -2,6 +2,7 @@
 using Eryph.ComputeClient.Models;
 using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.Json;
+using Eryph.ConfigModel.Networks;
 using Eryph.ConfigModel.Yaml;
 using JetBrains.Annotations;
 

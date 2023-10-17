@@ -62,31 +62,21 @@ namespace Eryph.ComputeClient.Models
             return new Project(id, name, tenantId);
         }
 
-        /// <summary> Initializes a new instance of VirtualNetwork. </summary>
-        /// <param name="id"></param>
-        /// <param name="name"></param>
-        /// <param name="projectId"></param>
-        /// <param name="projectName"></param>
-        /// <param name="tenantId"></param>
-        /// <param name="providerName"></param>
-        /// <param name="ipNetwork"></param>
-        /// <returns> A new <see cref="Models.VirtualNetwork"/> instance for mocking. </returns>
-        public static VirtualNetwork VirtualNetwork(string id = null, string name = null, string projectId = null, string projectName = null, string tenantId = null, string providerName = null, string ipNetwork = null)
-        {
-            return new VirtualNetwork(id, name, projectId, projectName, tenantId, providerName, ipNetwork);
-        }
-
         /// <summary> Initializes a new instance of Catlet. </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
         /// <param name="status"></param>
         /// <param name="networks"></param>
+        /// <param name="networkAdapters"></param>
+        /// <param name="drives"></param>
         /// <returns> A new <see cref="Models.Catlet"/> instance for mocking. </returns>
-        public static Catlet Catlet(string id = null, string name = null, CatletStatus? status = null, IEnumerable<CatletNetwork> networks = null)
+        public static Catlet Catlet(string id = null, string name = null, CatletStatus? status = null, IEnumerable<CatletNetwork> networks = null, IEnumerable<CatletNetworkAdapter> networkAdapters = null, IEnumerable<CatletDrive> drives = null)
         {
             networks ??= new List<CatletNetwork>();
+            networkAdapters ??= new List<CatletNetworkAdapter>();
+            drives ??= new List<CatletDrive>();
 
-            return new Catlet(id, name, status, networks?.ToList());
+            return new Catlet(id, name, status, networks?.ToList(), networkAdapters?.ToList(), drives?.ToList());
         }
 
         /// <summary> Initializes a new instance of CatletNetwork. </summary>
@@ -111,6 +101,24 @@ namespace Eryph.ComputeClient.Models
             return new CatletNetwork(name, provider, ipV4Addresses?.ToList(), ipV6Addresses?.ToList(), iPv4DefaultGateway, iPv6DefaultGateway, dnsServerAddresses?.ToList(), ipV4Subnets?.ToList(), ipV6Subnets?.ToList());
         }
 
+        /// <summary> Initializes a new instance of CatletNetworkAdapter. </summary>
+        /// <param name="name"></param>
+        /// <param name="macAddress"></param>
+        /// <returns> A new <see cref="Models.CatletNetworkAdapter"/> instance for mocking. </returns>
+        public static CatletNetworkAdapter CatletNetworkAdapter(string name = null, string macAddress = null)
+        {
+            return new CatletNetworkAdapter(name, macAddress);
+        }
+
+        /// <summary> Initializes a new instance of CatletDrive. </summary>
+        /// <param name="type"></param>
+        /// <param name="attachedDiskId"></param>
+        /// <returns> A new <see cref="Models.CatletDrive"/> instance for mocking. </returns>
+        public static CatletDrive CatletDrive(CatletDriveType? type = null, Guid? attachedDiskId = null)
+        {
+            return new CatletDrive(type, attachedDiskId);
+        }
+
         /// <summary> Initializes a new instance of VirtualDisk. </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
@@ -123,54 +131,33 @@ namespace Eryph.ComputeClient.Models
         /// <param name="parentId"></param>
         /// <param name="attachedDrives"></param>
         /// <returns> A new <see cref="Models.VirtualDisk"/> instance for mocking. </returns>
-        public static VirtualDisk VirtualDisk(Guid? id = null, string name = null, string storageIdentifier = null, string dataStore = null, string project = null, string environment = null, string path = null, long? sizeBytes = null, Guid? parentId = null, IEnumerable<VirtualCatletDrive> attachedDrives = null)
+        public static VirtualDisk VirtualDisk(Guid? id = null, string name = null, string storageIdentifier = null, string dataStore = null, string project = null, string environment = null, string path = null, long? sizeBytes = null, Guid? parentId = null, IEnumerable<CatletDrive> attachedDrives = null)
         {
-            attachedDrives ??= new List<VirtualCatletDrive>();
+            attachedDrives ??= new List<CatletDrive>();
 
             return new VirtualDisk(id, name, storageIdentifier, dataStore, project, environment, path, sizeBytes, parentId, attachedDrives?.ToList());
         }
 
-        /// <summary> Initializes a new instance of VirtualCatletDrive. </summary>
-        /// <param name="type"></param>
-        /// <param name="attachedDiskId"></param>
-        /// <returns> A new <see cref="Models.VirtualCatletDrive"/> instance for mocking. </returns>
-        public static VirtualCatletDrive VirtualCatletDrive(VirtualCatletDriveType? type = null, Guid? attachedDiskId = null)
-        {
-            return new VirtualCatletDrive(type, attachedDiskId);
-        }
-
-        /// <summary> Initializes a new instance of VirtualCatlet. </summary>
+        /// <summary> Initializes a new instance of VirtualNetwork. </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
-        /// <param name="status"></param>
-        /// <param name="networks"></param>
-        /// <param name="networkAdapters"></param>
-        /// <param name="drives"></param>
-        /// <returns> A new <see cref="Models.VirtualCatlet"/> instance for mocking. </returns>
-        public static VirtualCatlet VirtualCatlet(string id = null, string name = null, CatletStatus? status = null, IEnumerable<CatletNetwork> networks = null, IEnumerable<VirtualCatletNetworkAdapter> networkAdapters = null, IEnumerable<VirtualCatletDrive> drives = null)
+        /// <param name="projectId"></param>
+        /// <param name="projectName"></param>
+        /// <param name="tenantId"></param>
+        /// <param name="providerName"></param>
+        /// <param name="ipNetwork"></param>
+        /// <returns> A new <see cref="Models.VirtualNetwork"/> instance for mocking. </returns>
+        public static VirtualNetwork VirtualNetwork(string id = null, string name = null, string projectId = null, string projectName = null, string tenantId = null, string providerName = null, string ipNetwork = null)
         {
-            networks ??= new List<CatletNetwork>();
-            networkAdapters ??= new List<VirtualCatletNetworkAdapter>();
-            drives ??= new List<VirtualCatletDrive>();
-
-            return new VirtualCatlet(id, name, status, networks?.ToList(), networkAdapters?.ToList(), drives?.ToList());
+            return new VirtualNetwork(id, name, projectId, projectName, tenantId, providerName, ipNetwork);
         }
 
-        /// <summary> Initializes a new instance of VirtualCatletNetworkAdapter. </summary>
-        /// <param name="name"></param>
-        /// <param name="macAddress"></param>
-        /// <returns> A new <see cref="Models.VirtualCatletNetworkAdapter"/> instance for mocking. </returns>
-        public static VirtualCatletNetworkAdapter VirtualCatletNetworkAdapter(string name = null, string macAddress = null)
-        {
-            return new VirtualCatletNetworkAdapter(name, macAddress);
-        }
-
-        /// <summary> Initializes a new instance of VirtualCatletConfiguration. </summary>
+        /// <summary> Initializes a new instance of CatletConfiguration. </summary>
         /// <param name="configuration"> Anything. </param>
-        /// <returns> A new <see cref="Models.VirtualCatletConfiguration"/> instance for mocking. </returns>
-        public static VirtualCatletConfiguration VirtualCatletConfiguration(JsonElement configuration = default)
+        /// <returns> A new <see cref="Models.CatletConfiguration"/> instance for mocking. </returns>
+        public static CatletConfiguration CatletConfiguration(JsonElement configuration = default)
         {
-            return new VirtualCatletConfiguration(configuration);
+            return new CatletConfiguration(configuration);
         }
 
         /// <summary> Initializes a new instance of VirtualNetworkConfiguration. </summary>

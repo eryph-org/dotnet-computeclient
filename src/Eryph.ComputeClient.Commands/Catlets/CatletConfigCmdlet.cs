@@ -2,11 +2,14 @@
 using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.Yaml;
 using YamlDotNet.Core;
+using static Org.BouncyCastle.Math.EC.ECCurve;
+using System.Text.RegularExpressions;
 
 namespace Eryph.ComputeClient.Commands.Catlets
 {
     public class CatletConfigCmdlet : CatletCmdLet
     {
+
         protected static CatletConfig DeserializeConfigString(string configString)
         {
             configString = configString.Trim();
