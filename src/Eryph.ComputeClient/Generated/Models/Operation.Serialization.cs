@@ -25,6 +25,7 @@ namespace Eryph.ComputeClient.Models
             Optional<IReadOnlyList<OperationResource>> resources = default;
             Optional<IReadOnlyList<OperationLogEntry>> logEntries = default;
             Optional<IReadOnlyList<Project>> projects = default;
+            Optional<IReadOnlyList<OperationTask>> tasks = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("id"u8))
@@ -98,8 +99,22 @@ namespace Eryph.ComputeClient.Models
                     projects = array;
                     continue;
                 }
+                if (property.NameEquals("tasks"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    List<OperationTask> array = new List<OperationTask>();
+                    foreach (var item in property.Value.EnumerateArray())
+                    {
+                        array.Add(OperationTask.DeserializeOperationTask(item));
+                    }
+                    tasks = array;
+                    continue;
+                }
             }
-            return new Operation(id.Value, Optional.ToNullable(status), statusMessage.Value, Optional.ToList(resources), Optional.ToList(logEntries), Optional.ToList(projects));
+            return new Operation(id.Value, Optional.ToNullable(status), statusMessage.Value, Optional.ToList(resources), Optional.ToList(logEntries), Optional.ToList(projects), Optional.ToList(tasks));
         }
     }
 }

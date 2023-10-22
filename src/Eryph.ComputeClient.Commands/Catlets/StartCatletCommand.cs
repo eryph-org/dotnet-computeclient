@@ -32,14 +32,14 @@ namespace Eryph.ComputeClient.Commands.Catlets
         }
 
         [Parameter]
-        public SwitchParameter Wait
+        public SwitchParameter NoWait
         {
-            get => _wait;
-            set => _wait = value;
+            get => _nowait;
+            set => _nowait = value;
         }
 
         private bool _force;
-        private bool _wait;
+        private bool _nowait;
         private bool _yesToAll, _noToAll;
 
 
@@ -64,7 +64,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
                     continue;
                 }
 
-                WaitForOperation(Factory.CreateCatletsClient().Start(id), _wait, false, id);
+                WaitForOperation(Factory.CreateCatletsClient().Start(id), _nowait, false, id);
 
             }
 

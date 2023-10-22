@@ -1,5 +1,4 @@
-﻿using System;
-using Eryph.ComputeClient.Models;
+﻿using Eryph.ComputeClient.Models;
 using JetBrains.Annotations;
 
 namespace Eryph.ComputeClient.Commands.Catlets
@@ -12,9 +11,9 @@ namespace Eryph.ComputeClient.Commands.Catlets
             return Factory.CreateCatletsClient().Get(id);
         }
 
-        protected void WaitForOperation(Operation operation, bool wait, bool alwaysWriteMachine, string knownMachineId = default)
+        protected void WaitForOperation(Operation operation, bool noWait, bool alwaysWriteMachine, string knownMachineId = default)
         {
-            if (!wait)
+            if (noWait)
             {
                 if (knownMachineId == default || !alwaysWriteMachine)
                     WriteObject(operation);
@@ -23,14 +22,15 @@ namespace Eryph.ComputeClient.Commands.Catlets
                 return;
             }
 
+            WaitForOperation(operation, (op) => ResourceWriter(op, WriteCatlet));
+            return;
+
             void WriteCatlet(ResourceType resourceType, string id)
             {
                 if (resourceType == ResourceType.Catlet)
                     WriteObject(GetSingleCatlet(id));
 
             }
-
-            WaitForOperation(operation, (op) => ResourceWriter(op, WriteCatlet));
         }
     }
 }

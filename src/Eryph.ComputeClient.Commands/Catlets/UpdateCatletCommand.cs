@@ -24,13 +24,13 @@ namespace Eryph.ComputeClient.Commands.Catlets
         public string Config { get; set; }
 
         [Parameter]
-        public SwitchParameter Wait
+        public SwitchParameter NoWait
         {
-            get => _wait;
-            set => _wait = value;
+            get => _nowait;
+            set => _nowait = value;
         }
 
-        private bool _wait;
+        private bool _nowait;
 
 
         protected override void ProcessRecord()
@@ -40,7 +40,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
                 var config = DeserializeConfigString(Config);
                 WaitForOperation(Factory.CreateCatletsClient().Update(new UpdateCatletRequest(Guid.NewGuid(),
                         JsonSerializer.SerializeToElement(config), id))
-                    , _wait, true);
+                    , _nowait, true);
             }
 
         }

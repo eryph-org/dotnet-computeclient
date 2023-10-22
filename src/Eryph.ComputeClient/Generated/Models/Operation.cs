@@ -19,6 +19,7 @@ namespace Eryph.ComputeClient.Models
             Resources = new ChangeTrackingList<OperationResource>();
             LogEntries = new ChangeTrackingList<OperationLogEntry>();
             Projects = new ChangeTrackingList<Project>();
+            Tasks = new ChangeTrackingList<OperationTask>();
         }
 
         /// <summary> Initializes a new instance of Operation. </summary>
@@ -28,7 +29,8 @@ namespace Eryph.ComputeClient.Models
         /// <param name="resources"></param>
         /// <param name="logEntries"></param>
         /// <param name="projects"></param>
-        internal Operation(string id, OperationStatus? status, string statusMessage, IReadOnlyList<OperationResource> resources, IReadOnlyList<OperationLogEntry> logEntries, IReadOnlyList<Project> projects)
+        /// <param name="tasks"></param>
+        internal Operation(string id, OperationStatus? status, string statusMessage, IReadOnlyList<OperationResource> resources, IReadOnlyList<OperationLogEntry> logEntries, IReadOnlyList<Project> projects, IReadOnlyList<OperationTask> tasks)
         {
             Id = id;
             Status = status;
@@ -36,6 +38,7 @@ namespace Eryph.ComputeClient.Models
             Resources = resources;
             LogEntries = logEntries;
             Projects = projects;
+            Tasks = tasks;
         }
 
         /// <summary> Gets the id. </summary>
@@ -50,5 +53,7 @@ namespace Eryph.ComputeClient.Models
         public IReadOnlyList<OperationLogEntry> LogEntries { get; }
         /// <summary> Gets the projects. </summary>
         public IReadOnlyList<Project> Projects { get; }
+        /// <summary> Gets the tasks. </summary>
+        public IReadOnlyList<OperationTask> Tasks { get; }
     }
 }

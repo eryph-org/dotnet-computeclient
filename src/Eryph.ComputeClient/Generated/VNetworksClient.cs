@@ -8,6 +8,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Autorest.CSharp.Core;
 using Azure;
 using Azure.Core;
 using Azure.Core.Pipeline;
@@ -159,7 +160,7 @@ namespace Eryph.ComputeClient
         {
             HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(count, project);
             HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListNextPageRequest(nextLink, count, project);
-            return PageableHelpers.CreateAsyncPageable(FirstPageRequest, NextPageRequest, VirtualNetwork.DeserializeVirtualNetwork, _clientDiagnostics, _pipeline, "VNetworksClient.List", "value", "nextLink", cancellationToken);
+            return GeneratorPageableHelpers.CreateAsyncPageable(FirstPageRequest, NextPageRequest, VirtualNetwork.DeserializeVirtualNetwork, _clientDiagnostics, _pipeline, "VNetworksClient.List", "value", "nextLink", cancellationToken);
         }
 
         /// <summary> Get list of virtual networks. </summary>
@@ -170,7 +171,7 @@ namespace Eryph.ComputeClient
         {
             HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(count, project);
             HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListNextPageRequest(nextLink, count, project);
-            return PageableHelpers.CreatePageable(FirstPageRequest, NextPageRequest, VirtualNetwork.DeserializeVirtualNetwork, _clientDiagnostics, _pipeline, "VNetworksClient.List", "value", "nextLink", cancellationToken);
+            return GeneratorPageableHelpers.CreatePageable(FirstPageRequest, NextPageRequest, VirtualNetwork.DeserializeVirtualNetwork, _clientDiagnostics, _pipeline, "VNetworksClient.List", "value", "nextLink", cancellationToken);
         }
 
         /// <summary> Get list of virtual networks in a project. </summary>
@@ -185,7 +186,7 @@ namespace Eryph.ComputeClient
 
             HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListProjectRequest(project, count);
             HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListProjectNextPageRequest(nextLink, project, count);
-            return PageableHelpers.CreateAsyncPageable(FirstPageRequest, NextPageRequest, VirtualNetwork.DeserializeVirtualNetwork, _clientDiagnostics, _pipeline, "VNetworksClient.ListProject", "value", "nextLink", cancellationToken);
+            return GeneratorPageableHelpers.CreateAsyncPageable(FirstPageRequest, NextPageRequest, VirtualNetwork.DeserializeVirtualNetwork, _clientDiagnostics, _pipeline, "VNetworksClient.ListProject", "value", "nextLink", cancellationToken);
         }
 
         /// <summary> Get list of virtual networks in a project. </summary>
@@ -200,7 +201,7 @@ namespace Eryph.ComputeClient
 
             HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListProjectRequest(project, count);
             HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListProjectNextPageRequest(nextLink, project, count);
-            return PageableHelpers.CreatePageable(FirstPageRequest, NextPageRequest, VirtualNetwork.DeserializeVirtualNetwork, _clientDiagnostics, _pipeline, "VNetworksClient.ListProject", "value", "nextLink", cancellationToken);
+            return GeneratorPageableHelpers.CreatePageable(FirstPageRequest, NextPageRequest, VirtualNetwork.DeserializeVirtualNetwork, _clientDiagnostics, _pipeline, "VNetworksClient.ListProject", "value", "nextLink", cancellationToken);
         }
     }
 }

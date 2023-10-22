@@ -20,6 +20,7 @@ namespace Eryph.ComputeClient.Models
                 return null;
             }
             Optional<string> id = default;
+            Optional<string> taskId = default;
             Optional<string> message = default;
             Optional<DateTimeOffset> timestamp = default;
             foreach (var property in element.EnumerateObject())
@@ -32,6 +33,16 @@ namespace Eryph.ComputeClient.Models
                         continue;
                     }
                     id = property.Value.GetString();
+                    continue;
+                }
+                if (property.NameEquals("taskId"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        taskId = null;
+                        continue;
+                    }
+                    taskId = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("message"u8))
@@ -54,7 +65,7 @@ namespace Eryph.ComputeClient.Models
                     continue;
                 }
             }
-            return new OperationLogEntry(id.Value, message.Value, Optional.ToNullable(timestamp));
+            return new OperationLogEntry(id.Value, taskId.Value, message.Value, Optional.ToNullable(timestamp));
         }
     }
 }

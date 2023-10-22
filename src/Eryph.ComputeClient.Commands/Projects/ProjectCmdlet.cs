@@ -6,9 +6,9 @@ namespace Eryph.ComputeClient.Commands.Projects
 {
     public class ProjectCmdlet : ComputeCmdLet
     {
-        protected void WaitForProject(Operation operation, bool wait, bool preferWriteProject, string knownProjectId = default)
+        protected void WaitForProject(Operation operation, bool noWait, bool preferWriteProject, string knownProjectId = default)
         {
-            if (!wait)
+            if (noWait)
             {
                 if (knownProjectId == default || !preferWriteProject)
                     WriteObject(operation);

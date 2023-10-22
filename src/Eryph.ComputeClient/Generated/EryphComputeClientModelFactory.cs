@@ -22,14 +22,16 @@ namespace Eryph.ComputeClient.Models
         /// <param name="resources"></param>
         /// <param name="logEntries"></param>
         /// <param name="projects"></param>
+        /// <param name="tasks"></param>
         /// <returns> A new <see cref="Models.Operation"/> instance for mocking. </returns>
-        public static Operation Operation(string id = null, OperationStatus? status = null, string statusMessage = null, IEnumerable<OperationResource> resources = null, IEnumerable<OperationLogEntry> logEntries = null, IEnumerable<Project> projects = null)
+        public static Operation Operation(string id = null, OperationStatus? status = null, string statusMessage = null, IEnumerable<OperationResource> resources = null, IEnumerable<OperationLogEntry> logEntries = null, IEnumerable<Project> projects = null, IEnumerable<OperationTask> tasks = null)
         {
             resources ??= new List<OperationResource>();
             logEntries ??= new List<OperationLogEntry>();
             projects ??= new List<Project>();
+            tasks ??= new List<OperationTask>();
 
-            return new Operation(id, status, statusMessage, resources?.ToList(), logEntries?.ToList(), projects?.ToList());
+            return new Operation(id, status, statusMessage, resources?.ToList(), logEntries?.ToList(), projects?.ToList(), tasks?.ToList());
         }
 
         /// <summary> Initializes a new instance of OperationResource. </summary>
@@ -44,12 +46,13 @@ namespace Eryph.ComputeClient.Models
 
         /// <summary> Initializes a new instance of OperationLogEntry. </summary>
         /// <param name="id"></param>
+        /// <param name="taskId"></param>
         /// <param name="message"></param>
         /// <param name="timestamp"></param>
         /// <returns> A new <see cref="Models.OperationLogEntry"/> instance for mocking. </returns>
-        public static OperationLogEntry OperationLogEntry(string id = null, string message = null, DateTimeOffset? timestamp = null)
+        public static OperationLogEntry OperationLogEntry(string id = null, string taskId = null, string message = null, DateTimeOffset? timestamp = null)
         {
-            return new OperationLogEntry(id, message, timestamp);
+            return new OperationLogEntry(id, taskId, message, timestamp);
         }
 
         /// <summary> Initializes a new instance of Project. </summary>
@@ -60,6 +63,19 @@ namespace Eryph.ComputeClient.Models
         public static Project Project(string id = null, string name = null, string tenantId = null)
         {
             return new Project(id, name, tenantId);
+        }
+
+        /// <summary> Initializes a new instance of OperationTask. </summary>
+        /// <param name="id"></param>
+        /// <param name="parentTask"></param>
+        /// <param name="name"></param>
+        /// <param name="displayName"></param>
+        /// <param name="progress"></param>
+        /// <param name="status"></param>
+        /// <returns> A new <see cref="Models.OperationTask"/> instance for mocking. </returns>
+        public static OperationTask OperationTask(string id = null, string parentTask = null, string name = null, string displayName = null, int? progress = null, OperationTaskStatus? status = null)
+        {
+            return new OperationTask(id, parentTask, name, displayName, progress, status);
         }
 
         /// <summary> Initializes a new instance of Catlet. </summary>

@@ -8,6 +8,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Autorest.CSharp.Core;
 using Azure;
 using Azure.Core;
 using Azure.Core.Pipeline;
@@ -195,7 +196,7 @@ namespace Eryph.ComputeClient
         {
             HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(count, project);
             HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListNextPageRequest(nextLink, count, project);
-            return PageableHelpers.CreateAsyncPageable(FirstPageRequest, NextPageRequest, Project.DeserializeProject, _clientDiagnostics, _pipeline, "ProjectsClient.List", "value", "nextLink", cancellationToken);
+            return GeneratorPageableHelpers.CreateAsyncPageable(FirstPageRequest, NextPageRequest, Project.DeserializeProject, _clientDiagnostics, _pipeline, "ProjectsClient.List", "value", "nextLink", cancellationToken);
         }
 
         /// <summary> List all projects. </summary>
@@ -206,7 +207,7 @@ namespace Eryph.ComputeClient
         {
             HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(count, project);
             HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListNextPageRequest(nextLink, count, project);
-            return PageableHelpers.CreatePageable(FirstPageRequest, NextPageRequest, Project.DeserializeProject, _clientDiagnostics, _pipeline, "ProjectsClient.List", "value", "nextLink", cancellationToken);
+            return GeneratorPageableHelpers.CreatePageable(FirstPageRequest, NextPageRequest, Project.DeserializeProject, _clientDiagnostics, _pipeline, "ProjectsClient.List", "value", "nextLink", cancellationToken);
         }
     }
 }

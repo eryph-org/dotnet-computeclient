@@ -30,17 +30,17 @@ namespace Eryph.ComputeClient.Commands.Networks
         public string Config { get; set; }
 
         [Parameter]
-        public SwitchParameter Wait
+        public SwitchParameter NoWait
         {
-            get => _wait;
-            set => _wait = value;
+            get => _nowait;
+            set => _nowait = value;
         }
 
         [Parameter]
         [ValidateNotNullOrEmpty]
         public string ProjectName { get; set; }
 
-        private bool _wait;
+        private bool _nowait;
         private StringBuilder _input = new StringBuilder();
 
 
@@ -80,7 +80,7 @@ namespace Eryph.ComputeClient.Commands.Networks
                 .Create(
                     new UpdateProjectNetworksRequest(Guid.NewGuid(),
                        JsonSerializer.SerializeToElement(config, 
-                           ConfigModelJsonSerializer.DefaultOptions))), _wait, false);
+                           ConfigModelJsonSerializer.DefaultOptions))), _nowait, false);
         }
     }
 

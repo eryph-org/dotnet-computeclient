@@ -16,7 +16,7 @@ using Eryph.ComputeClient.Models;
 
 namespace Eryph.ComputeClient
 {
-    internal partial class RestClient
+    internal partial class OperationsRestClient
     {
         private readonly HttpPipeline _pipeline;
         private readonly Uri _endpoint;
@@ -24,16 +24,16 @@ namespace Eryph.ComputeClient
         /// <summary> The ClientDiagnostics is used to provide tracing support for the client library. </summary>
         internal ClientDiagnostics ClientDiagnostics { get; }
 
-        /// <summary> Initializes a new instance of RestClient. </summary>
+        /// <summary> Initializes a new instance of OperationsRestClient. </summary>
         /// <param name="clientDiagnostics"> The handler for diagnostic messaging in the client. </param>
         /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
         /// <param name="endpoint"> server parameter. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="clientDiagnostics"/> or <paramref name="pipeline"/> is null. </exception>
-        public RestClient(ClientDiagnostics clientDiagnostics, HttpPipeline pipeline, Uri endpoint = null)
+        public OperationsRestClient(ClientDiagnostics clientDiagnostics, HttpPipeline pipeline, Uri endpoint = null)
         {
             ClientDiagnostics = clientDiagnostics ?? throw new ArgumentNullException(nameof(clientDiagnostics));
             _pipeline = pipeline ?? throw new ArgumentNullException(nameof(pipeline));
-            _endpoint = endpoint ?? new Uri("https://localhost:60632/compute");
+            _endpoint = endpoint ?? new Uri("https://localhost:52712/compute");
         }
 
         internal HttpMessage CreateGetRequest(string id, DateTimeOffset? logTimeStamp, string expand)

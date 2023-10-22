@@ -8,6 +8,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Autorest.CSharp.Core;
 using Azure;
 using Azure.Core;
 using Azure.Core.Pipeline;
@@ -15,26 +16,26 @@ using Eryph.ComputeClient.Models;
 
 namespace Eryph.ComputeClient
 {
-    /// <summary> The  service client. </summary>
-    public partial class Client
+    /// <summary> The Operations service client. </summary>
+    public partial class OperationsClient
     {
         private readonly ClientDiagnostics _clientDiagnostics;
         private readonly HttpPipeline _pipeline;
-        internal RestClient RestClient { get; }
+        internal OperationsRestClient RestClient { get; }
 
-        /// <summary> Initializes a new instance of Client for mocking. </summary>
-        protected Client()
+        /// <summary> Initializes a new instance of OperationsClient for mocking. </summary>
+        protected OperationsClient()
         {
         }
 
-        /// <summary> Initializes a new instance of Client. </summary>
+        /// <summary> Initializes a new instance of OperationsClient. </summary>
         /// <param name="clientDiagnostics"> The handler for diagnostic messaging in the client. </param>
         /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
         /// <param name="endpoint"> server parameter. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="clientDiagnostics"/> or <paramref name="pipeline"/> is null. </exception>
-        internal Client(ClientDiagnostics clientDiagnostics, HttpPipeline pipeline, Uri endpoint = null)
+        internal OperationsClient(ClientDiagnostics clientDiagnostics, HttpPipeline pipeline, Uri endpoint = null)
         {
-            RestClient = new RestClient(clientDiagnostics, pipeline, endpoint);
+            RestClient = new OperationsRestClient(clientDiagnostics, pipeline, endpoint);
             _clientDiagnostics = clientDiagnostics;
             _pipeline = pipeline;
         }
@@ -46,7 +47,7 @@ namespace Eryph.ComputeClient
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response<Models.Operation>> GetAsync(string id, DateTimeOffset? logTimeStamp = null, string expand = null, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("Client.Get");
+            using var scope = _clientDiagnostics.CreateScope("OperationsClient.Get");
             scope.Start();
             try
             {
@@ -66,7 +67,7 @@ namespace Eryph.ComputeClient
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response<Models.Operation> Get(string id, DateTimeOffset? logTimeStamp = null, string expand = null, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("Client.Get");
+            using var scope = _clientDiagnostics.CreateScope("OperationsClient.Get");
             scope.Start();
             try
             {
@@ -89,7 +90,7 @@ namespace Eryph.ComputeClient
         {
             HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(logTimeStamp, expand, count, project);
             HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListNextPageRequest(nextLink, logTimeStamp, expand, count, project);
-            return PageableHelpers.CreateAsyncPageable(FirstPageRequest, NextPageRequest, Models.Operation.DeserializeOperation, _clientDiagnostics, _pipeline, "Client.List", "value", "nextLink", cancellationToken);
+            return GeneratorPageableHelpers.CreateAsyncPageable(FirstPageRequest, NextPageRequest, Models.Operation.DeserializeOperation, _clientDiagnostics, _pipeline, "OperationsClient.List", "value", "nextLink", cancellationToken);
         }
 
         /// <summary> List all Operations. </summary>
@@ -102,7 +103,7 @@ namespace Eryph.ComputeClient
         {
             HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(logTimeStamp, expand, count, project);
             HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListNextPageRequest(nextLink, logTimeStamp, expand, count, project);
-            return PageableHelpers.CreatePageable(FirstPageRequest, NextPageRequest, Models.Operation.DeserializeOperation, _clientDiagnostics, _pipeline, "Client.List", "value", "nextLink", cancellationToken);
+            return GeneratorPageableHelpers.CreatePageable(FirstPageRequest, NextPageRequest, Models.Operation.DeserializeOperation, _clientDiagnostics, _pipeline, "OperationsClient.List", "value", "nextLink", cancellationToken);
         }
     }
 }
