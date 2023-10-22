@@ -19,7 +19,7 @@ namespace Eryph.ComputeClient
             _endpoint = endpoint;
         }
 
-        public Client CreateOperationsClient(string? scopes = null) =>
+        public OperationsClient CreateOperationsClient(string? scopes = null) =>
             new(new ClientDiagnostics(_options), _options.BuildHttpPipeline(_options.ClientCredentials, scopes), _endpoint);
 
         public ProjectsClient CreateProjectsClient(string? scopes = null) =>

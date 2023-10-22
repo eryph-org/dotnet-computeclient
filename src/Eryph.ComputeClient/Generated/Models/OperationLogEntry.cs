@@ -19,17 +19,21 @@ namespace Eryph.ComputeClient.Models
 
         /// <summary> Initializes a new instance of OperationLogEntry. </summary>
         /// <param name="id"></param>
+        /// <param name="taskId"></param>
         /// <param name="message"></param>
         /// <param name="timestamp"></param>
-        internal OperationLogEntry(string id, string message, DateTimeOffset? timestamp)
+        internal OperationLogEntry(string id, string taskId, string message, DateTimeOffset? timestamp)
         {
             Id = id;
+            TaskId = taskId;
             Message = message;
             Timestamp = timestamp;
         }
 
         /// <summary> Gets the id. </summary>
         public string Id { get; }
+        /// <summary> Gets the task id. </summary>
+        public string TaskId { get; }
         /// <summary> Gets the message. </summary>
         public string Message { get; }
         /// <summary> Gets the timestamp. </summary>

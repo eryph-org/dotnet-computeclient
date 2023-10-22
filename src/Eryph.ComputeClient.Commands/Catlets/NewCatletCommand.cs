@@ -30,10 +30,10 @@ namespace Eryph.ComputeClient.Commands.Catlets
         public string Config { get; set; }
 
         [Parameter]
-        public SwitchParameter Wait
+        public SwitchParameter NoWait
         {
-            get => _wait;
-            set => _wait = value;
+            get => _noWait;
+            set => _noWait = value;
         }
 
         [Parameter]
@@ -48,7 +48,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
         [ValidateNotNullOrEmpty]
         public string Name { get; set; }
 
-        private bool _wait;
+        private bool _noWait;
         private StringBuilder _input = new StringBuilder();
 
         protected override void ProcessRecord()
@@ -101,7 +101,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
                 .Create(
                     new NewCatletRequest(Guid.NewGuid(),
                        JsonSerializer.SerializeToElement(config, 
-                           ConfigModelJsonSerializer.DefaultOptions))), _wait, true);
+                           ConfigModelJsonSerializer.DefaultOptions))), _noWait, true);
         }
     }
 

@@ -67,7 +67,6 @@ namespace Eryph.ComputeClient.Commands.Catlets
 
         private void WriteConfig(CatletConfiguration config)
         {
-            var configString = config.ToString();
             var catletConfig = CatletConfigDictionaryConverter.Convert(
                 ConfigModelJsonSerializer.DeserializeToDictionary(config.Configuration));
 

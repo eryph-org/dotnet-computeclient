@@ -12,9 +12,9 @@ namespace Eryph.ComputeClient.Commands.Networks
         }
 
 
-        protected void WaitForOperation(Operation operation, bool wait, bool alwaysWriteNetwork, string knownNetworkId = default)
+        protected void WaitForOperation(Operation operation, bool noWait, bool alwaysWriteNetwork, string knownNetworkId = default)
         {
-            if (!wait)
+            if (noWait)
             {
                 if (knownNetworkId == default || !alwaysWriteNetwork)
                     WriteObject(operation);
@@ -23,14 +23,15 @@ namespace Eryph.ComputeClient.Commands.Networks
                 return;
             }
 
+            WaitForOperation(operation, (op) => ResourceWriter(op, Write));
+            return;
+
             void Write(ResourceType resourceType, string id)
             {
                 if (resourceType == ResourceType.VirtualNetwork)
                     WriteObject(GetSingleNetwork(id));
 
             }
-
-            WaitForOperation(operation, (op) => ResourceWriter(op, Write));
         }
     }
 }
