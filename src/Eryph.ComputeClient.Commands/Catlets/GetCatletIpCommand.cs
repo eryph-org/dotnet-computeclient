@@ -8,7 +8,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
 {
     [PublicAPI]
     [Cmdlet(VerbsCommon.Get, "CatletIp", DefaultParameterSetName = "get")]
-    [OutputType(typeof(FloatingNetworkPort), ParameterSetName = new[] { "get" })]
+    [OutputType(typeof(NetworkPortIp), ParameterSetName = new[] { "get" })]
     public class GetCatletIpCommand : CatletCmdLet
     {
         [Parameter(
