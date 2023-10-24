@@ -99,22 +99,33 @@ namespace Eryph.ComputeClient.Models
         /// <param name="name"></param>
         /// <param name="provider"></param>
         /// <param name="ipV4Addresses"></param>
-        /// <param name="ipV6Addresses"></param>
         /// <param name="iPv4DefaultGateway"></param>
-        /// <param name="iPv6DefaultGateway"></param>
         /// <param name="dnsServerAddresses"></param>
         /// <param name="ipV4Subnets"></param>
-        /// <param name="ipV6Subnets"></param>
+        /// <param name="floatingPort"></param>
         /// <returns> A new <see cref="Models.CatletNetwork"/> instance for mocking. </returns>
-        public static CatletNetwork CatletNetwork(string name = null, string provider = null, IEnumerable<string> ipV4Addresses = null, IEnumerable<string> ipV6Addresses = null, string iPv4DefaultGateway = null, string iPv6DefaultGateway = null, IEnumerable<string> dnsServerAddresses = null, IEnumerable<string> ipV4Subnets = null, IEnumerable<string> ipV6Subnets = null)
+        public static CatletNetwork CatletNetwork(string name = null, string provider = null, IEnumerable<string> ipV4Addresses = null, string iPv4DefaultGateway = null, IEnumerable<string> dnsServerAddresses = null, IEnumerable<string> ipV4Subnets = null, FloatingNetworkPort floatingPort = null)
         {
             ipV4Addresses ??= new List<string>();
-            ipV6Addresses ??= new List<string>();
             dnsServerAddresses ??= new List<string>();
             ipV4Subnets ??= new List<string>();
-            ipV6Subnets ??= new List<string>();
 
-            return new CatletNetwork(name, provider, ipV4Addresses?.ToList(), ipV6Addresses?.ToList(), iPv4DefaultGateway, iPv6DefaultGateway, dnsServerAddresses?.ToList(), ipV4Subnets?.ToList(), ipV6Subnets?.ToList());
+            return new CatletNetwork(name, provider, ipV4Addresses?.ToList(), iPv4DefaultGateway, dnsServerAddresses?.ToList(), ipV4Subnets?.ToList(), floatingPort);
+        }
+
+        /// <summary> Initializes a new instance of FloatingNetworkPort. </summary>
+        /// <param name="name"></param>
+        /// <param name="provider"></param>
+        /// <param name="subnet"></param>
+        /// <param name="ipV4Addresses"></param>
+        /// <param name="ipV4Subnets"></param>
+        /// <returns> A new <see cref="Models.FloatingNetworkPort"/> instance for mocking. </returns>
+        public static FloatingNetworkPort FloatingNetworkPort(string name = null, string provider = null, string subnet = null, IEnumerable<string> ipV4Addresses = null, IEnumerable<string> ipV4Subnets = null)
+        {
+            ipV4Addresses ??= new List<string>();
+            ipV4Subnets ??= new List<string>();
+
+            return new FloatingNetworkPort(name, provider, subnet, ipV4Addresses?.ToList(), ipV4Subnets?.ToList());
         }
 
         /// <summary> Initializes a new instance of CatletNetworkAdapter. </summary>

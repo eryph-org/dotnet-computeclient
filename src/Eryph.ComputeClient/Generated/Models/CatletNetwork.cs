@@ -17,33 +17,27 @@ namespace Eryph.ComputeClient.Models
         internal CatletNetwork()
         {
             IpV4Addresses = new ChangeTrackingList<string>();
-            IpV6Addresses = new ChangeTrackingList<string>();
             DnsServerAddresses = new ChangeTrackingList<string>();
             IpV4Subnets = new ChangeTrackingList<string>();
-            IpV6Subnets = new ChangeTrackingList<string>();
         }
 
         /// <summary> Initializes a new instance of CatletNetwork. </summary>
         /// <param name="name"></param>
         /// <param name="provider"></param>
         /// <param name="ipV4Addresses"></param>
-        /// <param name="ipV6Addresses"></param>
         /// <param name="iPv4DefaultGateway"></param>
-        /// <param name="iPv6DefaultGateway"></param>
         /// <param name="dnsServerAddresses"></param>
         /// <param name="ipV4Subnets"></param>
-        /// <param name="ipV6Subnets"></param>
-        internal CatletNetwork(string name, string provider, IReadOnlyList<string> ipV4Addresses, IReadOnlyList<string> ipV6Addresses, string iPv4DefaultGateway, string iPv6DefaultGateway, IReadOnlyList<string> dnsServerAddresses, IReadOnlyList<string> ipV4Subnets, IReadOnlyList<string> ipV6Subnets)
+        /// <param name="floatingPort"></param>
+        internal CatletNetwork(string name, string provider, IReadOnlyList<string> ipV4Addresses, string iPv4DefaultGateway, IReadOnlyList<string> dnsServerAddresses, IReadOnlyList<string> ipV4Subnets, FloatingNetworkPort floatingPort)
         {
             Name = name;
             Provider = provider;
             IpV4Addresses = ipV4Addresses;
-            IpV6Addresses = ipV6Addresses;
             IPv4DefaultGateway = iPv4DefaultGateway;
-            IPv6DefaultGateway = iPv6DefaultGateway;
             DnsServerAddresses = dnsServerAddresses;
             IpV4Subnets = ipV4Subnets;
-            IpV6Subnets = ipV6Subnets;
+            FloatingPort = floatingPort;
         }
 
         /// <summary> Gets the name. </summary>
@@ -52,17 +46,13 @@ namespace Eryph.ComputeClient.Models
         public string Provider { get; }
         /// <summary> Gets the ip v 4 addresses. </summary>
         public IReadOnlyList<string> IpV4Addresses { get; }
-        /// <summary> Gets the ip v 6 addresses. </summary>
-        public IReadOnlyList<string> IpV6Addresses { get; }
         /// <summary> Gets the i pv 4 default gateway. </summary>
         public string IPv4DefaultGateway { get; }
-        /// <summary> Gets the i pv 6 default gateway. </summary>
-        public string IPv6DefaultGateway { get; }
         /// <summary> Gets the dns server addresses. </summary>
         public IReadOnlyList<string> DnsServerAddresses { get; }
         /// <summary> Gets the ip v 4 subnets. </summary>
         public IReadOnlyList<string> IpV4Subnets { get; }
-        /// <summary> Gets the ip v 6 subnets. </summary>
-        public IReadOnlyList<string> IpV6Subnets { get; }
+        /// <summary> Gets the floating port. </summary>
+        public FloatingNetworkPort FloatingPort { get; }
     }
 }

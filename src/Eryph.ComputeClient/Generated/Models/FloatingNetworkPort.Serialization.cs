@@ -11,9 +11,9 @@ using Azure.Core;
 
 namespace Eryph.ComputeClient.Models
 {
-    public partial class CatletNetwork
+    public partial class FloatingNetworkPort
     {
-        internal static CatletNetwork DeserializeCatletNetwork(JsonElement element)
+        internal static FloatingNetworkPort DeserializeFloatingNetworkPort(JsonElement element)
         {
             if (element.ValueKind == JsonValueKind.Null)
             {
@@ -21,11 +21,9 @@ namespace Eryph.ComputeClient.Models
             }
             Optional<string> name = default;
             Optional<string> provider = default;
+            Optional<string> subnet = default;
             Optional<IReadOnlyList<string>> ipV4Addresses = default;
-            Optional<string> iPv4DefaultGateway = default;
-            Optional<IReadOnlyList<string>> dnsServerAddresses = default;
             Optional<IReadOnlyList<string>> ipV4Subnets = default;
-            Optional<FloatingNetworkPort> floatingPort = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("name"u8))
@@ -48,6 +46,16 @@ namespace Eryph.ComputeClient.Models
                     provider = property.Value.GetString();
                     continue;
                 }
+                if (property.NameEquals("subnet"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        subnet = null;
+                        continue;
+                    }
+                    subnet = property.Value.GetString();
+                    continue;
+                }
                 if (property.NameEquals("ipV4Addresses"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
@@ -60,30 +68,6 @@ namespace Eryph.ComputeClient.Models
                         array.Add(item.GetString());
                     }
                     ipV4Addresses = array;
-                    continue;
-                }
-                if (property.NameEquals("iPv4DefaultGateway"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        iPv4DefaultGateway = null;
-                        continue;
-                    }
-                    iPv4DefaultGateway = property.Value.GetString();
-                    continue;
-                }
-                if (property.NameEquals("dnsServerAddresses"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    List<string> array = new List<string>();
-                    foreach (var item in property.Value.EnumerateArray())
-                    {
-                        array.Add(item.GetString());
-                    }
-                    dnsServerAddresses = array;
                     continue;
                 }
                 if (property.NameEquals("ipV4Subnets"u8))
@@ -100,17 +84,8 @@ namespace Eryph.ComputeClient.Models
                     ipV4Subnets = array;
                     continue;
                 }
-                if (property.NameEquals("floatingPort"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
-                    floatingPort = FloatingNetworkPort.DeserializeFloatingNetworkPort(property.Value);
-                    continue;
-                }
             }
-            return new CatletNetwork(name.Value, provider.Value, Optional.ToList(ipV4Addresses), iPv4DefaultGateway.Value, Optional.ToList(dnsServerAddresses), Optional.ToList(ipV4Subnets), floatingPort.Value);
+            return new FloatingNetworkPort(name.Value, provider.Value, subnet.Value, Optional.ToList(ipV4Addresses), Optional.ToList(ipV4Subnets));
         }
     }
 }
