@@ -5,6 +5,9 @@ resources:
     name: eryph-org/build
     endpoint: eryph-org
 
+trigger:
+- main
+- refs/tags/v*
 
 extends:
   template: pipelines/templates/dotnetclient.yml@build
