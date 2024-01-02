@@ -10,12 +10,12 @@ namespace Eryph.ComputeClient.Models
     /// <summary> The VirtualNetwork. </summary>
     public partial class VirtualNetwork
     {
-        /// <summary> Initializes a new instance of VirtualNetwork. </summary>
+        /// <summary> Initializes a new instance of <see cref="VirtualNetwork"/>. </summary>
         internal VirtualNetwork()
         {
         }
 
-        /// <summary> Initializes a new instance of VirtualNetwork. </summary>
+        /// <summary> Initializes a new instance of <see cref="VirtualNetwork"/>. </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
         /// <param name="projectId"></param>

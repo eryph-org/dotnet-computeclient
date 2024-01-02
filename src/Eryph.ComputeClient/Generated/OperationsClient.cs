@@ -41,9 +41,9 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Get a operation. </summary>
-        /// <param name="id"> The String to use. </param>
-        /// <param name="logTimeStamp"> The DateTimeISO8601 to use. </param>
-        /// <param name="expand"> The String to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="logTimeStamp"> The <see cref="DateTimeOffset"/>? to use. </param>
+        /// <param name="expand"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response<Models.Operation>> GetAsync(string id, DateTimeOffset? logTimeStamp = null, string expand = null, CancellationToken cancellationToken = default)
         {
@@ -61,9 +61,9 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Get a operation. </summary>
-        /// <param name="id"> The String to use. </param>
-        /// <param name="logTimeStamp"> The DateTimeISO8601 to use. </param>
-        /// <param name="expand"> The String to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="logTimeStamp"> The <see cref="DateTimeOffset"/>? to use. </param>
+        /// <param name="expand"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response<Models.Operation> Get(string id, DateTimeOffset? logTimeStamp = null, string expand = null, CancellationToken cancellationToken = default)
         {
@@ -81,10 +81,10 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> List all Operations. </summary>
-        /// <param name="logTimeStamp"> The DateTimeISO8601 to use. </param>
-        /// <param name="expand"> The String to use. </param>
-        /// <param name="count"> The Boolean to use. </param>
-        /// <param name="project"> The String to use. </param>
+        /// <param name="logTimeStamp"> The <see cref="DateTimeOffset"/>? to use. </param>
+        /// <param name="expand"> The <see cref="string"/> to use. </param>
+        /// <param name="count"> The <see cref="bool"/>? to use. </param>
+        /// <param name="project"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual AsyncPageable<Models.Operation> ListAsync(DateTimeOffset? logTimeStamp = null, string expand = null, bool? count = null, string project = null, CancellationToken cancellationToken = default)
         {
@@ -94,10 +94,10 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> List all Operations. </summary>
-        /// <param name="logTimeStamp"> The DateTimeISO8601 to use. </param>
-        /// <param name="expand"> The String to use. </param>
-        /// <param name="count"> The Boolean to use. </param>
-        /// <param name="project"> The String to use. </param>
+        /// <param name="logTimeStamp"> The <see cref="DateTimeOffset"/>? to use. </param>
+        /// <param name="expand"> The <see cref="string"/> to use. </param>
+        /// <param name="count"> The <see cref="bool"/>? to use. </param>
+        /// <param name="project"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Pageable<Models.Operation> List(DateTimeOffset? logTimeStamp = null, string expand = null, bool? count = null, string project = null, CancellationToken cancellationToken = default)
         {

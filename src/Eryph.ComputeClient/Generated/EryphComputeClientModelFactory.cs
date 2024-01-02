@@ -15,7 +15,7 @@ namespace Eryph.ComputeClient.Models
     /// <summary> Model factory for models. </summary>
     public static partial class EryphComputeClientModelFactory
     {
-        /// <summary> Initializes a new instance of Operation. </summary>
+        /// <summary> Initializes a new instance of <see cref="Models.Operation"/>. </summary>
         /// <param name="id"></param>
         /// <param name="status"></param>
         /// <param name="statusMessage"></param>
@@ -34,7 +34,7 @@ namespace Eryph.ComputeClient.Models
             return new Operation(id, status, statusMessage, resources?.ToList(), logEntries?.ToList(), projects?.ToList(), tasks?.ToList());
         }
 
-        /// <summary> Initializes a new instance of OperationResource. </summary>
+        /// <summary> Initializes a new instance of <see cref="Models.OperationResource"/>. </summary>
         /// <param name="id"></param>
         /// <param name="resourceId"></param>
         /// <param name="resourceType"></param>
@@ -44,7 +44,7 @@ namespace Eryph.ComputeClient.Models
             return new OperationResource(id, resourceId, resourceType);
         }
 
-        /// <summary> Initializes a new instance of OperationLogEntry. </summary>
+        /// <summary> Initializes a new instance of <see cref="Models.OperationLogEntry"/>. </summary>
         /// <param name="id"></param>
         /// <param name="taskId"></param>
         /// <param name="message"></param>
@@ -55,7 +55,7 @@ namespace Eryph.ComputeClient.Models
             return new OperationLogEntry(id, taskId, message, timestamp);
         }
 
-        /// <summary> Initializes a new instance of Project. </summary>
+        /// <summary> Initializes a new instance of <see cref="Models.Project"/>. </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
         /// <param name="tenantId"></param>
@@ -65,7 +65,7 @@ namespace Eryph.ComputeClient.Models
             return new Project(id, name, tenantId);
         }
 
-        /// <summary> Initializes a new instance of OperationTask. </summary>
+        /// <summary> Initializes a new instance of <see cref="Models.OperationTask"/>. </summary>
         /// <param name="id"></param>
         /// <param name="parentTask"></param>
         /// <param name="name"></param>
@@ -78,7 +78,7 @@ namespace Eryph.ComputeClient.Models
             return new OperationTask(id, parentTask, name, displayName, progress, status);
         }
 
-        /// <summary> Initializes a new instance of Catlet. </summary>
+        /// <summary> Initializes a new instance of <see cref="Models.Catlet"/>. </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
         /// <param name="status"></param>
@@ -95,7 +95,7 @@ namespace Eryph.ComputeClient.Models
             return new Catlet(id, name, status, networks?.ToList(), networkAdapters?.ToList(), drives?.ToList());
         }
 
-        /// <summary> Initializes a new instance of CatletNetwork. </summary>
+        /// <summary> Initializes a new instance of <see cref="Models.CatletNetwork"/>. </summary>
         /// <param name="name"></param>
         /// <param name="provider"></param>
         /// <param name="ipV4Addresses"></param>
@@ -113,7 +113,7 @@ namespace Eryph.ComputeClient.Models
             return new CatletNetwork(name, provider, ipV4Addresses?.ToList(), iPv4DefaultGateway, dnsServerAddresses?.ToList(), ipV4Subnets?.ToList(), floatingPort);
         }
 
-        /// <summary> Initializes a new instance of FloatingNetworkPort. </summary>
+        /// <summary> Initializes a new instance of <see cref="Models.FloatingNetworkPort"/>. </summary>
         /// <param name="name"></param>
         /// <param name="provider"></param>
         /// <param name="subnet"></param>
@@ -128,7 +128,7 @@ namespace Eryph.ComputeClient.Models
             return new FloatingNetworkPort(name, provider, subnet, ipV4Addresses?.ToList(), ipV4Subnets?.ToList());
         }
 
-        /// <summary> Initializes a new instance of CatletNetworkAdapter. </summary>
+        /// <summary> Initializes a new instance of <see cref="Models.CatletNetworkAdapter"/>. </summary>
         /// <param name="name"></param>
         /// <param name="macAddress"></param>
         /// <returns> A new <see cref="Models.CatletNetworkAdapter"/> instance for mocking. </returns>
@@ -137,7 +137,7 @@ namespace Eryph.ComputeClient.Models
             return new CatletNetworkAdapter(name, macAddress);
         }
 
-        /// <summary> Initializes a new instance of CatletDrive. </summary>
+        /// <summary> Initializes a new instance of <see cref="Models.CatletDrive"/>. </summary>
         /// <param name="type"></param>
         /// <param name="attachedDiskId"></param>
         /// <returns> A new <see cref="Models.CatletDrive"/> instance for mocking. </returns>
@@ -146,7 +146,7 @@ namespace Eryph.ComputeClient.Models
             return new CatletDrive(type, attachedDiskId);
         }
 
-        /// <summary> Initializes a new instance of VirtualDisk. </summary>
+        /// <summary> Initializes a new instance of <see cref="Models.VirtualDisk"/>. </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
         /// <param name="storageIdentifier"></param>
@@ -165,7 +165,7 @@ namespace Eryph.ComputeClient.Models
             return new VirtualDisk(id, name, storageIdentifier, dataStore, project, environment, path, sizeBytes, parentId, attachedDrives?.ToList());
         }
 
-        /// <summary> Initializes a new instance of VirtualNetwork. </summary>
+        /// <summary> Initializes a new instance of <see cref="Models.VirtualNetwork"/>. </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
         /// <param name="projectId"></param>
@@ -179,7 +179,7 @@ namespace Eryph.ComputeClient.Models
             return new VirtualNetwork(id, name, projectId, projectName, tenantId, providerName, ipNetwork);
         }
 
-        /// <summary> Initializes a new instance of CatletConfiguration. </summary>
+        /// <summary> Initializes a new instance of <see cref="Models.CatletConfiguration"/>. </summary>
         /// <param name="configuration"> Anything. </param>
         /// <returns> A new <see cref="Models.CatletConfiguration"/> instance for mocking. </returns>
         public static CatletConfiguration CatletConfiguration(JsonElement configuration = default)
@@ -187,7 +187,7 @@ namespace Eryph.ComputeClient.Models
             return new CatletConfiguration(configuration);
         }
 
-        /// <summary> Initializes a new instance of VirtualNetworkConfiguration. </summary>
+        /// <summary> Initializes a new instance of <see cref="Models.VirtualNetworkConfiguration"/>. </summary>
         /// <param name="configuration"> Anything. </param>
         /// <returns> A new <see cref="Models.VirtualNetworkConfiguration"/> instance for mocking. </returns>
         public static VirtualNetworkConfiguration VirtualNetworkConfiguration(JsonElement configuration = default)

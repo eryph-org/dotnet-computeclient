@@ -33,7 +33,7 @@ namespace Eryph.ComputeClient
         {
             ClientDiagnostics = clientDiagnostics ?? throw new ArgumentNullException(nameof(clientDiagnostics));
             _pipeline = pipeline ?? throw new ArgumentNullException(nameof(pipeline));
-            _endpoint = endpoint ?? new Uri("https://localhost:60302/compute");
+            _endpoint = endpoint ?? new Uri("https://localhost:8000/compute");
         }
 
         internal HttpMessage CreateGetRequest(string id, DateTimeOffset? logTimeStamp, string expand)
@@ -59,9 +59,9 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Get a operation. </summary>
-        /// <param name="id"> The String to use. </param>
-        /// <param name="logTimeStamp"> The DateTimeISO8601 to use. </param>
-        /// <param name="expand"> The String to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="logTimeStamp"> The <see cref="DateTimeOffset"/>? to use. </param>
+        /// <param name="expand"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
         public async Task<Response<Models.Operation>> GetAsync(string id, DateTimeOffset? logTimeStamp = null, string expand = null, CancellationToken cancellationToken = default)
@@ -88,9 +88,9 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Get a operation. </summary>
-        /// <param name="id"> The String to use. </param>
-        /// <param name="logTimeStamp"> The DateTimeISO8601 to use. </param>
-        /// <param name="expand"> The String to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="logTimeStamp"> The <see cref="DateTimeOffset"/>? to use. </param>
+        /// <param name="expand"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
         public Response<Models.Operation> Get(string id, DateTimeOffset? logTimeStamp = null, string expand = null, CancellationToken cancellationToken = default)
@@ -146,10 +146,10 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> List all Operations. </summary>
-        /// <param name="logTimeStamp"> The DateTimeISO8601 to use. </param>
-        /// <param name="expand"> The String to use. </param>
-        /// <param name="count"> The Boolean to use. </param>
-        /// <param name="project"> The String to use. </param>
+        /// <param name="logTimeStamp"> The <see cref="DateTimeOffset"/>? to use. </param>
+        /// <param name="expand"> The <see cref="string"/> to use. </param>
+        /// <param name="count"> The <see cref="bool"/>? to use. </param>
+        /// <param name="project"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public async Task<Response<OperationList>> ListAsync(DateTimeOffset? logTimeStamp = null, string expand = null, bool? count = null, string project = null, CancellationToken cancellationToken = default)
         {
@@ -170,10 +170,10 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> List all Operations. </summary>
-        /// <param name="logTimeStamp"> The DateTimeISO8601 to use. </param>
-        /// <param name="expand"> The String to use. </param>
-        /// <param name="count"> The Boolean to use. </param>
-        /// <param name="project"> The String to use. </param>
+        /// <param name="logTimeStamp"> The <see cref="DateTimeOffset"/>? to use. </param>
+        /// <param name="expand"> The <see cref="string"/> to use. </param>
+        /// <param name="count"> The <see cref="bool"/>? to use. </param>
+        /// <param name="project"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public Response<OperationList> List(DateTimeOffset? logTimeStamp = null, string expand = null, bool? count = null, string project = null, CancellationToken cancellationToken = default)
         {
@@ -208,10 +208,10 @@ namespace Eryph.ComputeClient
 
         /// <summary> List all Operations. </summary>
         /// <param name="nextLink"> The URL to the next page of results. </param>
-        /// <param name="logTimeStamp"> The DateTimeISO8601 to use. </param>
-        /// <param name="expand"> The String to use. </param>
-        /// <param name="count"> The Boolean to use. </param>
-        /// <param name="project"> The String to use. </param>
+        /// <param name="logTimeStamp"> The <see cref="DateTimeOffset"/>? to use. </param>
+        /// <param name="expand"> The <see cref="string"/> to use. </param>
+        /// <param name="count"> The <see cref="bool"/>? to use. </param>
+        /// <param name="project"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> is null. </exception>
         public async Task<Response<OperationList>> ListNextPageAsync(string nextLink, DateTimeOffset? logTimeStamp = null, string expand = null, bool? count = null, string project = null, CancellationToken cancellationToken = default)
@@ -239,10 +239,10 @@ namespace Eryph.ComputeClient
 
         /// <summary> List all Operations. </summary>
         /// <param name="nextLink"> The URL to the next page of results. </param>
-        /// <param name="logTimeStamp"> The DateTimeISO8601 to use. </param>
-        /// <param name="expand"> The String to use. </param>
-        /// <param name="count"> The Boolean to use. </param>
-        /// <param name="project"> The String to use. </param>
+        /// <param name="logTimeStamp"> The <see cref="DateTimeOffset"/>? to use. </param>
+        /// <param name="expand"> The <see cref="string"/> to use. </param>
+        /// <param name="count"> The <see cref="bool"/>? to use. </param>
+        /// <param name="project"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> is null. </exception>
         public Response<OperationList> ListNextPage(string nextLink, DateTimeOffset? logTimeStamp = null, string expand = null, bool? count = null, string project = null, CancellationToken cancellationToken = default)

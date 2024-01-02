@@ -13,13 +13,13 @@ namespace Eryph.ComputeClient.Models
     /// <summary> The VirtualNetworkList. </summary>
     internal partial class VirtualNetworkList
     {
-        /// <summary> Initializes a new instance of VirtualNetworkList. </summary>
+        /// <summary> Initializes a new instance of <see cref="VirtualNetworkList"/>. </summary>
         internal VirtualNetworkList()
         {
             Value = new ChangeTrackingList<VirtualNetwork>();
         }
 
-        /// <summary> Initializes a new instance of VirtualNetworkList. </summary>
+        /// <summary> Initializes a new instance of <see cref="VirtualNetworkList"/>. </summary>
         /// <param name="count"></param>
         /// <param name="nextLink"></param>
         /// <param name="value"></param>

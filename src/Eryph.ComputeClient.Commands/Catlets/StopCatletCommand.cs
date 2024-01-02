@@ -39,8 +39,16 @@ namespace Eryph.ComputeClient.Commands.Catlets
             set => _nowait = value;
         }
 
+        [Parameter]
+        public SwitchParameter Graceful
+        {
+            get => _graceful;
+            set => _graceful = value;
+        }
+
         private bool _force;
         private bool _nowait;
+        private bool _graceful;
         private bool _yesToAll, _noToAll;
 
 
@@ -65,7 +73,10 @@ namespace Eryph.ComputeClient.Commands.Catlets
                     continue;
                 }
 
-                WaitForOperation(Factory.CreateCatletsClient().Stop(id).Value, _nowait, false, id);
+                WaitForOperation(Factory.CreateCatletsClient().Stop(id,new StopCatletRequestBody()
+                {
+                    Graceful = _graceful,
+                }).Value, _nowait, false, id);
 
             }
 

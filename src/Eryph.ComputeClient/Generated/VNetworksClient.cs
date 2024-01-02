@@ -41,7 +41,7 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Get a virtual network. </summary>
-        /// <param name="id"> The String to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response<VirtualNetwork>> GetAsync(string id, CancellationToken cancellationToken = default)
         {
@@ -59,7 +59,7 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Get a virtual network. </summary>
-        /// <param name="id"> The String to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response<VirtualNetwork> Get(string id, CancellationToken cancellationToken = default)
         {
@@ -77,7 +77,7 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Get project virtual networks configuration. </summary>
-        /// <param name="project"> The String to use. </param>
+        /// <param name="project"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <remarks> Get the configuration for all networks in a project. </remarks>
         public virtual async Task<Response<VirtualNetworkConfiguration>> GetConfigAsync(string project, CancellationToken cancellationToken = default)
@@ -96,7 +96,7 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Get project virtual networks configuration. </summary>
-        /// <param name="project"> The String to use. </param>
+        /// <param name="project"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <remarks> Get the configuration for all networks in a project. </remarks>
         public virtual Response<VirtualNetworkConfiguration> GetConfig(string project, CancellationToken cancellationToken = default)
@@ -115,7 +115,7 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Creates or updates virtual networks of project. </summary>
-        /// <param name="body"> The UpdateProjectNetworksRequest to use. </param>
+        /// <param name="body"> The <see cref="UpdateProjectNetworksRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <remarks> Creates or updates virtual networks. </remarks>
         public virtual async Task<Response<Models.Operation>> CreateAsync(UpdateProjectNetworksRequest body = null, CancellationToken cancellationToken = default)
@@ -134,7 +134,7 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Creates or updates virtual networks of project. </summary>
-        /// <param name="body"> The UpdateProjectNetworksRequest to use. </param>
+        /// <param name="body"> The <see cref="UpdateProjectNetworksRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <remarks> Creates or updates virtual networks. </remarks>
         public virtual Response<Models.Operation> Create(UpdateProjectNetworksRequest body = null, CancellationToken cancellationToken = default)
@@ -153,8 +153,8 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Get list of virtual networks. </summary>
-        /// <param name="count"> The Boolean to use. </param>
-        /// <param name="project"> The String to use. </param>
+        /// <param name="count"> The <see cref="bool"/>? to use. </param>
+        /// <param name="project"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual AsyncPageable<VirtualNetwork> ListAsync(bool? count = null, string project = null, CancellationToken cancellationToken = default)
         {
@@ -164,8 +164,8 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Get list of virtual networks. </summary>
-        /// <param name="count"> The Boolean to use. </param>
-        /// <param name="project"> The String to use. </param>
+        /// <param name="count"> The <see cref="bool"/>? to use. </param>
+        /// <param name="project"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Pageable<VirtualNetwork> List(bool? count = null, string project = null, CancellationToken cancellationToken = default)
         {
@@ -175,8 +175,8 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Get list of virtual networks in a project. </summary>
-        /// <param name="project"> The String to use. </param>
-        /// <param name="count"> The Boolean to use. </param>
+        /// <param name="project"> The <see cref="string"/> to use. </param>
+        /// <param name="count"> The <see cref="bool"/>? to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="project"/> is null. </exception>
         /// <remarks> Get list of virtual networks in project. </remarks>
@@ -190,8 +190,8 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Get list of virtual networks in a project. </summary>
-        /// <param name="project"> The String to use. </param>
-        /// <param name="count"> The Boolean to use. </param>
+        /// <param name="project"> The <see cref="string"/> to use. </param>
+        /// <param name="count"> The <see cref="bool"/>? to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="project"/> is null. </exception>
         /// <remarks> Get list of virtual networks in project. </remarks>

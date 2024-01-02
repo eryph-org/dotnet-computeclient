@@ -10,12 +10,12 @@ namespace Eryph.ComputeClient.Models
     /// <summary> The OperationResource. </summary>
     public partial class OperationResource
     {
-        /// <summary> Initializes a new instance of OperationResource. </summary>
+        /// <summary> Initializes a new instance of <see cref="OperationResource"/>. </summary>
         internal OperationResource()
         {
         }
 
-        /// <summary> Initializes a new instance of OperationResource. </summary>
+        /// <summary> Initializes a new instance of <see cref="OperationResource"/>. </summary>
         /// <param name="id"></param>
         /// <param name="resourceId"></param>
         /// <param name="resourceType"></param>

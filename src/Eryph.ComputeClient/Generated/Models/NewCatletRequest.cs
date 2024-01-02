@@ -13,7 +13,7 @@ namespace Eryph.ComputeClient.Models
     /// <summary> The NewCatletRequest. </summary>
     public partial class NewCatletRequest
     {
-        /// <summary> Initializes a new instance of NewCatletRequest. </summary>
+        /// <summary> Initializes a new instance of <see cref="NewCatletRequest"/>. </summary>
         /// <param name="correlationId"></param>
         /// <param name="configuration"> Anything. </param>
         public NewCatletRequest(Guid correlationId, JsonElement configuration)

@@ -13,14 +13,14 @@ namespace Eryph.ComputeClient.Models
     /// <summary> The FloatingNetworkPort. </summary>
     public partial class FloatingNetworkPort
     {
-        /// <summary> Initializes a new instance of FloatingNetworkPort. </summary>
+        /// <summary> Initializes a new instance of <see cref="FloatingNetworkPort"/>. </summary>
         internal FloatingNetworkPort()
         {
             IpV4Addresses = new ChangeTrackingList<string>();
             IpV4Subnets = new ChangeTrackingList<string>();
         }
 
-        /// <summary> Initializes a new instance of FloatingNetworkPort. </summary>
+        /// <summary> Initializes a new instance of <see cref="FloatingNetworkPort"/>. </summary>
         /// <param name="name"></param>
         /// <param name="provider"></param>
         /// <param name="subnet"></param>

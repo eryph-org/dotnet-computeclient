@@ -10,7 +10,7 @@ using Azure.Core;
 
 namespace Eryph.ComputeClient.Models
 {
-    public partial class UpdateCatletRequest : IUtf8JsonSerializable
+    public partial class UpdateCatletRequestBody : IUtf8JsonSerializable
     {
         void IUtf8JsonSerializable.Write(Utf8JsonWriter writer)
         {
@@ -18,9 +18,7 @@ namespace Eryph.ComputeClient.Models
             writer.WritePropertyName("correlationId"u8);
             writer.WriteStringValue(CorrelationId);
             writer.WritePropertyName("configuration"u8);
-            Configuration.WriteTo(writer);
-            writer.WritePropertyName("id"u8);
-            writer.WriteStringValue(Id);
+            writer.WriteObjectValue(Configuration);
             writer.WriteEndObject();
         }
     }

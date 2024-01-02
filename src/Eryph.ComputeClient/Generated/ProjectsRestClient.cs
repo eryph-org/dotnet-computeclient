@@ -33,7 +33,7 @@ namespace Eryph.ComputeClient
         {
             ClientDiagnostics = clientDiagnostics ?? throw new ArgumentNullException(nameof(clientDiagnostics));
             _pipeline = pipeline ?? throw new ArgumentNullException(nameof(pipeline));
-            _endpoint = endpoint ?? new Uri("https://localhost:60302/compute");
+            _endpoint = endpoint ?? new Uri("https://localhost:8000/compute");
         }
 
         internal HttpMessage CreateCreateRequest(NewProjectRequest body)
@@ -57,7 +57,7 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Creates a new project. </summary>
-        /// <param name="body"> The NewProjectRequest to use. </param>
+        /// <param name="body"> The <see cref="NewProjectRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <remarks> Creates a project. </remarks>
         public async Task<Response<Models.Operation>> CreateAsync(NewProjectRequest body = null, CancellationToken cancellationToken = default)
@@ -79,7 +79,7 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Creates a new project. </summary>
-        /// <param name="body"> The NewProjectRequest to use. </param>
+        /// <param name="body"> The <see cref="NewProjectRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <remarks> Creates a project. </remarks>
         public Response<Models.Operation> Create(NewProjectRequest body = null, CancellationToken cancellationToken = default)
@@ -122,8 +122,8 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> List all projects. </summary>
-        /// <param name="count"> The Boolean to use. </param>
-        /// <param name="project"> The String to use. </param>
+        /// <param name="count"> The <see cref="bool"/>? to use. </param>
+        /// <param name="project"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public async Task<Response<ProjectList>> ListAsync(bool? count = null, string project = null, CancellationToken cancellationToken = default)
         {
@@ -144,8 +144,8 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> List all projects. </summary>
-        /// <param name="count"> The Boolean to use. </param>
-        /// <param name="project"> The String to use. </param>
+        /// <param name="count"> The <see cref="bool"/>? to use. </param>
+        /// <param name="project"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public Response<ProjectList> List(bool? count = null, string project = null, CancellationToken cancellationToken = default)
         {
@@ -180,7 +180,7 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Deletes a project. </summary>
-        /// <param name="id"> The String to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
         public async Task<Response<Models.Operation>> DeleteAsync(string id, CancellationToken cancellationToken = default)
@@ -207,7 +207,7 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Deletes a project. </summary>
-        /// <param name="id"> The String to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
         public Response<Models.Operation> Delete(string id, CancellationToken cancellationToken = default)
@@ -248,7 +248,7 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Get a projects. </summary>
-        /// <param name="id"> The String to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
         public async Task<Response<Project>> GetAsync(string id, CancellationToken cancellationToken = default)
@@ -275,7 +275,7 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Get a projects. </summary>
-        /// <param name="id"> The String to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
         public Response<Project> Get(string id, CancellationToken cancellationToken = default)
@@ -323,8 +323,8 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Updates a project. </summary>
-        /// <param name="id"> The String to use. </param>
-        /// <param name="body"> The UpdateProjectBody to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="UpdateProjectBody"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
         public async Task<Response<Models.Operation>> UpdateAsync(string id, UpdateProjectBody body = null, CancellationToken cancellationToken = default)
@@ -351,8 +351,8 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Updates a project. </summary>
-        /// <param name="id"> The String to use. </param>
-        /// <param name="body"> The UpdateProjectBody to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="UpdateProjectBody"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
         public Response<Models.Operation> Update(string id, UpdateProjectBody body = null, CancellationToken cancellationToken = default)
@@ -393,8 +393,8 @@ namespace Eryph.ComputeClient
 
         /// <summary> List all projects. </summary>
         /// <param name="nextLink"> The URL to the next page of results. </param>
-        /// <param name="count"> The Boolean to use. </param>
-        /// <param name="project"> The String to use. </param>
+        /// <param name="count"> The <see cref="bool"/>? to use. </param>
+        /// <param name="project"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> is null. </exception>
         public async Task<Response<ProjectList>> ListNextPageAsync(string nextLink, bool? count = null, string project = null, CancellationToken cancellationToken = default)
@@ -422,8 +422,8 @@ namespace Eryph.ComputeClient
 
         /// <summary> List all projects. </summary>
         /// <param name="nextLink"> The URL to the next page of results. </param>
-        /// <param name="count"> The Boolean to use. </param>
-        /// <param name="project"> The String to use. </param>
+        /// <param name="count"> The <see cref="bool"/>? to use. </param>
+        /// <param name="project"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> is null. </exception>
         public Response<ProjectList> ListNextPage(string nextLink, bool? count = null, string project = null, CancellationToken cancellationToken = default)

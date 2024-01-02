@@ -41,7 +41,7 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Creates a new catlet. </summary>
-        /// <param name="body"> The NewCatletRequest to use. </param>
+        /// <param name="body"> The <see cref="NewCatletRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <remarks> Creates a catlet. </remarks>
         public virtual async Task<Response<Models.Operation>> CreateAsync(NewCatletRequest body = null, CancellationToken cancellationToken = default)
@@ -60,7 +60,7 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Creates a new catlet. </summary>
-        /// <param name="body"> The NewCatletRequest to use. </param>
+        /// <param name="body"> The <see cref="NewCatletRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <remarks> Creates a catlet. </remarks>
         public virtual Response<Models.Operation> Create(NewCatletRequest body = null, CancellationToken cancellationToken = default)
@@ -79,7 +79,7 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Deletes a catlet. </summary>
-        /// <param name="id"> The String to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response<Models.Operation>> DeleteAsync(string id, CancellationToken cancellationToken = default)
         {
@@ -97,7 +97,7 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Deletes a catlet. </summary>
-        /// <param name="id"> The String to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response<Models.Operation> Delete(string id, CancellationToken cancellationToken = default)
         {
@@ -115,7 +115,7 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Get a catlet. </summary>
-        /// <param name="id"> The String to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response<Catlet>> GetAsync(string id, CancellationToken cancellationToken = default)
         {
@@ -133,7 +133,7 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Get a catlet. </summary>
-        /// <param name="id"> The String to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response<Catlet> Get(string id, CancellationToken cancellationToken = default)
         {
@@ -151,7 +151,7 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Get catlet configuration. </summary>
-        /// <param name="id"> The String to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <remarks> Get the configuration of a catlet. </remarks>
         public virtual async Task<Response<CatletConfiguration>> GetConfigAsync(string id, CancellationToken cancellationToken = default)
@@ -170,7 +170,7 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Get catlet configuration. </summary>
-        /// <param name="id"> The String to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <remarks> Get the configuration of a catlet. </remarks>
         public virtual Response<CatletConfiguration> GetConfig(string id, CancellationToken cancellationToken = default)
@@ -189,7 +189,7 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Starts a catlet. </summary>
-        /// <param name="id"> The String to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response<Models.Operation>> StartAsync(string id, CancellationToken cancellationToken = default)
         {
@@ -207,7 +207,7 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Starts a catlet. </summary>
-        /// <param name="id"> The String to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response<Models.Operation> Start(string id, CancellationToken cancellationToken = default)
         {
@@ -225,15 +225,16 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Stops a catlet. </summary>
-        /// <param name="id"> The String to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="StopCatletRequestBody"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response<Models.Operation>> StopAsync(string id, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<Models.Operation>> StopAsync(string id, StopCatletRequestBody body = null, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("CatletsClient.Stop");
             scope.Start();
             try
             {
-                return await RestClient.StopAsync(id, cancellationToken).ConfigureAwait(false);
+                return await RestClient.StopAsync(id, body, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -243,15 +244,16 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Stops a catlet. </summary>
-        /// <param name="id"> The String to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="StopCatletRequestBody"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response<Models.Operation> Stop(string id, CancellationToken cancellationToken = default)
+        public virtual Response<Models.Operation> Stop(string id, StopCatletRequestBody body = null, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("CatletsClient.Stop");
             scope.Start();
             try
             {
-                return RestClient.Stop(id, cancellationToken);
+                return RestClient.Stop(id, body, cancellationToken);
             }
             catch (Exception e)
             {
@@ -261,15 +263,16 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Updates a catlet. </summary>
-        /// <param name="body"> The UpdateCatletRequest to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="UpdateCatletRequestBody"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response<Models.Operation>> UpdateAsync(UpdateCatletRequest body = null, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<Models.Operation>> UpdateAsync(string id, UpdateCatletRequestBody body, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("CatletsClient.Update");
             scope.Start();
             try
             {
-                return await RestClient.UpdateAsync(body, cancellationToken).ConfigureAwait(false);
+                return await RestClient.UpdateAsync(id, body, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -279,15 +282,16 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Updates a catlet. </summary>
-        /// <param name="body"> The UpdateCatletRequest to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="UpdateCatletRequestBody"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response<Models.Operation> Update(UpdateCatletRequest body = null, CancellationToken cancellationToken = default)
+        public virtual Response<Models.Operation> Update(string id, UpdateCatletRequestBody body, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("CatletsClient.Update");
             scope.Start();
             try
             {
-                return RestClient.Update(body, cancellationToken);
+                return RestClient.Update(id, body, cancellationToken);
             }
             catch (Exception e)
             {
@@ -297,8 +301,8 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> List all catlets. </summary>
-        /// <param name="count"> The Boolean to use. </param>
-        /// <param name="project"> The String to use. </param>
+        /// <param name="count"> The <see cref="bool"/>? to use. </param>
+        /// <param name="project"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual AsyncPageable<Catlet> ListAsync(bool? count = null, string project = null, CancellationToken cancellationToken = default)
         {
@@ -308,8 +312,8 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> List all catlets. </summary>
-        /// <param name="count"> The Boolean to use. </param>
-        /// <param name="project"> The String to use. </param>
+        /// <param name="count"> The <see cref="bool"/>? to use. </param>
+        /// <param name="project"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Pageable<Catlet> List(bool? count = null, string project = null, CancellationToken cancellationToken = default)
         {

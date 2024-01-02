@@ -14,7 +14,7 @@ namespace Eryph.ComputeClient.Models
     /// <summary> The ApiErrorData. </summary>
     internal partial class ApiErrorData
     {
-        /// <summary> Initializes a new instance of ApiErrorData. </summary>
+        /// <summary> Initializes a new instance of <see cref="ApiErrorData"/>. </summary>
         /// <param name="code"></param>
         /// <param name="message"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="code"/> or <paramref name="message"/> is null. </exception>
@@ -29,7 +29,7 @@ namespace Eryph.ComputeClient.Models
             AdditionalProperties = new ChangeTrackingDictionary<string, object>();
         }
 
-        /// <summary> Initializes a new instance of ApiErrorData. </summary>
+        /// <summary> Initializes a new instance of <see cref="ApiErrorData"/>. </summary>
         /// <param name="code"></param>
         /// <param name="message"></param>
         /// <param name="target"></param>

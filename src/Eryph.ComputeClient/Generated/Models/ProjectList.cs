@@ -13,13 +13,13 @@ namespace Eryph.ComputeClient.Models
     /// <summary> The ProjectList. </summary>
     internal partial class ProjectList
     {
-        /// <summary> Initializes a new instance of ProjectList. </summary>
+        /// <summary> Initializes a new instance of <see cref="ProjectList"/>. </summary>
         internal ProjectList()
         {
             Value = new ChangeTrackingList<Project>();
         }
 
-        /// <summary> Initializes a new instance of ProjectList. </summary>
+        /// <summary> Initializes a new instance of <see cref="ProjectList"/>. </summary>
         /// <param name="count"></param>
         /// <param name="nextLink"></param>
         /// <param name="value"></param>

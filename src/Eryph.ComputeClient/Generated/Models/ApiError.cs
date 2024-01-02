@@ -10,12 +10,12 @@ namespace Eryph.ComputeClient.Models
     /// <summary> The ApiError. </summary>
     internal partial class ApiError
     {
-        /// <summary> Initializes a new instance of ApiError. </summary>
+        /// <summary> Initializes a new instance of <see cref="ApiError"/>. </summary>
         internal ApiError()
         {
         }
 
-        /// <summary> Initializes a new instance of ApiError. </summary>
+        /// <summary> Initializes a new instance of <see cref="ApiError"/>. </summary>
         /// <param name="error"></param>
         internal ApiError(ApiErrorData error)
         {

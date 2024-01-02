@@ -13,7 +13,7 @@ namespace Eryph.ComputeClient.Models
     /// <summary> The Catlet. </summary>
     public partial class Catlet
     {
-        /// <summary> Initializes a new instance of Catlet. </summary>
+        /// <summary> Initializes a new instance of <see cref="Catlet"/>. </summary>
         internal Catlet()
         {
             Networks = new ChangeTrackingList<CatletNetwork>();
@@ -21,7 +21,7 @@ namespace Eryph.ComputeClient.Models
             Drives = new ChangeTrackingList<CatletDrive>();
         }
 
-        /// <summary> Initializes a new instance of Catlet. </summary>
+        /// <summary> Initializes a new instance of <see cref="Catlet"/>. </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
         /// <param name="status"></param>
