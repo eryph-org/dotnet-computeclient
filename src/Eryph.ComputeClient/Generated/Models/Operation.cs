@@ -13,7 +13,7 @@ namespace Eryph.ComputeClient.Models
     /// <summary> The Operation. </summary>
     public partial class Operation
     {
-        /// <summary> Initializes a new instance of Operation. </summary>
+        /// <summary> Initializes a new instance of <see cref="Operation"/>. </summary>
         internal Operation()
         {
             Resources = new ChangeTrackingList<OperationResource>();
@@ -22,7 +22,7 @@ namespace Eryph.ComputeClient.Models
             Tasks = new ChangeTrackingList<OperationTask>();
         }
 
-        /// <summary> Initializes a new instance of Operation. </summary>
+        /// <summary> Initializes a new instance of <see cref="Operation"/>. </summary>
         /// <param name="id"></param>
         /// <param name="status"></param>
         /// <param name="statusMessage"></param>

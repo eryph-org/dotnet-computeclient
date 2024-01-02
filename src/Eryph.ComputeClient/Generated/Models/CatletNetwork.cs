@@ -13,7 +13,7 @@ namespace Eryph.ComputeClient.Models
     /// <summary> The CatletNetwork. </summary>
     public partial class CatletNetwork
     {
-        /// <summary> Initializes a new instance of CatletNetwork. </summary>
+        /// <summary> Initializes a new instance of <see cref="CatletNetwork"/>. </summary>
         internal CatletNetwork()
         {
             IpV4Addresses = new ChangeTrackingList<string>();
@@ -21,7 +21,7 @@ namespace Eryph.ComputeClient.Models
             IpV4Subnets = new ChangeTrackingList<string>();
         }
 
-        /// <summary> Initializes a new instance of CatletNetwork. </summary>
+        /// <summary> Initializes a new instance of <see cref="CatletNetwork"/>. </summary>
         /// <param name="name"></param>
         /// <param name="provider"></param>
         /// <param name="ipV4Addresses"></param>

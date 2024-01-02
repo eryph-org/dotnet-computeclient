@@ -12,12 +12,12 @@ namespace Eryph.ComputeClient.Models
     /// <summary> The CatletDrive. </summary>
     public partial class CatletDrive
     {
-        /// <summary> Initializes a new instance of CatletDrive. </summary>
+        /// <summary> Initializes a new instance of <see cref="CatletDrive"/>. </summary>
         internal CatletDrive()
         {
         }
 
-        /// <summary> Initializes a new instance of CatletDrive. </summary>
+        /// <summary> Initializes a new instance of <see cref="CatletDrive"/>. </summary>
         /// <param name="type"></param>
         /// <param name="attachedDiskId"></param>
         internal CatletDrive(CatletDriveType? type, Guid? attachedDiskId)

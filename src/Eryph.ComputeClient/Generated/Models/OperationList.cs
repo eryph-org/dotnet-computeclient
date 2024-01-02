@@ -13,13 +13,13 @@ namespace Eryph.ComputeClient.Models
     /// <summary> The OperationList. </summary>
     internal partial class OperationList
     {
-        /// <summary> Initializes a new instance of OperationList. </summary>
+        /// <summary> Initializes a new instance of <see cref="OperationList"/>. </summary>
         internal OperationList()
         {
             Value = new ChangeTrackingList<Operation>();
         }
 
-        /// <summary> Initializes a new instance of OperationList. </summary>
+        /// <summary> Initializes a new instance of <see cref="OperationList"/>. </summary>
         /// <param name="count"></param>
         /// <param name="nextLink"></param>
         /// <param name="value"></param>

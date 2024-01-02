@@ -3,7 +3,6 @@ using System.Management.Automation;
 using System.Text;
 using System.Text.Json;
 using Eryph.ComputeClient.Models;
-using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.Json;
 using Eryph.ConfigModel.Networks;
 using JetBrains.Annotations;

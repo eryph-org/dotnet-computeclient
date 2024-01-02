@@ -41,7 +41,7 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Creates a new project. </summary>
-        /// <param name="body"> The NewProjectRequest to use. </param>
+        /// <param name="body"> The <see cref="NewProjectRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <remarks> Creates a project. </remarks>
         public virtual async Task<Response<Models.Operation>> CreateAsync(NewProjectRequest body = null, CancellationToken cancellationToken = default)
@@ -60,7 +60,7 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Creates a new project. </summary>
-        /// <param name="body"> The NewProjectRequest to use. </param>
+        /// <param name="body"> The <see cref="NewProjectRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <remarks> Creates a project. </remarks>
         public virtual Response<Models.Operation> Create(NewProjectRequest body = null, CancellationToken cancellationToken = default)
@@ -79,7 +79,7 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Deletes a project. </summary>
-        /// <param name="id"> The String to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response<Models.Operation>> DeleteAsync(string id, CancellationToken cancellationToken = default)
         {
@@ -97,7 +97,7 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Deletes a project. </summary>
-        /// <param name="id"> The String to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response<Models.Operation> Delete(string id, CancellationToken cancellationToken = default)
         {
@@ -115,7 +115,7 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Get a projects. </summary>
-        /// <param name="id"> The String to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response<Project>> GetAsync(string id, CancellationToken cancellationToken = default)
         {
@@ -133,7 +133,7 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Get a projects. </summary>
-        /// <param name="id"> The String to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response<Project> Get(string id, CancellationToken cancellationToken = default)
         {
@@ -151,8 +151,8 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Updates a project. </summary>
-        /// <param name="id"> The String to use. </param>
-        /// <param name="body"> The UpdateProjectBody to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="UpdateProjectBody"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response<Models.Operation>> UpdateAsync(string id, UpdateProjectBody body = null, CancellationToken cancellationToken = default)
         {
@@ -170,8 +170,8 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Updates a project. </summary>
-        /// <param name="id"> The String to use. </param>
-        /// <param name="body"> The UpdateProjectBody to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="UpdateProjectBody"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response<Models.Operation> Update(string id, UpdateProjectBody body = null, CancellationToken cancellationToken = default)
         {
@@ -189,8 +189,8 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> List all projects. </summary>
-        /// <param name="count"> The Boolean to use. </param>
-        /// <param name="project"> The String to use. </param>
+        /// <param name="count"> The <see cref="bool"/>? to use. </param>
+        /// <param name="project"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual AsyncPageable<Project> ListAsync(bool? count = null, string project = null, CancellationToken cancellationToken = default)
         {
@@ -200,8 +200,8 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> List all projects. </summary>
-        /// <param name="count"> The Boolean to use. </param>
-        /// <param name="project"> The String to use. </param>
+        /// <param name="count"> The <see cref="bool"/>? to use. </param>
+        /// <param name="project"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Pageable<Project> List(bool? count = null, string project = null, CancellationToken cancellationToken = default)
         {

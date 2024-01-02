@@ -10,12 +10,12 @@ namespace Eryph.ComputeClient.Models
     /// <summary> The CatletNetworkAdapter. </summary>
     public partial class CatletNetworkAdapter
     {
-        /// <summary> Initializes a new instance of CatletNetworkAdapter. </summary>
+        /// <summary> Initializes a new instance of <see cref="CatletNetworkAdapter"/>. </summary>
         internal CatletNetworkAdapter()
         {
         }
 
-        /// <summary> Initializes a new instance of CatletNetworkAdapter. </summary>
+        /// <summary> Initializes a new instance of <see cref="CatletNetworkAdapter"/>. </summary>
         /// <param name="name"></param>
         /// <param name="macAddress"></param>
         internal CatletNetworkAdapter(string name, string macAddress)

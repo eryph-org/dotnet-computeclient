@@ -14,13 +14,13 @@ namespace Eryph.ComputeClient.Models
     /// <summary> The VirtualDisk. </summary>
     public partial class VirtualDisk
     {
-        /// <summary> Initializes a new instance of VirtualDisk. </summary>
+        /// <summary> Initializes a new instance of <see cref="VirtualDisk"/>. </summary>
         internal VirtualDisk()
         {
             AttachedDrives = new ChangeTrackingList<CatletDrive>();
         }
 
-        /// <summary> Initializes a new instance of VirtualDisk. </summary>
+        /// <summary> Initializes a new instance of <see cref="VirtualDisk"/>. </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
         /// <param name="storageIdentifier"></param>

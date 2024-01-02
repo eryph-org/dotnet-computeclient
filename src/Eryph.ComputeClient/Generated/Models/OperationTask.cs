@@ -10,12 +10,12 @@ namespace Eryph.ComputeClient.Models
     /// <summary> The OperationTask. </summary>
     public partial class OperationTask
     {
-        /// <summary> Initializes a new instance of OperationTask. </summary>
+        /// <summary> Initializes a new instance of <see cref="OperationTask"/>. </summary>
         internal OperationTask()
         {
         }
 
-        /// <summary> Initializes a new instance of OperationTask. </summary>
+        /// <summary> Initializes a new instance of <see cref="OperationTask"/>. </summary>
         /// <param name="id"></param>
         /// <param name="parentTask"></param>
         /// <param name="name"></param>

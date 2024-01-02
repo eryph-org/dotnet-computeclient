@@ -41,7 +41,7 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Deletes a virtual disk. </summary>
-        /// <param name="id"> The String to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response<Models.Operation>> DeleteAsync(string id, CancellationToken cancellationToken = default)
         {
@@ -59,7 +59,7 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Deletes a virtual disk. </summary>
-        /// <param name="id"> The String to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response<Models.Operation> Delete(string id, CancellationToken cancellationToken = default)
         {
@@ -77,7 +77,7 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Get a Virtual Disk. </summary>
-        /// <param name="id"> The String to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response<VirtualDisk>> GetAsync(string id, CancellationToken cancellationToken = default)
         {
@@ -95,7 +95,7 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Get a Virtual Disk. </summary>
-        /// <param name="id"> The String to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response<VirtualDisk> Get(string id, CancellationToken cancellationToken = default)
         {
@@ -113,8 +113,8 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Get list of Virtual Disks. </summary>
-        /// <param name="count"> The Boolean to use. </param>
-        /// <param name="project"> The String to use. </param>
+        /// <param name="count"> The <see cref="bool"/>? to use. </param>
+        /// <param name="project"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual AsyncPageable<VirtualDisk> ListAsync(bool? count = null, string project = null, CancellationToken cancellationToken = default)
         {
@@ -124,8 +124,8 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Get list of Virtual Disks. </summary>
-        /// <param name="count"> The Boolean to use. </param>
-        /// <param name="project"> The String to use. </param>
+        /// <param name="count"> The <see cref="bool"/>? to use. </param>
+        /// <param name="project"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Pageable<VirtualDisk> List(bool? count = null, string project = null, CancellationToken cancellationToken = default)
         {

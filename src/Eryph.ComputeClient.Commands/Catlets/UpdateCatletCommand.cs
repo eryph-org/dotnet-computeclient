@@ -38,8 +38,8 @@ namespace Eryph.ComputeClient.Commands.Catlets
             foreach (var id in Id)
             {
                 var config = DeserializeConfigString(Config);
-                WaitForOperation(Factory.CreateCatletsClient().Update(new UpdateCatletRequest(Guid.NewGuid(),
-                        JsonSerializer.SerializeToElement(config), id))
+                WaitForOperation(Factory.CreateCatletsClient().Update(id, new UpdateCatletRequestBody(Guid.NewGuid(),
+                        JsonSerializer.SerializeToElement(config)))
                     , _nowait, true);
             }
 

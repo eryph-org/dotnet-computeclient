@@ -13,13 +13,13 @@ namespace Eryph.ComputeClient.Models
     /// <summary> The CatletList. </summary>
     internal partial class CatletList
     {
-        /// <summary> Initializes a new instance of CatletList. </summary>
+        /// <summary> Initializes a new instance of <see cref="CatletList"/>. </summary>
         internal CatletList()
         {
             Value = new ChangeTrackingList<Catlet>();
         }
 
-        /// <summary> Initializes a new instance of CatletList. </summary>
+        /// <summary> Initializes a new instance of <see cref="CatletList"/>. </summary>
         /// <param name="count"></param>
         /// <param name="nextLink"></param>
         /// <param name="value"></param>

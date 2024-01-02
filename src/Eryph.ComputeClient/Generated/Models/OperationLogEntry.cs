@@ -12,12 +12,12 @@ namespace Eryph.ComputeClient.Models
     /// <summary> The OperationLogEntry. </summary>
     public partial class OperationLogEntry
     {
-        /// <summary> Initializes a new instance of OperationLogEntry. </summary>
+        /// <summary> Initializes a new instance of <see cref="OperationLogEntry"/>. </summary>
         internal OperationLogEntry()
         {
         }
 
-        /// <summary> Initializes a new instance of OperationLogEntry. </summary>
+        /// <summary> Initializes a new instance of <see cref="OperationLogEntry"/>. </summary>
         /// <param name="id"></param>
         /// <param name="taskId"></param>
         /// <param name="message"></param>

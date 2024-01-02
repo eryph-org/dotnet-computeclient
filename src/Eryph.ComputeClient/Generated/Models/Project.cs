@@ -10,12 +10,12 @@ namespace Eryph.ComputeClient.Models
     /// <summary> The Project. </summary>
     public partial class Project
     {
-        /// <summary> Initializes a new instance of Project. </summary>
+        /// <summary> Initializes a new instance of <see cref="Project"/>. </summary>
         internal Project()
         {
         }
 
-        /// <summary> Initializes a new instance of Project. </summary>
+        /// <summary> Initializes a new instance of <see cref="Project"/>. </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
         /// <param name="tenantId"></param>

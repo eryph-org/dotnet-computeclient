@@ -10,14 +10,14 @@ using Azure.Core;
 
 namespace Eryph.ComputeClient.Models
 {
-    /// <summary> The UpdateProjectNetworksRequest. </summary>
-    public partial class UpdateProjectNetworksRequest
+    /// <summary> The UpdateCatletRequestBody. </summary>
+    public partial class UpdateCatletRequestBody
     {
-        /// <summary> Initializes a new instance of <see cref="UpdateProjectNetworksRequest"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="UpdateCatletRequestBody"/>. </summary>
         /// <param name="correlationId"></param>
         /// <param name="configuration"> Anything. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="configuration"/> is null. </exception>
-        public UpdateProjectNetworksRequest(Guid correlationId, object configuration)
+        public UpdateCatletRequestBody(Guid correlationId, object configuration)
         {
             Argument.AssertNotNull(configuration, nameof(configuration));
 
