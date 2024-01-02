@@ -150,6 +150,44 @@ namespace Eryph.ComputeClient
             }
         }
 
+        /// <summary> Updates a catlet. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="UpdateCatletRequestBody"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public virtual async Task<Response<Models.Operation>> UpdateAsync(string id, UpdateCatletRequestBody body, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("CatletsClient.Update");
+            scope.Start();
+            try
+            {
+                return await RestClient.UpdateAsync(id, body, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Updates a catlet. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="UpdateCatletRequestBody"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public virtual Response<Models.Operation> Update(string id, UpdateCatletRequestBody body, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("CatletsClient.Update");
+            scope.Start();
+            try
+            {
+                return RestClient.Update(id, body, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
         /// <summary> Get catlet configuration. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
@@ -254,44 +292,6 @@ namespace Eryph.ComputeClient
             try
             {
                 return RestClient.Stop(id, body, cancellationToken);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
-        }
-
-        /// <summary> Updates a catlet. </summary>
-        /// <param name="id"> The <see cref="string"/> to use. </param>
-        /// <param name="body"> The <see cref="UpdateCatletRequestBody"/> to use. </param>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response<Models.Operation>> UpdateAsync(string id, UpdateCatletRequestBody body, CancellationToken cancellationToken = default)
-        {
-            using var scope = _clientDiagnostics.CreateScope("CatletsClient.Update");
-            scope.Start();
-            try
-            {
-                return await RestClient.UpdateAsync(id, body, cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
-        }
-
-        /// <summary> Updates a catlet. </summary>
-        /// <param name="id"> The <see cref="string"/> to use. </param>
-        /// <param name="body"> The <see cref="UpdateCatletRequestBody"/> to use. </param>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response<Models.Operation> Update(string id, UpdateCatletRequestBody body, CancellationToken cancellationToken = default)
-        {
-            using var scope = _clientDiagnostics.CreateScope("CatletsClient.Update");
-            scope.Start();
-            try
-            {
-                return RestClient.Update(id, body, cancellationToken);
             }
             catch (Exception e)
             {
