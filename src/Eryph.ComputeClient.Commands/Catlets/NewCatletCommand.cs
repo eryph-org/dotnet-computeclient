@@ -89,7 +89,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
                 return;
 
             if (!string.IsNullOrWhiteSpace(Project))
-                config.Society = Project;
+                config.Project = Project;
 
 
             if (!string.IsNullOrWhiteSpace(Name))
