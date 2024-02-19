@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Eryph.ClientRuntime.Powershell" Version="0.5.0" />
-    <PackageReference Include="Eryph.ConfigModel.Catlets.Yaml" Version="0.1.0" />
+    <PackageReference Include="Eryph.ConfigModel.Catlets.Yaml" Version="0.3.0" />
     <PackageReference Include="Eryph.ConfigModel.Networks.Yaml" Version="0.1.0" />
     <PackageReference Include="Eryph.ConfigModel.System.Json" Version="0.1.0" />
     <PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
