@@ -6,7 +6,6 @@
 #nullable disable
 
 using System.Text.Json;
-using Azure.Core;
 
 namespace Eryph.ComputeClient.Models
 {
@@ -18,7 +17,7 @@ namespace Eryph.ComputeClient.Models
             {
                 return null;
             }
-            Optional<ApiErrorData> error = default;
+            ApiErrorData error = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("error"u8))
@@ -31,7 +30,7 @@ namespace Eryph.ComputeClient.Models
                     continue;
                 }
             }
-            return new ApiError(error.Value);
+            return new ApiError(error);
         }
     }
 }

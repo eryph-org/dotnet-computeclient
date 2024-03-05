@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Azure;
 using Eryph.ClientRuntime.Configuration;
 using Eryph.ClientRuntime.Powershell;
+using Eryph.ComputeClient.Commands.Catlets;
 using Eryph.ComputeClient.Models;
 using JetBrains.Annotations;
 using Operation = Eryph.ComputeClient.Models.Operation;
@@ -85,6 +86,15 @@ namespace Eryph.ComputeClient.Commands
                 WriteObject(resourceData);
             }
 
+        }
+
+        protected Guid? GetProjectId(string projectName)
+        {
+            if(string.IsNullOrWhiteSpace(projectName))
+                return null;
+
+            var project = Factory.CreateProjectsClient().List().FirstOrDefault(x => x.Name == projectName);
+            return project == null ? throw new ProjectNotFoundException(projectName) : Guid.Parse(project.Id);
         }
 
         protected void ListOutput<T>(Pageable<T> pageable)

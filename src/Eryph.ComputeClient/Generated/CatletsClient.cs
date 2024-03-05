@@ -302,23 +302,23 @@ namespace Eryph.ComputeClient
 
         /// <summary> List all catlets. </summary>
         /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="project"> The <see cref="string"/> to use. </param>
+        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual AsyncPageable<Catlet> ListAsync(bool? count = null, string project = null, CancellationToken cancellationToken = default)
+        public virtual AsyncPageable<Catlet> ListAsync(bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
         {
-            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(count, project);
-            HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListNextPageRequest(nextLink, count, project);
+            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(count, projectId);
+            HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListNextPageRequest(nextLink, count, projectId);
             return GeneratorPageableHelpers.CreateAsyncPageable(FirstPageRequest, NextPageRequest, Catlet.DeserializeCatlet, _clientDiagnostics, _pipeline, "CatletsClient.List", "value", "nextLink", cancellationToken);
         }
 
         /// <summary> List all catlets. </summary>
         /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="project"> The <see cref="string"/> to use. </param>
+        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Pageable<Catlet> List(bool? count = null, string project = null, CancellationToken cancellationToken = default)
+        public virtual Pageable<Catlet> List(bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
         {
-            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(count, project);
-            HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListNextPageRequest(nextLink, count, project);
+            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(count, projectId);
+            HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListNextPageRequest(nextLink, count, projectId);
             return GeneratorPageableHelpers.CreatePageable(FirstPageRequest, NextPageRequest, Catlet.DeserializeCatlet, _clientDiagnostics, _pipeline, "CatletsClient.List", "value", "nextLink", cancellationToken);
         }
     }

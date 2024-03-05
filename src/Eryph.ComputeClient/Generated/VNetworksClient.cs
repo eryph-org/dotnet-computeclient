@@ -77,16 +77,16 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Get project virtual networks configuration. </summary>
-        /// <param name="project"> The <see cref="string"/> to use. </param>
+        /// <param name="projectId"> The <see cref="Guid"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <remarks> Get the configuration for all networks in a project. </remarks>
-        public virtual async Task<Response<VirtualNetworkConfiguration>> GetConfigAsync(string project, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<VirtualNetworkConfiguration>> GetConfigAsync(Guid projectId, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("VNetworksClient.GetConfig");
             scope.Start();
             try
             {
-                return await RestClient.GetConfigAsync(project, cancellationToken).ConfigureAwait(false);
+                return await RestClient.GetConfigAsync(projectId, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -96,16 +96,16 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Get project virtual networks configuration. </summary>
-        /// <param name="project"> The <see cref="string"/> to use. </param>
+        /// <param name="projectId"> The <see cref="Guid"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <remarks> Get the configuration for all networks in a project. </remarks>
-        public virtual Response<VirtualNetworkConfiguration> GetConfig(string project, CancellationToken cancellationToken = default)
+        public virtual Response<VirtualNetworkConfiguration> GetConfig(Guid projectId, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("VNetworksClient.GetConfig");
             scope.Start();
             try
             {
-                return RestClient.GetConfig(project, cancellationToken);
+                return RestClient.GetConfig(projectId, cancellationToken);
             }
             catch (Exception e)
             {
@@ -154,53 +154,47 @@ namespace Eryph.ComputeClient
 
         /// <summary> Get list of virtual networks. </summary>
         /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="project"> The <see cref="string"/> to use. </param>
+        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual AsyncPageable<VirtualNetwork> ListAsync(bool? count = null, string project = null, CancellationToken cancellationToken = default)
+        public virtual AsyncPageable<VirtualNetwork> ListAsync(bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
         {
-            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(count, project);
-            HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListNextPageRequest(nextLink, count, project);
+            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(count, projectId);
+            HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListNextPageRequest(nextLink, count, projectId);
             return GeneratorPageableHelpers.CreateAsyncPageable(FirstPageRequest, NextPageRequest, VirtualNetwork.DeserializeVirtualNetwork, _clientDiagnostics, _pipeline, "VNetworksClient.List", "value", "nextLink", cancellationToken);
         }
 
         /// <summary> Get list of virtual networks. </summary>
         /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="project"> The <see cref="string"/> to use. </param>
+        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Pageable<VirtualNetwork> List(bool? count = null, string project = null, CancellationToken cancellationToken = default)
+        public virtual Pageable<VirtualNetwork> List(bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
         {
-            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(count, project);
-            HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListNextPageRequest(nextLink, count, project);
+            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(count, projectId);
+            HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListNextPageRequest(nextLink, count, projectId);
             return GeneratorPageableHelpers.CreatePageable(FirstPageRequest, NextPageRequest, VirtualNetwork.DeserializeVirtualNetwork, _clientDiagnostics, _pipeline, "VNetworksClient.List", "value", "nextLink", cancellationToken);
         }
 
         /// <summary> Get list of virtual networks in a project. </summary>
-        /// <param name="project"> The <see cref="string"/> to use. </param>
+        /// <param name="projectId"> The <see cref="Guid"/> to use. </param>
         /// <param name="count"> The <see cref="bool"/>? to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="project"/> is null. </exception>
         /// <remarks> Get list of virtual networks in project. </remarks>
-        public virtual AsyncPageable<VirtualNetwork> ListProjectAsync(string project, bool? count = null, CancellationToken cancellationToken = default)
+        public virtual AsyncPageable<VirtualNetwork> ListProjectAsync(Guid projectId, bool? count = null, CancellationToken cancellationToken = default)
         {
-            Argument.AssertNotNullOrEmpty(project, nameof(project));
-
-            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListProjectRequest(project, count);
-            HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListProjectNextPageRequest(nextLink, project, count);
+            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListProjectRequest(projectId, count);
+            HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListProjectNextPageRequest(nextLink, projectId, count);
             return GeneratorPageableHelpers.CreateAsyncPageable(FirstPageRequest, NextPageRequest, VirtualNetwork.DeserializeVirtualNetwork, _clientDiagnostics, _pipeline, "VNetworksClient.ListProject", "value", "nextLink", cancellationToken);
         }
 
         /// <summary> Get list of virtual networks in a project. </summary>
-        /// <param name="project"> The <see cref="string"/> to use. </param>
+        /// <param name="projectId"> The <see cref="Guid"/> to use. </param>
         /// <param name="count"> The <see cref="bool"/>? to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="project"/> is null. </exception>
         /// <remarks> Get list of virtual networks in project. </remarks>
-        public virtual Pageable<VirtualNetwork> ListProject(string project, bool? count = null, CancellationToken cancellationToken = default)
+        public virtual Pageable<VirtualNetwork> ListProject(Guid projectId, bool? count = null, CancellationToken cancellationToken = default)
         {
-            Argument.AssertNotNullOrEmpty(project, nameof(project));
-
-            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListProjectRequest(project, count);
-            HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListProjectNextPageRequest(nextLink, project, count);
+            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListProjectRequest(projectId, count);
+            HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListProjectNextPageRequest(nextLink, projectId, count);
             return GeneratorPageableHelpers.CreatePageable(FirstPageRequest, NextPageRequest, VirtualNetwork.DeserializeVirtualNetwork, _clientDiagnostics, _pipeline, "VNetworksClient.ListProject", "value", "nextLink", cancellationToken);
         }
     }

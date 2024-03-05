@@ -19,10 +19,10 @@ namespace Eryph.ComputeClient.Models
             {
                 return null;
             }
-            Optional<string> id = default;
-            Optional<string> taskId = default;
-            Optional<string> message = default;
-            Optional<DateTimeOffset> timestamp = default;
+            string id = default;
+            string taskId = default;
+            string message = default;
+            DateTimeOffset? timestamp = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("id"u8))
@@ -65,7 +65,7 @@ namespace Eryph.ComputeClient.Models
                     continue;
                 }
             }
-            return new OperationLogEntry(id.Value, taskId.Value, message.Value, Optional.ToNullable(timestamp));
+            return new OperationLogEntry(id, taskId, message, timestamp);
         }
     }
 }

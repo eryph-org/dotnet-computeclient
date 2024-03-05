@@ -6,7 +6,6 @@
 #nullable disable
 
 using System;
-using Azure.Core;
 
 namespace Eryph.ComputeClient.Models
 {
@@ -18,7 +17,10 @@ namespace Eryph.ComputeClient.Models
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> is null. </exception>
         public NewProjectRequest(string name)
         {
-            Argument.AssertNotNull(name, nameof(name));
+            if (name == null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
 
             Name = name;
         }

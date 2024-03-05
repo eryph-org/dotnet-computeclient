@@ -7,7 +7,7 @@
 
 using System.Collections.Generic;
 using System.Text.Json;
-using Azure.Core;
+using Eryph.ComputeClient;
 
 namespace Eryph.ComputeClient.Models
 {
@@ -19,11 +19,11 @@ namespace Eryph.ComputeClient.Models
             {
                 return null;
             }
-            Optional<string> name = default;
-            Optional<string> provider = default;
-            Optional<string> subnet = default;
-            Optional<IReadOnlyList<string>> ipV4Addresses = default;
-            Optional<IReadOnlyList<string>> ipV4Subnets = default;
+            string name = default;
+            string provider = default;
+            string subnet = default;
+            IReadOnlyList<string> ipV4Addresses = default;
+            IReadOnlyList<string> ipV4Subnets = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("name"u8))
@@ -85,7 +85,7 @@ namespace Eryph.ComputeClient.Models
                     continue;
                 }
             }
-            return new FloatingNetworkPort(name.Value, provider.Value, subnet.Value, Optional.ToList(ipV4Addresses), Optional.ToList(ipV4Subnets));
+            return new FloatingNetworkPort(name, provider, subnet, ipV4Addresses ?? new ChangeTrackingList<string>(), ipV4Subnets ?? new ChangeTrackingList<string>());
         }
     }
 }

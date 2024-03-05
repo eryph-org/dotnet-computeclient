@@ -7,7 +7,7 @@
 
 using System.Collections.Generic;
 using System.Text.Json;
-using Azure.Core;
+using Eryph.ComputeClient;
 
 namespace Eryph.ComputeClient.Models
 {
@@ -19,13 +19,13 @@ namespace Eryph.ComputeClient.Models
             {
                 return null;
             }
-            Optional<string> id = default;
-            Optional<OperationStatus> status = default;
-            Optional<string> statusMessage = default;
-            Optional<IReadOnlyList<OperationResource>> resources = default;
-            Optional<IReadOnlyList<OperationLogEntry>> logEntries = default;
-            Optional<IReadOnlyList<Project>> projects = default;
-            Optional<IReadOnlyList<OperationTask>> tasks = default;
+            string id = default;
+            OperationStatus? status = default;
+            string statusMessage = default;
+            IReadOnlyList<OperationResource> resources = default;
+            IReadOnlyList<OperationLogEntry> logEntries = default;
+            IReadOnlyList<Project> projects = default;
+            IReadOnlyList<OperationTask> tasks = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("id"u8))
@@ -114,7 +114,14 @@ namespace Eryph.ComputeClient.Models
                     continue;
                 }
             }
-            return new Operation(id.Value, Optional.ToNullable(status), statusMessage.Value, Optional.ToList(resources), Optional.ToList(logEntries), Optional.ToList(projects), Optional.ToList(tasks));
+            return new Operation(
+                id,
+                status,
+                statusMessage,
+                resources ?? new ChangeTrackingList<OperationResource>(),
+                logEntries ?? new ChangeTrackingList<OperationLogEntry>(),
+                projects ?? new ChangeTrackingList<Project>(),
+                tasks ?? new ChangeTrackingList<OperationTask>());
         }
     }
 }

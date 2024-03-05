@@ -9,21 +9,20 @@ using System.Text.Json;
 
 namespace Eryph.ComputeClient.Models
 {
-    public partial class VirtualNetwork
+    public partial class ProjectMemberRole
     {
-        internal static VirtualNetwork DeserializeVirtualNetwork(JsonElement element)
+        internal static ProjectMemberRole DeserializeProjectMemberRole(JsonElement element)
         {
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
             string id = default;
-            string name = default;
             string projectId = default;
             string projectName = default;
-            string tenantId = default;
-            string providerName = default;
-            string ipNetwork = default;
+            string memberId = default;
+            string roleId = default;
+            string roleName = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("id"u8))
@@ -34,16 +33,6 @@ namespace Eryph.ComputeClient.Models
                         continue;
                     }
                     id = property.Value.GetString();
-                    continue;
-                }
-                if (property.NameEquals("name"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        name = null;
-                        continue;
-                    }
-                    name = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("projectId"u8))
@@ -66,45 +55,44 @@ namespace Eryph.ComputeClient.Models
                     projectName = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("tenantId"u8))
+                if (property.NameEquals("memberId"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        tenantId = null;
+                        memberId = null;
                         continue;
                     }
-                    tenantId = property.Value.GetString();
+                    memberId = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("providerName"u8))
+                if (property.NameEquals("roleId"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        providerName = null;
+                        roleId = null;
                         continue;
                     }
-                    providerName = property.Value.GetString();
+                    roleId = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("ipNetwork"u8))
+                if (property.NameEquals("roleName"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        ipNetwork = null;
+                        roleName = null;
                         continue;
                     }
-                    ipNetwork = property.Value.GetString();
+                    roleName = property.Value.GetString();
                     continue;
                 }
             }
-            return new VirtualNetwork(
+            return new ProjectMemberRole(
                 id,
-                name,
                 projectId,
                 projectName,
-                tenantId,
-                providerName,
-                ipNetwork);
+                memberId,
+                roleId,
+                roleName);
         }
     }
 }

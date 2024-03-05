@@ -5,61 +5,54 @@
 
 #nullable disable
 
-using System.Collections.Generic;
 using System.Text.Json;
-using Eryph.ComputeClient;
 
 namespace Eryph.ComputeClient.Models
 {
-    internal partial class CatletList
+    public partial class OperationTaskReference
     {
-        internal static CatletList DeserializeCatletList(JsonElement element)
+        internal static OperationTaskReference DeserializeOperationTaskReference(JsonElement element)
         {
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
-            string count = default;
-            string nextLink = default;
-            IReadOnlyList<Catlet> value = default;
+            string id = default;
+            TaskReferenceType? type = default;
+            string projectName = default;
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("count"u8))
+                if (property.NameEquals("id"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        count = null;
+                        id = null;
                         continue;
                     }
-                    count = property.Value.GetString();
+                    id = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("nextLink"u8))
+                if (property.NameEquals("type"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        nextLink = null;
                         continue;
                     }
-                    nextLink = property.Value.GetString();
+                    type = new TaskReferenceType(property.Value.GetString());
                     continue;
                 }
-                if (property.NameEquals("value"u8))
+                if (property.NameEquals("projectName"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
+                        projectName = null;
                         continue;
                     }
-                    List<Catlet> array = new List<Catlet>();
-                    foreach (var item in property.Value.EnumerateArray())
-                    {
-                        array.Add(Catlet.DeserializeCatlet(item));
-                    }
-                    value = array;
+                    projectName = property.Value.GetString();
                     continue;
                 }
             }
-            return new CatletList(count, nextLink, value ?? new ChangeTrackingList<Catlet>());
+            return new OperationTaskReference(id, type, projectName);
         }
     }
 }

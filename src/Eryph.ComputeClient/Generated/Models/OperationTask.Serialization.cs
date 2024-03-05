@@ -6,7 +6,6 @@
 #nullable disable
 
 using System.Text.Json;
-using Azure.Core;
 
 namespace Eryph.ComputeClient.Models
 {
@@ -18,12 +17,13 @@ namespace Eryph.ComputeClient.Models
             {
                 return null;
             }
-            Optional<string> id = default;
-            Optional<string> parentTask = default;
-            Optional<string> name = default;
-            Optional<string> displayName = default;
-            Optional<int> progress = default;
-            Optional<OperationTaskStatus> status = default;
+            string id = default;
+            string parentTask = default;
+            string name = default;
+            string displayName = default;
+            int? progress = default;
+            OperationTaskStatus? status = default;
+            OperationTaskReference reference = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("id"u8))
@@ -84,8 +84,24 @@ namespace Eryph.ComputeClient.Models
                     status = new OperationTaskStatus(property.Value.GetString());
                     continue;
                 }
+                if (property.NameEquals("reference"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    reference = OperationTaskReference.DeserializeOperationTaskReference(property.Value);
+                    continue;
+                }
             }
-            return new OperationTask(id.Value, parentTask.Value, name.Value, displayName.Value, Optional.ToNullable(progress), Optional.ToNullable(status));
+            return new OperationTask(
+                id,
+                parentTask,
+                name,
+                displayName,
+                progress,
+                status,
+                reference);
         }
     }
 }

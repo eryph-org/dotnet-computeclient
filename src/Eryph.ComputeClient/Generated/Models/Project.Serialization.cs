@@ -6,7 +6,6 @@
 #nullable disable
 
 using System.Text.Json;
-using Azure.Core;
 
 namespace Eryph.ComputeClient.Models
 {
@@ -18,9 +17,9 @@ namespace Eryph.ComputeClient.Models
             {
                 return null;
             }
-            Optional<string> id = default;
-            Optional<string> name = default;
-            Optional<string> tenantId = default;
+            string id = default;
+            string name = default;
+            string tenantId = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("id"u8))
@@ -54,7 +53,7 @@ namespace Eryph.ComputeClient.Models
                     continue;
                 }
             }
-            return new Project(id.Value, name.Value, tenantId.Value);
+            return new Project(id, name, tenantId);
         }
     }
 }

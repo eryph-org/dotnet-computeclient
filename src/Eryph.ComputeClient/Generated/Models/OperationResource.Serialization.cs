@@ -6,7 +6,6 @@
 #nullable disable
 
 using System.Text.Json;
-using Azure.Core;
 
 namespace Eryph.ComputeClient.Models
 {
@@ -18,9 +17,9 @@ namespace Eryph.ComputeClient.Models
             {
                 return null;
             }
-            Optional<string> id = default;
-            Optional<string> resourceId = default;
-            Optional<ResourceType> resourceType = default;
+            string id = default;
+            string resourceId = default;
+            ResourceType? resourceType = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("id"u8))
@@ -53,7 +52,7 @@ namespace Eryph.ComputeClient.Models
                     continue;
                 }
             }
-            return new OperationResource(id.Value, resourceId.Value, Optional.ToNullable(resourceType));
+            return new OperationResource(id, resourceId, resourceType);
         }
     }
 }

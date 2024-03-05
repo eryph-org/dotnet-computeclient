@@ -10,20 +10,20 @@ using Eryph.ComputeClient;
 
 namespace Eryph.ComputeClient.Models
 {
-    /// <summary> The CatletList. </summary>
-    internal partial class CatletList
+    /// <summary> The ProjectMemberRoleList. </summary>
+    internal partial class ProjectMemberRoleList
     {
-        /// <summary> Initializes a new instance of <see cref="CatletList"/>. </summary>
-        internal CatletList()
+        /// <summary> Initializes a new instance of <see cref="ProjectMemberRoleList"/>. </summary>
+        internal ProjectMemberRoleList()
         {
-            Value = new ChangeTrackingList<Catlet>();
+            Value = new ChangeTrackingList<ProjectMemberRole>();
         }
 
-        /// <summary> Initializes a new instance of <see cref="CatletList"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="ProjectMemberRoleList"/>. </summary>
         /// <param name="count"></param>
         /// <param name="nextLink"></param>
         /// <param name="value"></param>
-        internal CatletList(string count, string nextLink, IReadOnlyList<Catlet> value)
+        internal ProjectMemberRoleList(string count, string nextLink, IReadOnlyList<ProjectMemberRole> value)
         {
             Count = count;
             NextLink = nextLink;
@@ -35,6 +35,6 @@ namespace Eryph.ComputeClient.Models
         /// <summary> Gets the next link. </summary>
         public string NextLink { get; }
         /// <summary> Gets the value. </summary>
-        public IReadOnlyList<Catlet> Value { get; }
+        public IReadOnlyList<ProjectMemberRole> Value { get; }
     }
 }

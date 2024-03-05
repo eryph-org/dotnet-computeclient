@@ -7,7 +7,7 @@
 
 using System.Collections.Generic;
 using System.Text.Json;
-using Azure.Core;
+using Eryph.ComputeClient;
 
 namespace Eryph.ComputeClient.Models
 {
@@ -19,9 +19,9 @@ namespace Eryph.ComputeClient.Models
             {
                 return null;
             }
-            Optional<string> count = default;
-            Optional<string> nextLink = default;
-            Optional<IReadOnlyList<VirtualDisk>> value = default;
+            string count = default;
+            string nextLink = default;
+            IReadOnlyList<VirtualDisk> value = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("count"u8))
@@ -59,7 +59,7 @@ namespace Eryph.ComputeClient.Models
                     continue;
                 }
             }
-            return new VirtualDiskList(count.Value, nextLink.Value, Optional.ToList(value));
+            return new VirtualDiskList(count, nextLink, value ?? new ChangeTrackingList<VirtualDisk>());
         }
     }
 }

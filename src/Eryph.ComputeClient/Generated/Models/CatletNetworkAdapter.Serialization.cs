@@ -6,7 +6,6 @@
 #nullable disable
 
 using System.Text.Json;
-using Azure.Core;
 
 namespace Eryph.ComputeClient.Models
 {
@@ -18,8 +17,8 @@ namespace Eryph.ComputeClient.Models
             {
                 return null;
             }
-            Optional<string> name = default;
-            Optional<string> macAddress = default;
+            string name = default;
+            string macAddress = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("name"u8))
@@ -43,7 +42,7 @@ namespace Eryph.ComputeClient.Models
                     continue;
                 }
             }
-            return new CatletNetworkAdapter(name.Value, macAddress.Value);
+            return new CatletNetworkAdapter(name, macAddress);
         }
     }
 }
