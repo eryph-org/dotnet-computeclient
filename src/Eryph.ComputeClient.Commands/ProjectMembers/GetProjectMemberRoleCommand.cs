@@ -20,23 +20,24 @@ namespace Eryph.ComputeClient.Commands.ProjectMembers
         [Parameter(
             ParameterSetName = "get",
             Mandatory = true,
-            ValueFromPipeline = true,
+            ValueFromPipeline = false,
             ValueFromPipelineByPropertyName = true)]
         public string ProjectName { get; set; }
 
         protected override void ProcessRecord()
         {
+            var projectId = GetProjectId(ProjectName);
             if (Id != null)
             {
                 foreach (var id in Id)
                 {
-                    WriteObject(Factory.CreateProjectMembersClient().Get(ProjectName, id).Value);
+                    WriteObject(Factory.CreateProjectMembersClient().Get(projectId.GetValueOrDefault(), id).Value);
                 }
 
                 return;
             }
 
-            ListOutput(Factory.CreateProjectMembersClient().List(ProjectName));
+            ListOutput(Factory.CreateProjectMembersClient().List(projectId.GetValueOrDefault()));
 
 
         }

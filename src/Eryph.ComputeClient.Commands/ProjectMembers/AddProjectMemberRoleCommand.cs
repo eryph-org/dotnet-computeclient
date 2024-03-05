@@ -49,6 +49,8 @@ namespace Eryph.ComputeClient.Commands.ProjectMembers
 
         protected override void ProcessRecord()
         {
+            var projectId = GetProjectId(ProjectName);
+
             if (RoleId == Guid.Empty)
             {
                 switch (Role)
@@ -69,7 +71,7 @@ namespace Eryph.ComputeClient.Commands.ProjectMembers
 
             var recordId = Guid.NewGuid();
             WaitForMember(Factory.CreateProjectMembersClient()
-                .Add(ProjectName, new NewProjectMemberBody
+                .Add(projectId.GetValueOrDefault(), new NewProjectMemberBody
                 {
                     CorrelationId = recordId,
                     MemberId = MemberId,

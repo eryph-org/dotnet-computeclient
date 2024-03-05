@@ -35,11 +35,12 @@ namespace Eryph.ComputeClient.Commands.ProjectMembers
 
         protected override void ProcessRecord()
         {
+            var projectId = GetProjectId(ProjectName).GetValueOrDefault();
             foreach (var id in Id)
             {
                 WaitForMember(
-                    Factory.CreateProjectMembersClient().Remove(ProjectName, id),
-                    _nowait, false, id, ProjectName);
+                    Factory.CreateProjectMembersClient().Remove(projectId, id),
+                    _nowait, false, id, projectId);
             }
 
         }
