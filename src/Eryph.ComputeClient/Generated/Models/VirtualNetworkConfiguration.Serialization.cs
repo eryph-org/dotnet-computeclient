@@ -6,7 +6,6 @@
 #nullable disable
 
 using System.Text.Json;
-using Azure.Core;
 
 namespace Eryph.ComputeClient.Models
 {
@@ -18,7 +17,7 @@ namespace Eryph.ComputeClient.Models
             {
                 return null;
             }
-            Optional<JsonElement> configuration = default;
+            JsonElement configuration = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("configuration"u8))

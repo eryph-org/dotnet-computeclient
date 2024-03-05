@@ -8,7 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
-using Azure.Core;
+using Eryph.ComputeClient;
 
 namespace Eryph.ComputeClient.Models
 {
@@ -20,16 +20,16 @@ namespace Eryph.ComputeClient.Models
             {
                 return null;
             }
-            Optional<Guid> id = default;
-            Optional<string> name = default;
-            Optional<string> storageIdentifier = default;
-            Optional<string> dataStore = default;
-            Optional<string> project = default;
-            Optional<string> environment = default;
-            Optional<string> path = default;
-            Optional<long?> sizeBytes = default;
-            Optional<Guid> parentId = default;
-            Optional<IReadOnlyList<CatletDrive>> attachedDrives = default;
+            Guid? id = default;
+            string name = default;
+            string storageIdentifier = default;
+            string dataStore = default;
+            string project = default;
+            string environment = default;
+            string path = default;
+            long? sizeBytes = default;
+            Guid? parentId = default;
+            IReadOnlyList<CatletDrive> attachedDrives = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("id"u8))
@@ -135,7 +135,17 @@ namespace Eryph.ComputeClient.Models
                     continue;
                 }
             }
-            return new VirtualDisk(Optional.ToNullable(id), name.Value, storageIdentifier.Value, dataStore.Value, project.Value, environment.Value, path.Value, Optional.ToNullable(sizeBytes), Optional.ToNullable(parentId), Optional.ToList(attachedDrives));
+            return new VirtualDisk(
+                id,
+                name,
+                storageIdentifier,
+                dataStore,
+                project,
+                environment,
+                path,
+                sizeBytes,
+                parentId,
+                attachedDrives ?? new ChangeTrackingList<CatletDrive>());
         }
     }
 }

@@ -38,7 +38,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
 
         [Parameter]
         [ValidateNotNullOrEmpty]
-        public string Project { get; set; }
+        public string ProjectName { get; set; }
 
         [Parameter(ParameterSetName = "Parent")]
         [ValidateNotNullOrEmpty]
@@ -88,8 +88,8 @@ namespace Eryph.ComputeClient.Commands.Catlets
             if (config == null)
                 return;
 
-            if (!string.IsNullOrWhiteSpace(Project))
-                config.Project = Project;
+            if (!string.IsNullOrWhiteSpace(ProjectName))
+                config.Project = ProjectName;
 
 
             if (!string.IsNullOrWhiteSpace(Name))

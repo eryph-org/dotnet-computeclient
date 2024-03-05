@@ -7,7 +7,7 @@
 
 using System.Collections.Generic;
 using System.Text.Json;
-using Azure.Core;
+using Eryph.ComputeClient;
 
 namespace Eryph.ComputeClient.Models
 {
@@ -19,13 +19,13 @@ namespace Eryph.ComputeClient.Models
             {
                 return null;
             }
-            Optional<string> name = default;
-            Optional<string> provider = default;
-            Optional<IReadOnlyList<string>> ipV4Addresses = default;
-            Optional<string> iPv4DefaultGateway = default;
-            Optional<IReadOnlyList<string>> dnsServerAddresses = default;
-            Optional<IReadOnlyList<string>> ipV4Subnets = default;
-            Optional<FloatingNetworkPort> floatingPort = default;
+            string name = default;
+            string provider = default;
+            IReadOnlyList<string> ipV4Addresses = default;
+            string iPv4DefaultGateway = default;
+            IReadOnlyList<string> dnsServerAddresses = default;
+            IReadOnlyList<string> ipV4Subnets = default;
+            FloatingNetworkPort floatingPort = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("name"u8))
@@ -110,7 +110,14 @@ namespace Eryph.ComputeClient.Models
                     continue;
                 }
             }
-            return new CatletNetwork(name.Value, provider.Value, Optional.ToList(ipV4Addresses), iPv4DefaultGateway.Value, Optional.ToList(dnsServerAddresses), Optional.ToList(ipV4Subnets), floatingPort.Value);
+            return new CatletNetwork(
+                name,
+                provider,
+                ipV4Addresses ?? new ChangeTrackingList<string>(),
+                iPv4DefaultGateway,
+                dnsServerAddresses ?? new ChangeTrackingList<string>(),
+                ipV4Subnets ?? new ChangeTrackingList<string>(),
+                floatingPort);
         }
     }
 }

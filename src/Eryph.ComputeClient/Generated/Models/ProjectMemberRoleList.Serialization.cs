@@ -11,9 +11,9 @@ using Eryph.ComputeClient;
 
 namespace Eryph.ComputeClient.Models
 {
-    internal partial class CatletList
+    internal partial class ProjectMemberRoleList
     {
-        internal static CatletList DeserializeCatletList(JsonElement element)
+        internal static ProjectMemberRoleList DeserializeProjectMemberRoleList(JsonElement element)
         {
             if (element.ValueKind == JsonValueKind.Null)
             {
@@ -21,7 +21,7 @@ namespace Eryph.ComputeClient.Models
             }
             string count = default;
             string nextLink = default;
-            IReadOnlyList<Catlet> value = default;
+            IReadOnlyList<ProjectMemberRole> value = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("count"u8))
@@ -50,16 +50,16 @@ namespace Eryph.ComputeClient.Models
                     {
                         continue;
                     }
-                    List<Catlet> array = new List<Catlet>();
+                    List<ProjectMemberRole> array = new List<ProjectMemberRole>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(Catlet.DeserializeCatlet(item));
+                        array.Add(ProjectMemberRole.DeserializeProjectMemberRole(item));
                     }
                     value = array;
                     continue;
                 }
             }
-            return new CatletList(count, nextLink, value ?? new ChangeTrackingList<Catlet>());
+            return new ProjectMemberRoleList(count, nextLink, value ?? new ChangeTrackingList<ProjectMemberRole>());
         }
     }
 }

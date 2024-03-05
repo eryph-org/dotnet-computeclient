@@ -6,7 +6,6 @@
 #nullable disable
 
 using System;
-using Azure.Core;
 
 namespace Eryph.ComputeClient.Models
 {
@@ -19,7 +18,10 @@ namespace Eryph.ComputeClient.Models
         /// <exception cref="ArgumentNullException"> <paramref name="configuration"/> is null. </exception>
         public UpdateCatletRequestBody(Guid correlationId, object configuration)
         {
-            Argument.AssertNotNull(configuration, nameof(configuration));
+            if (configuration == null)
+            {
+                throw new ArgumentNullException(nameof(configuration));
+            }
 
             CorrelationId = correlationId;
             Configuration = configuration;

@@ -7,7 +7,6 @@
 
 using System;
 using System.Text.Json;
-using Azure.Core;
 
 namespace Eryph.ComputeClient.Models
 {
@@ -19,8 +18,8 @@ namespace Eryph.ComputeClient.Models
             {
                 return null;
             }
-            Optional<CatletDriveType> type = default;
-            Optional<Guid> attachedDiskId = default;
+            CatletDriveType? type = default;
+            Guid? attachedDiskId = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("type"u8))
@@ -42,7 +41,7 @@ namespace Eryph.ComputeClient.Models
                     continue;
                 }
             }
-            return new CatletDrive(Optional.ToNullable(type), Optional.ToNullable(attachedDiskId));
+            return new CatletDrive(type, attachedDiskId);
         }
     }
 }

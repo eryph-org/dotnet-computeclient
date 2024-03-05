@@ -1,4 +1,5 @@
-﻿using System.Management.Automation;
+﻿using System;
+using System.Management.Automation;
 using Eryph.ComputeClient.Models;
 using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.Json;
@@ -10,6 +11,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
     [PublicAPI]
     [Cmdlet(VerbsCommon.Get, "Catlet", DefaultParameterSetName = "get")]
     [OutputType(typeof(Catlet), ParameterSetName = new[] { "get" })]
+    [OutputType(typeof(Catlet), ParameterSetName = new[] { "list" })]
     [OutputType(typeof(string), ParameterSetName = new[] { "getconfig" })]
     public class GetCatletCommand : CatletCmdLet
     {
@@ -30,6 +32,13 @@ namespace Eryph.ComputeClient.Commands.Catlets
             Mandatory = true)]
         public SwitchParameter Config { get; set; }
 
+        [Parameter(
+            ParameterSetName = "list",
+            ValueFromPipeline = true,
+            ValueFromPipelineByPropertyName = true)]
+        [ValidateNotNullOrEmpty]
+        public string ProjectName { get; set; }
+
         protected override void ProcessRecord()
         {
 
@@ -46,8 +55,8 @@ namespace Eryph.ComputeClient.Commands.Catlets
                 return;
             }
 
-
-            foreach (var virtualCatlet in Factory.CreateCatletsClient().List())
+            var projectId = GetProjectId(ProjectName);
+            foreach (var virtualCatlet in Factory.CreateCatletsClient().List(projectId: projectId))
             {
                 if (Stopping) break;
 
@@ -77,4 +86,18 @@ namespace Eryph.ComputeClient.Commands.Catlets
 
     }
 
+    public class ProjectNotFoundException : Exception
+    {
+        public ProjectNotFoundException()
+        {
+        }
+
+        public ProjectNotFoundException(string project) : base($"Project {project} not found")
+        {
+        }
+
+        public ProjectNotFoundException(string project, Exception inner) : base($"Project {project} not found", inner)
+        {
+        }
+    }
 }

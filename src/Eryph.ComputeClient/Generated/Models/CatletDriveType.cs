@@ -26,6 +26,7 @@ namespace Eryph.ComputeClient.Models
         private const string SharedVHDValue = "SharedVHD";
         private const string PHDValue = "PHD";
         private const string DVDValue = "DVD";
+        private const string VHDSetValue = "VHDSet";
 
         /// <summary> VHD. </summary>
         public static CatletDriveType VHD { get; } = new CatletDriveType(VHDValue);
@@ -35,6 +36,8 @@ namespace Eryph.ComputeClient.Models
         public static CatletDriveType PHD { get; } = new CatletDriveType(PHDValue);
         /// <summary> DVD. </summary>
         public static CatletDriveType DVD { get; } = new CatletDriveType(DVDValue);
+        /// <summary> VHDSet. </summary>
+        public static CatletDriveType VHDSet { get; } = new CatletDriveType(VHDSetValue);
         /// <summary> Determines if two <see cref="CatletDriveType"/> values are the same. </summary>
         public static bool operator ==(CatletDriveType left, CatletDriveType right) => left.Equals(right);
         /// <summary> Determines if two <see cref="CatletDriveType"/> values are not the same. </summary>

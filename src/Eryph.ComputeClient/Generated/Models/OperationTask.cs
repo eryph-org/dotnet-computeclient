@@ -22,7 +22,8 @@ namespace Eryph.ComputeClient.Models
         /// <param name="displayName"></param>
         /// <param name="progress"></param>
         /// <param name="status"></param>
-        internal OperationTask(string id, string parentTask, string name, string displayName, int? progress, OperationTaskStatus? status)
+        /// <param name="reference"></param>
+        internal OperationTask(string id, string parentTask, string name, string displayName, int? progress, OperationTaskStatus? status, OperationTaskReference reference)
         {
             Id = id;
             ParentTask = parentTask;
@@ -30,6 +31,7 @@ namespace Eryph.ComputeClient.Models
             DisplayName = displayName;
             Progress = progress;
             Status = status;
+            Reference = reference;
         }
 
         /// <summary> Gets the id. </summary>
@@ -44,5 +46,7 @@ namespace Eryph.ComputeClient.Models
         public int? Progress { get; }
         /// <summary> Gets the status. </summary>
         public OperationTaskStatus? Status { get; }
+        /// <summary> Gets the reference. </summary>
+        public OperationTaskReference Reference { get; }
     }
 }

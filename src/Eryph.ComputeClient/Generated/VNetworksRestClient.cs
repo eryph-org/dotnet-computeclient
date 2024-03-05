@@ -104,7 +104,7 @@ namespace Eryph.ComputeClient
             }
         }
 
-        internal HttpMessage CreateGetConfigRequest(string project)
+        internal HttpMessage CreateGetConfigRequest(Guid projectId)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -112,7 +112,7 @@ namespace Eryph.ComputeClient
             var uri = new RawRequestUriBuilder();
             uri.Reset(_endpoint);
             uri.AppendPath("/v1/projects/", false);
-            uri.AppendPath(project, true);
+            uri.AppendPath(projectId, true);
             uri.AppendPath("/vnetworks/config", false);
             request.Uri = uri;
             request.Headers.Add("Accept", "application/json, text/json");
@@ -120,18 +120,12 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Get project virtual networks configuration. </summary>
-        /// <param name="project"> The <see cref="string"/> to use. </param>
+        /// <param name="projectId"> The <see cref="Guid"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="project"/> is null. </exception>
         /// <remarks> Get the configuration for all networks in a project. </remarks>
-        public async Task<Response<VirtualNetworkConfiguration>> GetConfigAsync(string project, CancellationToken cancellationToken = default)
+        public async Task<Response<VirtualNetworkConfiguration>> GetConfigAsync(Guid projectId, CancellationToken cancellationToken = default)
         {
-            if (project == null)
-            {
-                throw new ArgumentNullException(nameof(project));
-            }
-
-            using var message = CreateGetConfigRequest(project);
+            using var message = CreateGetConfigRequest(projectId);
             await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             switch (message.Response.Status)
             {
@@ -148,18 +142,12 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Get project virtual networks configuration. </summary>
-        /// <param name="project"> The <see cref="string"/> to use. </param>
+        /// <param name="projectId"> The <see cref="Guid"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="project"/> is null. </exception>
         /// <remarks> Get the configuration for all networks in a project. </remarks>
-        public Response<VirtualNetworkConfiguration> GetConfig(string project, CancellationToken cancellationToken = default)
+        public Response<VirtualNetworkConfiguration> GetConfig(Guid projectId, CancellationToken cancellationToken = default)
         {
-            if (project == null)
-            {
-                throw new ArgumentNullException(nameof(project));
-            }
-
-            using var message = CreateGetConfigRequest(project);
+            using var message = CreateGetConfigRequest(projectId);
             _pipeline.Send(message, cancellationToken);
             switch (message.Response.Status)
             {
@@ -175,7 +163,7 @@ namespace Eryph.ComputeClient
             }
         }
 
-        internal HttpMessage CreateListRequest(bool? count, string project)
+        internal HttpMessage CreateListRequest(bool? count, Guid? projectId)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -187,9 +175,9 @@ namespace Eryph.ComputeClient
             {
                 uri.AppendQuery("count", count.Value, true);
             }
-            if (project != null)
+            if (projectId != null)
             {
-                uri.AppendQuery("project", project, true);
+                uri.AppendQuery("projectId", projectId.Value, true);
             }
             request.Uri = uri;
             request.Headers.Add("Accept", "application/json, text/json");
@@ -198,11 +186,11 @@ namespace Eryph.ComputeClient
 
         /// <summary> Get list of virtual networks. </summary>
         /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="project"> The <see cref="string"/> to use. </param>
+        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public async Task<Response<VirtualNetworkList>> ListAsync(bool? count = null, string project = null, CancellationToken cancellationToken = default)
+        public async Task<Response<VirtualNetworkList>> ListAsync(bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
         {
-            using var message = CreateListRequest(count, project);
+            using var message = CreateListRequest(count, projectId);
             await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             switch (message.Response.Status)
             {
@@ -220,11 +208,11 @@ namespace Eryph.ComputeClient
 
         /// <summary> Get list of virtual networks. </summary>
         /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="project"> The <see cref="string"/> to use. </param>
+        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public Response<VirtualNetworkList> List(bool? count = null, string project = null, CancellationToken cancellationToken = default)
+        public Response<VirtualNetworkList> List(bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
         {
-            using var message = CreateListRequest(count, project);
+            using var message = CreateListRequest(count, projectId);
             _pipeline.Send(message, cancellationToken);
             switch (message.Response.Status)
             {
@@ -304,7 +292,7 @@ namespace Eryph.ComputeClient
             }
         }
 
-        internal HttpMessage CreateListProjectRequest(string project, bool? count)
+        internal HttpMessage CreateListProjectRequest(Guid projectId, bool? count)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -312,7 +300,7 @@ namespace Eryph.ComputeClient
             var uri = new RawRequestUriBuilder();
             uri.Reset(_endpoint);
             uri.AppendPath("/v1/projects/", false);
-            uri.AppendPath(project, true);
+            uri.AppendPath(projectId, true);
             uri.AppendPath("/vnetworks", false);
             if (count != null)
             {
@@ -324,19 +312,13 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Get list of virtual networks in a project. </summary>
-        /// <param name="project"> The <see cref="string"/> to use. </param>
+        /// <param name="projectId"> The <see cref="Guid"/> to use. </param>
         /// <param name="count"> The <see cref="bool"/>? to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="project"/> is null. </exception>
         /// <remarks> Get list of virtual networks in project. </remarks>
-        public async Task<Response<VirtualNetworkList>> ListProjectAsync(string project, bool? count = null, CancellationToken cancellationToken = default)
+        public async Task<Response<VirtualNetworkList>> ListProjectAsync(Guid projectId, bool? count = null, CancellationToken cancellationToken = default)
         {
-            if (project == null)
-            {
-                throw new ArgumentNullException(nameof(project));
-            }
-
-            using var message = CreateListProjectRequest(project, count);
+            using var message = CreateListProjectRequest(projectId, count);
             await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             switch (message.Response.Status)
             {
@@ -353,19 +335,13 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Get list of virtual networks in a project. </summary>
-        /// <param name="project"> The <see cref="string"/> to use. </param>
+        /// <param name="projectId"> The <see cref="Guid"/> to use. </param>
         /// <param name="count"> The <see cref="bool"/>? to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="project"/> is null. </exception>
         /// <remarks> Get list of virtual networks in project. </remarks>
-        public Response<VirtualNetworkList> ListProject(string project, bool? count = null, CancellationToken cancellationToken = default)
+        public Response<VirtualNetworkList> ListProject(Guid projectId, bool? count = null, CancellationToken cancellationToken = default)
         {
-            if (project == null)
-            {
-                throw new ArgumentNullException(nameof(project));
-            }
-
-            using var message = CreateListProjectRequest(project, count);
+            using var message = CreateListProjectRequest(projectId, count);
             _pipeline.Send(message, cancellationToken);
             switch (message.Response.Status)
             {
@@ -381,7 +357,7 @@ namespace Eryph.ComputeClient
             }
         }
 
-        internal HttpMessage CreateListNextPageRequest(string nextLink, bool? count, string project)
+        internal HttpMessage CreateListNextPageRequest(string nextLink, bool? count, Guid? projectId)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -397,17 +373,17 @@ namespace Eryph.ComputeClient
         /// <summary> Get list of virtual networks. </summary>
         /// <param name="nextLink"> The URL to the next page of results. </param>
         /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="project"> The <see cref="string"/> to use. </param>
+        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> is null. </exception>
-        public async Task<Response<VirtualNetworkList>> ListNextPageAsync(string nextLink, bool? count = null, string project = null, CancellationToken cancellationToken = default)
+        public async Task<Response<VirtualNetworkList>> ListNextPageAsync(string nextLink, bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
         {
             if (nextLink == null)
             {
                 throw new ArgumentNullException(nameof(nextLink));
             }
 
-            using var message = CreateListNextPageRequest(nextLink, count, project);
+            using var message = CreateListNextPageRequest(nextLink, count, projectId);
             await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             switch (message.Response.Status)
             {
@@ -426,17 +402,17 @@ namespace Eryph.ComputeClient
         /// <summary> Get list of virtual networks. </summary>
         /// <param name="nextLink"> The URL to the next page of results. </param>
         /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="project"> The <see cref="string"/> to use. </param>
+        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> is null. </exception>
-        public Response<VirtualNetworkList> ListNextPage(string nextLink, bool? count = null, string project = null, CancellationToken cancellationToken = default)
+        public Response<VirtualNetworkList> ListNextPage(string nextLink, bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
         {
             if (nextLink == null)
             {
                 throw new ArgumentNullException(nameof(nextLink));
             }
 
-            using var message = CreateListNextPageRequest(nextLink, count, project);
+            using var message = CreateListNextPageRequest(nextLink, count, projectId);
             _pipeline.Send(message, cancellationToken);
             switch (message.Response.Status)
             {
@@ -452,7 +428,7 @@ namespace Eryph.ComputeClient
             }
         }
 
-        internal HttpMessage CreateListProjectNextPageRequest(string nextLink, string project, bool? count)
+        internal HttpMessage CreateListProjectNextPageRequest(string nextLink, Guid projectId, bool? count)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -467,23 +443,19 @@ namespace Eryph.ComputeClient
 
         /// <summary> Get list of virtual networks in a project. </summary>
         /// <param name="nextLink"> The URL to the next page of results. </param>
-        /// <param name="project"> The <see cref="string"/> to use. </param>
+        /// <param name="projectId"> The <see cref="Guid"/> to use. </param>
         /// <param name="count"> The <see cref="bool"/>? to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> or <paramref name="project"/> is null. </exception>
+        /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> is null. </exception>
         /// <remarks> Get list of virtual networks in project. </remarks>
-        public async Task<Response<VirtualNetworkList>> ListProjectNextPageAsync(string nextLink, string project, bool? count = null, CancellationToken cancellationToken = default)
+        public async Task<Response<VirtualNetworkList>> ListProjectNextPageAsync(string nextLink, Guid projectId, bool? count = null, CancellationToken cancellationToken = default)
         {
             if (nextLink == null)
             {
                 throw new ArgumentNullException(nameof(nextLink));
             }
-            if (project == null)
-            {
-                throw new ArgumentNullException(nameof(project));
-            }
 
-            using var message = CreateListProjectNextPageRequest(nextLink, project, count);
+            using var message = CreateListProjectNextPageRequest(nextLink, projectId, count);
             await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             switch (message.Response.Status)
             {
@@ -501,23 +473,19 @@ namespace Eryph.ComputeClient
 
         /// <summary> Get list of virtual networks in a project. </summary>
         /// <param name="nextLink"> The URL to the next page of results. </param>
-        /// <param name="project"> The <see cref="string"/> to use. </param>
+        /// <param name="projectId"> The <see cref="Guid"/> to use. </param>
         /// <param name="count"> The <see cref="bool"/>? to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> or <paramref name="project"/> is null. </exception>
+        /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> is null. </exception>
         /// <remarks> Get list of virtual networks in project. </remarks>
-        public Response<VirtualNetworkList> ListProjectNextPage(string nextLink, string project, bool? count = null, CancellationToken cancellationToken = default)
+        public Response<VirtualNetworkList> ListProjectNextPage(string nextLink, Guid projectId, bool? count = null, CancellationToken cancellationToken = default)
         {
             if (nextLink == null)
             {
                 throw new ArgumentNullException(nameof(nextLink));
             }
-            if (project == null)
-            {
-                throw new ArgumentNullException(nameof(project));
-            }
 
-            using var message = CreateListProjectNextPageRequest(nextLink, project, count);
+            using var message = CreateListProjectNextPageRequest(nextLink, projectId, count);
             _pipeline.Send(message, cancellationToken);
             switch (message.Response.Status)
             {

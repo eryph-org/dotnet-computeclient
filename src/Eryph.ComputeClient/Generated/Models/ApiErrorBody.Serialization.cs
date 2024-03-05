@@ -21,7 +21,7 @@ namespace Eryph.ComputeClient.Models
             }
             string code = default;
             string message = default;
-            Optional<string> target = default;
+            string target = default;
             IReadOnlyDictionary<string, object> additionalProperties = default;
             Dictionary<string, object> additionalPropertiesDictionary = new Dictionary<string, object>();
             foreach (var property in element.EnumerateObject())
@@ -49,7 +49,7 @@ namespace Eryph.ComputeClient.Models
                 additionalPropertiesDictionary.Add(property.Name, property.Value.GetObject());
             }
             additionalProperties = additionalPropertiesDictionary;
-            return new ApiErrorBody(code, message, target.Value, additionalProperties);
+            return new ApiErrorBody(code, message, target, additionalProperties);
         }
     }
 }

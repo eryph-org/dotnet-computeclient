@@ -8,6 +8,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using Azure.Core;
+using Eryph.ComputeClient;
 
 namespace Eryph.ComputeClient.Models
 {
@@ -21,9 +22,9 @@ namespace Eryph.ComputeClient.Models
             }
             string code = default;
             string message = default;
-            Optional<string> target = default;
-            Optional<IReadOnlyList<ApiErrorBody>> details = default;
-            Optional<object> innererror = default;
+            string target = default;
+            IReadOnlyList<ApiErrorBody> details = default;
+            object innererror = default;
             IReadOnlyDictionary<string, object> additionalProperties = default;
             Dictionary<string, object> additionalPropertiesDictionary = new Dictionary<string, object>();
             foreach (var property in element.EnumerateObject())
@@ -74,7 +75,13 @@ namespace Eryph.ComputeClient.Models
                 additionalPropertiesDictionary.Add(property.Name, property.Value.GetObject());
             }
             additionalProperties = additionalPropertiesDictionary;
-            return new ApiErrorData(code, message, target.Value, Optional.ToList(details), innererror.Value, additionalProperties);
+            return new ApiErrorData(
+                code,
+                message,
+                target,
+                details ?? new ChangeTrackingList<ApiErrorBody>(),
+                innererror,
+                additionalProperties);
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System.Management.Automation;
 using Eryph.ComputeClient.Models;
-using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.Json;
 using Eryph.ConfigModel.Networks;
 using Eryph.ConfigModel.Yaml;
@@ -36,9 +35,12 @@ namespace Eryph.ComputeClient.Commands.Networks
 
         protected override void ProcessRecord()
         {
+            var projectId = GetProjectId(ProjectName);
+
             if (Config.IsPresent)
             {
-                WriteConfig(Factory.CreateVNetworksClient().GetConfig(ProjectName).Value);
+
+                WriteConfig(Factory.CreateVNetworksClient().GetConfig(projectId.GetValueOrDefault()).Value);
                 return;
             }
 
@@ -54,21 +56,7 @@ namespace Eryph.ComputeClient.Commands.Networks
             }
 
 
-            foreach (var virtualCatlet in Factory.CreateVNetworksClient().List())
-            {
-                if (Stopping) break;
-
-                if (Config.IsPresent)
-                {
-                    WriteConfig(Factory.CreateVNetworksClient().GetConfig(virtualCatlet.Id));
-
-                }
-                else
-                {
-                    WriteObject(virtualCatlet, true);
-                }
-            }
-
+            ListOutput(Factory.CreateVNetworksClient().List());
 
         }
 

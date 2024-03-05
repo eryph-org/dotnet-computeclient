@@ -172,7 +172,7 @@ namespace Eryph.ComputeClient
             }
         }
 
-        internal HttpMessage CreateListRequest(bool? count, string project)
+        internal HttpMessage CreateListRequest(bool? count, Guid? projectId)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -184,9 +184,9 @@ namespace Eryph.ComputeClient
             {
                 uri.AppendQuery("count", count.Value, true);
             }
-            if (project != null)
+            if (projectId != null)
             {
-                uri.AppendQuery("project", project, true);
+                uri.AppendQuery("projectId", projectId.Value, true);
             }
             request.Uri = uri;
             request.Headers.Add("Accept", "application/json, text/json");
@@ -195,11 +195,11 @@ namespace Eryph.ComputeClient
 
         /// <summary> Get list of Virtual Disks. </summary>
         /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="project"> The <see cref="string"/> to use. </param>
+        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public async Task<Response<VirtualDiskList>> ListAsync(bool? count = null, string project = null, CancellationToken cancellationToken = default)
+        public async Task<Response<VirtualDiskList>> ListAsync(bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
         {
-            using var message = CreateListRequest(count, project);
+            using var message = CreateListRequest(count, projectId);
             await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             switch (message.Response.Status)
             {
@@ -217,11 +217,11 @@ namespace Eryph.ComputeClient
 
         /// <summary> Get list of Virtual Disks. </summary>
         /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="project"> The <see cref="string"/> to use. </param>
+        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public Response<VirtualDiskList> List(bool? count = null, string project = null, CancellationToken cancellationToken = default)
+        public Response<VirtualDiskList> List(bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
         {
-            using var message = CreateListRequest(count, project);
+            using var message = CreateListRequest(count, projectId);
             _pipeline.Send(message, cancellationToken);
             switch (message.Response.Status)
             {
@@ -237,7 +237,7 @@ namespace Eryph.ComputeClient
             }
         }
 
-        internal HttpMessage CreateListNextPageRequest(string nextLink, bool? count, string project)
+        internal HttpMessage CreateListNextPageRequest(string nextLink, bool? count, Guid? projectId)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -253,17 +253,17 @@ namespace Eryph.ComputeClient
         /// <summary> Get list of Virtual Disks. </summary>
         /// <param name="nextLink"> The URL to the next page of results. </param>
         /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="project"> The <see cref="string"/> to use. </param>
+        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> is null. </exception>
-        public async Task<Response<VirtualDiskList>> ListNextPageAsync(string nextLink, bool? count = null, string project = null, CancellationToken cancellationToken = default)
+        public async Task<Response<VirtualDiskList>> ListNextPageAsync(string nextLink, bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
         {
             if (nextLink == null)
             {
                 throw new ArgumentNullException(nameof(nextLink));
             }
 
-            using var message = CreateListNextPageRequest(nextLink, count, project);
+            using var message = CreateListNextPageRequest(nextLink, count, projectId);
             await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             switch (message.Response.Status)
             {
@@ -282,17 +282,17 @@ namespace Eryph.ComputeClient
         /// <summary> Get list of Virtual Disks. </summary>
         /// <param name="nextLink"> The URL to the next page of results. </param>
         /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="project"> The <see cref="string"/> to use. </param>
+        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> is null. </exception>
-        public Response<VirtualDiskList> ListNextPage(string nextLink, bool? count = null, string project = null, CancellationToken cancellationToken = default)
+        public Response<VirtualDiskList> ListNextPage(string nextLink, bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
         {
             if (nextLink == null)
             {
                 throw new ArgumentNullException(nameof(nextLink));
             }
 
-            using var message = CreateListNextPageRequest(nextLink, count, project);
+            using var message = CreateListNextPageRequest(nextLink, count, projectId);
             _pipeline.Send(message, cancellationToken);
             switch (message.Response.Status)
             {

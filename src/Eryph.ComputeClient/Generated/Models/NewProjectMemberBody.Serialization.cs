@@ -11,7 +11,7 @@ using Eryph.ComputeClient;
 
 namespace Eryph.ComputeClient.Models
 {
-    public partial class NewProjectRequest : IUtf8JsonSerializable
+    public partial class NewProjectMemberBody : IUtf8JsonSerializable
     {
         void IUtf8JsonSerializable.Write(Utf8JsonWriter writer)
         {
@@ -28,8 +28,23 @@ namespace Eryph.ComputeClient.Models
                     writer.WriteNull("correlationId");
                 }
             }
-            writer.WritePropertyName("name"u8);
-            writer.WriteStringValue(Name);
+            if (Optional.IsDefined(MemberId))
+            {
+                if (MemberId != null)
+                {
+                    writer.WritePropertyName("memberId"u8);
+                    writer.WriteStringValue(MemberId);
+                }
+                else
+                {
+                    writer.WriteNull("memberId");
+                }
+            }
+            if (Optional.IsDefined(RoleId))
+            {
+                writer.WritePropertyName("roleId"u8);
+                writer.WriteStringValue(RoleId.Value);
+            }
             writer.WriteEndObject();
         }
     }

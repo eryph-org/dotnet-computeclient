@@ -7,7 +7,7 @@
 
 using System.Collections.Generic;
 using System.Text.Json;
-using Azure.Core;
+using Eryph.ComputeClient;
 
 namespace Eryph.ComputeClient.Models
 {
@@ -19,12 +19,12 @@ namespace Eryph.ComputeClient.Models
             {
                 return null;
             }
-            Optional<string> id = default;
-            Optional<string> name = default;
-            Optional<CatletStatus> status = default;
-            Optional<IReadOnlyList<CatletNetwork>> networks = default;
-            Optional<IReadOnlyList<CatletNetworkAdapter>> networkAdapters = default;
-            Optional<IReadOnlyList<CatletDrive>> drives = default;
+            string id = default;
+            string name = default;
+            CatletStatus? status = default;
+            IReadOnlyList<CatletNetwork> networks = default;
+            IReadOnlyList<CatletNetworkAdapter> networkAdapters = default;
+            IReadOnlyList<CatletDrive> drives = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("id"u8))
@@ -99,7 +99,13 @@ namespace Eryph.ComputeClient.Models
                     continue;
                 }
             }
-            return new Catlet(id.Value, name.Value, Optional.ToNullable(status), Optional.ToList(networks), Optional.ToList(networkAdapters), Optional.ToList(drives));
+            return new Catlet(
+                id,
+                name,
+                status,
+                networks ?? new ChangeTrackingList<CatletNetwork>(),
+                networkAdapters ?? new ChangeTrackingList<CatletNetworkAdapter>(),
+                drives ?? new ChangeTrackingList<CatletDrive>());
         }
     }
 }

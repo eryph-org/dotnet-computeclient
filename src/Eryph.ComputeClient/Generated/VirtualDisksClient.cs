@@ -114,23 +114,23 @@ namespace Eryph.ComputeClient
 
         /// <summary> Get list of Virtual Disks. </summary>
         /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="project"> The <see cref="string"/> to use. </param>
+        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual AsyncPageable<VirtualDisk> ListAsync(bool? count = null, string project = null, CancellationToken cancellationToken = default)
+        public virtual AsyncPageable<VirtualDisk> ListAsync(bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
         {
-            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(count, project);
-            HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListNextPageRequest(nextLink, count, project);
+            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(count, projectId);
+            HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListNextPageRequest(nextLink, count, projectId);
             return GeneratorPageableHelpers.CreateAsyncPageable(FirstPageRequest, NextPageRequest, VirtualDisk.DeserializeVirtualDisk, _clientDiagnostics, _pipeline, "VirtualDisksClient.List", "value", "nextLink", cancellationToken);
         }
 
         /// <summary> Get list of Virtual Disks. </summary>
         /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="project"> The <see cref="string"/> to use. </param>
+        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Pageable<VirtualDisk> List(bool? count = null, string project = null, CancellationToken cancellationToken = default)
+        public virtual Pageable<VirtualDisk> List(bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
         {
-            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(count, project);
-            HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListNextPageRequest(nextLink, count, project);
+            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(count, projectId);
+            HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListNextPageRequest(nextLink, count, projectId);
             return GeneratorPageableHelpers.CreatePageable(FirstPageRequest, NextPageRequest, VirtualDisk.DeserializeVirtualDisk, _clientDiagnostics, _pipeline, "VirtualDisksClient.List", "value", "nextLink", cancellationToken);
         }
     }

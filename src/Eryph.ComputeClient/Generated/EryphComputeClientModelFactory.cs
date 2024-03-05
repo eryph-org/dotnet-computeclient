@@ -31,7 +31,14 @@ namespace Eryph.ComputeClient.Models
             projects ??= new List<Project>();
             tasks ??= new List<OperationTask>();
 
-            return new Operation(id, status, statusMessage, resources?.ToList(), logEntries?.ToList(), projects?.ToList(), tasks?.ToList());
+            return new Operation(
+                id,
+                status,
+                statusMessage,
+                resources?.ToList(),
+                logEntries?.ToList(),
+                projects?.ToList(),
+                tasks?.ToList());
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.OperationResource"/>. </summary>
@@ -72,10 +79,47 @@ namespace Eryph.ComputeClient.Models
         /// <param name="displayName"></param>
         /// <param name="progress"></param>
         /// <param name="status"></param>
+        /// <param name="reference"></param>
         /// <returns> A new <see cref="Models.OperationTask"/> instance for mocking. </returns>
-        public static OperationTask OperationTask(string id = null, string parentTask = null, string name = null, string displayName = null, int? progress = null, OperationTaskStatus? status = null)
+        public static OperationTask OperationTask(string id = null, string parentTask = null, string name = null, string displayName = null, int? progress = null, OperationTaskStatus? status = null, OperationTaskReference reference = null)
         {
-            return new OperationTask(id, parentTask, name, displayName, progress, status);
+            return new OperationTask(
+                id,
+                parentTask,
+                name,
+                displayName,
+                progress,
+                status,
+                reference);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.OperationTaskReference"/>. </summary>
+        /// <param name="id"></param>
+        /// <param name="type"></param>
+        /// <param name="projectName"></param>
+        /// <returns> A new <see cref="Models.OperationTaskReference"/> instance for mocking. </returns>
+        public static OperationTaskReference OperationTaskReference(string id = null, TaskReferenceType? type = null, string projectName = null)
+        {
+            return new OperationTaskReference(id, type, projectName);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.ProjectMemberRole"/>. </summary>
+        /// <param name="id"></param>
+        /// <param name="projectId"></param>
+        /// <param name="projectName"></param>
+        /// <param name="memberId"></param>
+        /// <param name="roleId"></param>
+        /// <param name="roleName"></param>
+        /// <returns> A new <see cref="Models.ProjectMemberRole"/> instance for mocking. </returns>
+        public static ProjectMemberRole ProjectMemberRole(string id = null, string projectId = null, string projectName = null, string memberId = null, string roleId = null, string roleName = null)
+        {
+            return new ProjectMemberRole(
+                id,
+                projectId,
+                projectName,
+                memberId,
+                roleId,
+                roleName);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.Catlet"/>. </summary>
@@ -92,7 +136,13 @@ namespace Eryph.ComputeClient.Models
             networkAdapters ??= new List<CatletNetworkAdapter>();
             drives ??= new List<CatletDrive>();
 
-            return new Catlet(id, name, status, networks?.ToList(), networkAdapters?.ToList(), drives?.ToList());
+            return new Catlet(
+                id,
+                name,
+                status,
+                networks?.ToList(),
+                networkAdapters?.ToList(),
+                drives?.ToList());
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.CatletNetwork"/>. </summary>
@@ -110,7 +160,14 @@ namespace Eryph.ComputeClient.Models
             dnsServerAddresses ??= new List<string>();
             ipV4Subnets ??= new List<string>();
 
-            return new CatletNetwork(name, provider, ipV4Addresses?.ToList(), iPv4DefaultGateway, dnsServerAddresses?.ToList(), ipV4Subnets?.ToList(), floatingPort);
+            return new CatletNetwork(
+                name,
+                provider,
+                ipV4Addresses?.ToList(),
+                iPv4DefaultGateway,
+                dnsServerAddresses?.ToList(),
+                ipV4Subnets?.ToList(),
+                floatingPort);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.FloatingNetworkPort"/>. </summary>
@@ -162,7 +219,17 @@ namespace Eryph.ComputeClient.Models
         {
             attachedDrives ??= new List<CatletDrive>();
 
-            return new VirtualDisk(id, name, storageIdentifier, dataStore, project, environment, path, sizeBytes, parentId, attachedDrives?.ToList());
+            return new VirtualDisk(
+                id,
+                name,
+                storageIdentifier,
+                dataStore,
+                project,
+                environment,
+                path,
+                sizeBytes,
+                parentId,
+                attachedDrives?.ToList());
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.VirtualNetwork"/>. </summary>
@@ -176,7 +243,14 @@ namespace Eryph.ComputeClient.Models
         /// <returns> A new <see cref="Models.VirtualNetwork"/> instance for mocking. </returns>
         public static VirtualNetwork VirtualNetwork(string id = null, string name = null, string projectId = null, string projectName = null, string tenantId = null, string providerName = null, string ipNetwork = null)
         {
-            return new VirtualNetwork(id, name, projectId, projectName, tenantId, providerName, ipNetwork);
+            return new VirtualNetwork(
+                id,
+                name,
+                projectId,
+                projectName,
+                tenantId,
+                providerName,
+                ipNetwork);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.CatletConfiguration"/>. </summary>

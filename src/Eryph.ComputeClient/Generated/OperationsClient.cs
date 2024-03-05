@@ -84,12 +84,12 @@ namespace Eryph.ComputeClient
         /// <param name="logTimeStamp"> The <see cref="DateTimeOffset"/>? to use. </param>
         /// <param name="expand"> The <see cref="string"/> to use. </param>
         /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="project"> The <see cref="string"/> to use. </param>
+        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual AsyncPageable<Models.Operation> ListAsync(DateTimeOffset? logTimeStamp = null, string expand = null, bool? count = null, string project = null, CancellationToken cancellationToken = default)
+        public virtual AsyncPageable<Models.Operation> ListAsync(DateTimeOffset? logTimeStamp = null, string expand = null, bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
         {
-            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(logTimeStamp, expand, count, project);
-            HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListNextPageRequest(nextLink, logTimeStamp, expand, count, project);
+            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(logTimeStamp, expand, count, projectId);
+            HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListNextPageRequest(nextLink, logTimeStamp, expand, count, projectId);
             return GeneratorPageableHelpers.CreateAsyncPageable(FirstPageRequest, NextPageRequest, Models.Operation.DeserializeOperation, _clientDiagnostics, _pipeline, "OperationsClient.List", "value", "nextLink", cancellationToken);
         }
 
@@ -97,12 +97,12 @@ namespace Eryph.ComputeClient
         /// <param name="logTimeStamp"> The <see cref="DateTimeOffset"/>? to use. </param>
         /// <param name="expand"> The <see cref="string"/> to use. </param>
         /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="project"> The <see cref="string"/> to use. </param>
+        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Pageable<Models.Operation> List(DateTimeOffset? logTimeStamp = null, string expand = null, bool? count = null, string project = null, CancellationToken cancellationToken = default)
+        public virtual Pageable<Models.Operation> List(DateTimeOffset? logTimeStamp = null, string expand = null, bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
         {
-            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(logTimeStamp, expand, count, project);
-            HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListNextPageRequest(nextLink, logTimeStamp, expand, count, project);
+            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(logTimeStamp, expand, count, projectId);
+            HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListNextPageRequest(nextLink, logTimeStamp, expand, count, projectId);
             return GeneratorPageableHelpers.CreatePageable(FirstPageRequest, NextPageRequest, Models.Operation.DeserializeOperation, _clientDiagnostics, _pipeline, "OperationsClient.List", "value", "nextLink", cancellationToken);
         }
     }
