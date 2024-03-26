@@ -87,7 +87,10 @@ CmdletsToExport = @(
     "Get-EryphProject",
     "Set-EryphProject",
     "New-EryphProject",
-    "Remove-EryphProject"
+    "Remove-EryphProject",
+    "Add-EryphProjectMemberRole",
+    "Get-EryphProjectMemberRole",
+    "Remove-EryphProjectMemberRole"
 )
 
 # Variables to export from this module
