@@ -4,10 +4,11 @@
     <TargetFrameworks>net462;net6.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <LangVersion>12</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Eryph.ClientRuntime.Powershell" Version="0.6.1" />
+    <PackageReference Include="Eryph.ClientRuntime.Powershell" Version="0.6.2-PullRequest0044.4" />
     <PackageReference Include="Eryph.ConfigModel.Catlets.Yaml" Version="0.4.0" />
     <PackageReference Include="Eryph.ConfigModel.Networks.Yaml" Version="0.4.0" />
     <PackageReference Include="Eryph.ConfigModel.System.Json" Version="0.4.0" />

@@ -11,14 +11,17 @@ param()
 $PSNativeCommandUseErrorActionPreference = $true
 $ErrorActionPreference = 'Stop'
 
+# Update the version in the csproj when changing this
+$autoRestCSharpVersion = "3.0.0-beta.20240527.2"
+
 $settings = Get-Content -Raw -Path "$PSScriptRoot/config.json" | ConvertFrom-Json
 $tag = $settings.tag
 $spec = $settings.spec
 
-npm exec --package="autorest" -- `
+npm exec --package="autorest@3.7.1" -- `
     autorest `
     --version="3.10.2" `
-    --use="@autorest/csharp@3.0.0-beta.20240527.2" `
+    --use="@autorest/csharp@$autoRestCSharpVersion" `
     --use="@autorest/modelerfour@4.27.0" `
     "$PSScriptRoot/../../eryph-api-spec/specification/$spec" `
     --tag=$tag `
