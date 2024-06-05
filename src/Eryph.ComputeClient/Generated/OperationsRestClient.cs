@@ -54,7 +54,7 @@ namespace Eryph.ComputeClient
                 uri.AppendQuery("expand", expand, true);
             }
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json");
+            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
             return message;
         }
 
@@ -141,7 +141,7 @@ namespace Eryph.ComputeClient
                 uri.AppendQuery("projectId", projectId.Value, true);
             }
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json");
+            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
             return message;
         }
 
@@ -202,7 +202,7 @@ namespace Eryph.ComputeClient
             uri.Reset(_endpoint);
             uri.AppendRawNextLink(nextLink, false);
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json");
+            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
             return message;
         }
 

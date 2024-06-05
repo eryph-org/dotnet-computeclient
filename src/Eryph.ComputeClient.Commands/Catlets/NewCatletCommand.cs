@@ -95,16 +95,13 @@ namespace Eryph.ComputeClient.Commands.Catlets
             if (!string.IsNullOrWhiteSpace(Name))
                 config.Name = Name;
 
+            var serializedConfig = JsonSerializer.SerializeToElement(config, ConfigModelJsonSerializer.DefaultOptions);
 
-
-            WaitForOperation(Factory.CreateCatletsClient()
-                .Create(
-                    new NewCatletRequest(Guid.NewGuid(),
-                       JsonSerializer.SerializeToElement(config, 
-                           ConfigModelJsonSerializer.DefaultOptions))), _noWait, true);
+            WaitForOperation(
+                Factory.CreateCatletsClient().Create(
+                    new NewCatletRequest(Guid.NewGuid(), serializedConfig)),
+                _noWait,
+                true);
         }
     }
-
-
-
 }

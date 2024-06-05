@@ -11,89 +11,91 @@ using Azure;
 
 namespace Eryph.ComputeClient.Models
 {
-    public partial class FloatingNetworkPort
+    internal partial class ProblemDetails
     {
-        internal static FloatingNetworkPort DeserializeFloatingNetworkPort(JsonElement element)
+        internal static ProblemDetails DeserializeProblemDetails(JsonElement element)
         {
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
-            string name = default;
-            string provider = default;
-            string subnet = default;
-            IReadOnlyList<string> ipV4Addresses = default;
-            IReadOnlyList<string> ipV4Subnets = default;
+            string type = default;
+            string title = default;
+            int? status = default;
+            string detail = default;
+            string instance = default;
+            IReadOnlyDictionary<string, object> additionalProperties = default;
+            Dictionary<string, object> additionalPropertiesDictionary = new Dictionary<string, object>();
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("name"u8))
+                if (property.NameEquals("type"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        name = null;
+                        type = null;
                         continue;
                     }
-                    name = property.Value.GetString();
+                    type = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("provider"u8))
+                if (property.NameEquals("title"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        provider = null;
+                        title = null;
                         continue;
                     }
-                    provider = property.Value.GetString();
+                    title = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("subnet"u8))
+                if (property.NameEquals("status"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        subnet = null;
+                        status = null;
                         continue;
                     }
-                    subnet = property.Value.GetString();
+                    status = property.Value.GetInt32();
                     continue;
                 }
-                if (property.NameEquals("ipV4Addresses"u8))
+                if (property.NameEquals("detail"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
+                        detail = null;
                         continue;
                     }
-                    List<string> array = new List<string>();
-                    foreach (var item in property.Value.EnumerateArray())
-                    {
-                        array.Add(item.GetString());
-                    }
-                    ipV4Addresses = array;
+                    detail = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("ipV4Subnets"u8))
+                if (property.NameEquals("instance"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
+                        instance = null;
                         continue;
                     }
-                    List<string> array = new List<string>();
-                    foreach (var item in property.Value.EnumerateArray())
-                    {
-                        array.Add(item.GetString());
-                    }
-                    ipV4Subnets = array;
+                    instance = property.Value.GetString();
                     continue;
                 }
+                additionalPropertiesDictionary.Add(property.Name, property.Value.GetObject());
             }
-            return new FloatingNetworkPort(name, provider, subnet, ipV4Addresses ?? new ChangeTrackingList<string>(), ipV4Subnets ?? new ChangeTrackingList<string>());
+            additionalProperties = additionalPropertiesDictionary;
+            return new ProblemDetails(
+                type,
+                title,
+                status,
+                detail,
+                instance,
+                additionalProperties);
         }
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The response to deserialize the model from. </param>
-        internal static FloatingNetworkPort FromResponse(Response response)
+        internal static ProblemDetails FromResponse(Response response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeFloatingNetworkPort(document.RootElement);
+            return DeserializeProblemDetails(document.RootElement);
         }
     }
 }

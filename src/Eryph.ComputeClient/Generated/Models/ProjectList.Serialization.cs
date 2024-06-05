@@ -7,7 +7,7 @@
 
 using System.Collections.Generic;
 using System.Text.Json;
-using Eryph.ComputeClient;
+using Azure;
 
 namespace Eryph.ComputeClient.Models
 {
@@ -60,6 +60,14 @@ namespace Eryph.ComputeClient.Models
                 }
             }
             return new ProjectList(count, nextLink, value ?? new ChangeTrackingList<Project>());
+        }
+
+        /// <summary> Deserializes the model from a raw response. </summary>
+        /// <param name="response"> The response to deserialize the model from. </param>
+        internal static ProjectList FromResponse(Response response)
+        {
+            using var document = JsonDocument.Parse(response.Content);
+            return DeserializeProjectList(document.RootElement);
         }
     }
 }

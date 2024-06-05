@@ -6,6 +6,7 @@
 #nullable disable
 
 using System.Text.Json;
+using Azure;
 
 namespace Eryph.ComputeClient.Models
 {
@@ -21,6 +22,7 @@ namespace Eryph.ComputeClient.Models
             string name = default;
             string projectId = default;
             string projectName = default;
+            string environment = default;
             string tenantId = default;
             string providerName = default;
             string ipNetwork = default;
@@ -66,6 +68,16 @@ namespace Eryph.ComputeClient.Models
                     projectName = property.Value.GetString();
                     continue;
                 }
+                if (property.NameEquals("environment"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        environment = null;
+                        continue;
+                    }
+                    environment = property.Value.GetString();
+                    continue;
+                }
                 if (property.NameEquals("tenantId"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
@@ -102,9 +114,18 @@ namespace Eryph.ComputeClient.Models
                 name,
                 projectId,
                 projectName,
+                environment,
                 tenantId,
                 providerName,
                 ipNetwork);
+        }
+
+        /// <summary> Deserializes the model from a raw response. </summary>
+        /// <param name="response"> The response to deserialize the model from. </param>
+        internal static VirtualNetwork FromResponse(Response response)
+        {
+            using var document = JsonDocument.Parse(response.Content);
+            return DeserializeVirtualNetwork(document.RootElement);
         }
     }
 }

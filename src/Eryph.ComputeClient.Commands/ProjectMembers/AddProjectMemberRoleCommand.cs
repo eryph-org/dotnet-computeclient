@@ -70,15 +70,15 @@ namespace Eryph.ComputeClient.Commands.ProjectMembers
             }
 
             var recordId = Guid.NewGuid();
-            WaitForMember(Factory.CreateProjectMembersClient()
-                .Add(projectId.GetValueOrDefault(), new NewProjectMemberBody
-                {
-                    CorrelationId = recordId,
-                    MemberId = MemberId,
-                    RoleId = RoleId
-                }), _nowait, true);
+            WaitForMember(
+                Factory.CreateProjectMembersClient().Add(
+                    projectId.GetValueOrDefault(),
+                    new NewProjectMemberBody(MemberId, RoleId)
+                    {
+                        CorrelationId = recordId,
+                    }), 
+                _nowait,
+                true);
         }
-
-
     }
 }

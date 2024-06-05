@@ -47,7 +47,7 @@ namespace Eryph.ComputeClient
             uri.AppendPath(projectId, true);
             uri.AppendPath("/members", false);
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json");
+            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
             request.Headers.Add("Content-Type", "application/json");
             var content = new Utf8JsonRequestContent();
             content.JsonWriter.WriteObjectValue(body);
@@ -128,7 +128,7 @@ namespace Eryph.ComputeClient
                 uri.AppendQuery("count", count.Value, true);
             }
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json");
+            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
             return message;
         }
 
@@ -188,7 +188,7 @@ namespace Eryph.ComputeClient
             uri.AppendPath("/members/", false);
             uri.AppendPath(id, true);
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json");
+            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
             return message;
         }
 
@@ -262,7 +262,7 @@ namespace Eryph.ComputeClient
             uri.AppendPath("/members/", false);
             uri.AppendPath(id, true);
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json");
+            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
             return message;
         }
 
@@ -331,7 +331,7 @@ namespace Eryph.ComputeClient
             uri.Reset(_endpoint);
             uri.AppendRawNextLink(nextLink, false);
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json");
+            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
             return message;
         }
 

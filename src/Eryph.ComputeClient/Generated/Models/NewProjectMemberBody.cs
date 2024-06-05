@@ -13,15 +13,19 @@ namespace Eryph.ComputeClient.Models
     public partial class NewProjectMemberBody
     {
         /// <summary> Initializes a new instance of <see cref="NewProjectMemberBody"/>. </summary>
-        public NewProjectMemberBody()
+        /// <param name="memberId"></param>
+        /// <param name="roleId"></param>
+        public NewProjectMemberBody(string memberId, Guid roleId)
         {
+            MemberId = memberId;
+            RoleId = roleId;
         }
 
         /// <summary> Initializes a new instance of <see cref="NewProjectMemberBody"/>. </summary>
         /// <param name="correlationId"></param>
         /// <param name="memberId"></param>
         /// <param name="roleId"></param>
-        internal NewProjectMemberBody(Guid? correlationId, string memberId, Guid? roleId)
+        internal NewProjectMemberBody(Guid? correlationId, string memberId, Guid roleId)
         {
             CorrelationId = correlationId;
             MemberId = memberId;
@@ -30,9 +34,9 @@ namespace Eryph.ComputeClient.Models
 
         /// <summary> Gets or sets the correlation id. </summary>
         public Guid? CorrelationId { get; set; }
-        /// <summary> Gets or sets the member id. </summary>
-        public string MemberId { get; set; }
-        /// <summary> Gets or sets the role id. </summary>
-        public Guid? RoleId { get; set; }
+        /// <summary> Gets the member id. </summary>
+        public string MemberId { get; }
+        /// <summary> Gets the role id. </summary>
+        public Guid RoleId { get; }
     }
 }

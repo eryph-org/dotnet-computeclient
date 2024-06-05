@@ -7,7 +7,7 @@
 
 using System.Collections.Generic;
 using System.Text.Json;
-using Eryph.ComputeClient;
+using Azure;
 
 namespace Eryph.ComputeClient.Models
 {
@@ -118,6 +118,14 @@ namespace Eryph.ComputeClient.Models
                 dnsServerAddresses ?? new ChangeTrackingList<string>(),
                 ipV4Subnets ?? new ChangeTrackingList<string>(),
                 floatingPort);
+        }
+
+        /// <summary> Deserializes the model from a raw response. </summary>
+        /// <param name="response"> The response to deserialize the model from. </param>
+        internal static CatletNetwork FromResponse(Response response)
+        {
+            using var document = JsonDocument.Parse(response.Content);
+            return DeserializeCatletNetwork(document.RootElement);
         }
     }
 }

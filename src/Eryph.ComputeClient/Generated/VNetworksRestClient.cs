@@ -46,7 +46,7 @@ namespace Eryph.ComputeClient
             uri.AppendPath("/v1/vnetworks/", false);
             uri.AppendPath(id, true);
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json");
+            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
             return message;
         }
 
@@ -115,7 +115,7 @@ namespace Eryph.ComputeClient
             uri.AppendPath(projectId, true);
             uri.AppendPath("/vnetworks/config", false);
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json");
+            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
             return message;
         }
 
@@ -180,7 +180,7 @@ namespace Eryph.ComputeClient
                 uri.AppendQuery("projectId", projectId.Value, true);
             }
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json");
+            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
             return message;
         }
 
@@ -237,7 +237,7 @@ namespace Eryph.ComputeClient
             uri.Reset(_endpoint);
             uri.AppendPath("/v1/vnetworks", false);
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json");
+            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
             if (body != null)
             {
                 request.Headers.Add("Content-Type", "application/json");
@@ -307,7 +307,7 @@ namespace Eryph.ComputeClient
                 uri.AppendQuery("count", count.Value, true);
             }
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json");
+            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
             return message;
         }
 
@@ -366,7 +366,7 @@ namespace Eryph.ComputeClient
             uri.Reset(_endpoint);
             uri.AppendRawNextLink(nextLink, false);
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json");
+            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
             return message;
         }
 
@@ -437,7 +437,7 @@ namespace Eryph.ComputeClient
             uri.Reset(_endpoint);
             uri.AppendRawNextLink(nextLink, false);
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json");
+            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
             return message;
         }
 

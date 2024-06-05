@@ -7,7 +7,6 @@
 
 using System;
 using System.Collections.Generic;
-using Eryph.ComputeClient;
 
 namespace Eryph.ComputeClient.Models
 {

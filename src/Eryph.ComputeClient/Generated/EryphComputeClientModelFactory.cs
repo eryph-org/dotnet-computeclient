@@ -237,17 +237,19 @@ namespace Eryph.ComputeClient.Models
         /// <param name="name"></param>
         /// <param name="projectId"></param>
         /// <param name="projectName"></param>
+        /// <param name="environment"></param>
         /// <param name="tenantId"></param>
         /// <param name="providerName"></param>
         /// <param name="ipNetwork"></param>
         /// <returns> A new <see cref="Models.VirtualNetwork"/> instance for mocking. </returns>
-        public static VirtualNetwork VirtualNetwork(string id = null, string name = null, string projectId = null, string projectName = null, string tenantId = null, string providerName = null, string ipNetwork = null)
+        public static VirtualNetwork VirtualNetwork(string id = null, string name = null, string projectId = null, string projectName = null, string environment = null, string tenantId = null, string providerName = null, string ipNetwork = null)
         {
             return new VirtualNetwork(
                 id,
                 name,
                 projectId,
                 projectName,
+                environment,
                 tenantId,
                 providerName,
                 ipNetwork);

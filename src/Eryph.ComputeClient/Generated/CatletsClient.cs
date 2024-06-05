@@ -266,7 +266,7 @@ namespace Eryph.ComputeClient
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="body"> The <see cref="StopCatletRequestBody"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response<Models.Operation>> StopAsync(string id, StopCatletRequestBody body = null, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<Models.Operation>> StopAsync(string id, StopCatletRequestBody body, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("CatletsClient.Stop");
             scope.Start();
@@ -285,7 +285,7 @@ namespace Eryph.ComputeClient
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="body"> The <see cref="StopCatletRequestBody"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response<Models.Operation> Stop(string id, StopCatletRequestBody body = null, CancellationToken cancellationToken = default)
+        public virtual Response<Models.Operation> Stop(string id, StopCatletRequestBody body, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("CatletsClient.Stop");
             scope.Start();
