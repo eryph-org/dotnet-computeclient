@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Eryph.ClientRuntime.Powershell" Version="0.6.2-PullRequest0044.4" />
+    <PackageReference Include="Eryph.ClientRuntime.Powershell" Version="0.6.2-PullRequest0044.7" />
     <PackageReference Include="Eryph.ConfigModel.Catlets.Yaml" Version="0.4.0" />
     <PackageReference Include="Eryph.ConfigModel.Networks.Yaml" Version="0.4.0" />
     <PackageReference Include="Eryph.ConfigModel.System.Json" Version="0.4.0" />

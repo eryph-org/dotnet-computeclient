@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Eryph.ClientRuntime.Authentication" Version="0.6.2-PullRequest0044.4" />
+    <PackageReference Include="Eryph.ClientRuntime.Authentication" Version="0.6.2-PullRequest0044.7" />
     <PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
