@@ -45,7 +45,7 @@ namespace Eryph.ComputeClient
             uri.Reset(_endpoint);
             uri.AppendPath("/v1/catlets", false);
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json");
+            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
             if (body != null)
             {
                 request.Headers.Add("Content-Type", "application/json");
@@ -117,7 +117,7 @@ namespace Eryph.ComputeClient
                 uri.AppendQuery("projectId", projectId.Value, true);
             }
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json");
+            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
             return message;
         }
 
@@ -175,7 +175,7 @@ namespace Eryph.ComputeClient
             uri.AppendPath("/v1/catlets/", false);
             uri.AppendPath(id, true);
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json");
+            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
             return message;
         }
 
@@ -243,7 +243,7 @@ namespace Eryph.ComputeClient
             uri.AppendPath("/v1/catlets/", false);
             uri.AppendPath(id, true);
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json");
+            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
             return message;
         }
 
@@ -311,7 +311,7 @@ namespace Eryph.ComputeClient
             uri.AppendPath("/v1/catlets/", false);
             uri.AppendPath(id, true);
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json");
+            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
             request.Headers.Add("Content-Type", "application/json");
             var content = new Utf8JsonRequestContent();
             content.JsonWriter.WriteObjectValue(body);
@@ -394,7 +394,7 @@ namespace Eryph.ComputeClient
             uri.AppendPath(id, true);
             uri.AppendPath("/config", false);
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json");
+            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
             return message;
         }
 
@@ -465,7 +465,7 @@ namespace Eryph.ComputeClient
             uri.AppendPath(id, true);
             uri.AppendPath("/start", false);
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json");
+            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
             return message;
         }
 
@@ -534,14 +534,11 @@ namespace Eryph.ComputeClient
             uri.AppendPath(id, true);
             uri.AppendPath("/stop", false);
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json");
-            if (body != null)
-            {
-                request.Headers.Add("Content-Type", "application/json");
-                var content = new Utf8JsonRequestContent();
-                content.JsonWriter.WriteObjectValue(body);
-                request.Content = content;
-            }
+            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
+            request.Headers.Add("Content-Type", "application/json");
+            var content = new Utf8JsonRequestContent();
+            content.JsonWriter.WriteObjectValue(body);
+            request.Content = content;
             return message;
         }
 
@@ -549,12 +546,16 @@ namespace Eryph.ComputeClient
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="body"> The <see cref="StopCatletRequestBody"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
-        public async Task<Response<Models.Operation>> StopAsync(string id, StopCatletRequestBody body = null, CancellationToken cancellationToken = default)
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="body"/> is null. </exception>
+        public async Task<Response<Models.Operation>> StopAsync(string id, StopCatletRequestBody body, CancellationToken cancellationToken = default)
         {
             if (id == null)
             {
                 throw new ArgumentNullException(nameof(id));
+            }
+            if (body == null)
+            {
+                throw new ArgumentNullException(nameof(body));
             }
 
             using var message = CreateStopRequest(id, body);
@@ -577,12 +578,16 @@ namespace Eryph.ComputeClient
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="body"> The <see cref="StopCatletRequestBody"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
-        public Response<Models.Operation> Stop(string id, StopCatletRequestBody body = null, CancellationToken cancellationToken = default)
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="body"/> is null. </exception>
+        public Response<Models.Operation> Stop(string id, StopCatletRequestBody body, CancellationToken cancellationToken = default)
         {
             if (id == null)
             {
                 throw new ArgumentNullException(nameof(id));
+            }
+            if (body == null)
+            {
+                throw new ArgumentNullException(nameof(body));
             }
 
             using var message = CreateStopRequest(id, body);
@@ -610,7 +615,7 @@ namespace Eryph.ComputeClient
             uri.Reset(_endpoint);
             uri.AppendRawNextLink(nextLink, false);
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json");
+            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
             return message;
         }
 

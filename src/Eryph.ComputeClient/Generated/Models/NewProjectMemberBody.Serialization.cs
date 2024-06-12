@@ -7,7 +7,6 @@
 
 using System.Text.Json;
 using Azure.Core;
-using Eryph.ComputeClient;
 
 namespace Eryph.ComputeClient.Models
 {
@@ -28,24 +27,26 @@ namespace Eryph.ComputeClient.Models
                     writer.WriteNull("correlationId");
                 }
             }
-            if (Optional.IsDefined(MemberId))
+            if (MemberId != null)
             {
-                if (MemberId != null)
-                {
-                    writer.WritePropertyName("memberId"u8);
-                    writer.WriteStringValue(MemberId);
-                }
-                else
-                {
-                    writer.WriteNull("memberId");
-                }
+                writer.WritePropertyName("memberId"u8);
+                writer.WriteStringValue(MemberId);
             }
-            if (Optional.IsDefined(RoleId))
+            else
             {
-                writer.WritePropertyName("roleId"u8);
-                writer.WriteStringValue(RoleId.Value);
+                writer.WriteNull("memberId");
             }
+            writer.WritePropertyName("roleId"u8);
+            writer.WriteStringValue(RoleId);
             writer.WriteEndObject();
+        }
+
+        /// <summary> Convert into a <see cref="RequestContent"/>. </summary>
+        internal virtual RequestContent ToRequestContent()
+        {
+            var content = new Utf8JsonRequestContent();
+            content.JsonWriter.WriteObjectValue(this);
+            return content;
         }
     }
 }

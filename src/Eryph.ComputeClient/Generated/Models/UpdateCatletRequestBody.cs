@@ -18,10 +18,7 @@ namespace Eryph.ComputeClient.Models
         /// <exception cref="ArgumentNullException"> <paramref name="configuration"/> is null. </exception>
         public UpdateCatletRequestBody(Guid correlationId, object configuration)
         {
-            if (configuration == null)
-            {
-                throw new ArgumentNullException(nameof(configuration));
-            }
+            Argument.AssertNotNull(configuration, nameof(configuration));
 
             CorrelationId = correlationId;
             Configuration = configuration;

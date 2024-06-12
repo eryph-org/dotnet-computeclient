@@ -7,7 +7,6 @@
 
 using System.Text.Json;
 using Azure.Core;
-using Eryph.ComputeClient;
 
 namespace Eryph.ComputeClient.Models
 {
@@ -16,21 +15,19 @@ namespace Eryph.ComputeClient.Models
         void IUtf8JsonSerializable.Write(Utf8JsonWriter writer)
         {
             writer.WriteStartObject();
-            if (Optional.IsDefined(CorrelationId))
-            {
-                if (CorrelationId != null)
-                {
-                    writer.WritePropertyName("correlationId"u8);
-                    writer.WriteStringValue(CorrelationId.Value);
-                }
-                else
-                {
-                    writer.WriteNull("correlationId");
-                }
-            }
+            writer.WritePropertyName("correlationId"u8);
+            writer.WriteStringValue(CorrelationId);
             writer.WritePropertyName("name"u8);
             writer.WriteStringValue(Name);
             writer.WriteEndObject();
+        }
+
+        /// <summary> Convert into a <see cref="RequestContent"/>. </summary>
+        internal virtual RequestContent ToRequestContent()
+        {
+            var content = new Utf8JsonRequestContent();
+            content.JsonWriter.WriteObjectValue(this);
+            return content;
         }
     }
 }

@@ -6,6 +6,7 @@
 #nullable disable
 
 using System.Text.Json;
+using Azure;
 
 namespace Eryph.ComputeClient.Models
 {
@@ -102,6 +103,14 @@ namespace Eryph.ComputeClient.Models
                 progress,
                 status,
                 reference);
+        }
+
+        /// <summary> Deserializes the model from a raw response. </summary>
+        /// <param name="response"> The response to deserialize the model from. </param>
+        internal static OperationTask FromResponse(Response response)
+        {
+            using var document = JsonDocument.Parse(response.Content);
+            return DeserializeOperationTask(document.RootElement);
         }
     }
 }

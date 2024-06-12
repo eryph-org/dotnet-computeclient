@@ -32,17 +32,15 @@ namespace Eryph.ComputeClient.Commands.Projects
 
         private bool _nowait;
 
-
         protected override void ProcessRecord()
         {
-            WaitForProject(Factory.CreateProjectsClient().Update(Id, new UpdateProjectBody
-            {
-                CorrelationId = Guid.NewGuid(),
-                Name = Name,
-            })
-                , _nowait, true, Id);
-
+            WaitForProject(
+                Factory.CreateProjectsClient().Update(
+                    Id,
+                    new UpdateProjectBody(Guid.NewGuid(), Name)),
+                _nowait,
+                true,
+                Id);
         }
-
     }
 }

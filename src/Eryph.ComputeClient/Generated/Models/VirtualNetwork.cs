@@ -20,15 +20,17 @@ namespace Eryph.ComputeClient.Models
         /// <param name="name"></param>
         /// <param name="projectId"></param>
         /// <param name="projectName"></param>
+        /// <param name="environment"></param>
         /// <param name="tenantId"></param>
         /// <param name="providerName"></param>
         /// <param name="ipNetwork"></param>
-        internal VirtualNetwork(string id, string name, string projectId, string projectName, string tenantId, string providerName, string ipNetwork)
+        internal VirtualNetwork(string id, string name, string projectId, string projectName, string environment, string tenantId, string providerName, string ipNetwork)
         {
             Id = id;
             Name = name;
             ProjectId = projectId;
             ProjectName = projectName;
+            Environment = environment;
             TenantId = tenantId;
             ProviderName = providerName;
             IpNetwork = ipNetwork;
@@ -42,6 +44,8 @@ namespace Eryph.ComputeClient.Models
         public string ProjectId { get; }
         /// <summary> Gets the project name. </summary>
         public string ProjectName { get; }
+        /// <summary> Gets the environment. </summary>
+        public string Environment { get; }
         /// <summary> Gets the tenant id. </summary>
         public string TenantId { get; }
         /// <summary> Gets the provider name. </summary>

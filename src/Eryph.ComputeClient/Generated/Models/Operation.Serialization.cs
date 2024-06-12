@@ -7,7 +7,7 @@
 
 using System.Collections.Generic;
 using System.Text.Json;
-using Eryph.ComputeClient;
+using Azure;
 
 namespace Eryph.ComputeClient.Models
 {
@@ -122,6 +122,14 @@ namespace Eryph.ComputeClient.Models
                 logEntries ?? new ChangeTrackingList<OperationLogEntry>(),
                 projects ?? new ChangeTrackingList<Project>(),
                 tasks ?? new ChangeTrackingList<OperationTask>());
+        }
+
+        /// <summary> Deserializes the model from a raw response. </summary>
+        /// <param name="response"> The response to deserialize the model from. </param>
+        internal static Operation FromResponse(Response response)
+        {
+            using var document = JsonDocument.Parse(response.Content);
+            return DeserializeOperation(document.RootElement);
         }
     }
 }
