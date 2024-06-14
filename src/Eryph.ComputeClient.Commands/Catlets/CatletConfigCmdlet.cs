@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Management.Automation;
@@ -8,6 +9,8 @@ using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.Variables;
 using Eryph.ConfigModel.Yaml;
 using YamlDotNet.Core;
+using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 
 namespace Eryph.ComputeClient.Commands.Catlets
 {
@@ -34,57 +37,164 @@ namespace Eryph.ComputeClient.Commands.Catlets
 
         }
 
-        protected void PopulateVariables(CatletConfig catletConfig)
+        protected void PopulateVariables(CatletConfig catletConfig, Hashtable variables)
         {
             if (catletConfig.Variables is not { Length: > 0 })
                 return;
 
-            var fieldDescriptions = catletConfig.Variables.Select(v =>
-            {
-                var fieldDescription = new FieldDescription(v.Name)
-                {
-                    IsMandatory = v.Required.GetValueOrDefault(),
-                    DefaultValue = v.Value is not null ? new PSObject(v.Value) : null,
-                };
-                fieldDescription.SetParameterType(GetType(v.Type.GetValueOrDefault(VariableType.String)));
-                return fieldDescription;
-            }).ToList();
+            ApplyVariablesFromParameter(catletConfig.Variables, variables);
+            ReadVariablesFromInput(catletConfig.Variables);
+        }
 
-            try
-            {
-                var results = Host.UI.Prompt(
-                    "Catlet Parameters",
-                    "Please provide values for catlet parameters",
-                    new Collection<FieldDescription>(fieldDescriptions));
+        private static void ApplyVariablesFromParameter(VariableConfig[] variableConfigs, Hashtable variables)
+        {
+            if (variables is not { Count: > 0 })
+                return;
 
-                foreach (var result in results)
+            var variablesByKey = variables.Cast<DictionaryEntry>()
+                .Where(entry => entry.Key is string)
+                .ToLookup(e => (string)e.Key, e => e.Value.ToString(), StringComparer.OrdinalIgnoreCase)
+                .ToDictionary(g => g.Key, g => g.First(), StringComparer.OrdinalIgnoreCase);
+
+            foreach (var variableConfig in variableConfigs)
+            {
+                if (!string.IsNullOrWhiteSpace(variableConfig.Name)
+                    && variablesByKey.TryGetValue(variableConfig.Name, out var providedValue))
                 {
-                    var variable = catletConfig.Variables.FirstOrDefault(v => v.Name == result.Key);
-                    if (variable is not null)
-                    {
-                        variable.Value = result.Value.ToString();
-                    }
+                    variableConfig.Value = providedValue;
                 }
-            }
-            // TODO proper exception type
-            catch (Exception ex)
-            {
-                // The prompt will fail if the Powershell session is not
-                // interactive. Unfortunately, there is no easy way to
-                // reliably detect a non-interactive session. Hence, we
-                // just catch the exception and continue.
             }
         }
 
-        private static Type GetType(VariableType variableType) =>
-        variableType switch
+        private void ReadVariablesFromInput(VariableConfig[] variableConfigs)
         {
-            VariableType.String => typeof(string),
-            VariableType.Number => typeof(decimal),
-            VariableType.Boolean => typeof(bool),
-            _ => throw new ArgumentException(
-                $"The variable type {variableType} is not supported.",
-                nameof(variableType))
-        };
+            var anyRequired = variableConfigs.Any(vc =>
+                vc.Required.GetValueOrDefault()
+                && string.IsNullOrWhiteSpace(vc.Value));
+
+            try
+            {
+                var choices = new Collection<ChoiceDescription>()
+                {
+                    new("&Yes"),
+                    new("&No"),
+                };
+
+                if(anyRequired)
+                {
+                    choices.Add(new ChoiceDescription("&Required only"));
+                }
+
+                // The prompt for choice will fail when the Powershell session
+                // is not interactive. This also serves as a check whether we
+                // are in an interactive session.
+                var choice = Host.UI.PromptForChoice(
+                    "Catlet variables",
+                    "Would you like to provide variable values interactively?"
+                    + (anyRequired
+                        ? " Some required variables are missing values. The deployment will fail if you do not specify them."
+                        : ""),
+                    choices,
+                    anyRequired ? 2 : 1);
+                if (choice == 1)
+                    return;
+
+                var requiredOnly = choice == 2;
+
+                var configsToRead = variableConfigs.Where(vc =>
+                    !requiredOnly || vc.Required.GetValueOrDefault() && string.IsNullOrWhiteSpace(vc.Value));
+
+                foreach (var variableConfig in configsToRead)
+                {
+                    variableConfig.Value = ReadVariableFromInput(variableConfig);
+                }
+            }
+            catch (PSInvalidOperationException)
+            {
+                // The prompt for choice will fail if the Powershell session is not
+                // interactive. Unfortunately, there is no easy way to reliably detect
+                // a non-interactive session. Hence, we just catch the exception and continue.
+            }
+        }
+
+        private string ReadVariableFromInput(VariableConfig config)
+        {
+            var prompt = PreparePrompt(config);
+            
+            while (true)
+            {
+                var result = ReadFromInput(prompt, config.Secret ?? false);
+                if (string.IsNullOrEmpty(result))
+                    result = config.Value;
+                
+                if (IsValueValid(config, result))
+                    return result;
+
+                Host.UI.WriteLine($"The provided value is invalid. Please try again.");
+            }
+        }
+
+        private static string PreparePrompt(VariableConfig config)
+        {
+            var prompt = config.Type switch
+            {
+                VariableType.Boolean => $"[{config.Type} (true/false)]",
+                _ => $"[{config.Type ?? VariableType.String}]",
+            };
+
+            prompt += $" {config.Name}";
+
+            if (!string.IsNullOrWhiteSpace(config.Value))
+            {
+                prompt += config.Secret switch
+                {
+                    true => " (***)",
+                    _ => $" ({config.Value})"
+                };
+            }
+
+            return prompt + ": ";
+        }
+
+        private static bool IsValueValid(VariableConfig config, string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return !config.Required.GetValueOrDefault();
+
+            return (config.Type ?? VariableType.String) switch
+            {
+                VariableType.Boolean => Regex.IsMatch(
+                    value,
+                    VariableValueRegex.Boolean,
+                    RegexOptions.None,
+                    TimeSpan.FromSeconds(1)),
+                VariableType.Number => Regex.IsMatch(
+                    value,
+                    VariableValueRegex.Number,
+                    RegexOptions.None,
+                    TimeSpan.FromSeconds(1)),
+                _ => true
+            };
+        }
+
+        private string ReadFromInput(string prompt, bool secret)
+        {
+            Host.UI.Write(prompt);
+            return secret ? ReadSecret() : Host.UI.ReadLine();
+        }
+
+        private string ReadSecret()
+        {
+            var result = Host.UI.ReadLineAsSecureString();
+            var pointer = Marshal.SecureStringToBSTR(result);
+            try
+            {
+                return Marshal.PtrToStringBSTR(pointer);
+            }
+            finally
+            {
+                Marshal.ZeroFreeBSTR(pointer);
+            }
+        }
     }
 }

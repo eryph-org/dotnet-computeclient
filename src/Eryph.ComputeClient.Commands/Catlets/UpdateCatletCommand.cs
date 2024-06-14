@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Management.Automation;
 using System.Text.Json;
 using Eryph.ClientRuntime;
@@ -32,12 +33,17 @@ namespace Eryph.ComputeClient.Commands.Catlets
 
         private bool _nowait;
 
+        [Parameter]
+        public Hashtable Variables { get; set; }
 
         protected override void ProcessRecord()
         {
             foreach (var id in Id)
             {
                 var config = DeserializeConfigString(Config);
+
+                PopulateVariables(config, Variables);
+
                 WaitForOperation(Factory.CreateCatletsClient().Update(id, new UpdateCatletRequestBody(Guid.NewGuid(),
                         JsonSerializer.SerializeToElement(config)))
                     , _nowait, true);

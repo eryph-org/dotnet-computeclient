@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Management.Automation;
 using System.Text;
 using System.Text.Json;
@@ -48,6 +49,9 @@ namespace Eryph.ComputeClient.Commands.Catlets
         [ValidateNotNullOrEmpty]
         public string Name { get; set; }
 
+        [Parameter]
+        public Hashtable Variables { get; set; }
+
         private bool _noWait;
         private StringBuilder _input = new StringBuilder();
 
@@ -95,7 +99,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
             if (!string.IsNullOrWhiteSpace(Name))
                 config.Name = Name;
 
-            PopulateVariables(config);
+            PopulateVariables(config, Variables);
 
             var serializedConfig = JsonSerializer.SerializeToElement(config, ConfigModelJsonSerializer.DefaultOptions);
 
