@@ -48,8 +48,6 @@ namespace Eryph.ComputeClient.Commands.Catlets
                         JsonSerializer.SerializeToElement(config)))
                     , _nowait, true);
             }
-
         }
-
     }
 }
