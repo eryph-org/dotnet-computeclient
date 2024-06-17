@@ -96,7 +96,9 @@ namespace Eryph.ComputeClient.Commands.Catlets
                         : ""),
                     choices,
                     anyRequired ? 2 : 1);
-                if (choice == 1)
+
+                // The prompt returns -1 when the user cancels the prompt (e.g. Ctrl+C).
+                if (choice is -1 or 1)
                     return;
 
                 var requiredOnly = choice == 2;
@@ -106,7 +108,11 @@ namespace Eryph.ComputeClient.Commands.Catlets
 
                 foreach (var variableConfig in configsToRead)
                 {
-                    variableConfig.Value = ReadVariableFromInput(variableConfig);
+                    var result = ReadVariableFromInput(variableConfig);
+                    if (result is null)
+                        return;
+
+                    variableConfig.Value = result;
                 }
             }
             catch (PSInvalidOperationException)
@@ -124,6 +130,12 @@ namespace Eryph.ComputeClient.Commands.Catlets
             while (true)
             {
                 var result = ReadFromInput(prompt, config.Secret ?? false);
+
+                // Null indicates that the user cancelled the input (e.g. with Ctrl+C).
+                // In this case, we return null and cancel the whole operation.
+                if (result is null)
+                    return null;
+
                 if (string.IsNullOrEmpty(result))
                     result = config.Value;
                 
