@@ -37,13 +37,16 @@ namespace Eryph.ComputeClient.Commands.Catlets
 
         }
 
-        protected void PopulateVariables(CatletConfig catletConfig, Hashtable variables)
+        protected void PopulateVariables(CatletConfig catletConfig, Hashtable variables, bool skipVariablesPrompt)
         {
             if (catletConfig.Variables is not { Length: > 0 })
                 return;
 
             ApplyVariablesFromParameter(catletConfig.Variables, variables);
-            ReadVariablesFromInput(catletConfig.Variables);
+            if (!skipVariablesPrompt)
+            {
+                ReadVariablesFromInput(catletConfig.Variables);
+            }
         }
 
         private static void ApplyVariablesFromParameter(VariableConfig[] variableConfigs, Hashtable variables)

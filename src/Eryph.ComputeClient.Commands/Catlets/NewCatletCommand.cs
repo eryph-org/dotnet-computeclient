@@ -52,6 +52,9 @@ namespace Eryph.ComputeClient.Commands.Catlets
         [Parameter]
         public Hashtable Variables { get; set; }
 
+        [Parameter]
+        public SwitchParameter SkipVariablesPrompt { get; set; }
+
         private bool _noWait;
         private StringBuilder _input = new StringBuilder();
 
@@ -99,7 +102,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
             if (!string.IsNullOrWhiteSpace(Name))
                 config.Name = Name;
 
-            PopulateVariables(config, Variables);
+            PopulateVariables(config, Variables, SkipVariablesPrompt);
 
             var serializedConfig = JsonSerializer.SerializeToElement(config, ConfigModelJsonSerializer.DefaultOptions);
 
