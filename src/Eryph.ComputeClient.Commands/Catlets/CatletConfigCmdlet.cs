@@ -76,13 +76,14 @@ namespace Eryph.ComputeClient.Commands.Catlets
             {
                 var choices = new Collection<ChoiceDescription>()
                 {
-                    new("&Yes"),
-                    new("&No"),
+                    new("&Yes", "You will be asked to provide values for all variables."),
+                    new("&No", "You will not be asked for any values."),
                 };
 
                 if(anyRequired)
                 {
-                    choices.Add(new ChoiceDescription("&Required only"));
+                    choices.Add(new ChoiceDescription("&Required only",
+                        "You will only be asked for the values of variables which are required and do not have a value yet."));
                 }
 
                 // The prompt for choice will fail when the Powershell session
@@ -142,7 +143,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
                 if (IsValueValid(config, result))
                     return result;
 
-                Host.UI.WriteLine($"The provided value is invalid. Please try again.");
+                Host.UI.WriteLine("The provided value is invalid. Please try again.");
             }
         }
 
