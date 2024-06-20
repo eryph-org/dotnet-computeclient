@@ -64,7 +64,7 @@ public class RemoveCatletDiskCmdlet : CatletDiskCmdlet
                 continue;
             }
 
-            WaitForOperation(Factory.CreateVirtualDisksClient().Delete(id).Value, NoWait.IsPresent, false, id);
+            WaitForOperation(Factory.CreateVirtualDisksClient().Delete(id).Value, NoWait, false, id);
 
             if (PassThru)
                 WriteObject(virtualDisk);

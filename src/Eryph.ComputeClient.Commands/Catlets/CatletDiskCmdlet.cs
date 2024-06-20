@@ -14,11 +14,11 @@ public abstract class CatletDiskCmdlet : ComputeCmdLet
         return Factory.CreateVirtualDisksClient().Get(id);
     }
 
-    protected void WaitForOperation(Operation operation, bool noWait, bool alwaysWriteNetwork, string knownCatletDiskId = default)
+    protected void WaitForOperation(Operation operation, bool noWait, bool alwaysWriteCatletDisk, string knownCatletDiskId = default)
     {
         if (noWait)
         {
-            if (knownCatletDiskId == default || !alwaysWriteNetwork)
+            if (knownCatletDiskId == default || !alwaysWriteCatletDisk)
                 WriteObject(operation);
             else
                 WriteObject(GetSingleCatletDisk(knownCatletDiskId));
