@@ -45,7 +45,8 @@ namespace Eryph.ComputeClient.Commands.Catlets
             {
                 var config = DeserializeConfigString(Config);
 
-                PopulateVariables(config, Variables, SkipVariablesPrompt);
+                if (!PopulateVariables(config, Variables, SkipVariablesPrompt))
+                    continue;
 
                 WaitForOperation(Factory.CreateCatletsClient().Update(id, new UpdateCatletRequestBody(Guid.NewGuid(),
                         JsonSerializer.SerializeToElement(config)))

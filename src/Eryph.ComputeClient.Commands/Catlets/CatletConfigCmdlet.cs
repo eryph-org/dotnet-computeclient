@@ -37,16 +37,20 @@ namespace Eryph.ComputeClient.Commands.Catlets
 
         }
 
-        protected void PopulateVariables(CatletConfig catletConfig, Hashtable variables, bool skipVariablesPrompt)
+        /// <summary>
+        /// Populates the variables in the given <paramref name="catletConfig"/> by
+        /// applying the values from the <paramref name="variables"/> hashtable and
+        /// interactively asking the user for the values. Returns <see langword="false"/>
+        /// when the user aborted the interactive prompt and <see langword="true"/> otherwise.
+        /// </summary>
+        protected bool PopulateVariables(CatletConfig catletConfig, Hashtable variables, bool skipVariablesPrompt)
         {
             if (catletConfig.Variables is not { Length: > 0 })
-                return;
+                return true;
 
             ApplyVariablesFromParameter(catletConfig.Variables, variables);
-            if (!skipVariablesPrompt)
-            {
-                ReadVariablesFromInput(catletConfig.Variables);
-            }
+            
+            return skipVariablesPrompt || ReadVariablesFromInput(catletConfig.Variables);
         }
 
         private static void ApplyVariablesFromParameter(VariableConfig[] variableConfigs, Hashtable variables)
@@ -69,7 +73,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
             }
         }
 
-        private void ReadVariablesFromInput(VariableConfig[] variableConfigs)
+        private bool ReadVariablesFromInput(VariableConfig[] variableConfigs)
         {
             var anyRequired = variableConfigs.Any(vc =>
                 vc.Required.GetValueOrDefault()
@@ -103,7 +107,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
 
                 // The prompt returns -1 when the user cancels the prompt (e.g. Ctrl+C).
                 if (choice is -1 or 1)
-                    return;
+                    return choice != -1;
 
                 var requiredOnly = choice == 2;
 
@@ -114,7 +118,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
                 {
                     var result = ReadVariableFromInput(variableConfig);
                     if (result is null)
-                        return;
+                        return false;
 
                     variableConfig.Value = result;
                 }
@@ -125,6 +129,8 @@ namespace Eryph.ComputeClient.Commands.Catlets
                 // interactive. Unfortunately, there is no easy way to reliably detect
                 // a non-interactive session. Hence, we just catch the exception and continue.
             }
+
+            return true;
         }
 
         private string ReadVariableFromInput(VariableConfig config)
