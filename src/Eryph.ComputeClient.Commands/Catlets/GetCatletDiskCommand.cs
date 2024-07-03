@@ -2,37 +2,41 @@
 using Eryph.ComputeClient.Models;
 using JetBrains.Annotations;
 
-namespace Eryph.ComputeClient.Commands.Catlets
+namespace Eryph.ComputeClient.Commands.Catlets;
+
+[PublicAPI]
+[Cmdlet(VerbsCommon.Get, "CatletDisk", DefaultParameterSetName = "get")]
+[OutputType(typeof(Catlet), ParameterSetName = ["get"])]
+[OutputType(typeof(Catlet), ParameterSetName = ["list"])]
+public class GetCatletDiskCommand : CatletDiskCmdlet
 {
-    [PublicAPI]
-    [Cmdlet(VerbsCommon.Get, "CatletDisk", DefaultParameterSetName = "get")]
-    [OutputType(typeof(VirtualDisk))]
-    public class GetCatletDiskCommand : ComputeCmdLet
+    [Parameter(
+        ParameterSetName = "get",
+        Position = 0,
+        ValueFromPipeline = true,
+        ValueFromPipelineByPropertyName = true)]
+    public string[] Id { get; set; }
+
+    [Parameter(
+        ParameterSetName = "list",
+        ValueFromPipeline = true,
+        ValueFromPipelineByPropertyName = true)]
+    [ValidateNotNullOrEmpty]
+    public string ProjectName { get; set; }
+
+    protected override void ProcessRecord()
     {
-        [Parameter(
-            ParameterSetName = "get",
-            Position = 0,
-            ValueFromPipeline = true,
-            ValueFromPipelineByPropertyName = true)]
-        public string[] Id { get; set; }
-
-        protected override void ProcessRecord()
+        if (Id != null)
         {
-            if (Id != null)
+            foreach (var id in Id)
             {
-                foreach (var id in Id)
-                {
-                    WriteObject(Factory.CreateVirtualDisksClient().Get(id));
-                }
-
-                return;
+                WriteObject(GetSingleCatletDisk(id));
             }
 
-            ListOutput(Factory.CreateVirtualDisksClient().List());
-
-
+            return;
         }
 
+        var projectId = GetProjectId(ProjectName);
+        ListOutput(Factory.CreateVirtualDisksClient().List(projectId: projectId));
     }
-
 }

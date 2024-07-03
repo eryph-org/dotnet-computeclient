@@ -79,8 +79,9 @@ CmdletsToExport = @(
     "Update-Catlet", 
     "Start-Catlet", 
     "Stop-Catlet", 
-    "Get-Catlet", 
-    "Get-CatletIp", 
+    "Get-CatletIp",
+    "Get-CatletDisk",
+    "Remove-CatletDisk"
     "Get-EryphOperation",
     "Get-VNetwork",
     "Set-VNetwork",
