@@ -9,9 +9,9 @@
 
   <ItemGroup>
     <PackageReference Include="Eryph.ClientRuntime.Powershell" Version="0.7.0" />
-    <PackageReference Include="Eryph.ConfigModel.Catlets.Yaml" Version="0.5.1-PullRequest0077.10" />
-    <PackageReference Include="Eryph.ConfigModel.Networks.Yaml" Version="0.5.1-PullRequest0077.10" />
-    <PackageReference Include="Eryph.ConfigModel.System.Json" Version="0.5.1-PullRequest0077.10" />
+    <PackageReference Include="Eryph.ConfigModel.Catlets.Yaml" Version="0.5.1-PullRequest0077.20" />
+    <PackageReference Include="Eryph.ConfigModel.Networks.Yaml" Version="0.5.1-PullRequest0077.20" />
+    <PackageReference Include="Eryph.ConfigModel.System.Json" Version="0.5.1-PullRequest0077.20" />
     <PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
