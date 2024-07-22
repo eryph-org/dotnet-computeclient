@@ -33,19 +33,11 @@ namespace Eryph.ComputeClient.Commands.Catlets
 
         private bool _nowait;
 
-        [Parameter]
-        public Hashtable Variables { get; set; }
-
-        [Parameter]
-        public SwitchParameter SkipVariablesPrompt { get; set; }
-
         protected override void ProcessRecord()
         {
             foreach (var id in Id)
             {
                 var config = DeserializeConfigString(Config);
-
-                PopulateVariables(config, Variables, SkipVariablesPrompt);
 
                 WaitForOperation(Factory.CreateCatletsClient().Update(id, new UpdateCatletRequestBody(Guid.NewGuid(),
                         JsonSerializer.SerializeToElement(config)))
