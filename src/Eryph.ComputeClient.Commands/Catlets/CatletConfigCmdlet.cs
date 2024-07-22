@@ -123,7 +123,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
                     variableConfig.Value = result;
                 }
             }
-            catch (PSInvalidOperationException)
+            catch (Exception ex) when (ex is PSInvalidOperationException or HostException)
             {
                 // The prompt for choice will fail if the Powershell session is not
                 // interactive. Unfortunately, there is no easy way to reliably detect
