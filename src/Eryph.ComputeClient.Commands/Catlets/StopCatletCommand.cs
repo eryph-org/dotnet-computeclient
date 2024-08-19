@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Management.Automation;
-using Eryph.ClientRuntime;
 using Eryph.ComputeClient.Models;
 using JetBrains.Annotations;
-
 
 namespace Eryph.ComputeClient.Commands.Catlets
 {
