@@ -11,18 +11,13 @@ namespace Eryph.ComputeClient.Models
     public partial class StopCatletRequestBody
     {
         /// <summary> Initializes a new instance of <see cref="StopCatletRequestBody"/>. </summary>
-        public StopCatletRequestBody()
+        /// <param name="mode"></param>
+        public StopCatletRequestBody(CatletStopMode mode)
         {
+            Mode = mode;
         }
 
-        /// <summary> Initializes a new instance of <see cref="StopCatletRequestBody"/>. </summary>
-        /// <param name="graceful"></param>
-        internal StopCatletRequestBody(bool? graceful)
-        {
-            Graceful = graceful;
-        }
-
-        /// <summary> Gets or sets the graceful. </summary>
-        public bool? Graceful { get; set; }
+        /// <summary> Gets the mode. </summary>
+        public CatletStopMode Mode { get; }
     }
 }

@@ -115,6 +115,7 @@ namespace Eryph.ComputeClient.Models
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
+                        parentId = null;
                         continue;
                     }
                     parentId = property.Value.GetGuid();
