@@ -146,6 +146,7 @@ namespace Eryph.ComputeClient.Commands
                         }
                     }
 
+                    // TODO Either create progress records for all tasks or make sure that the progress parent is also written to progress
                     if (!string.IsNullOrWhiteSpace(displayName))
                     {
                         var activityName = operationTask.ParentTask == operation.Id
@@ -175,7 +176,8 @@ namespace Eryph.ComputeClient.Commands
                             .FirstOrDefault();
 
                         if (lastTaskLogEntry != null)
-                            progressRecord.CurrentOperation = lastTaskLogEntry.Message;
+                            progressRecord.CurrentOperation = string.IsNullOrEmpty(lastTaskLogEntry.Message)
+                                ? " " : lastTaskLogEntry.Message;
 
                         activities.Add(operationTask.Id,progressRecord);
                     }
@@ -204,12 +206,15 @@ namespace Eryph.ComputeClient.Commands
                         parentId = parentTask.ParentTask;
 
                         if (!activities.TryGetValue(parentTask.Id, out var activity)) continue;
-                        activity.CurrentOperation = lastTaskLogEntry.Message;
+                        activity.CurrentOperation = string.IsNullOrEmpty(lastTaskLogEntry.Message)
+                            ? " " : lastTaskLogEntry.Message;
                         break;
 
                     }
 
                 }
+
+                // TODO Ensure to write all completed progress
 
                 foreach (var progressRecord in activities.Values.OrderBy(x=>x.ActivityId))
                 {
@@ -237,7 +242,7 @@ namespace Eryph.ComputeClient.Commands
 
                     processedLogIds.Add(logEntry.Id);
 
-                    WriteVerbose($"Operation {currentOperation.Id}: {logEntry.Message}");
+                    //WriteVerbose($"Operation {currentOperation.Id}: {logEntry.Message}");
                     timeStamp = logEntry.Timestamp.GetValueOrDefault().DateTime;
                     Task.Delay(100).GetAwaiter().GetResult();
                 }
