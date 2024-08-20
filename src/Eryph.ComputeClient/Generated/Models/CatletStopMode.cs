@@ -24,14 +24,11 @@ namespace Eryph.ComputeClient.Models
 
         private const string ShutdownValue = "Shutdown";
         private const string HardValue = "Hard";
-        private const string KillValue = "Kill";
 
         /// <summary> Shutdown. </summary>
         public static CatletStopMode Shutdown { get; } = new CatletStopMode(ShutdownValue);
         /// <summary> Hard. </summary>
         public static CatletStopMode Hard { get; } = new CatletStopMode(HardValue);
-        /// <summary> Kill. </summary>
-        public static CatletStopMode Kill { get; } = new CatletStopMode(KillValue);
         /// <summary> Determines if two <see cref="CatletStopMode"/> values are the same. </summary>
         public static bool operator ==(CatletStopMode left, CatletStopMode right) => left.Equals(right);
         /// <summary> Determines if two <see cref="CatletStopMode"/> values are not the same. </summary>
