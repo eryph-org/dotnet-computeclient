@@ -36,6 +36,135 @@ namespace Eryph.ComputeClient
             _endpoint = endpoint ?? new Uri("https://localhost:8000/compute");
         }
 
+        internal HttpMessage CreateCreateRequest(NewVirtualDiskRequest body)
+        {
+            var message = _pipeline.CreateMessage();
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/v1/virtualdisks", false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
+            if (body != null)
+            {
+                request.Headers.Add("Content-Type", "application/json");
+                var content = new Utf8JsonRequestContent();
+                content.JsonWriter.WriteObjectValue(body);
+                request.Content = content;
+            }
+            return message;
+        }
+
+        /// <summary> Creates a new virtual disk. </summary>
+        /// <param name="body"> The <see cref="NewVirtualDiskRequest"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Creates a virtual disk. </remarks>
+        public async Task<Response<Models.Operation>> CreateAsync(NewVirtualDiskRequest body = null, CancellationToken cancellationToken = default)
+        {
+            using var message = CreateCreateRequest(body);
+            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            switch (message.Response.Status)
+            {
+                case 202:
+                    {
+                        Models.Operation value = default;
+                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
+                        value = Models.Operation.DeserializeOperation(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        /// <summary> Creates a new virtual disk. </summary>
+        /// <param name="body"> The <see cref="NewVirtualDiskRequest"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Creates a virtual disk. </remarks>
+        public Response<Models.Operation> Create(NewVirtualDiskRequest body = null, CancellationToken cancellationToken = default)
+        {
+            using var message = CreateCreateRequest(body);
+            _pipeline.Send(message, cancellationToken);
+            switch (message.Response.Status)
+            {
+                case 202:
+                    {
+                        Models.Operation value = default;
+                        using var document = JsonDocument.Parse(message.Response.ContentStream);
+                        value = Models.Operation.DeserializeOperation(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        internal HttpMessage CreateListRequest(bool? count, Guid? projectId)
+        {
+            var message = _pipeline.CreateMessage();
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/v1/virtualdisks", false);
+            if (count != null)
+            {
+                uri.AppendQuery("count", count.Value, true);
+            }
+            if (projectId != null)
+            {
+                uri.AppendQuery("projectId", projectId.Value, true);
+            }
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
+            return message;
+        }
+
+        /// <summary> Get list of Virtual Disks. </summary>
+        /// <param name="count"> The <see cref="bool"/>? to use. </param>
+        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public async Task<Response<VirtualDiskList>> ListAsync(bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
+        {
+            using var message = CreateListRequest(count, projectId);
+            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        VirtualDiskList value = default;
+                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
+                        value = VirtualDiskList.DeserializeVirtualDiskList(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        /// <summary> Get list of Virtual Disks. </summary>
+        /// <param name="count"> The <see cref="bool"/>? to use. </param>
+        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public Response<VirtualDiskList> List(bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
+        {
+            using var message = CreateListRequest(count, projectId);
+            _pipeline.Send(message, cancellationToken);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        VirtualDiskList value = default;
+                        using var document = JsonDocument.Parse(message.Response.ContentStream);
+                        value = VirtualDiskList.DeserializeVirtualDiskList(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
         internal HttpMessage CreateDeleteRequest(string id)
         {
             var message = _pipeline.CreateMessage();
@@ -165,71 +294,6 @@ namespace Eryph.ComputeClient
                         VirtualDisk value = default;
                         using var document = JsonDocument.Parse(message.Response.ContentStream);
                         value = VirtualDisk.DeserializeVirtualDisk(document.RootElement);
-                        return Response.FromValue(value, message.Response);
-                    }
-                default:
-                    throw new RequestFailedException(message.Response);
-            }
-        }
-
-        internal HttpMessage CreateListRequest(bool? count, Guid? projectId)
-        {
-            var message = _pipeline.CreateMessage();
-            var request = message.Request;
-            request.Method = RequestMethod.Get;
-            var uri = new RawRequestUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendPath("/v1/virtualdisks", false);
-            if (count != null)
-            {
-                uri.AppendQuery("count", count.Value, true);
-            }
-            if (projectId != null)
-            {
-                uri.AppendQuery("projectId", projectId.Value, true);
-            }
-            request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
-            return message;
-        }
-
-        /// <summary> Get list of Virtual Disks. </summary>
-        /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public async Task<Response<VirtualDiskList>> ListAsync(bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
-        {
-            using var message = CreateListRequest(count, projectId);
-            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
-            switch (message.Response.Status)
-            {
-                case 200:
-                    {
-                        VirtualDiskList value = default;
-                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
-                        value = VirtualDiskList.DeserializeVirtualDiskList(document.RootElement);
-                        return Response.FromValue(value, message.Response);
-                    }
-                default:
-                    throw new RequestFailedException(message.Response);
-            }
-        }
-
-        /// <summary> Get list of Virtual Disks. </summary>
-        /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public Response<VirtualDiskList> List(bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
-        {
-            using var message = CreateListRequest(count, projectId);
-            _pipeline.Send(message, cancellationToken);
-            switch (message.Response.Status)
-            {
-                case 200:
-                    {
-                        VirtualDiskList value = default;
-                        using var document = JsonDocument.Parse(message.Response.ContentStream);
-                        value = VirtualDiskList.DeserializeVirtualDiskList(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:
