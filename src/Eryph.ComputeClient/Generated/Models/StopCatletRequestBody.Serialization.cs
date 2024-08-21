@@ -15,18 +15,8 @@ namespace Eryph.ComputeClient.Models
         void IUtf8JsonSerializable.Write(Utf8JsonWriter writer)
         {
             writer.WriteStartObject();
-            if (Optional.IsDefined(Graceful))
-            {
-                if (Graceful != null)
-                {
-                    writer.WritePropertyName("graceful"u8);
-                    writer.WriteBooleanValue(Graceful.Value);
-                }
-                else
-                {
-                    writer.WriteNull("graceful");
-                }
-            }
+            writer.WritePropertyName("mode"u8);
+            writer.WriteStringValue(Mode.ToString());
             writer.WriteEndObject();
         }
 

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Management.Automation;
-using Eryph.ClientRuntime;
 using Eryph.ComputeClient.Models;
 using JetBrains.Annotations;
-using Operation = Eryph.ComputeClient.Models.Operation;
 
 namespace Eryph.ComputeClient.Commands.Catlets
 {
@@ -25,35 +23,25 @@ namespace Eryph.ComputeClient.Commands.Catlets
         /// be used with caution.
         /// </summary>
         [Parameter]
-        public SwitchParameter Force
-        {
-            get => _force;
-            set => _force = value;
-        }
-
+        public SwitchParameter Force { get; set; }
 
         [Parameter]
-        public SwitchParameter NoWait
-        {
-            get => _nowait;
-            set => _nowait = value;
-        }
+        public SwitchParameter NoWait { get; set; }
 
         [Parameter]
-        public SwitchParameter Graceful
-        {
-            get => _graceful;
-            set => _graceful = value;
-        }
+        public CatletStopMode Mode { get; set; }
 
-        private bool _force;
-        private bool _nowait;
-        private bool _graceful;
         private bool _yesToAll, _noToAll;
-
 
         protected override void ProcessRecord()
         {
+            var stopMode = Mode switch
+            {
+                CatletStopMode.Shutdown => Models.CatletStopMode.Shutdown,
+                CatletStopMode.Hard => Models.CatletStopMode.Hard,
+                _ => throw new ArgumentOutOfRangeException(nameof(Mode))
+            };
+
             foreach (var id in Id)
             {
                 Catlet catlet;
@@ -73,14 +61,10 @@ namespace Eryph.ComputeClient.Commands.Catlets
                     continue;
                 }
 
-                WaitForOperation(Factory.CreateCatletsClient().Stop(id,new StopCatletRequestBody()
-                {
-                    Graceful = _graceful,
-                }).Value, _nowait, false, id);
-
+                WaitForOperation(
+                    Factory.CreateCatletsClient().Stop(id, new StopCatletRequestBody(stopMode)).Value,
+                    NoWait, false, id);
             }
-
         }
-
     }
 }
