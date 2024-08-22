@@ -29,6 +29,10 @@ public class NewCatletDiskCmdlet : CatletDiskCmdlet
     [ValidateNotNullOrEmpty]
     public string ProjectName { get; set; }
 
+    [Parameter(Mandatory = true)]
+    [ValidateNotNullOrEmpty]
+    public string Location { get; set; }
+
     [Parameter]
     [ValidateNotNullOrEmpty]
     public string Store { get; set; }
@@ -43,18 +47,15 @@ public class NewCatletDiskCmdlet : CatletDiskCmdlet
     protected override void ProcessRecord()
     {
         var projectId = GetProjectId(ProjectName);
-
-
         var recordId = Guid.NewGuid();
+        
         WaitForOperation(
             Factory.CreateVirtualDisksClient().Create(
-                new NewVirtualDiskRequest(projectId.GetValueOrDefault(), Name, Size)
+                new NewVirtualDiskRequest(projectId.GetValueOrDefault(), Name, Location, Size)
                 {
                     CorrelationId = recordId,
                     Environment = Environment,
                     Store = Store,
-                    Location = "blub",
-                    // TODO add location/storage identifier
                 }),
             NoWait,
             true);

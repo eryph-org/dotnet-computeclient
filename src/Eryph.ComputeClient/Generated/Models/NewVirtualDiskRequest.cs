@@ -15,46 +15,48 @@ namespace Eryph.ComputeClient.Models
         /// <summary> Initializes a new instance of <see cref="NewVirtualDiskRequest"/>. </summary>
         /// <param name="projectId"></param>
         /// <param name="name"></param>
-        /// <param name="size"></param>
-        public NewVirtualDiskRequest(Guid projectId, string name, int size)
-        {
-            ProjectId = projectId;
-            Name = name;
-            Size = size;
-        }
-
-        /// <summary> Initializes a new instance of <see cref="NewVirtualDiskRequest"/>. </summary>
-        /// <param name="projectId"></param>
-        /// <param name="correlationId"></param>
-        /// <param name="name"></param>
-        /// <param name="environment"></param>
-        /// <param name="store"></param>
         /// <param name="location"></param>
         /// <param name="size"></param>
-        internal NewVirtualDiskRequest(Guid projectId, Guid? correlationId, string name, string environment, string store, string location, int size)
+        public NewVirtualDiskRequest(Guid projectId, string name, string location, int size)
         {
             ProjectId = projectId;
-            CorrelationId = correlationId;
             Name = name;
-            Environment = environment;
-            Store = store;
             Location = location;
             Size = size;
         }
 
-        /// <summary> Gets the project id. </summary>
-        public Guid ProjectId { get; }
+        /// <summary> Initializes a new instance of <see cref="NewVirtualDiskRequest"/>. </summary>
+        /// <param name="correlationId"></param>
+        /// <param name="projectId"></param>
+        /// <param name="name"></param>
+        /// <param name="location"></param>
+        /// <param name="size"></param>
+        /// <param name="environment"></param>
+        /// <param name="store"></param>
+        internal NewVirtualDiskRequest(Guid? correlationId, Guid projectId, string name, string location, int size, string environment, string store)
+        {
+            CorrelationId = correlationId;
+            ProjectId = projectId;
+            Name = name;
+            Location = location;
+            Size = size;
+            Environment = environment;
+            Store = store;
+        }
+
         /// <summary> Gets or sets the correlation id. </summary>
         public Guid? CorrelationId { get; set; }
+        /// <summary> Gets the project id. </summary>
+        public Guid ProjectId { get; }
         /// <summary> Gets the name. </summary>
         public string Name { get; }
+        /// <summary> Gets the location. </summary>
+        public string Location { get; }
+        /// <summary> Gets the size. </summary>
+        public int Size { get; }
         /// <summary> Gets or sets the environment. </summary>
         public string Environment { get; set; }
         /// <summary> Gets or sets the store. </summary>
         public string Store { get; set; }
-        /// <summary> Gets or sets the location. </summary>
-        public string Location { get; set; }
-        /// <summary> Gets the size. </summary>
-        public int Size { get; }
     }
 }

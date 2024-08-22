@@ -106,7 +106,7 @@ namespace Eryph.ComputeClient.Models
         /// <summary> Initializes a new instance of <see cref="Models.VirtualDisk"/>. </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
-        /// <param name="storageIdentifier"></param>
+        /// <param name="location"></param>
         /// <param name="dataStore"></param>
         /// <param name="project"></param>
         /// <param name="environment"></param>
@@ -115,14 +115,14 @@ namespace Eryph.ComputeClient.Models
         /// <param name="parentId"></param>
         /// <param name="attachedDrives"></param>
         /// <returns> A new <see cref="Models.VirtualDisk"/> instance for mocking. </returns>
-        public static VirtualDisk VirtualDisk(Guid? id = null, string name = null, string storageIdentifier = null, string dataStore = null, string project = null, string environment = null, string path = null, long? sizeBytes = null, Guid? parentId = null, IEnumerable<CatletDrive> attachedDrives = null)
+        public static VirtualDisk VirtualDisk(string id = null, string name = null, string location = null, string dataStore = null, string project = null, string environment = null, string path = null, long? sizeBytes = null, string parentId = null, IEnumerable<CatletDrive> attachedDrives = null)
         {
             attachedDrives ??= new List<CatletDrive>();
 
             return new VirtualDisk(
                 id,
                 name,
-                storageIdentifier,
+                location,
                 dataStore,
                 project,
                 environment,

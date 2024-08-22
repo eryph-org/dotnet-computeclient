@@ -5,7 +5,6 @@
 
 #nullable disable
 
-using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using Azure;
@@ -20,15 +19,15 @@ namespace Eryph.ComputeClient.Models
             {
                 return null;
             }
-            Guid? id = default;
+            string id = default;
             string name = default;
-            string storageIdentifier = default;
+            string location = default;
             string dataStore = default;
             string project = default;
             string environment = default;
             string path = default;
             long? sizeBytes = default;
-            Guid? parentId = default;
+            string parentId = default;
             IReadOnlyList<CatletDrive> attachedDrives = default;
             foreach (var property in element.EnumerateObject())
             {
@@ -36,9 +35,10 @@ namespace Eryph.ComputeClient.Models
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
+                        id = null;
                         continue;
                     }
-                    id = property.Value.GetGuid();
+                    id = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("name"u8))
@@ -51,14 +51,14 @@ namespace Eryph.ComputeClient.Models
                     name = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("storageIdentifier"u8))
+                if (property.NameEquals("location"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        storageIdentifier = null;
+                        location = null;
                         continue;
                     }
-                    storageIdentifier = property.Value.GetString();
+                    location = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("dataStore"u8))
@@ -118,7 +118,7 @@ namespace Eryph.ComputeClient.Models
                         parentId = null;
                         continue;
                     }
-                    parentId = property.Value.GetGuid();
+                    parentId = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("attachedDrives"u8))
@@ -139,7 +139,7 @@ namespace Eryph.ComputeClient.Models
             return new VirtualDisk(
                 id,
                 name,
-                storageIdentifier,
+                location,
                 dataStore,
                 project,
                 environment,

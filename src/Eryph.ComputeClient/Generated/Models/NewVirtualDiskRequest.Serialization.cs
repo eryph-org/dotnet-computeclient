@@ -15,8 +15,6 @@ namespace Eryph.ComputeClient.Models
         void IUtf8JsonSerializable.Write(Utf8JsonWriter writer)
         {
             writer.WriteStartObject();
-            writer.WritePropertyName("projectId"u8);
-            writer.WriteStringValue(ProjectId);
             if (Optional.IsDefined(CorrelationId))
             {
                 if (CorrelationId != null)
@@ -29,6 +27,8 @@ namespace Eryph.ComputeClient.Models
                     writer.WriteNull("correlationId");
                 }
             }
+            writer.WritePropertyName("projectId"u8);
+            writer.WriteStringValue(ProjectId);
             if (Name != null)
             {
                 writer.WritePropertyName("name"u8);
@@ -38,6 +38,17 @@ namespace Eryph.ComputeClient.Models
             {
                 writer.WriteNull("name");
             }
+            if (Location != null)
+            {
+                writer.WritePropertyName("location"u8);
+                writer.WriteStringValue(Location);
+            }
+            else
+            {
+                writer.WriteNull("location");
+            }
+            writer.WritePropertyName("size"u8);
+            writer.WriteNumberValue(Size);
             if (Optional.IsDefined(Environment))
             {
                 if (Environment != null)
@@ -62,20 +73,6 @@ namespace Eryph.ComputeClient.Models
                     writer.WriteNull("store");
                 }
             }
-            if (Optional.IsDefined(Location))
-            {
-                if (Location != null)
-                {
-                    writer.WritePropertyName("location"u8);
-                    writer.WriteStringValue(Location);
-                }
-                else
-                {
-                    writer.WriteNull("location");
-                }
-            }
-            writer.WritePropertyName("size"u8);
-            writer.WriteNumberValue(Size);
             writer.WriteEndObject();
         }
 

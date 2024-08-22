@@ -56,10 +56,9 @@ namespace Eryph.ComputeClient
             return message;
         }
 
-        /// <summary> Creates a new virtual disk. </summary>
+        /// <summary> Creates a virtual disk. </summary>
         /// <param name="body"> The <see cref="NewVirtualDiskRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <remarks> Creates a virtual disk. </remarks>
         public async Task<Response<Models.Operation>> CreateAsync(NewVirtualDiskRequest body = null, CancellationToken cancellationToken = default)
         {
             using var message = CreateCreateRequest(body);
@@ -78,10 +77,9 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Creates a new virtual disk. </summary>
+        /// <summary> Creates a virtual disk. </summary>
         /// <param name="body"> The <see cref="NewVirtualDiskRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <remarks> Creates a virtual disk. </remarks>
         public Response<Models.Operation> Create(NewVirtualDiskRequest body = null, CancellationToken cancellationToken = default)
         {
             using var message = CreateCreateRequest(body);
