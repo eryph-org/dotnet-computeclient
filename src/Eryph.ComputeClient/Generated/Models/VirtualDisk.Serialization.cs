@@ -105,7 +105,6 @@ namespace Eryph.ComputeClient.Models
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        sizeBytes = null;
                         continue;
                     }
                     sizeBytes = property.Value.GetInt64();

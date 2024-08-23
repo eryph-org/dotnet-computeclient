@@ -13,8 +13,20 @@ namespace Eryph.ComputeClient.Models
     public partial class VirtualDisk
     {
         /// <summary> Initializes a new instance of <see cref="VirtualDisk"/>. </summary>
-        internal VirtualDisk()
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="location"></param>
+        /// <param name="dataStore"></param>
+        /// <param name="project"></param>
+        /// <param name="environment"></param>
+        internal VirtualDisk(string id, string name, string location, string dataStore, string project, string environment)
         {
+            Id = id;
+            Name = name;
+            Location = location;
+            DataStore = dataStore;
+            Project = project;
+            Environment = environment;
             AttachedDrives = new ChangeTrackingList<CatletDrive>();
         }
 
