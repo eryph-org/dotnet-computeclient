@@ -73,15 +73,15 @@ FunctionsToExport = @()
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @(
-    "Get-Catlet",
-    "New-Catlet",
-    "New-CatletDisk",
-    "Remove-Catlet",
-    "Update-Catlet",
-    "Start-Catlet",
-    "Stop-Catlet",
+    "Get-Catlet", 
+    "New-Catlet", 
+    "Remove-Catlet", 
+    "Update-Catlet", 
+    "Start-Catlet", 
+    "Stop-Catlet", 
     "Get-CatletIp",
     "Get-CatletDisk",
+    "New-CatletDisk",
     "Remove-CatletDisk",
     "Get-EryphOperation",
     "Get-VNetwork",
