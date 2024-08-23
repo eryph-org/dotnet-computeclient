@@ -1,14 +1,12 @@
-﻿using Eryph.ComputeClient.Models;
-using JetBrains.Annotations;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Management.Automation;
 using System.Text;
 using System.Threading.Tasks;
-using Eryph.ComputeClient.Commands.ProjectMembers;
+using Eryph.ComputeClient.Models;
+using JetBrains.Annotations;
 
 namespace Eryph.ComputeClient.Commands.Catlets;
 
