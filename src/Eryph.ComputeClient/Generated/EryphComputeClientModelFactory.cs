@@ -232,6 +232,18 @@ namespace Eryph.ComputeClient.Models
             return new CatletNetworkAdapter(name, macAddress);
         }
 
+        /// <summary> Initializes a new instance of <see cref="Models.Gene"/>. </summary>
+        /// <param name="id"></param>
+        /// <param name="geneType"></param>
+        /// <param name="name"></param>
+        /// <param name="size"></param>
+        /// <param name="hash"></param>
+        /// <returns> A new <see cref="Models.Gene"/> instance for mocking. </returns>
+        public static Gene Gene(string id = null, GeneType? geneType = null, string name = null, long? size = null, string hash = null)
+        {
+            return new Gene(id, geneType, name, size, hash);
+        }
+
         /// <summary> Initializes a new instance of <see cref="Models.VirtualNetwork"/>. </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
