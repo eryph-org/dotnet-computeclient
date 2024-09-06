@@ -23,15 +23,17 @@ namespace Eryph.ComputeClient.Models
         /// <summary> Initializes a new instance of <see cref="GeneWithUsage"/>. </summary>
         /// <param name="id"></param>
         /// <param name="geneType"></param>
+        /// <param name="geneSet"></param>
         /// <param name="name"></param>
         /// <param name="size"></param>
         /// <param name="hash"></param>
         /// <param name="catlets"></param>
         /// <param name="disks"></param>
-        internal GeneWithUsage(string id, GeneType? geneType, string name, long? size, string hash, IReadOnlyList<Guid> catlets, IReadOnlyList<Guid> disks)
+        internal GeneWithUsage(string id, GeneType? geneType, string geneSet, string name, long? size, string hash, IReadOnlyList<Guid> catlets, IReadOnlyList<Guid> disks)
         {
             Id = id;
             GeneType = geneType;
+            GeneSet = geneSet;
             Name = name;
             Size = size;
             Hash = hash;
@@ -43,6 +45,8 @@ namespace Eryph.ComputeClient.Models
         public string Id { get; }
         /// <summary> Gets the gene type. </summary>
         public GeneType? GeneType { get; }
+        /// <summary> Gets the gene set. </summary>
+        public string GeneSet { get; }
         /// <summary> Gets the name. </summary>
         public string Name { get; }
         /// <summary> Gets the size. </summary>

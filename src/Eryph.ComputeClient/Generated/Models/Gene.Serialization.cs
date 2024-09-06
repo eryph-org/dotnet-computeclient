@@ -20,6 +20,7 @@ namespace Eryph.ComputeClient.Models
             }
             string id = default;
             GeneType? geneType = default;
+            string geneSet = default;
             string name = default;
             long? size = default;
             string hash = default;
@@ -42,6 +43,16 @@ namespace Eryph.ComputeClient.Models
                         continue;
                     }
                     geneType = new GeneType(property.Value.GetString());
+                    continue;
+                }
+                if (property.NameEquals("geneSet"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        geneSet = null;
+                        continue;
+                    }
+                    geneSet = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("name"u8))
@@ -74,7 +85,13 @@ namespace Eryph.ComputeClient.Models
                     continue;
                 }
             }
-            return new Gene(id, geneType, name, size, hash);
+            return new Gene(
+                id,
+                geneType,
+                geneSet,
+                name,
+                size,
+                hash);
         }
 
         /// <summary> Deserializes the model from a raw response. </summary>
