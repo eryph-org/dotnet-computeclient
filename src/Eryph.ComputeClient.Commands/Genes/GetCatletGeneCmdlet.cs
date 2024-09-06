@@ -1,20 +1,19 @@
-﻿using Eryph.ComputeClient.Models;
-using JetBrains.Annotations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
 using System.Text;
 using System.Threading.Tasks;
-using static Org.BouncyCastle.Math.EC.ECCurve;
+using Eryph.ComputeClient.Models;
+using JetBrains.Annotations;
 
 namespace Eryph.ComputeClient.Commands.Genes;
 
 [PublicAPI]
 [Cmdlet(VerbsCommon.Get, "CatletGene", DefaultParameterSetName = "get")]
-[OutputType(typeof(Gene), ParameterSetName = ["get"])]
+[OutputType(typeof(GeneWithUsage), ParameterSetName = ["get"])]
 [OutputType(typeof(Gene), ParameterSetName = ["list"])]
-public class GetGeneCmdlet : ComputeCmdLet
+public class GetCatletGeneCmdlet : CatletGeneCmdlet
 {
     [Parameter(
         ParameterSetName = "get",
@@ -40,10 +39,5 @@ public class GetGeneCmdlet : ComputeCmdLet
             if (Stopping) break;
             WriteObject(gene, true);
         }
-    }
-
-    private Gene GetSingleGene(string id)
-    {
-        return Factory.CreateGenesClient().Get(id);
     }
 }

@@ -103,42 +103,16 @@ namespace Eryph.ComputeClient.Models
             return new OperationTaskReference(id, type, projectName);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.VirtualDisk"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="Models.Gene"/>. </summary>
         /// <param name="id"></param>
+        /// <param name="geneType"></param>
         /// <param name="name"></param>
-        /// <param name="location"></param>
-        /// <param name="dataStore"></param>
-        /// <param name="project"></param>
-        /// <param name="environment"></param>
-        /// <param name="path"></param>
-        /// <param name="sizeBytes"></param>
-        /// <param name="parentId"></param>
-        /// <param name="attachedDrives"></param>
-        /// <returns> A new <see cref="Models.VirtualDisk"/> instance for mocking. </returns>
-        public static VirtualDisk VirtualDisk(string id = null, string name = null, string location = null, string dataStore = null, string project = null, string environment = null, string path = null, long? sizeBytes = null, string parentId = null, IEnumerable<CatletDrive> attachedDrives = null)
+        /// <param name="size"></param>
+        /// <param name="hash"></param>
+        /// <returns> A new <see cref="Models.Gene"/> instance for mocking. </returns>
+        public static Gene Gene(string id = null, GeneType? geneType = null, string name = null, long? size = null, string hash = null)
         {
-            attachedDrives ??= new List<CatletDrive>();
-
-            return new VirtualDisk(
-                id,
-                name,
-                location,
-                dataStore,
-                project,
-                environment,
-                path,
-                sizeBytes,
-                parentId,
-                attachedDrives?.ToList());
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.CatletDrive"/>. </summary>
-        /// <param name="type"></param>
-        /// <param name="attachedDiskId"></param>
-        /// <returns> A new <see cref="Models.CatletDrive"/> instance for mocking. </returns>
-        public static CatletDrive CatletDrive(CatletDriveType? type = null, Guid? attachedDiskId = null)
-        {
-            return new CatletDrive(type, attachedDiskId);
+            return new Gene(id, geneType, name, size, hash);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.ProjectMemberRole"/>. </summary>
@@ -232,16 +206,66 @@ namespace Eryph.ComputeClient.Models
             return new CatletNetworkAdapter(name, macAddress);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.Gene"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="Models.CatletDrive"/>. </summary>
+        /// <param name="type"></param>
+        /// <param name="attachedDiskId"></param>
+        /// <returns> A new <see cref="Models.CatletDrive"/> instance for mocking. </returns>
+        public static CatletDrive CatletDrive(CatletDriveType? type = null, Guid? attachedDiskId = null)
+        {
+            return new CatletDrive(type, attachedDiskId);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.VirtualDisk"/>. </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="storageIdentifier"></param>
+        /// <param name="dataStore"></param>
+        /// <param name="project"></param>
+        /// <param name="environment"></param>
+        /// <param name="path"></param>
+        /// <param name="sizeBytes"></param>
+        /// <param name="parentId"></param>
+        /// <param name="attachedDrives"></param>
+        /// <returns> A new <see cref="Models.VirtualDisk"/> instance for mocking. </returns>
+        public static VirtualDisk VirtualDisk(Guid? id = null, string name = null, string storageIdentifier = null, string dataStore = null, string project = null, string environment = null, string path = null, long? sizeBytes = null, Guid? parentId = null, IEnumerable<CatletDrive> attachedDrives = null)
+        {
+            attachedDrives ??= new List<CatletDrive>();
+
+            return new VirtualDisk(
+                id,
+                name,
+                storageIdentifier,
+                dataStore,
+                project,
+                environment,
+                path,
+                sizeBytes,
+                parentId,
+                attachedDrives?.ToList());
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.GeneWithUsage"/>. </summary>
         /// <param name="id"></param>
         /// <param name="geneType"></param>
         /// <param name="name"></param>
         /// <param name="size"></param>
         /// <param name="hash"></param>
-        /// <returns> A new <see cref="Models.Gene"/> instance for mocking. </returns>
-        public static Gene Gene(string id = null, GeneType? geneType = null, string name = null, long? size = null, string hash = null)
+        /// <param name="catlets"></param>
+        /// <param name="disks"></param>
+        /// <returns> A new <see cref="Models.GeneWithUsage"/> instance for mocking. </returns>
+        public static GeneWithUsage GeneWithUsage(string id = null, GeneType? geneType = null, string name = null, long? size = null, string hash = null, IEnumerable<Guid> catlets = null, IEnumerable<Guid> disks = null)
         {
-            return new Gene(id, geneType, name, size, hash);
+            catlets ??= new List<Guid>();
+            disks ??= new List<Guid>();
+
+            return new GeneWithUsage(
+                id,
+                geneType,
+                name,
+                size,
+                hash,
+                catlets?.ToList(),
+                disks?.ToList());
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.VirtualNetwork"/>. </summary>

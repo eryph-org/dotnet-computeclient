@@ -40,9 +40,46 @@ namespace Eryph.ComputeClient
             _pipeline = pipeline;
         }
 
-        /// <summary> Deletes a gene. </summary>
+        /// <summary> Removes unused genes. </summary>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Removes unused genes from the local gene pool. </remarks>
+        public virtual async Task<Response<Models.Operation>> CleanupAsync(CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("GenesClient.Cleanup");
+            scope.Start();
+            try
+            {
+                return await RestClient.CleanupAsync(cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Removes unused genes. </summary>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Removes unused genes from the local gene pool. </remarks>
+        public virtual Response<Models.Operation> Cleanup(CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("GenesClient.Cleanup");
+            scope.Start();
+            try
+            {
+                return RestClient.Cleanup(cancellationToken);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Removes a gene. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Removes a gene from the local gene pool. </remarks>
         public virtual async Task<Response<Models.Operation>> DeleteAsync(string id, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("GenesClient.Delete");
@@ -58,9 +95,10 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Deletes a gene. </summary>
+        /// <summary> Removes a gene. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Removes a gene from the local gene pool. </remarks>
         public virtual Response<Models.Operation> Delete(string id, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("GenesClient.Delete");
@@ -80,7 +118,7 @@ namespace Eryph.ComputeClient
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <remarks> Get a gene. </remarks>
-        public virtual async Task<Response<Gene>> GetAsync(string id, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<GeneWithUsage>> GetAsync(string id, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("GenesClient.Get");
             scope.Start();
@@ -99,7 +137,7 @@ namespace Eryph.ComputeClient
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <remarks> Get a gene. </remarks>
-        public virtual Response<Gene> Get(string id, CancellationToken cancellationToken = default)
+        public virtual Response<GeneWithUsage> Get(string id, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("GenesClient.Get");
             scope.Start();
