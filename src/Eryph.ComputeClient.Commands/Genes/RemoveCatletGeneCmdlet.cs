@@ -43,7 +43,7 @@ public class RemoveCatletGeneCmdlet : CatletGeneCmdlet
     {
         if (Unused)
         {
-            if (!Force && !ShouldContinue("All unused genes will be deleted from local gene pool!", "Warning!"))
+            if (!Force && !ShouldContinue("All unused genes will be deleted from the local gene pool!", "Warning!"))
             {
                 return;
             }
@@ -70,7 +70,7 @@ public class RemoveCatletGeneCmdlet : CatletGeneCmdlet
                 continue;
             }
 
-            if (!Force && !ShouldContinue($"Gene '{gene.Name}' (Id:{id}) will be deleted from local gene pool!", "Warning!",
+            if (!Force && !ShouldContinue($"Gene '{gene.Name}' (Id:{id}) will be deleted from the local gene pool!", "Warning!",
                     ref _yesToAll, ref _noToAll))
             {
                 continue;
