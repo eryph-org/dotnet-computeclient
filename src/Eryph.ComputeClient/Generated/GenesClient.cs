@@ -114,10 +114,9 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Gene a gene. </summary>
+        /// <summary> Get a gene. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <remarks> Get a gene. </remarks>
         public virtual async Task<Response<GeneWithUsage>> GetAsync(string id, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("GenesClient.Get");
@@ -133,10 +132,9 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Gene a gene. </summary>
+        /// <summary> Get a gene. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <remarks> Get a gene. </remarks>
         public virtual Response<GeneWithUsage> Get(string id, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("GenesClient.Get");

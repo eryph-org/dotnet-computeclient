@@ -240,11 +240,10 @@ namespace Eryph.ComputeClient
             return message;
         }
 
-        /// <summary> Gene a gene. </summary>
+        /// <summary> Get a gene. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
-        /// <remarks> Get a gene. </remarks>
         public async Task<Response<GeneWithUsage>> GetAsync(string id, CancellationToken cancellationToken = default)
         {
             if (id == null)
@@ -268,11 +267,10 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Gene a gene. </summary>
+        /// <summary> Get a gene. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
-        /// <remarks> Get a gene. </remarks>
         public Response<GeneWithUsage> Get(string id, CancellationToken cancellationToken = default)
         {
             if (id == null)
