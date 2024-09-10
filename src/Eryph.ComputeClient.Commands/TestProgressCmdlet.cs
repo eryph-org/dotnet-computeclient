@@ -13,22 +13,22 @@ namespace Eryph.ComputeClient.Commands
     {
         protected override void ProcessRecord()
         {
-            WriteProgress(new ProgressRecord(0, "Parent", "Running")
+            WriteProgress(new ProgressRecord(0, "Root", "Running")
             {
                 PercentComplete = -1,
-                CurrentOperation = "bla bla bla",
             });
 
-            for (int i = 0; i < 10; i++)
+            for (var i = 0; i < 10; i++)
             {
-                WriteProgress(new ProgressRecord(1, "Parent", "Running")
+                WriteProgress(new ProgressRecord(1, $"Parent {i}", "Running")
                 {
                     ParentActivityId = 0,
                     PercentComplete = 0,
-                    CurrentOperation = "bla bla bla",
                 });
 
-                WriteProgress(new ProgressRecord(2, "Child", "Running")
+                Thread.Sleep(100);
+
+                WriteProgress(new ProgressRecord(2, $"Child {i}", "Running")
                 {
                     ParentActivityId = 1,
                     PercentComplete = 0
@@ -36,9 +36,7 @@ namespace Eryph.ComputeClient.Commands
 
                 Thread.Sleep(500);
 
-
-
-                WriteProgress(new ProgressRecord(2, "Child", "Running")
+                WriteProgress(new ProgressRecord(2, $"Child {i}", "Done")
                 {
                     PercentComplete = 100,
                     ParentActivityId = 1,
@@ -47,15 +45,12 @@ namespace Eryph.ComputeClient.Commands
 
                 Thread.Sleep(100);
 
-                WriteProgress(new ProgressRecord(1, "Parent", "Running")
+                WriteProgress(new ProgressRecord(1, $"Parent {i}", "Done")
                 {
                     ParentActivityId = 0,
                     PercentComplete = 100,
-                    CurrentOperation = "bla bla bla",
                     RecordType = ProgressRecordType.Completed,
                 });
-
-                
 
                 Thread.Sleep(500);
             }

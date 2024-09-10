@@ -23,7 +23,7 @@ public class OperationProgressManager
     public void Update(Operation operation)
     {
         var tasksById = operation.Tasks.ToDictionary(t => t.Id);
-        EnsureActivities(operation);
+        EnsureActivities(tasksById);
     }
 
     private void EnsureActivities(IDictionary<string, OperationTask> tasks)
