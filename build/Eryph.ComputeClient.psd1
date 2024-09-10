@@ -83,6 +83,8 @@ CmdletsToExport = @(
     "Get-CatletDisk",
     "New-CatletDisk",
     "Remove-CatletDisk",
+    "Get-CatletGene",
+    "Remove-CatletGene",
     "Get-EryphOperation",
     "Get-VNetwork",
     "Set-VNetwork",
