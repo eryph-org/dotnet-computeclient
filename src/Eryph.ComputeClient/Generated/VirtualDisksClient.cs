@@ -40,6 +40,42 @@ namespace Eryph.ComputeClient
             _pipeline = pipeline;
         }
 
+        /// <summary> Creates a virtual disk. </summary>
+        /// <param name="body"> The <see cref="NewVirtualDiskRequest"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public virtual async Task<Response<Models.Operation>> CreateAsync(NewVirtualDiskRequest body = null, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("VirtualDisksClient.Create");
+            scope.Start();
+            try
+            {
+                return await RestClient.CreateAsync(body, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Creates a virtual disk. </summary>
+        /// <param name="body"> The <see cref="NewVirtualDiskRequest"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public virtual Response<Models.Operation> Create(NewVirtualDiskRequest body = null, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("VirtualDisksClient.Create");
+            scope.Start();
+            try
+            {
+                return RestClient.Create(body, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
         /// <summary> Deletes a virtual disk. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>

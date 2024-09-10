@@ -5,7 +5,6 @@
 
 #nullable disable
 
-using System;
 using System.Collections.Generic;
 
 namespace Eryph.ComputeClient.Models
@@ -14,15 +13,27 @@ namespace Eryph.ComputeClient.Models
     public partial class VirtualDisk
     {
         /// <summary> Initializes a new instance of <see cref="VirtualDisk"/>. </summary>
-        internal VirtualDisk()
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="location"></param>
+        /// <param name="dataStore"></param>
+        /// <param name="project"></param>
+        /// <param name="environment"></param>
+        internal VirtualDisk(string id, string name, string location, string dataStore, string project, string environment)
         {
+            Id = id;
+            Name = name;
+            Location = location;
+            DataStore = dataStore;
+            Project = project;
+            Environment = environment;
             AttachedDrives = new ChangeTrackingList<CatletDrive>();
         }
 
         /// <summary> Initializes a new instance of <see cref="VirtualDisk"/>. </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
-        /// <param name="storageIdentifier"></param>
+        /// <param name="location"></param>
         /// <param name="dataStore"></param>
         /// <param name="project"></param>
         /// <param name="environment"></param>
@@ -30,11 +41,11 @@ namespace Eryph.ComputeClient.Models
         /// <param name="sizeBytes"></param>
         /// <param name="parentId"></param>
         /// <param name="attachedDrives"></param>
-        internal VirtualDisk(Guid? id, string name, string storageIdentifier, string dataStore, string project, string environment, string path, long? sizeBytes, Guid? parentId, IReadOnlyList<CatletDrive> attachedDrives)
+        internal VirtualDisk(string id, string name, string location, string dataStore, string project, string environment, string path, long? sizeBytes, string parentId, IReadOnlyList<CatletDrive> attachedDrives)
         {
             Id = id;
             Name = name;
-            StorageIdentifier = storageIdentifier;
+            Location = location;
             DataStore = dataStore;
             Project = project;
             Environment = environment;
@@ -45,11 +56,11 @@ namespace Eryph.ComputeClient.Models
         }
 
         /// <summary> Gets the id. </summary>
-        public Guid? Id { get; }
+        public string Id { get; }
         /// <summary> Gets the name. </summary>
         public string Name { get; }
-        /// <summary> Gets the storage identifier. </summary>
-        public string StorageIdentifier { get; }
+        /// <summary> Gets the location. </summary>
+        public string Location { get; }
         /// <summary> Gets the data store. </summary>
         public string DataStore { get; }
         /// <summary> Gets the project. </summary>
@@ -61,7 +72,7 @@ namespace Eryph.ComputeClient.Models
         /// <summary> Gets the size bytes. </summary>
         public long? SizeBytes { get; }
         /// <summary> Gets the parent id. </summary>
-        public Guid? ParentId { get; }
+        public string ParentId { get; }
         /// <summary> Gets the attached drives. </summary>
         public IReadOnlyList<CatletDrive> AttachedDrives { get; }
     }
