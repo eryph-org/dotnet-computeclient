@@ -103,6 +103,25 @@ namespace Eryph.ComputeClient.Models
             return new OperationTaskReference(id, type, projectName);
         }
 
+        /// <summary> Initializes a new instance of <see cref="Models.Gene"/>. </summary>
+        /// <param name="id"></param>
+        /// <param name="geneType"></param>
+        /// <param name="geneSet"></param>
+        /// <param name="name"></param>
+        /// <param name="size"></param>
+        /// <param name="hash"></param>
+        /// <returns> A new <see cref="Models.Gene"/> instance for mocking. </returns>
+        public static Gene Gene(string id = null, GeneType? geneType = null, string geneSet = null, string name = null, long? size = null, string hash = null)
+        {
+            return new Gene(
+                id,
+                geneType,
+                geneSet,
+                name,
+                size,
+                hash);
+        }
+
         /// <summary> Initializes a new instance of <see cref="Models.VirtualDisk"/>. </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
@@ -230,6 +249,32 @@ namespace Eryph.ComputeClient.Models
         public static CatletNetworkAdapter CatletNetworkAdapter(string name = null, string macAddress = null)
         {
             return new CatletNetworkAdapter(name, macAddress);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.GeneWithUsage"/>. </summary>
+        /// <param name="id"></param>
+        /// <param name="geneType"></param>
+        /// <param name="geneSet"></param>
+        /// <param name="name"></param>
+        /// <param name="size"></param>
+        /// <param name="hash"></param>
+        /// <param name="catlets"></param>
+        /// <param name="disks"></param>
+        /// <returns> A new <see cref="Models.GeneWithUsage"/> instance for mocking. </returns>
+        public static GeneWithUsage GeneWithUsage(string id = null, GeneType? geneType = null, string geneSet = null, string name = null, long? size = null, string hash = null, IEnumerable<Guid> catlets = null, IEnumerable<Guid> disks = null)
+        {
+            catlets ??= new List<Guid>();
+            disks ??= new List<Guid>();
+
+            return new GeneWithUsage(
+                id,
+                geneType,
+                geneSet,
+                name,
+                size,
+                hash,
+                catlets?.ToList(),
+                disks?.ToList());
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.VirtualNetwork"/>. </summary>
