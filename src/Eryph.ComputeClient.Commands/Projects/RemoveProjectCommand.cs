@@ -41,7 +41,7 @@ public class RemoveProjectCommand : ProjectCmdlet
                 continue;
             }
 
-            if (!Force && !ShouldContinue($"Project '{project.Name}' (Id:{id}) will be deleted!", "Warning!",
+            if (!Force && !ShouldContinue($"Project '{project.Name}' (Id:{id}) and all catlets in the project will be deleted!", "Warning!",
                     ref _yesToAll, ref _noToAll))
             {
                 continue;
