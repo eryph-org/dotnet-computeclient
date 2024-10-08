@@ -15,7 +15,7 @@ namespace Eryph.ComputeClient.Models
         void IUtf8JsonSerializable.Write(Utf8JsonWriter writer)
         {
             writer.WriteStartObject();
-            writer.WritePropertyName("correlationId"u8);
+            writer.WritePropertyName("correlation_id"u8);
             writer.WriteStringValue(CorrelationId);
             writer.WritePropertyName("name"u8);
             writer.WriteStringValue(Name);

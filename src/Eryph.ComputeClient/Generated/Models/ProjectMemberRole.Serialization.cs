@@ -28,61 +28,31 @@ namespace Eryph.ComputeClient.Models
             {
                 if (property.NameEquals("id"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        id = null;
-                        continue;
-                    }
                     id = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("projectId"u8))
+                if (property.NameEquals("project_id"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        projectId = null;
-                        continue;
-                    }
                     projectId = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("projectName"u8))
+                if (property.NameEquals("project_name"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        projectName = null;
-                        continue;
-                    }
                     projectName = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("memberId"u8))
+                if (property.NameEquals("member_id"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        memberId = null;
-                        continue;
-                    }
                     memberId = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("roleId"u8))
+                if (property.NameEquals("role_id"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        roleId = null;
-                        continue;
-                    }
                     roleId = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("roleName"u8))
+                if (property.NameEquals("role_name"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        roleName = null;
-                        continue;
-                    }
                     roleName = property.Value.GetString();
                     continue;
                 }

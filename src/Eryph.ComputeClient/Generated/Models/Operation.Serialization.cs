@@ -30,11 +30,6 @@ namespace Eryph.ComputeClient.Models
             {
                 if (property.NameEquals("id"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        id = null;
-                        continue;
-                    }
                     id = property.Value.GetString();
                     continue;
                 }
@@ -47,7 +42,7 @@ namespace Eryph.ComputeClient.Models
                     status = new OperationStatus(property.Value.GetString());
                     continue;
                 }
-                if (property.NameEquals("statusMessage"u8))
+                if (property.NameEquals("status_message"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -71,7 +66,7 @@ namespace Eryph.ComputeClient.Models
                     resources = array;
                     continue;
                 }
-                if (property.NameEquals("logEntries"u8))
+                if (property.NameEquals("log_entries"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {

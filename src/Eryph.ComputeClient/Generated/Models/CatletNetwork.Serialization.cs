@@ -30,25 +30,15 @@ namespace Eryph.ComputeClient.Models
             {
                 if (property.NameEquals("name"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        name = null;
-                        continue;
-                    }
                     name = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("provider"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        provider = null;
-                        continue;
-                    }
                     provider = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("ipV4Addresses"u8))
+                if (property.NameEquals("ip_v4_addresses"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -62,17 +52,12 @@ namespace Eryph.ComputeClient.Models
                     ipV4Addresses = array;
                     continue;
                 }
-                if (property.NameEquals("iPv4DefaultGateway"u8))
+                if (property.NameEquals("i_pv4_default_gateway"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        iPv4DefaultGateway = null;
-                        continue;
-                    }
                     iPv4DefaultGateway = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("dnsServerAddresses"u8))
+                if (property.NameEquals("dns_server_addresses"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -86,7 +71,7 @@ namespace Eryph.ComputeClient.Models
                     dnsServerAddresses = array;
                     continue;
                 }
-                if (property.NameEquals("ipV4Subnets"u8))
+                if (property.NameEquals("ip_v4_subnets"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -100,7 +85,7 @@ namespace Eryph.ComputeClient.Models
                     ipV4Subnets = array;
                     continue;
                 }
-                if (property.NameEquals("floatingPort"u8))
+                if (property.NameEquals("floating_port"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {

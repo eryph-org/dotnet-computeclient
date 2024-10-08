@@ -5,30 +5,30 @@
 
 #nullable disable
 
-using System;
-
 namespace Eryph.ComputeClient.Models
 {
     /// <summary> The CatletDrive. </summary>
     public partial class CatletDrive
     {
         /// <summary> Initializes a new instance of <see cref="CatletDrive"/>. </summary>
-        internal CatletDrive()
+        /// <param name="type"></param>
+        internal CatletDrive(CatletDriveType type)
         {
+            Type = type;
         }
 
         /// <summary> Initializes a new instance of <see cref="CatletDrive"/>. </summary>
         /// <param name="type"></param>
         /// <param name="attachedDiskId"></param>
-        internal CatletDrive(CatletDriveType? type, Guid? attachedDiskId)
+        internal CatletDrive(CatletDriveType type, string attachedDiskId)
         {
             Type = type;
             AttachedDiskId = attachedDiskId;
         }
 
         /// <summary> Gets the type. </summary>
-        public CatletDriveType? Type { get; }
+        public CatletDriveType Type { get; }
         /// <summary> Gets the attached disk id. </summary>
-        public Guid? AttachedDiskId { get; }
+        public string AttachedDiskId { get; }
     }
 }

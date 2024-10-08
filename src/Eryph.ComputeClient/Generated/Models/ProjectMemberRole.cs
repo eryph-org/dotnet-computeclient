@@ -5,16 +5,13 @@
 
 #nullable disable
 
+using System;
+
 namespace Eryph.ComputeClient.Models
 {
     /// <summary> The ProjectMemberRole. </summary>
     public partial class ProjectMemberRole
     {
-        /// <summary> Initializes a new instance of <see cref="ProjectMemberRole"/>. </summary>
-        internal ProjectMemberRole()
-        {
-        }
-
         /// <summary> Initializes a new instance of <see cref="ProjectMemberRole"/>. </summary>
         /// <param name="id"></param>
         /// <param name="projectId"></param>
@@ -22,8 +19,16 @@ namespace Eryph.ComputeClient.Models
         /// <param name="memberId"></param>
         /// <param name="roleId"></param>
         /// <param name="roleName"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="projectId"/>, <paramref name="projectName"/>, <paramref name="memberId"/>, <paramref name="roleId"/> or <paramref name="roleName"/> is null. </exception>
         internal ProjectMemberRole(string id, string projectId, string projectName, string memberId, string roleId, string roleName)
         {
+            Argument.AssertNotNull(id, nameof(id));
+            Argument.AssertNotNull(projectId, nameof(projectId));
+            Argument.AssertNotNull(projectName, nameof(projectName));
+            Argument.AssertNotNull(memberId, nameof(memberId));
+            Argument.AssertNotNull(roleId, nameof(roleId));
+            Argument.AssertNotNull(roleName, nameof(roleName));
+
             Id = id;
             ProjectId = projectId;
             ProjectName = projectName;

@@ -13,11 +13,6 @@ namespace Eryph.ComputeClient.Models
     public partial class CatletConfiguration
     {
         /// <summary> Initializes a new instance of <see cref="CatletConfiguration"/>. </summary>
-        internal CatletConfiguration()
-        {
-        }
-
-        /// <summary> Initializes a new instance of <see cref="CatletConfiguration"/>. </summary>
         /// <param name="configuration"> Anything. </param>
         internal CatletConfiguration(JsonElement configuration)
         {

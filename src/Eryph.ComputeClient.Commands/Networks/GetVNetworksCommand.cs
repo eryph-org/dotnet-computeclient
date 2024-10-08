@@ -40,7 +40,7 @@ namespace Eryph.ComputeClient.Commands.Networks
             if (Config.IsPresent)
             {
 
-                WriteConfig(Factory.CreateVNetworksClient().GetConfig(projectId.GetValueOrDefault()).Value);
+                WriteConfig(Factory.CreateVirtualNetworksClient().GetConfig(projectId).Value);
                 return;
             }
 
@@ -56,7 +56,7 @@ namespace Eryph.ComputeClient.Commands.Networks
             }
 
 
-            ListOutput(Factory.CreateVNetworksClient().List());
+            ListOutput(Factory.CreateVirtualNetworksClient().List());
 
         }
 

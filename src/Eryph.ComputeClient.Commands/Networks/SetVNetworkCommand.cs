@@ -75,7 +75,7 @@ namespace Eryph.ComputeClient.Commands.Networks
             if (!string.IsNullOrWhiteSpace(ProjectName))
                 config.Project = ProjectName;
             
-            WaitForOperation(Factory.CreateVNetworksClient()
+            WaitForOperation(Factory.CreateVirtualNetworksClient()
                 .Create(
                     new UpdateProjectNetworksRequest(Guid.NewGuid(),
                        JsonSerializer.SerializeToElement(config, 

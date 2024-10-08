@@ -27,15 +27,10 @@ namespace Eryph.ComputeClient.Models
             {
                 if (property.NameEquals("id"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        id = null;
-                        continue;
-                    }
                     id = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("taskId"u8))
+                if (property.NameEquals("task_id"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {

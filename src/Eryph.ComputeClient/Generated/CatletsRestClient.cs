@@ -45,7 +45,7 @@ namespace Eryph.ComputeClient
             uri.Reset(_endpoint);
             uri.AppendPath("/v1/catlets", false);
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
+            request.Headers.Add("Accept", "application/json, application/problem+json");
             if (body != null)
             {
                 request.Headers.Add("Content-Type", "application/json");
@@ -56,10 +56,10 @@ namespace Eryph.ComputeClient
             return message;
         }
 
-        /// <summary> Creates a new catlet. </summary>
+        /// <summary> Create a new catlet. </summary>
         /// <param name="body"> The <see cref="NewCatletRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <remarks> Creates a catlet. </remarks>
+        /// <remarks> Create a catlet. </remarks>
         public async Task<Response<Models.Operation>> CreateAsync(NewCatletRequest body = null, CancellationToken cancellationToken = default)
         {
             using var message = CreateCreateRequest(body);
@@ -78,10 +78,10 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Creates a new catlet. </summary>
+        /// <summary> Create a new catlet. </summary>
         /// <param name="body"> The <see cref="NewCatletRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <remarks> Creates a catlet. </remarks>
+        /// <remarks> Create a catlet. </remarks>
         public Response<Models.Operation> Create(NewCatletRequest body = null, CancellationToken cancellationToken = default)
         {
             using var message = CreateCreateRequest(body);
@@ -100,7 +100,7 @@ namespace Eryph.ComputeClient
             }
         }
 
-        internal HttpMessage CreateListRequest(bool? count, Guid? projectId)
+        internal HttpMessage CreateListRequest(string projectId)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -108,26 +108,21 @@ namespace Eryph.ComputeClient
             var uri = new RawRequestUriBuilder();
             uri.Reset(_endpoint);
             uri.AppendPath("/v1/catlets", false);
-            if (count != null)
-            {
-                uri.AppendQuery("count", count.Value, true);
-            }
             if (projectId != null)
             {
-                uri.AppendQuery("projectId", projectId.Value, true);
+                uri.AppendQuery("projectId", projectId, true);
             }
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
+            request.Headers.Add("Accept", "application/json, application/problem+json");
             return message;
         }
 
         /// <summary> List all catlets. </summary>
-        /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
+        /// <param name="projectId"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public async Task<Response<CatletList>> ListAsync(bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
+        public async Task<Response<CatletList>> ListAsync(string projectId = null, CancellationToken cancellationToken = default)
         {
-            using var message = CreateListRequest(count, projectId);
+            using var message = CreateListRequest(projectId);
             await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             switch (message.Response.Status)
             {
@@ -144,12 +139,11 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> List all catlets. </summary>
-        /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
+        /// <param name="projectId"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public Response<CatletList> List(bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
+        public Response<CatletList> List(string projectId = null, CancellationToken cancellationToken = default)
         {
-            using var message = CreateListRequest(count, projectId);
+            using var message = CreateListRequest(projectId);
             _pipeline.Send(message, cancellationToken);
             switch (message.Response.Status)
             {
@@ -175,14 +169,15 @@ namespace Eryph.ComputeClient
             uri.AppendPath("/v1/catlets/", false);
             uri.AppendPath(id, true);
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
+            request.Headers.Add("Accept", "application/json, application/problem+json");
             return message;
         }
 
-        /// <summary> Deletes a catlet. </summary>
+        /// <summary> Delete a catlet. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
+        /// <remarks> Deletes a catlet. </remarks>
         public async Task<Response<Models.Operation>> DeleteAsync(string id, CancellationToken cancellationToken = default)
         {
             if (id == null)
@@ -206,10 +201,11 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Deletes a catlet. </summary>
+        /// <summary> Delete a catlet. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
+        /// <remarks> Deletes a catlet. </remarks>
         public Response<Models.Operation> Delete(string id, CancellationToken cancellationToken = default)
         {
             if (id == null)
@@ -243,7 +239,7 @@ namespace Eryph.ComputeClient
             uri.AppendPath("/v1/catlets/", false);
             uri.AppendPath(id, true);
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
+            request.Headers.Add("Accept", "application/json, application/problem+json");
             return message;
         }
 
@@ -311,7 +307,7 @@ namespace Eryph.ComputeClient
             uri.AppendPath("/v1/catlets/", false);
             uri.AppendPath(id, true);
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
+            request.Headers.Add("Accept", "application/json, application/problem+json");
             request.Headers.Add("Content-Type", "application/json");
             var content = new Utf8JsonRequestContent();
             content.JsonWriter.WriteObjectValue(body);
@@ -319,7 +315,7 @@ namespace Eryph.ComputeClient
             return message;
         }
 
-        /// <summary> Updates a catlet. </summary>
+        /// <summary> Update a catlet. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="body"> The <see cref="UpdateCatletRequestBody"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
@@ -351,7 +347,7 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Updates a catlet. </summary>
+        /// <summary> Update a catlet. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="body"> The <see cref="UpdateCatletRequestBody"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
@@ -394,11 +390,11 @@ namespace Eryph.ComputeClient
             uri.AppendPath(id, true);
             uri.AppendPath("/config", false);
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
+            request.Headers.Add("Accept", "application/json, application/problem+json");
             return message;
         }
 
-        /// <summary> Get catlet configuration. </summary>
+        /// <summary> Get a catlet configuration. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
@@ -426,7 +422,7 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Get catlet configuration. </summary>
+        /// <summary> Get a catlet configuration. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
@@ -465,11 +461,11 @@ namespace Eryph.ComputeClient
             uri.AppendPath(id, true);
             uri.AppendPath("/start", false);
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
+            request.Headers.Add("Accept", "application/json, application/problem+json");
             return message;
         }
 
-        /// <summary> Starts a catlet. </summary>
+        /// <summary> Start a catlet. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
@@ -496,7 +492,7 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Starts a catlet. </summary>
+        /// <summary> Start a catlet. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
@@ -534,7 +530,7 @@ namespace Eryph.ComputeClient
             uri.AppendPath(id, true);
             uri.AppendPath("/stop", false);
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
+            request.Headers.Add("Accept", "application/json, application/problem+json");
             request.Headers.Add("Content-Type", "application/json");
             var content = new Utf8JsonRequestContent();
             content.JsonWriter.WriteObjectValue(body);
@@ -542,7 +538,7 @@ namespace Eryph.ComputeClient
             return message;
         }
 
-        /// <summary> Stops a catlet. </summary>
+        /// <summary> Stop a catlet. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="body"> The <see cref="StopCatletRequestBody"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
@@ -574,7 +570,7 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Stops a catlet. </summary>
+        /// <summary> Stop a catlet. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="body"> The <see cref="StopCatletRequestBody"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
@@ -599,77 +595,6 @@ namespace Eryph.ComputeClient
                         Models.Operation value = default;
                         using var document = JsonDocument.Parse(message.Response.ContentStream);
                         value = Models.Operation.DeserializeOperation(document.RootElement);
-                        return Response.FromValue(value, message.Response);
-                    }
-                default:
-                    throw new RequestFailedException(message.Response);
-            }
-        }
-
-        internal HttpMessage CreateListNextPageRequest(string nextLink, bool? count, Guid? projectId)
-        {
-            var message = _pipeline.CreateMessage();
-            var request = message.Request;
-            request.Method = RequestMethod.Get;
-            var uri = new RawRequestUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendRawNextLink(nextLink, false);
-            request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
-            return message;
-        }
-
-        /// <summary> List all catlets. </summary>
-        /// <param name="nextLink"> The URL to the next page of results. </param>
-        /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> is null. </exception>
-        public async Task<Response<CatletList>> ListNextPageAsync(string nextLink, bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
-        {
-            if (nextLink == null)
-            {
-                throw new ArgumentNullException(nameof(nextLink));
-            }
-
-            using var message = CreateListNextPageRequest(nextLink, count, projectId);
-            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
-            switch (message.Response.Status)
-            {
-                case 200:
-                    {
-                        CatletList value = default;
-                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
-                        value = CatletList.DeserializeCatletList(document.RootElement);
-                        return Response.FromValue(value, message.Response);
-                    }
-                default:
-                    throw new RequestFailedException(message.Response);
-            }
-        }
-
-        /// <summary> List all catlets. </summary>
-        /// <param name="nextLink"> The URL to the next page of results. </param>
-        /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> is null. </exception>
-        public Response<CatletList> ListNextPage(string nextLink, bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
-        {
-            if (nextLink == null)
-            {
-                throw new ArgumentNullException(nameof(nextLink));
-            }
-
-            using var message = CreateListNextPageRequest(nextLink, count, projectId);
-            _pipeline.Send(message, cancellationToken);
-            switch (message.Response.Status)
-            {
-                case 200:
-                    {
-                        CatletList value = default;
-                        using var document = JsonDocument.Parse(message.Response.ContentStream);
-                        value = CatletList.DeserializeCatletList(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:

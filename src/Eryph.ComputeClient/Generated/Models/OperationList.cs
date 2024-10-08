@@ -5,7 +5,9 @@
 
 #nullable disable
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Eryph.ComputeClient.Models
 {
@@ -13,26 +15,22 @@ namespace Eryph.ComputeClient.Models
     internal partial class OperationList
     {
         /// <summary> Initializes a new instance of <see cref="OperationList"/>. </summary>
-        internal OperationList()
+        /// <param name="value"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
+        internal OperationList(IEnumerable<Operation> value)
         {
-            Value = new ChangeTrackingList<Operation>();
+            Argument.AssertNotNull(value, nameof(value));
+
+            Value = value.ToList();
         }
 
         /// <summary> Initializes a new instance of <see cref="OperationList"/>. </summary>
-        /// <param name="count"></param>
-        /// <param name="nextLink"></param>
         /// <param name="value"></param>
-        internal OperationList(string count, string nextLink, IReadOnlyList<Operation> value)
+        internal OperationList(IReadOnlyList<Operation> value)
         {
-            Count = count;
-            NextLink = nextLink;
             Value = value;
         }
 
-        /// <summary> Gets the count. </summary>
-        public string Count { get; }
-        /// <summary> Gets the next link. </summary>
-        public string NextLink { get; }
         /// <summary> Gets the value. </summary>
         public IReadOnlyList<Operation> Value { get; }
     }

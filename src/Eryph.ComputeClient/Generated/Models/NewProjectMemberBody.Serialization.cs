@@ -19,24 +19,17 @@ namespace Eryph.ComputeClient.Models
             {
                 if (CorrelationId != null)
                 {
-                    writer.WritePropertyName("correlationId"u8);
+                    writer.WritePropertyName("correlation_id"u8);
                     writer.WriteStringValue(CorrelationId.Value);
                 }
                 else
                 {
-                    writer.WriteNull("correlationId");
+                    writer.WriteNull("correlation_id");
                 }
             }
-            if (MemberId != null)
-            {
-                writer.WritePropertyName("memberId"u8);
-                writer.WriteStringValue(MemberId);
-            }
-            else
-            {
-                writer.WriteNull("memberId");
-            }
-            writer.WritePropertyName("roleId"u8);
+            writer.WritePropertyName("member_id"u8);
+            writer.WriteStringValue(MemberId);
+            writer.WritePropertyName("role_id"u8);
             writer.WriteStringValue(RoleId);
             writer.WriteEndObject();
         }

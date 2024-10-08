@@ -15,8 +15,12 @@ namespace Eryph.ComputeClient.Models
         /// <summary> Initializes a new instance of <see cref="NewProjectMemberBody"/>. </summary>
         /// <param name="memberId"></param>
         /// <param name="roleId"></param>
-        public NewProjectMemberBody(string memberId, Guid roleId)
+        /// <exception cref="ArgumentNullException"> <paramref name="memberId"/> or <paramref name="roleId"/> is null. </exception>
+        public NewProjectMemberBody(string memberId, string roleId)
         {
+            Argument.AssertNotNull(memberId, nameof(memberId));
+            Argument.AssertNotNull(roleId, nameof(roleId));
+
             MemberId = memberId;
             RoleId = roleId;
         }
@@ -25,7 +29,7 @@ namespace Eryph.ComputeClient.Models
         /// <param name="correlationId"></param>
         /// <param name="memberId"></param>
         /// <param name="roleId"></param>
-        internal NewProjectMemberBody(Guid? correlationId, string memberId, Guid roleId)
+        internal NewProjectMemberBody(Guid? correlationId, string memberId, string roleId)
         {
             CorrelationId = correlationId;
             MemberId = memberId;
@@ -37,6 +41,6 @@ namespace Eryph.ComputeClient.Models
         /// <summary> Gets the member id. </summary>
         public string MemberId { get; }
         /// <summary> Gets the role id. </summary>
-        public Guid RoleId { get; }
+        public string RoleId { get; }
     }
 }

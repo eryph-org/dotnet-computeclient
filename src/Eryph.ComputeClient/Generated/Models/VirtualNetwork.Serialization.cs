@@ -30,81 +30,41 @@ namespace Eryph.ComputeClient.Models
             {
                 if (property.NameEquals("id"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        id = null;
-                        continue;
-                    }
                     id = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("name"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        name = null;
-                        continue;
-                    }
                     name = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("projectId"u8))
+                if (property.NameEquals("project_id"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        projectId = null;
-                        continue;
-                    }
                     projectId = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("projectName"u8))
+                if (property.NameEquals("project_name"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        projectName = null;
-                        continue;
-                    }
                     projectName = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("environment"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        environment = null;
-                        continue;
-                    }
                     environment = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("tenantId"u8))
+                if (property.NameEquals("tenant_id"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        tenantId = null;
-                        continue;
-                    }
                     tenantId = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("providerName"u8))
+                if (property.NameEquals("provider_name"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        providerName = null;
-                        continue;
-                    }
                     providerName = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("ipNetwork"u8))
+                if (property.NameEquals("ip_network"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        ipNetwork = null;
-                        continue;
-                    }
                     ipNetwork = property.Value.GetString();
                     continue;
                 }

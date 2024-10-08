@@ -89,13 +89,13 @@ namespace Eryph.ComputeClient.Commands
 
         }
 
-        protected Guid? GetProjectId(string projectName)
+        protected string GetProjectId(string projectName)
         {
-            if(string.IsNullOrWhiteSpace(projectName))
+            if (string.IsNullOrWhiteSpace(projectName))
                 return null;
 
             var project = Factory.CreateProjectsClient().List().FirstOrDefault(x => x.Name == projectName);
-            return project == null ? throw new ProjectNotFoundException(projectName) : Guid.Parse(project.Id);
+            return project == null ? throw new ProjectNotFoundException(projectName) : project.Id;
         }
 
         protected void ListOutput<T>(Pageable<T> pageable)

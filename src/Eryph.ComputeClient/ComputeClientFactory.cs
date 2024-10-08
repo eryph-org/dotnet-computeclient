@@ -28,7 +28,7 @@ namespace Eryph.ComputeClient
         public ProjectMembersClient CreateProjectMembersClient(string? scopes = null) =>
             new(new ClientDiagnostics(_options), _options.BuildHttpPipeline(_options.ClientCredentials, scopes), _endpoint);
 
-        public VNetworksClient CreateVNetworksClient(string? scopes = null) =>
+        public VirtualNetworksClient CreateVirtualNetworksClient(string? scopes = null) =>
             new(new ClientDiagnostics(_options), _options.BuildHttpPipeline(_options.ClientCredentials, scopes), _endpoint);
 
         public CatletsClient CreateCatletsClient(string? scopes = null) =>

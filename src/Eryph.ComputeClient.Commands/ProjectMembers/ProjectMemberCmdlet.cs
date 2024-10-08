@@ -6,16 +6,20 @@ namespace Eryph.ComputeClient.Commands.ProjectMembers
 {
     public class ProjectMemberCmdlet : ComputeCmdLet
     {
-        protected void WaitForMember(Operation operation, bool noWait, 
-            bool preferWriteMember, string knownMemberId = default, Guid? knownProject = default)
+        protected void WaitForMember(
+            Operation operation,
+            bool noWait, 
+            bool preferWriteMember,
+            string knownMemberId = default,
+            string knownProjectId = default)
         {
             if (noWait)
             {
-                if (knownMemberId == default || knownProject == default || !preferWriteMember)
+                if (knownMemberId == default || knownProjectId == default || !preferWriteMember)
                     WriteObject(operation);
                 else
                     WriteObject(Factory.CreateProjectMembersClient()
-                        .Get(knownProject.GetValueOrDefault(), knownMemberId).Value);
+                        .Get(knownProjectId, knownMemberId).Value);
                 return;
             }
 
@@ -33,7 +37,7 @@ namespace Eryph.ComputeClient.Commands.ProjectMembers
                 .FirstOrDefault(x=>x.Reference.Type.GetValueOrDefault() == TaskReferenceType.ProjectMember);
             if (memberData != null)
             {
-                var projectId = GetProjectId(memberData.Reference.ProjectName).GetValueOrDefault();
+                var projectId = GetProjectId(memberData.Reference.ProjectName);
                 WriteObject(Factory.CreateProjectMembersClient()
                     .Get(projectId, memberData.Reference.Id).Value);
             }

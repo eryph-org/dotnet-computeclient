@@ -28,66 +28,36 @@ namespace Eryph.ComputeClient.Models
             string path = default;
             long? sizeBytes = default;
             string parentId = default;
-            IReadOnlyList<CatletDrive> attachedDrives = default;
+            IReadOnlyList<VirtualDiskAttachmentInfo> attachedCatlets = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("id"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        id = null;
-                        continue;
-                    }
                     id = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("name"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        name = null;
-                        continue;
-                    }
                     name = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("location"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        location = null;
-                        continue;
-                    }
                     location = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("dataStore"u8))
+                if (property.NameEquals("data_store"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        dataStore = null;
-                        continue;
-                    }
                     dataStore = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("project"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        project = null;
-                        continue;
-                    }
                     project = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("environment"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        environment = null;
-                        continue;
-                    }
                     environment = property.Value.GetString();
                     continue;
                 }
@@ -101,7 +71,7 @@ namespace Eryph.ComputeClient.Models
                     path = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("sizeBytes"u8))
+                if (property.NameEquals("size_bytes"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -110,7 +80,7 @@ namespace Eryph.ComputeClient.Models
                     sizeBytes = property.Value.GetInt64();
                     continue;
                 }
-                if (property.NameEquals("parentId"u8))
+                if (property.NameEquals("parent_id"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -120,18 +90,18 @@ namespace Eryph.ComputeClient.Models
                     parentId = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("attachedDrives"u8))
+                if (property.NameEquals("attached_catlets"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
                         continue;
                     }
-                    List<CatletDrive> array = new List<CatletDrive>();
+                    List<VirtualDiskAttachmentInfo> array = new List<VirtualDiskAttachmentInfo>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(CatletDrive.DeserializeCatletDrive(item));
+                        array.Add(VirtualDiskAttachmentInfo.DeserializeVirtualDiskAttachmentInfo(item));
                     }
-                    attachedDrives = array;
+                    attachedCatlets = array;
                     continue;
                 }
             }
@@ -145,7 +115,7 @@ namespace Eryph.ComputeClient.Models
                 path,
                 sizeBytes,
                 parentId,
-                attachedDrives ?? new ChangeTrackingList<CatletDrive>());
+                attachedCatlets ?? new ChangeTrackingList<VirtualDiskAttachmentInfo>());
         }
 
         /// <summary> Deserializes the model from a raw response. </summary>

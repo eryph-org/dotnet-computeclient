@@ -36,7 +36,7 @@ namespace Eryph.ComputeClient
             _endpoint = endpoint ?? new Uri("https://localhost:8000/compute");
         }
 
-        internal HttpMessage CreateAddRequest(Guid projectId, NewProjectMemberBody body)
+        internal HttpMessage CreateAddRequest(string projectId, NewProjectMemberBody body)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -47,7 +47,7 @@ namespace Eryph.ComputeClient
             uri.AppendPath(projectId, true);
             uri.AppendPath("/members", false);
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
+            request.Headers.Add("Accept", "application/json, application/problem+json");
             request.Headers.Add("Content-Type", "application/json");
             var content = new Utf8JsonRequestContent();
             content.JsonWriter.WriteObjectValue(body);
@@ -55,14 +55,17 @@ namespace Eryph.ComputeClient
             return message;
         }
 
-        /// <summary> Adds a project member. </summary>
-        /// <param name="projectId"> The <see cref="Guid"/> to use. </param>
+        /// <summary> Add a project member. </summary>
+        /// <param name="projectId"> The <see cref="string"/> to use. </param>
         /// <param name="body"> The <see cref="NewProjectMemberBody"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="body"/> is null. </exception>
-        /// <remarks> Add a project member. </remarks>
-        public async Task<Response<Models.Operation>> AddAsync(Guid projectId, NewProjectMemberBody body, CancellationToken cancellationToken = default)
+        /// <exception cref="ArgumentNullException"> <paramref name="projectId"/> or <paramref name="body"/> is null. </exception>
+        public async Task<Response<Models.Operation>> AddAsync(string projectId, NewProjectMemberBody body, CancellationToken cancellationToken = default)
         {
+            if (projectId == null)
+            {
+                throw new ArgumentNullException(nameof(projectId));
+            }
             if (body == null)
             {
                 throw new ArgumentNullException(nameof(body));
@@ -84,14 +87,17 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Adds a project member. </summary>
-        /// <param name="projectId"> The <see cref="Guid"/> to use. </param>
+        /// <summary> Add a project member. </summary>
+        /// <param name="projectId"> The <see cref="string"/> to use. </param>
         /// <param name="body"> The <see cref="NewProjectMemberBody"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="body"/> is null. </exception>
-        /// <remarks> Add a project member. </remarks>
-        public Response<Models.Operation> Add(Guid projectId, NewProjectMemberBody body, CancellationToken cancellationToken = default)
+        /// <exception cref="ArgumentNullException"> <paramref name="projectId"/> or <paramref name="body"/> is null. </exception>
+        public Response<Models.Operation> Add(string projectId, NewProjectMemberBody body, CancellationToken cancellationToken = default)
         {
+            if (projectId == null)
+            {
+                throw new ArgumentNullException(nameof(projectId));
+            }
             if (body == null)
             {
                 throw new ArgumentNullException(nameof(body));
@@ -113,7 +119,7 @@ namespace Eryph.ComputeClient
             }
         }
 
-        internal HttpMessage CreateListRequest(Guid projectId, bool? count)
+        internal HttpMessage CreateListRequest(string projectId)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -123,22 +129,23 @@ namespace Eryph.ComputeClient
             uri.AppendPath("/v1/projects/", false);
             uri.AppendPath(projectId, true);
             uri.AppendPath("/members", false);
-            if (count != null)
-            {
-                uri.AppendQuery("count", count.Value, true);
-            }
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
+            request.Headers.Add("Accept", "application/json, application/problem+json");
             return message;
         }
 
         /// <summary> List all project members. </summary>
-        /// <param name="projectId"> The <see cref="Guid"/> to use. </param>
-        /// <param name="count"> The <see cref="bool"/>? to use. </param>
+        /// <param name="projectId"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public async Task<Response<ProjectMemberRoleList>> ListAsync(Guid projectId, bool? count = null, CancellationToken cancellationToken = default)
+        /// <exception cref="ArgumentNullException"> <paramref name="projectId"/> is null. </exception>
+        public async Task<Response<ProjectMemberRoleList>> ListAsync(string projectId, CancellationToken cancellationToken = default)
         {
-            using var message = CreateListRequest(projectId, count);
+            if (projectId == null)
+            {
+                throw new ArgumentNullException(nameof(projectId));
+            }
+
+            using var message = CreateListRequest(projectId);
             await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             switch (message.Response.Status)
             {
@@ -155,12 +162,17 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> List all project members. </summary>
-        /// <param name="projectId"> The <see cref="Guid"/> to use. </param>
-        /// <param name="count"> The <see cref="bool"/>? to use. </param>
+        /// <param name="projectId"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public Response<ProjectMemberRoleList> List(Guid projectId, bool? count = null, CancellationToken cancellationToken = default)
+        /// <exception cref="ArgumentNullException"> <paramref name="projectId"/> is null. </exception>
+        public Response<ProjectMemberRoleList> List(string projectId, CancellationToken cancellationToken = default)
         {
-            using var message = CreateListRequest(projectId, count);
+            if (projectId == null)
+            {
+                throw new ArgumentNullException(nameof(projectId));
+            }
+
+            using var message = CreateListRequest(projectId);
             _pipeline.Send(message, cancellationToken);
             switch (message.Response.Status)
             {
@@ -176,7 +188,7 @@ namespace Eryph.ComputeClient
             }
         }
 
-        internal HttpMessage CreateRemoveRequest(Guid projectId, string id)
+        internal HttpMessage CreateRemoveRequest(string projectId, string id)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -188,18 +200,22 @@ namespace Eryph.ComputeClient
             uri.AppendPath("/members/", false);
             uri.AppendPath(id, true);
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
+            request.Headers.Add("Accept", "application/json, application/problem+json");
             return message;
         }
 
         /// <summary> Remove a project member. </summary>
-        /// <param name="projectId"> The <see cref="Guid"/> to use. </param>
+        /// <param name="projectId"> The <see cref="string"/> to use. </param>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
+        /// <exception cref="ArgumentNullException"> <paramref name="projectId"/> or <paramref name="id"/> is null. </exception>
         /// <remarks> Removes a project member assignment. </remarks>
-        public async Task<Response<Models.Operation>> RemoveAsync(Guid projectId, string id, CancellationToken cancellationToken = default)
+        public async Task<Response<Models.Operation>> RemoveAsync(string projectId, string id, CancellationToken cancellationToken = default)
         {
+            if (projectId == null)
+            {
+                throw new ArgumentNullException(nameof(projectId));
+            }
             if (id == null)
             {
                 throw new ArgumentNullException(nameof(id));
@@ -222,13 +238,17 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Remove a project member. </summary>
-        /// <param name="projectId"> The <see cref="Guid"/> to use. </param>
+        /// <param name="projectId"> The <see cref="string"/> to use. </param>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
+        /// <exception cref="ArgumentNullException"> <paramref name="projectId"/> or <paramref name="id"/> is null. </exception>
         /// <remarks> Removes a project member assignment. </remarks>
-        public Response<Models.Operation> Remove(Guid projectId, string id, CancellationToken cancellationToken = default)
+        public Response<Models.Operation> Remove(string projectId, string id, CancellationToken cancellationToken = default)
         {
+            if (projectId == null)
+            {
+                throw new ArgumentNullException(nameof(projectId));
+            }
             if (id == null)
             {
                 throw new ArgumentNullException(nameof(id));
@@ -250,7 +270,7 @@ namespace Eryph.ComputeClient
             }
         }
 
-        internal HttpMessage CreateGetRequest(Guid projectId, string id)
+        internal HttpMessage CreateGetRequest(string projectId, string id)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -262,17 +282,21 @@ namespace Eryph.ComputeClient
             uri.AppendPath("/members/", false);
             uri.AppendPath(id, true);
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
+            request.Headers.Add("Accept", "application/json, application/problem+json");
             return message;
         }
 
         /// <summary> Get a project member. </summary>
-        /// <param name="projectId"> The <see cref="Guid"/> to use. </param>
+        /// <param name="projectId"> The <see cref="string"/> to use. </param>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
-        public async Task<Response<ProjectMemberRole>> GetAsync(Guid projectId, string id, CancellationToken cancellationToken = default)
+        /// <exception cref="ArgumentNullException"> <paramref name="projectId"/> or <paramref name="id"/> is null. </exception>
+        public async Task<Response<ProjectMemberRole>> GetAsync(string projectId, string id, CancellationToken cancellationToken = default)
         {
+            if (projectId == null)
+            {
+                throw new ArgumentNullException(nameof(projectId));
+            }
             if (id == null)
             {
                 throw new ArgumentNullException(nameof(id));
@@ -295,12 +319,16 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Get a project member. </summary>
-        /// <param name="projectId"> The <see cref="Guid"/> to use. </param>
+        /// <param name="projectId"> The <see cref="string"/> to use. </param>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
-        public Response<ProjectMemberRole> Get(Guid projectId, string id, CancellationToken cancellationToken = default)
+        /// <exception cref="ArgumentNullException"> <paramref name="projectId"/> or <paramref name="id"/> is null. </exception>
+        public Response<ProjectMemberRole> Get(string projectId, string id, CancellationToken cancellationToken = default)
         {
+            if (projectId == null)
+            {
+                throw new ArgumentNullException(nameof(projectId));
+            }
             if (id == null)
             {
                 throw new ArgumentNullException(nameof(id));
@@ -315,77 +343,6 @@ namespace Eryph.ComputeClient
                         ProjectMemberRole value = default;
                         using var document = JsonDocument.Parse(message.Response.ContentStream);
                         value = ProjectMemberRole.DeserializeProjectMemberRole(document.RootElement);
-                        return Response.FromValue(value, message.Response);
-                    }
-                default:
-                    throw new RequestFailedException(message.Response);
-            }
-        }
-
-        internal HttpMessage CreateListNextPageRequest(string nextLink, Guid projectId, bool? count)
-        {
-            var message = _pipeline.CreateMessage();
-            var request = message.Request;
-            request.Method = RequestMethod.Get;
-            var uri = new RawRequestUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendRawNextLink(nextLink, false);
-            request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
-            return message;
-        }
-
-        /// <summary> List all project members. </summary>
-        /// <param name="nextLink"> The URL to the next page of results. </param>
-        /// <param name="projectId"> The <see cref="Guid"/> to use. </param>
-        /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> is null. </exception>
-        public async Task<Response<ProjectMemberRoleList>> ListNextPageAsync(string nextLink, Guid projectId, bool? count = null, CancellationToken cancellationToken = default)
-        {
-            if (nextLink == null)
-            {
-                throw new ArgumentNullException(nameof(nextLink));
-            }
-
-            using var message = CreateListNextPageRequest(nextLink, projectId, count);
-            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
-            switch (message.Response.Status)
-            {
-                case 200:
-                    {
-                        ProjectMemberRoleList value = default;
-                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
-                        value = ProjectMemberRoleList.DeserializeProjectMemberRoleList(document.RootElement);
-                        return Response.FromValue(value, message.Response);
-                    }
-                default:
-                    throw new RequestFailedException(message.Response);
-            }
-        }
-
-        /// <summary> List all project members. </summary>
-        /// <param name="nextLink"> The URL to the next page of results. </param>
-        /// <param name="projectId"> The <see cref="Guid"/> to use. </param>
-        /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> is null. </exception>
-        public Response<ProjectMemberRoleList> ListNextPage(string nextLink, Guid projectId, bool? count = null, CancellationToken cancellationToken = default)
-        {
-            if (nextLink == null)
-            {
-                throw new ArgumentNullException(nameof(nextLink));
-            }
-
-            using var message = CreateListNextPageRequest(nextLink, projectId, count);
-            _pipeline.Send(message, cancellationToken);
-            switch (message.Response.Status)
-            {
-                case 200:
-                    {
-                        ProjectMemberRoleList value = default;
-                        using var document = JsonDocument.Parse(message.Response.ContentStream);
-                        value = ProjectMemberRoleList.DeserializeProjectMemberRoleList(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:

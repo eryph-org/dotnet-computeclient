@@ -42,7 +42,7 @@ namespace Eryph.ComputeClient.Models
                     type = new TaskReferenceType(property.Value.GetString());
                     continue;
                 }
-                if (property.NameEquals("projectName"u8))
+                if (property.NameEquals("project_name"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {

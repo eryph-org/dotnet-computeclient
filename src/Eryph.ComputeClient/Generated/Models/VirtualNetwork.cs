@@ -5,16 +5,13 @@
 
 #nullable disable
 
+using System;
+
 namespace Eryph.ComputeClient.Models
 {
     /// <summary> The VirtualNetwork. </summary>
     public partial class VirtualNetwork
     {
-        /// <summary> Initializes a new instance of <see cref="VirtualNetwork"/>. </summary>
-        internal VirtualNetwork()
-        {
-        }
-
         /// <summary> Initializes a new instance of <see cref="VirtualNetwork"/>. </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
@@ -24,8 +21,18 @@ namespace Eryph.ComputeClient.Models
         /// <param name="tenantId"></param>
         /// <param name="providerName"></param>
         /// <param name="ipNetwork"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="name"/>, <paramref name="projectId"/>, <paramref name="projectName"/>, <paramref name="environment"/>, <paramref name="tenantId"/>, <paramref name="providerName"/> or <paramref name="ipNetwork"/> is null. </exception>
         internal VirtualNetwork(string id, string name, string projectId, string projectName, string environment, string tenantId, string providerName, string ipNetwork)
         {
+            Argument.AssertNotNull(id, nameof(id));
+            Argument.AssertNotNull(name, nameof(name));
+            Argument.AssertNotNull(projectId, nameof(projectId));
+            Argument.AssertNotNull(projectName, nameof(projectName));
+            Argument.AssertNotNull(environment, nameof(environment));
+            Argument.AssertNotNull(tenantId, nameof(tenantId));
+            Argument.AssertNotNull(providerName, nameof(providerName));
+            Argument.AssertNotNull(ipNetwork, nameof(ipNetwork));
+
             Id = id;
             Name = name;
             ProjectId = projectId;

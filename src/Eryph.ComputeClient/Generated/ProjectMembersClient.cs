@@ -40,12 +40,11 @@ namespace Eryph.ComputeClient
             _pipeline = pipeline;
         }
 
-        /// <summary> Adds a project member. </summary>
-        /// <param name="projectId"> The <see cref="Guid"/> to use. </param>
+        /// <summary> Add a project member. </summary>
+        /// <param name="projectId"> The <see cref="string"/> to use. </param>
         /// <param name="body"> The <see cref="NewProjectMemberBody"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <remarks> Add a project member. </remarks>
-        public virtual async Task<Response<Models.Operation>> AddAsync(Guid projectId, NewProjectMemberBody body, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<Models.Operation>> AddAsync(string projectId, NewProjectMemberBody body, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("ProjectMembersClient.Add");
             scope.Start();
@@ -60,12 +59,11 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Adds a project member. </summary>
-        /// <param name="projectId"> The <see cref="Guid"/> to use. </param>
+        /// <summary> Add a project member. </summary>
+        /// <param name="projectId"> The <see cref="string"/> to use. </param>
         /// <param name="body"> The <see cref="NewProjectMemberBody"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <remarks> Add a project member. </remarks>
-        public virtual Response<Models.Operation> Add(Guid projectId, NewProjectMemberBody body, CancellationToken cancellationToken = default)
+        public virtual Response<Models.Operation> Add(string projectId, NewProjectMemberBody body, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("ProjectMembersClient.Add");
             scope.Start();
@@ -81,11 +79,11 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Remove a project member. </summary>
-        /// <param name="projectId"> The <see cref="Guid"/> to use. </param>
+        /// <param name="projectId"> The <see cref="string"/> to use. </param>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <remarks> Removes a project member assignment. </remarks>
-        public virtual async Task<Response<Models.Operation>> RemoveAsync(Guid projectId, string id, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<Models.Operation>> RemoveAsync(string projectId, string id, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("ProjectMembersClient.Remove");
             scope.Start();
@@ -101,11 +99,11 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Remove a project member. </summary>
-        /// <param name="projectId"> The <see cref="Guid"/> to use. </param>
+        /// <param name="projectId"> The <see cref="string"/> to use. </param>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <remarks> Removes a project member assignment. </remarks>
-        public virtual Response<Models.Operation> Remove(Guid projectId, string id, CancellationToken cancellationToken = default)
+        public virtual Response<Models.Operation> Remove(string projectId, string id, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("ProjectMembersClient.Remove");
             scope.Start();
@@ -121,10 +119,10 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Get a project member. </summary>
-        /// <param name="projectId"> The <see cref="Guid"/> to use. </param>
+        /// <param name="projectId"> The <see cref="string"/> to use. </param>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response<ProjectMemberRole>> GetAsync(Guid projectId, string id, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<ProjectMemberRole>> GetAsync(string projectId, string id, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("ProjectMembersClient.Get");
             scope.Start();
@@ -140,10 +138,10 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Get a project member. </summary>
-        /// <param name="projectId"> The <see cref="Guid"/> to use. </param>
+        /// <param name="projectId"> The <see cref="string"/> to use. </param>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response<ProjectMemberRole> Get(Guid projectId, string id, CancellationToken cancellationToken = default)
+        public virtual Response<ProjectMemberRole> Get(string projectId, string id, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("ProjectMembersClient.Get");
             scope.Start();
@@ -159,25 +157,27 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> List all project members. </summary>
-        /// <param name="projectId"> The <see cref="Guid"/> to use. </param>
-        /// <param name="count"> The <see cref="bool"/>? to use. </param>
+        /// <param name="projectId"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual AsyncPageable<ProjectMemberRole> ListAsync(Guid projectId, bool? count = null, CancellationToken cancellationToken = default)
+        /// <exception cref="ArgumentNullException"> <paramref name="projectId"/> is null. </exception>
+        public virtual AsyncPageable<ProjectMemberRole> ListAsync(string projectId, CancellationToken cancellationToken = default)
         {
-            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(projectId, count);
-            HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListNextPageRequest(nextLink, projectId, count);
-            return GeneratorPageableHelpers.CreateAsyncPageable(FirstPageRequest, NextPageRequest, ProjectMemberRole.DeserializeProjectMemberRole, _clientDiagnostics, _pipeline, "ProjectMembersClient.List", "value", "nextLink", cancellationToken);
+            Argument.AssertNotNullOrEmpty(projectId, nameof(projectId));
+
+            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(projectId);
+            return GeneratorPageableHelpers.CreateAsyncPageable(FirstPageRequest, null, ProjectMemberRole.DeserializeProjectMemberRole, _clientDiagnostics, _pipeline, "ProjectMembersClient.List", "value", null, cancellationToken);
         }
 
         /// <summary> List all project members. </summary>
-        /// <param name="projectId"> The <see cref="Guid"/> to use. </param>
-        /// <param name="count"> The <see cref="bool"/>? to use. </param>
+        /// <param name="projectId"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Pageable<ProjectMemberRole> List(Guid projectId, bool? count = null, CancellationToken cancellationToken = default)
+        /// <exception cref="ArgumentNullException"> <paramref name="projectId"/> is null. </exception>
+        public virtual Pageable<ProjectMemberRole> List(string projectId, CancellationToken cancellationToken = default)
         {
-            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(projectId, count);
-            HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListNextPageRequest(nextLink, projectId, count);
-            return GeneratorPageableHelpers.CreatePageable(FirstPageRequest, NextPageRequest, ProjectMemberRole.DeserializeProjectMemberRole, _clientDiagnostics, _pipeline, "ProjectMembersClient.List", "value", "nextLink", cancellationToken);
+            Argument.AssertNotNullOrEmpty(projectId, nameof(projectId));
+
+            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(projectId);
+            return GeneratorPageableHelpers.CreatePageable(FirstPageRequest, null, ProjectMemberRole.DeserializeProjectMemberRole, _clientDiagnostics, _pipeline, "ProjectMembersClient.List", "value", null, cancellationToken);
         }
     }
 }

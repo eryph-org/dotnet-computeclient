@@ -21,7 +21,7 @@ namespace Eryph.ComputeClient.Models
             }
             string id = default;
             string name = default;
-            CatletStatus? status = default;
+            CatletStatus status = default;
             IReadOnlyList<CatletNetwork> networks = default;
             IReadOnlyList<CatletNetworkAdapter> networkAdapters = default;
             IReadOnlyList<CatletDrive> drives = default;
@@ -29,30 +29,16 @@ namespace Eryph.ComputeClient.Models
             {
                 if (property.NameEquals("id"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        id = null;
-                        continue;
-                    }
                     id = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("name"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        name = null;
-                        continue;
-                    }
                     name = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("status"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
                     status = new CatletStatus(property.Value.GetString());
                     continue;
                 }
@@ -70,7 +56,7 @@ namespace Eryph.ComputeClient.Models
                     networks = array;
                     continue;
                 }
-                if (property.NameEquals("networkAdapters"u8))
+                if (property.NameEquals("network_adapters"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {

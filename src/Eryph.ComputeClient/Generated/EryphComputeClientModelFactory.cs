@@ -66,9 +66,23 @@ namespace Eryph.ComputeClient.Models
         /// <param name="id"></param>
         /// <param name="name"></param>
         /// <param name="tenantId"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="name"/> or <paramref name="tenantId"/> is null. </exception>
         /// <returns> A new <see cref="Models.Project"/> instance for mocking. </returns>
         public static Project Project(string id = null, string name = null, string tenantId = null)
         {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+            if (name == null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            if (tenantId == null)
+            {
+                throw new ArgumentNullException(nameof(tenantId));
+            }
+
             return new Project(id, name, tenantId);
         }
 
@@ -110,9 +124,27 @@ namespace Eryph.ComputeClient.Models
         /// <param name="name"></param>
         /// <param name="size"></param>
         /// <param name="hash"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="geneSet"/>, <paramref name="name"/> or <paramref name="hash"/> is null. </exception>
         /// <returns> A new <see cref="Models.Gene"/> instance for mocking. </returns>
-        public static Gene Gene(string id = null, GeneType? geneType = null, string geneSet = null, string name = null, long? size = null, string hash = null)
+        public static Gene Gene(string id = null, GeneType geneType = default, string geneSet = null, string name = null, long size = default, string hash = null)
         {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+            if (geneSet == null)
+            {
+                throw new ArgumentNullException(nameof(geneSet));
+            }
+            if (name == null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            if (hash == null)
+            {
+                throw new ArgumentNullException(nameof(hash));
+            }
+
             return new Gene(
                 id,
                 geneType,
@@ -132,11 +164,11 @@ namespace Eryph.ComputeClient.Models
         /// <param name="path"></param>
         /// <param name="sizeBytes"></param>
         /// <param name="parentId"></param>
-        /// <param name="attachedDrives"></param>
+        /// <param name="attachedCatlets"></param>
         /// <returns> A new <see cref="Models.VirtualDisk"/> instance for mocking. </returns>
-        public static VirtualDisk VirtualDisk(string id = null, string name = null, string location = null, string dataStore = null, string project = null, string environment = null, string path = null, long? sizeBytes = null, string parentId = null, IEnumerable<CatletDrive> attachedDrives = null)
+        public static VirtualDisk VirtualDisk(string id = null, string name = null, string location = null, string dataStore = null, string project = null, string environment = null, string path = null, long? sizeBytes = null, string parentId = null, IEnumerable<VirtualDiskAttachmentInfo> attachedCatlets = null)
         {
-            attachedDrives ??= new List<CatletDrive>();
+            attachedCatlets ??= new List<VirtualDiskAttachmentInfo>();
 
             return new VirtualDisk(
                 id,
@@ -148,16 +180,22 @@ namespace Eryph.ComputeClient.Models
                 path,
                 sizeBytes,
                 parentId,
-                attachedDrives?.ToList());
+                attachedCatlets?.ToList());
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.CatletDrive"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="Models.VirtualDiskAttachmentInfo"/>. </summary>
         /// <param name="type"></param>
-        /// <param name="attachedDiskId"></param>
-        /// <returns> A new <see cref="Models.CatletDrive"/> instance for mocking. </returns>
-        public static CatletDrive CatletDrive(CatletDriveType? type = null, Guid? attachedDiskId = null)
+        /// <param name="catletId"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="catletId"/> is null. </exception>
+        /// <returns> A new <see cref="Models.VirtualDiskAttachmentInfo"/> instance for mocking. </returns>
+        public static VirtualDiskAttachmentInfo VirtualDiskAttachmentInfo(CatletDriveType type = default, string catletId = null)
         {
-            return new CatletDrive(type, attachedDiskId);
+            if (catletId == null)
+            {
+                throw new ArgumentNullException(nameof(catletId));
+            }
+
+            return new VirtualDiskAttachmentInfo(type, catletId);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.ProjectMemberRole"/>. </summary>
@@ -167,9 +205,35 @@ namespace Eryph.ComputeClient.Models
         /// <param name="memberId"></param>
         /// <param name="roleId"></param>
         /// <param name="roleName"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="projectId"/>, <paramref name="projectName"/>, <paramref name="memberId"/>, <paramref name="roleId"/> or <paramref name="roleName"/> is null. </exception>
         /// <returns> A new <see cref="Models.ProjectMemberRole"/> instance for mocking. </returns>
         public static ProjectMemberRole ProjectMemberRole(string id = null, string projectId = null, string projectName = null, string memberId = null, string roleId = null, string roleName = null)
         {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+            if (projectId == null)
+            {
+                throw new ArgumentNullException(nameof(projectId));
+            }
+            if (projectName == null)
+            {
+                throw new ArgumentNullException(nameof(projectName));
+            }
+            if (memberId == null)
+            {
+                throw new ArgumentNullException(nameof(memberId));
+            }
+            if (roleId == null)
+            {
+                throw new ArgumentNullException(nameof(roleId));
+            }
+            if (roleName == null)
+            {
+                throw new ArgumentNullException(nameof(roleName));
+            }
+
             return new ProjectMemberRole(
                 id,
                 projectId,
@@ -187,7 +251,7 @@ namespace Eryph.ComputeClient.Models
         /// <param name="networkAdapters"></param>
         /// <param name="drives"></param>
         /// <returns> A new <see cref="Models.Catlet"/> instance for mocking. </returns>
-        public static Catlet Catlet(string id = null, string name = null, CatletStatus? status = null, IEnumerable<CatletNetwork> networks = null, IEnumerable<CatletNetworkAdapter> networkAdapters = null, IEnumerable<CatletDrive> drives = null)
+        public static Catlet Catlet(string id = null, string name = null, CatletStatus status = default, IEnumerable<CatletNetwork> networks = null, IEnumerable<CatletNetworkAdapter> networkAdapters = null, IEnumerable<CatletDrive> drives = null)
         {
             networks ??= new List<CatletNetwork>();
             networkAdapters ??= new List<CatletNetworkAdapter>();
@@ -251,6 +315,15 @@ namespace Eryph.ComputeClient.Models
             return new CatletNetworkAdapter(name, macAddress);
         }
 
+        /// <summary> Initializes a new instance of <see cref="Models.CatletDrive"/>. </summary>
+        /// <param name="type"></param>
+        /// <param name="attachedDiskId"></param>
+        /// <returns> A new <see cref="Models.CatletDrive"/> instance for mocking. </returns>
+        public static CatletDrive CatletDrive(CatletDriveType type = default, string attachedDiskId = null)
+        {
+            return new CatletDrive(type, attachedDiskId);
+        }
+
         /// <summary> Initializes a new instance of <see cref="Models.GeneWithUsage"/>. </summary>
         /// <param name="id"></param>
         /// <param name="geneType"></param>
@@ -261,10 +334,10 @@ namespace Eryph.ComputeClient.Models
         /// <param name="catlets"></param>
         /// <param name="disks"></param>
         /// <returns> A new <see cref="Models.GeneWithUsage"/> instance for mocking. </returns>
-        public static GeneWithUsage GeneWithUsage(string id = null, GeneType? geneType = null, string geneSet = null, string name = null, long? size = null, string hash = null, IEnumerable<Guid> catlets = null, IEnumerable<Guid> disks = null)
+        public static GeneWithUsage GeneWithUsage(string id = null, GeneType geneType = default, string geneSet = null, string name = null, long size = default, string hash = null, IEnumerable<string> catlets = null, IEnumerable<string> disks = null)
         {
-            catlets ??= new List<Guid>();
-            disks ??= new List<Guid>();
+            catlets ??= new List<string>();
+            disks ??= new List<string>();
 
             return new GeneWithUsage(
                 id,
@@ -286,9 +359,43 @@ namespace Eryph.ComputeClient.Models
         /// <param name="tenantId"></param>
         /// <param name="providerName"></param>
         /// <param name="ipNetwork"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="name"/>, <paramref name="projectId"/>, <paramref name="projectName"/>, <paramref name="environment"/>, <paramref name="tenantId"/>, <paramref name="providerName"/> or <paramref name="ipNetwork"/> is null. </exception>
         /// <returns> A new <see cref="Models.VirtualNetwork"/> instance for mocking. </returns>
         public static VirtualNetwork VirtualNetwork(string id = null, string name = null, string projectId = null, string projectName = null, string environment = null, string tenantId = null, string providerName = null, string ipNetwork = null)
         {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+            if (name == null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            if (projectId == null)
+            {
+                throw new ArgumentNullException(nameof(projectId));
+            }
+            if (projectName == null)
+            {
+                throw new ArgumentNullException(nameof(projectName));
+            }
+            if (environment == null)
+            {
+                throw new ArgumentNullException(nameof(environment));
+            }
+            if (tenantId == null)
+            {
+                throw new ArgumentNullException(nameof(tenantId));
+            }
+            if (providerName == null)
+            {
+                throw new ArgumentNullException(nameof(providerName));
+            }
+            if (ipNetwork == null)
+            {
+                throw new ArgumentNullException(nameof(ipNetwork));
+            }
+
             return new VirtualNetwork(
                 id,
                 name,
