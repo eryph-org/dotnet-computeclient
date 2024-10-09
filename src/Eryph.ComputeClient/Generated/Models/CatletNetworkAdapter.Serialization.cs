@@ -29,6 +29,11 @@ namespace Eryph.ComputeClient.Models
                 }
                 if (property.NameEquals("mac_address"u8))
                 {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        macAddress = null;
+                        continue;
+                    }
                     macAddress = property.Value.GetString();
                     continue;
                 }

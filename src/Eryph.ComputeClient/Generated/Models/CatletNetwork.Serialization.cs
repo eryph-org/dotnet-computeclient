@@ -54,6 +54,11 @@ namespace Eryph.ComputeClient.Models
                 }
                 if (property.NameEquals("i_pv4_default_gateway"u8))
                 {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        iPv4DefaultGateway = null;
+                        continue;
+                    }
                     iPv4DefaultGateway = property.Value.GetString();
                     continue;
                 }

@@ -20,7 +20,7 @@ namespace Eryph.ComputeClient.Models
                 return null;
             }
             string id = default;
-            OperationStatus? status = default;
+            OperationStatus status = default;
             string statusMessage = default;
             IReadOnlyList<OperationResource> resources = default;
             IReadOnlyList<OperationLogEntry> logEntries = default;
@@ -35,10 +35,6 @@ namespace Eryph.ComputeClient.Models
                 }
                 if (property.NameEquals("status"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
                     status = new OperationStatus(property.Value.GetString());
                     continue;
                 }

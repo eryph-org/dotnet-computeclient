@@ -113,15 +113,16 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Update the virtual network configuration of a project. </summary>
-        /// <param name="body"> The <see cref="UpdateProjectNetworksRequest"/> to use. </param>
+        /// <param name="projectId"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="UpdateProjectNetworksRequestBody"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response<Models.Operation>> CreateAsync(UpdateProjectNetworksRequest body = null, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<Models.Operation>> UpdateConfigAsync(string projectId, UpdateProjectNetworksRequestBody body, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("VirtualNetworksClient.Create");
+            using var scope = _clientDiagnostics.CreateScope("VirtualNetworksClient.UpdateConfig");
             scope.Start();
             try
             {
-                return await RestClient.CreateAsync(body, cancellationToken).ConfigureAwait(false);
+                return await RestClient.UpdateConfigAsync(projectId, body, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -131,15 +132,16 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Update the virtual network configuration of a project. </summary>
-        /// <param name="body"> The <see cref="UpdateProjectNetworksRequest"/> to use. </param>
+        /// <param name="projectId"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="UpdateProjectNetworksRequestBody"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response<Models.Operation> Create(UpdateProjectNetworksRequest body = null, CancellationToken cancellationToken = default)
+        public virtual Response<Models.Operation> UpdateConfig(string projectId, UpdateProjectNetworksRequestBody body, CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("VirtualNetworksClient.Create");
+            using var scope = _clientDiagnostics.CreateScope("VirtualNetworksClient.UpdateConfig");
             scope.Start();
             try
             {
-                return RestClient.Create(body, cancellationToken);
+                return RestClient.UpdateConfig(projectId, body, cancellationToken);
             }
             catch (Exception e)
             {

@@ -33,8 +33,8 @@ namespace Eryph.ComputeClient.Commands.ProjectMembers
             var newOp = Factory.CreateOperationsClient().Get(operation.Id, 
                 expand: "tasks").Value;
             var memberData = newOp.Tasks
-                .Where(x=>x.Reference!= null)
-                .FirstOrDefault(x=>x.Reference.Type.GetValueOrDefault() == TaskReferenceType.ProjectMember);
+                .Where(x => x.Reference != null)
+                .FirstOrDefault(x => x.Reference.Type == TaskReferenceType.ProjectMember);
             if (memberData != null)
             {
                 var projectId = GetProjectId(memberData.Reference.ProjectName);

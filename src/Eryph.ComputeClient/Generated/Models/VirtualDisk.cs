@@ -36,7 +36,7 @@ namespace Eryph.ComputeClient.Models
             DataStore = dataStore;
             Project = project;
             Environment = environment;
-            AttachedCatlets = new ChangeTrackingList<VirtualDiskAttachmentInfo>();
+            AttachedCatlets = new ChangeTrackingList<VirtualDiskAttachedCatlet>();
         }
 
         /// <summary> Initializes a new instance of <see cref="VirtualDisk"/>. </summary>
@@ -50,7 +50,7 @@ namespace Eryph.ComputeClient.Models
         /// <param name="sizeBytes"></param>
         /// <param name="parentId"></param>
         /// <param name="attachedCatlets"></param>
-        internal VirtualDisk(string id, string name, string location, string dataStore, string project, string environment, string path, long? sizeBytes, string parentId, IReadOnlyList<VirtualDiskAttachmentInfo> attachedCatlets)
+        internal VirtualDisk(string id, string name, string location, string dataStore, string project, string environment, string path, long? sizeBytes, string parentId, IReadOnlyList<VirtualDiskAttachedCatlet> attachedCatlets)
         {
             Id = id;
             Name = name;
@@ -83,6 +83,6 @@ namespace Eryph.ComputeClient.Models
         /// <summary> Gets the parent id. </summary>
         public string ParentId { get; }
         /// <summary> Gets the attached catlets. </summary>
-        public IReadOnlyList<VirtualDiskAttachmentInfo> AttachedCatlets { get; }
+        public IReadOnlyList<VirtualDiskAttachedCatlet> AttachedCatlets { get; }
     }
 }

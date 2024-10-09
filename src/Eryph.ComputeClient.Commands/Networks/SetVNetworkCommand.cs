@@ -35,7 +35,7 @@ namespace Eryph.ComputeClient.Commands.Networks
             set => _nowait = value;
         }
 
-        [Parameter]
+        [Parameter(Mandatory = true)]
         [ValidateNotNullOrEmpty]
         public string ProjectName { get; set; }
 
@@ -72,14 +72,20 @@ namespace Eryph.ComputeClient.Commands.Networks
             if (config == null)
                 return;
 
+            var projectId = GetProjectId(ProjectName);
+
             if (!string.IsNullOrWhiteSpace(ProjectName))
                 config.Project = ProjectName;
             
-            WaitForOperation(Factory.CreateVirtualNetworksClient()
-                .Create(
-                    new UpdateProjectNetworksRequest(Guid.NewGuid(),
-                       JsonSerializer.SerializeToElement(config, 
-                           ConfigModelJsonSerializer.DefaultOptions))), _nowait, false);
+            var configJson = JsonSerializer.SerializeToElement(config, ConfigModelJsonSerializer.DefaultOptions);
+            WaitForOperation(
+                Factory.CreateVirtualNetworksClient().UpdateConfig(
+                    projectId,
+                    new UpdateProjectNetworksRequestBody(configJson)
+                    {
+                        CorrelationId = Guid.NewGuid(),
+                    }),
+                _nowait, false);
         }
     }
 

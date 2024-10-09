@@ -9,14 +9,14 @@ using System;
 
 namespace Eryph.ComputeClient.Models
 {
-    /// <summary> The VirtualDiskAttachmentInfo. </summary>
-    public partial class VirtualDiskAttachmentInfo
+    /// <summary> The VirtualDiskAttachedCatlet. </summary>
+    public partial class VirtualDiskAttachedCatlet
     {
-        /// <summary> Initializes a new instance of <see cref="VirtualDiskAttachmentInfo"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="VirtualDiskAttachedCatlet"/>. </summary>
         /// <param name="type"></param>
         /// <param name="catletId"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="catletId"/> is null. </exception>
-        internal VirtualDiskAttachmentInfo(CatletDriveType type, string catletId)
+        internal VirtualDiskAttachedCatlet(CatletDriveType type, string catletId)
         {
             Argument.AssertNotNull(catletId, nameof(catletId));
 

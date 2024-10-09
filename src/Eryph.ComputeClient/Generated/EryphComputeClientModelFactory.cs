@@ -24,7 +24,7 @@ namespace Eryph.ComputeClient.Models
         /// <param name="projects"></param>
         /// <param name="tasks"></param>
         /// <returns> A new <see cref="Models.Operation"/> instance for mocking. </returns>
-        public static Operation Operation(string id = null, OperationStatus? status = null, string statusMessage = null, IEnumerable<OperationResource> resources = null, IEnumerable<OperationLogEntry> logEntries = null, IEnumerable<Project> projects = null, IEnumerable<OperationTask> tasks = null)
+        public static Operation Operation(string id = null, OperationStatus status = default, string statusMessage = null, IEnumerable<OperationResource> resources = null, IEnumerable<OperationLogEntry> logEntries = null, IEnumerable<Project> projects = null, IEnumerable<OperationTask> tasks = null)
         {
             resources ??= new List<OperationResource>();
             logEntries ??= new List<OperationLogEntry>();
@@ -45,9 +45,19 @@ namespace Eryph.ComputeClient.Models
         /// <param name="id"></param>
         /// <param name="resourceId"></param>
         /// <param name="resourceType"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="resourceId"/> is null. </exception>
         /// <returns> A new <see cref="Models.OperationResource"/> instance for mocking. </returns>
-        public static OperationResource OperationResource(string id = null, string resourceId = null, ResourceType? resourceType = null)
+        public static OperationResource OperationResource(string id = null, string resourceId = null, ResourceType resourceType = default)
         {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+            if (resourceId == null)
+            {
+                throw new ArgumentNullException(nameof(resourceId));
+            }
+
             return new OperationResource(id, resourceId, resourceType);
         }
 
@@ -57,7 +67,7 @@ namespace Eryph.ComputeClient.Models
         /// <param name="message"></param>
         /// <param name="timestamp"></param>
         /// <returns> A new <see cref="Models.OperationLogEntry"/> instance for mocking. </returns>
-        public static OperationLogEntry OperationLogEntry(string id = null, string taskId = null, string message = null, DateTimeOffset? timestamp = null)
+        public static OperationLogEntry OperationLogEntry(string id = null, string taskId = null, string message = null, DateTimeOffset timestamp = default)
         {
             return new OperationLogEntry(id, taskId, message, timestamp);
         }
@@ -88,18 +98,18 @@ namespace Eryph.ComputeClient.Models
 
         /// <summary> Initializes a new instance of <see cref="Models.OperationTask"/>. </summary>
         /// <param name="id"></param>
-        /// <param name="parentTask"></param>
+        /// <param name="parentTaskId"></param>
         /// <param name="name"></param>
         /// <param name="displayName"></param>
         /// <param name="progress"></param>
         /// <param name="status"></param>
         /// <param name="reference"></param>
         /// <returns> A new <see cref="Models.OperationTask"/> instance for mocking. </returns>
-        public static OperationTask OperationTask(string id = null, string parentTask = null, string name = null, string displayName = null, int? progress = null, OperationTaskStatus? status = null, OperationTaskReference reference = null)
+        public static OperationTask OperationTask(string id = null, string parentTaskId = null, string name = null, string displayName = null, int progress = default, OperationTaskStatus status = default, OperationTaskReference reference = null)
         {
             return new OperationTask(
                 id,
-                parentTask,
+                parentTaskId,
                 name,
                 displayName,
                 progress,
@@ -111,9 +121,19 @@ namespace Eryph.ComputeClient.Models
         /// <param name="id"></param>
         /// <param name="type"></param>
         /// <param name="projectName"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="projectName"/> is null. </exception>
         /// <returns> A new <see cref="Models.OperationTaskReference"/> instance for mocking. </returns>
-        public static OperationTaskReference OperationTaskReference(string id = null, TaskReferenceType? type = null, string projectName = null)
+        public static OperationTaskReference OperationTaskReference(string id = null, TaskReferenceType type = default, string projectName = null)
         {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+            if (projectName == null)
+            {
+                throw new ArgumentNullException(nameof(projectName));
+            }
+
             return new OperationTaskReference(id, type, projectName);
         }
 
@@ -166,9 +186,9 @@ namespace Eryph.ComputeClient.Models
         /// <param name="parentId"></param>
         /// <param name="attachedCatlets"></param>
         /// <returns> A new <see cref="Models.VirtualDisk"/> instance for mocking. </returns>
-        public static VirtualDisk VirtualDisk(string id = null, string name = null, string location = null, string dataStore = null, string project = null, string environment = null, string path = null, long? sizeBytes = null, string parentId = null, IEnumerable<VirtualDiskAttachmentInfo> attachedCatlets = null)
+        public static VirtualDisk VirtualDisk(string id = null, string name = null, string location = null, string dataStore = null, string project = null, string environment = null, string path = null, long? sizeBytes = null, string parentId = null, IEnumerable<VirtualDiskAttachedCatlet> attachedCatlets = null)
         {
-            attachedCatlets ??= new List<VirtualDiskAttachmentInfo>();
+            attachedCatlets ??= new List<VirtualDiskAttachedCatlet>();
 
             return new VirtualDisk(
                 id,
@@ -183,19 +203,19 @@ namespace Eryph.ComputeClient.Models
                 attachedCatlets?.ToList());
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.VirtualDiskAttachmentInfo"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="Models.VirtualDiskAttachedCatlet"/>. </summary>
         /// <param name="type"></param>
         /// <param name="catletId"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="catletId"/> is null. </exception>
-        /// <returns> A new <see cref="Models.VirtualDiskAttachmentInfo"/> instance for mocking. </returns>
-        public static VirtualDiskAttachmentInfo VirtualDiskAttachmentInfo(CatletDriveType type = default, string catletId = null)
+        /// <returns> A new <see cref="Models.VirtualDiskAttachedCatlet"/> instance for mocking. </returns>
+        public static VirtualDiskAttachedCatlet VirtualDiskAttachedCatlet(CatletDriveType type = default, string catletId = null)
         {
             if (catletId == null)
             {
                 throw new ArgumentNullException(nameof(catletId));
             }
 
-            return new VirtualDiskAttachmentInfo(type, catletId);
+            return new VirtualDiskAttachedCatlet(type, catletId);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.ProjectMemberRole"/>. </summary>

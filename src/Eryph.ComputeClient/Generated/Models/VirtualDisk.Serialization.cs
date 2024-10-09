@@ -28,7 +28,7 @@ namespace Eryph.ComputeClient.Models
             string path = default;
             long? sizeBytes = default;
             string parentId = default;
-            IReadOnlyList<VirtualDiskAttachmentInfo> attachedCatlets = default;
+            IReadOnlyList<VirtualDiskAttachedCatlet> attachedCatlets = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("id"u8))
@@ -96,10 +96,10 @@ namespace Eryph.ComputeClient.Models
                     {
                         continue;
                     }
-                    List<VirtualDiskAttachmentInfo> array = new List<VirtualDiskAttachmentInfo>();
+                    List<VirtualDiskAttachedCatlet> array = new List<VirtualDiskAttachedCatlet>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(VirtualDiskAttachmentInfo.DeserializeVirtualDiskAttachmentInfo(item));
+                        array.Add(VirtualDiskAttachedCatlet.DeserializeVirtualDiskAttachedCatlet(item));
                     }
                     attachedCatlets = array;
                     continue;
@@ -115,7 +115,7 @@ namespace Eryph.ComputeClient.Models
                 path,
                 sizeBytes,
                 parentId,
-                attachedCatlets ?? new ChangeTrackingList<VirtualDiskAttachmentInfo>());
+                attachedCatlets ?? new ChangeTrackingList<VirtualDiskAttachedCatlet>());
         }
 
         /// <summary> Deserializes the model from a raw response. </summary>

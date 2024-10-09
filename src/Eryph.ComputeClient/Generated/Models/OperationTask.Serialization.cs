@@ -19,11 +19,11 @@ namespace Eryph.ComputeClient.Models
                 return null;
             }
             string id = default;
-            string parentTask = default;
+            string parentTaskId = default;
             string name = default;
             string displayName = default;
-            int? progress = default;
-            OperationTaskStatus? status = default;
+            int progress = default;
+            OperationTaskStatus status = default;
             OperationTaskReference reference = default;
             foreach (var property in element.EnumerateObject())
             {
@@ -32,23 +32,18 @@ namespace Eryph.ComputeClient.Models
                     id = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("parent_task"u8))
+                if (property.NameEquals("parent_task_id"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        parentTask = null;
+                        parentTaskId = null;
                         continue;
                     }
-                    parentTask = property.Value.GetString();
+                    parentTaskId = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("name"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        name = null;
-                        continue;
-                    }
                     name = property.Value.GetString();
                     continue;
                 }
@@ -64,19 +59,11 @@ namespace Eryph.ComputeClient.Models
                 }
                 if (property.NameEquals("progress"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
                     progress = property.Value.GetInt32();
                     continue;
                 }
                 if (property.NameEquals("status"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
                     status = new OperationTaskStatus(property.Value.GetString());
                     continue;
                 }
@@ -92,7 +79,7 @@ namespace Eryph.ComputeClient.Models
             }
             return new OperationTask(
                 id,
-                parentTask,
+                parentTaskId,
                 name,
                 displayName,
                 progress,

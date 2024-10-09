@@ -10,9 +10,9 @@ using Azure;
 
 namespace Eryph.ComputeClient.Models
 {
-    public partial class VirtualDiskAttachmentInfo
+    public partial class VirtualDiskAttachedCatlet
     {
-        internal static VirtualDiskAttachmentInfo DeserializeVirtualDiskAttachmentInfo(JsonElement element)
+        internal static VirtualDiskAttachedCatlet DeserializeVirtualDiskAttachedCatlet(JsonElement element)
         {
             if (element.ValueKind == JsonValueKind.Null)
             {
@@ -33,15 +33,15 @@ namespace Eryph.ComputeClient.Models
                     continue;
                 }
             }
-            return new VirtualDiskAttachmentInfo(type, catletId);
+            return new VirtualDiskAttachedCatlet(type, catletId);
         }
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The response to deserialize the model from. </param>
-        internal static VirtualDiskAttachmentInfo FromResponse(Response response)
+        internal static VirtualDiskAttachedCatlet FromResponse(Response response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeVirtualDiskAttachmentInfo(document.RootElement);
+            return DeserializeVirtualDiskAttachedCatlet(document.RootElement);
         }
     }
 }

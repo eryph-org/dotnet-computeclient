@@ -20,7 +20,7 @@ namespace Eryph.ComputeClient.Models
             }
             string id = default;
             string resourceId = default;
-            ResourceType? resourceType = default;
+            ResourceType resourceType = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("id"u8))
@@ -30,20 +30,11 @@ namespace Eryph.ComputeClient.Models
                 }
                 if (property.NameEquals("resource_id"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        resourceId = null;
-                        continue;
-                    }
                     resourceId = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("resource_type"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
                     resourceType = new ResourceType(property.Value.GetString());
                     continue;
                 }
