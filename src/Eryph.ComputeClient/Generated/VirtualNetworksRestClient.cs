@@ -266,7 +266,7 @@ namespace Eryph.ComputeClient
             uri.AppendPath("/v1/virtualnetworks", false);
             if (projectId != null)
             {
-                uri.AppendQuery("projectId", projectId, true);
+                uri.AppendQuery("project_id", projectId, true);
             }
             request.Uri = uri;
             request.Headers.Add("Accept", "application/json, application/problem+json");
