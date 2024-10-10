@@ -19,8 +19,7 @@ namespace Eryph.ComputeClient.Models
                 return null;
             }
             string id = default;
-            string projectId = default;
-            string projectName = default;
+            Project project = default;
             string memberId = default;
             string roleId = default;
             string roleName = default;
@@ -31,14 +30,9 @@ namespace Eryph.ComputeClient.Models
                     id = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("project_id"u8))
+                if (property.NameEquals("project"u8))
                 {
-                    projectId = property.Value.GetString();
-                    continue;
-                }
-                if (property.NameEquals("project_name"u8))
-                {
-                    projectName = property.Value.GetString();
+                    project = Project.DeserializeProject(property.Value);
                     continue;
                 }
                 if (property.NameEquals("member_id"u8))
@@ -57,13 +51,7 @@ namespace Eryph.ComputeClient.Models
                     continue;
                 }
             }
-            return new ProjectMemberRole(
-                id,
-                projectId,
-                projectName,
-                memberId,
-                roleId,
-                roleName);
+            return new ProjectMemberRole(id, project, memberId, roleId, roleName);
         }
 
         /// <summary> Deserializes the model from a raw response. </summary>

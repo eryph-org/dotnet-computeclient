@@ -20,10 +20,8 @@ namespace Eryph.ComputeClient.Models
             }
             string id = default;
             string name = default;
-            string projectId = default;
-            string projectName = default;
+            Project project = default;
             string environment = default;
-            string tenantId = default;
             string providerName = default;
             string ipNetwork = default;
             foreach (var property in element.EnumerateObject())
@@ -38,24 +36,14 @@ namespace Eryph.ComputeClient.Models
                     name = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("project_id"u8))
+                if (property.NameEquals("project"u8))
                 {
-                    projectId = property.Value.GetString();
-                    continue;
-                }
-                if (property.NameEquals("project_name"u8))
-                {
-                    projectName = property.Value.GetString();
+                    project = Project.DeserializeProject(property.Value);
                     continue;
                 }
                 if (property.NameEquals("environment"u8))
                 {
                     environment = property.Value.GetString();
-                    continue;
-                }
-                if (property.NameEquals("tenant_id"u8))
-                {
-                    tenantId = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("provider_name"u8))
@@ -72,10 +60,8 @@ namespace Eryph.ComputeClient.Models
             return new VirtualNetwork(
                 id,
                 name,
-                projectId,
-                projectName,
+                project,
                 environment,
-                tenantId,
                 providerName,
                 ipNetwork);
         }

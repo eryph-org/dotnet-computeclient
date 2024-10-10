@@ -21,7 +21,7 @@ namespace Eryph.ComputeClient.Models
         /// <param name="project"></param>
         /// <param name="environment"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="name"/>, <paramref name="location"/>, <paramref name="dataStore"/>, <paramref name="project"/> or <paramref name="environment"/> is null. </exception>
-        internal VirtualDisk(string id, string name, string location, string dataStore, string project, string environment)
+        internal VirtualDisk(string id, string name, string location, string dataStore, Project project, string environment)
         {
             Argument.AssertNotNull(id, nameof(id));
             Argument.AssertNotNull(name, nameof(name));
@@ -50,7 +50,7 @@ namespace Eryph.ComputeClient.Models
         /// <param name="sizeBytes"></param>
         /// <param name="parentId"></param>
         /// <param name="attachedCatlets"></param>
-        internal VirtualDisk(string id, string name, string location, string dataStore, string project, string environment, string path, long? sizeBytes, string parentId, IReadOnlyList<VirtualDiskAttachedCatlet> attachedCatlets)
+        internal VirtualDisk(string id, string name, string location, string dataStore, Project project, string environment, string path, long? sizeBytes, string parentId, IReadOnlyList<VirtualDiskAttachedCatlet> attachedCatlets)
         {
             Id = id;
             Name = name;
@@ -73,7 +73,7 @@ namespace Eryph.ComputeClient.Models
         /// <summary> Gets the data store. </summary>
         public string DataStore { get; }
         /// <summary> Gets the project. </summary>
-        public string Project { get; }
+        public Project Project { get; }
         /// <summary> Gets the environment. </summary>
         public string Environment { get; }
         /// <summary> Gets the path. </summary>

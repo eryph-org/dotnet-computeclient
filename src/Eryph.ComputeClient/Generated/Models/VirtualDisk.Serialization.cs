@@ -23,7 +23,7 @@ namespace Eryph.ComputeClient.Models
             string name = default;
             string location = default;
             string dataStore = default;
-            string project = default;
+            Project project = default;
             string environment = default;
             string path = default;
             long? sizeBytes = default;
@@ -53,7 +53,7 @@ namespace Eryph.ComputeClient.Models
                 }
                 if (property.NameEquals("project"u8))
                 {
-                    project = property.Value.GetString();
+                    project = Project.DeserializeProject(property.Value);
                     continue;
                 }
                 if (property.NameEquals("environment"u8))
@@ -75,6 +75,7 @@ namespace Eryph.ComputeClient.Models
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
+                        sizeBytes = null;
                         continue;
                     }
                     sizeBytes = property.Value.GetInt64();
