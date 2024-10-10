@@ -47,7 +47,7 @@ namespace Eryph.ComputeClient
             uri.AppendPath(id, true);
             if (logTimeStamp != null)
             {
-                uri.AppendQuery("logTimeStamp", logTimeStamp.Value, "O", true);
+                uri.AppendQuery("log_time_stamp", logTimeStamp.Value, "O", true);
             }
             if (expand != null)
             {
@@ -58,7 +58,7 @@ namespace Eryph.ComputeClient
             return message;
         }
 
-        /// <summary> Get a operation. </summary>
+        /// <summary> Get an operation. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="logTimeStamp"> The <see cref="DateTimeOffset"/>? to use. </param>
         /// <param name="expand"> The <see cref="string"/> to use. </param>
@@ -87,7 +87,7 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Get a operation. </summary>
+        /// <summary> Get an operation. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="logTimeStamp"> The <see cref="DateTimeOffset"/>? to use. </param>
         /// <param name="expand"> The <see cref="string"/> to use. </param>
@@ -116,7 +116,7 @@ namespace Eryph.ComputeClient
             }
         }
 
-        internal HttpMessage CreateListRequest(DateTimeOffset? logTimeStamp, string expand, bool? count, Guid? projectId)
+        internal HttpMessage CreateListRequest(DateTimeOffset? logTimeStamp, string expand)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -126,34 +126,24 @@ namespace Eryph.ComputeClient
             uri.AppendPath("/v1/operations", false);
             if (logTimeStamp != null)
             {
-                uri.AppendQuery("logTimeStamp", logTimeStamp.Value, "O", true);
+                uri.AppendQuery("log_time_stamp", logTimeStamp.Value, "O", true);
             }
             if (expand != null)
             {
                 uri.AppendQuery("expand", expand, true);
             }
-            if (count != null)
-            {
-                uri.AppendQuery("count", count.Value, true);
-            }
-            if (projectId != null)
-            {
-                uri.AppendQuery("projectId", projectId.Value, true);
-            }
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
+            request.Headers.Add("Accept", "application/json, application/problem+json");
             return message;
         }
 
-        /// <summary> List all Operations. </summary>
+        /// <summary> List all operations. </summary>
         /// <param name="logTimeStamp"> The <see cref="DateTimeOffset"/>? to use. </param>
         /// <param name="expand"> The <see cref="string"/> to use. </param>
-        /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public async Task<Response<OperationList>> ListAsync(DateTimeOffset? logTimeStamp = null, string expand = null, bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
+        public async Task<Response<OperationList>> ListAsync(DateTimeOffset? logTimeStamp = null, string expand = null, CancellationToken cancellationToken = default)
         {
-            using var message = CreateListRequest(logTimeStamp, expand, count, projectId);
+            using var message = CreateListRequest(logTimeStamp, expand);
             await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             switch (message.Response.Status)
             {
@@ -169,90 +159,13 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> List all Operations. </summary>
+        /// <summary> List all operations. </summary>
         /// <param name="logTimeStamp"> The <see cref="DateTimeOffset"/>? to use. </param>
         /// <param name="expand"> The <see cref="string"/> to use. </param>
-        /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public Response<OperationList> List(DateTimeOffset? logTimeStamp = null, string expand = null, bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
+        public Response<OperationList> List(DateTimeOffset? logTimeStamp = null, string expand = null, CancellationToken cancellationToken = default)
         {
-            using var message = CreateListRequest(logTimeStamp, expand, count, projectId);
-            _pipeline.Send(message, cancellationToken);
-            switch (message.Response.Status)
-            {
-                case 200:
-                    {
-                        OperationList value = default;
-                        using var document = JsonDocument.Parse(message.Response.ContentStream);
-                        value = OperationList.DeserializeOperationList(document.RootElement);
-                        return Response.FromValue(value, message.Response);
-                    }
-                default:
-                    throw new RequestFailedException(message.Response);
-            }
-        }
-
-        internal HttpMessage CreateListNextPageRequest(string nextLink, DateTimeOffset? logTimeStamp, string expand, bool? count, Guid? projectId)
-        {
-            var message = _pipeline.CreateMessage();
-            var request = message.Request;
-            request.Method = RequestMethod.Get;
-            var uri = new RawRequestUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendRawNextLink(nextLink, false);
-            request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
-            return message;
-        }
-
-        /// <summary> List all Operations. </summary>
-        /// <param name="nextLink"> The URL to the next page of results. </param>
-        /// <param name="logTimeStamp"> The <see cref="DateTimeOffset"/>? to use. </param>
-        /// <param name="expand"> The <see cref="string"/> to use. </param>
-        /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> is null. </exception>
-        public async Task<Response<OperationList>> ListNextPageAsync(string nextLink, DateTimeOffset? logTimeStamp = null, string expand = null, bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
-        {
-            if (nextLink == null)
-            {
-                throw new ArgumentNullException(nameof(nextLink));
-            }
-
-            using var message = CreateListNextPageRequest(nextLink, logTimeStamp, expand, count, projectId);
-            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
-            switch (message.Response.Status)
-            {
-                case 200:
-                    {
-                        OperationList value = default;
-                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
-                        value = OperationList.DeserializeOperationList(document.RootElement);
-                        return Response.FromValue(value, message.Response);
-                    }
-                default:
-                    throw new RequestFailedException(message.Response);
-            }
-        }
-
-        /// <summary> List all Operations. </summary>
-        /// <param name="nextLink"> The URL to the next page of results. </param>
-        /// <param name="logTimeStamp"> The <see cref="DateTimeOffset"/>? to use. </param>
-        /// <param name="expand"> The <see cref="string"/> to use. </param>
-        /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> is null. </exception>
-        public Response<OperationList> ListNextPage(string nextLink, DateTimeOffset? logTimeStamp = null, string expand = null, bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
-        {
-            if (nextLink == null)
-            {
-                throw new ArgumentNullException(nameof(nextLink));
-            }
-
-            using var message = CreateListNextPageRequest(nextLink, logTimeStamp, expand, count, projectId);
+            using var message = CreateListRequest(logTimeStamp, expand);
             _pipeline.Send(message, cancellationToken);
             switch (message.Response.Status)
             {

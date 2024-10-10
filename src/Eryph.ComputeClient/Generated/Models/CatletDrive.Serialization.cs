@@ -5,7 +5,6 @@
 
 #nullable disable
 
-using System;
 using System.Text.Json;
 using Azure;
 
@@ -19,26 +18,23 @@ namespace Eryph.ComputeClient.Models
             {
                 return null;
             }
-            CatletDriveType? type = default;
-            Guid? attachedDiskId = default;
+            CatletDriveType type = default;
+            string attachedDiskId = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("type"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
                     type = new CatletDriveType(property.Value.GetString());
                     continue;
                 }
-                if (property.NameEquals("attachedDiskId"u8))
+                if (property.NameEquals("attached_disk_id"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
+                        attachedDiskId = null;
                         continue;
                     }
-                    attachedDiskId = property.Value.GetGuid();
+                    attachedDiskId = property.Value.GetString();
                     continue;
                 }
             }

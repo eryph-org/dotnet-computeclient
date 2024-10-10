@@ -5,6 +5,7 @@
 
 #nullable disable
 
+using System;
 using System.Collections.Generic;
 
 namespace Eryph.ComputeClient.Models
@@ -19,15 +20,23 @@ namespace Eryph.ComputeClient.Models
         /// <param name="dataStore"></param>
         /// <param name="project"></param>
         /// <param name="environment"></param>
-        internal VirtualDisk(string id, string name, string location, string dataStore, string project, string environment)
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="name"/>, <paramref name="location"/>, <paramref name="dataStore"/>, <paramref name="project"/> or <paramref name="environment"/> is null. </exception>
+        internal VirtualDisk(string id, string name, string location, string dataStore, Project project, string environment)
         {
+            Argument.AssertNotNull(id, nameof(id));
+            Argument.AssertNotNull(name, nameof(name));
+            Argument.AssertNotNull(location, nameof(location));
+            Argument.AssertNotNull(dataStore, nameof(dataStore));
+            Argument.AssertNotNull(project, nameof(project));
+            Argument.AssertNotNull(environment, nameof(environment));
+
             Id = id;
             Name = name;
             Location = location;
             DataStore = dataStore;
             Project = project;
             Environment = environment;
-            AttachedDrives = new ChangeTrackingList<CatletDrive>();
+            AttachedCatlets = new ChangeTrackingList<VirtualDiskAttachedCatlet>();
         }
 
         /// <summary> Initializes a new instance of <see cref="VirtualDisk"/>. </summary>
@@ -40,8 +49,8 @@ namespace Eryph.ComputeClient.Models
         /// <param name="path"></param>
         /// <param name="sizeBytes"></param>
         /// <param name="parentId"></param>
-        /// <param name="attachedDrives"></param>
-        internal VirtualDisk(string id, string name, string location, string dataStore, string project, string environment, string path, long? sizeBytes, string parentId, IReadOnlyList<CatletDrive> attachedDrives)
+        /// <param name="attachedCatlets"></param>
+        internal VirtualDisk(string id, string name, string location, string dataStore, Project project, string environment, string path, long? sizeBytes, string parentId, IReadOnlyList<VirtualDiskAttachedCatlet> attachedCatlets)
         {
             Id = id;
             Name = name;
@@ -52,7 +61,7 @@ namespace Eryph.ComputeClient.Models
             Path = path;
             SizeBytes = sizeBytes;
             ParentId = parentId;
-            AttachedDrives = attachedDrives;
+            AttachedCatlets = attachedCatlets;
         }
 
         /// <summary> Gets the id. </summary>
@@ -64,7 +73,7 @@ namespace Eryph.ComputeClient.Models
         /// <summary> Gets the data store. </summary>
         public string DataStore { get; }
         /// <summary> Gets the project. </summary>
-        public string Project { get; }
+        public Project Project { get; }
         /// <summary> Gets the environment. </summary>
         public string Environment { get; }
         /// <summary> Gets the path. </summary>
@@ -73,7 +82,7 @@ namespace Eryph.ComputeClient.Models
         public long? SizeBytes { get; }
         /// <summary> Gets the parent id. </summary>
         public string ParentId { get; }
-        /// <summary> Gets the attached drives. </summary>
-        public IReadOnlyList<CatletDrive> AttachedDrives { get; }
+        /// <summary> Gets the attached catlets. </summary>
+        public IReadOnlyList<VirtualDiskAttachedCatlet> AttachedCatlets { get; }
     }
 }

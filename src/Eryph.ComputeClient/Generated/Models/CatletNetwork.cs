@@ -5,6 +5,7 @@
 
 #nullable disable
 
+using System;
 using System.Collections.Generic;
 
 namespace Eryph.ComputeClient.Models
@@ -13,8 +14,16 @@ namespace Eryph.ComputeClient.Models
     public partial class CatletNetwork
     {
         /// <summary> Initializes a new instance of <see cref="CatletNetwork"/>. </summary>
-        internal CatletNetwork()
+        /// <param name="name"></param>
+        /// <param name="provider"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="provider"/> is null. </exception>
+        internal CatletNetwork(string name, string provider)
         {
+            Argument.AssertNotNull(name, nameof(name));
+            Argument.AssertNotNull(provider, nameof(provider));
+
+            Name = name;
+            Provider = provider;
             IpV4Addresses = new ChangeTrackingList<string>();
             DnsServerAddresses = new ChangeTrackingList<string>();
             IpV4Subnets = new ChangeTrackingList<string>();

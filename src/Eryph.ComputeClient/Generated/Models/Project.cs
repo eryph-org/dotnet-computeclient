@@ -5,22 +5,24 @@
 
 #nullable disable
 
+using System;
+
 namespace Eryph.ComputeClient.Models
 {
     /// <summary> The Project. </summary>
     public partial class Project
     {
         /// <summary> Initializes a new instance of <see cref="Project"/>. </summary>
-        internal Project()
-        {
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Project"/>. </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
         /// <param name="tenantId"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="name"/> or <paramref name="tenantId"/> is null. </exception>
         internal Project(string id, string name, string tenantId)
         {
+            Argument.AssertNotNull(id, nameof(id));
+            Argument.AssertNotNull(name, nameof(name));
+            Argument.AssertNotNull(tenantId, nameof(tenantId));
+
             Id = id;
             Name = name;
             TenantId = tenantId;

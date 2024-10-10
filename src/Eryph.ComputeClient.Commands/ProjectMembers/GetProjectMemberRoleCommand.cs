@@ -31,13 +31,13 @@ namespace Eryph.ComputeClient.Commands.ProjectMembers
             {
                 foreach (var id in Id)
                 {
-                    WriteObject(Factory.CreateProjectMembersClient().Get(projectId.GetValueOrDefault(), id).Value);
+                    WriteObject(Factory.CreateProjectMembersClient().Get(projectId, id).Value);
                 }
 
                 return;
             }
 
-            ListOutput(Factory.CreateProjectMembersClient().List(projectId.GetValueOrDefault()));
+            ListOutput(Factory.CreateProjectMembersClient().List(projectId));
 
 
         }

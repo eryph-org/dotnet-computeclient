@@ -13,19 +13,26 @@ namespace Eryph.ComputeClient.Models
     public partial class NewProjectRequest
     {
         /// <summary> Initializes a new instance of <see cref="NewProjectRequest"/>. </summary>
-        /// <param name="correlationId"></param>
         /// <param name="name"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> is null. </exception>
-        public NewProjectRequest(Guid correlationId, string name)
+        public NewProjectRequest(string name)
         {
             Argument.AssertNotNull(name, nameof(name));
 
+            Name = name;
+        }
+
+        /// <summary> Initializes a new instance of <see cref="NewProjectRequest"/>. </summary>
+        /// <param name="correlationId"></param>
+        /// <param name="name"></param>
+        internal NewProjectRequest(Guid? correlationId, string name)
+        {
             CorrelationId = correlationId;
             Name = name;
         }
 
-        /// <summary> Gets the correlation id. </summary>
-        public Guid CorrelationId { get; }
+        /// <summary> Gets or sets the correlation id. </summary>
+        public Guid? CorrelationId { get; set; }
         /// <summary> Gets the name. </summary>
         public string Name { get; }
     }

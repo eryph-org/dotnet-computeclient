@@ -109,7 +109,10 @@ namespace Eryph.ComputeClient.Commands.Catlets
 
             WaitForOperation(
                 Factory.CreateCatletsClient().Create(
-                    new NewCatletRequest(Guid.NewGuid(), serializedConfig)),
+                    new NewCatletRequest(serializedConfig)
+                    {
+                        CorrelationId = Guid.NewGuid(),
+                    }),
                 _noWait,
                 true);
         }

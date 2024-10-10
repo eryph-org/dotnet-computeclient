@@ -14,10 +14,28 @@ namespace Eryph.ComputeClient.Models
     public partial class GeneWithUsage
     {
         /// <summary> Initializes a new instance of <see cref="GeneWithUsage"/>. </summary>
-        internal GeneWithUsage()
+        /// <param name="id"></param>
+        /// <param name="geneType"></param>
+        /// <param name="geneSet"></param>
+        /// <param name="name"></param>
+        /// <param name="size"></param>
+        /// <param name="hash"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="geneSet"/>, <paramref name="name"/> or <paramref name="hash"/> is null. </exception>
+        internal GeneWithUsage(string id, GeneType geneType, string geneSet, string name, long size, string hash)
         {
-            Catlets = new ChangeTrackingList<Guid>();
-            Disks = new ChangeTrackingList<Guid>();
+            Argument.AssertNotNull(id, nameof(id));
+            Argument.AssertNotNull(geneSet, nameof(geneSet));
+            Argument.AssertNotNull(name, nameof(name));
+            Argument.AssertNotNull(hash, nameof(hash));
+
+            Id = id;
+            GeneType = geneType;
+            GeneSet = geneSet;
+            Name = name;
+            Size = size;
+            Hash = hash;
+            Catlets = new ChangeTrackingList<string>();
+            Disks = new ChangeTrackingList<string>();
         }
 
         /// <summary> Initializes a new instance of <see cref="GeneWithUsage"/>. </summary>
@@ -29,7 +47,7 @@ namespace Eryph.ComputeClient.Models
         /// <param name="hash"></param>
         /// <param name="catlets"></param>
         /// <param name="disks"></param>
-        internal GeneWithUsage(string id, GeneType? geneType, string geneSet, string name, long? size, string hash, IReadOnlyList<Guid> catlets, IReadOnlyList<Guid> disks)
+        internal GeneWithUsage(string id, GeneType geneType, string geneSet, string name, long size, string hash, IReadOnlyList<string> catlets, IReadOnlyList<string> disks)
         {
             Id = id;
             GeneType = geneType;
@@ -44,18 +62,18 @@ namespace Eryph.ComputeClient.Models
         /// <summary> Gets the id. </summary>
         public string Id { get; }
         /// <summary> Gets the gene type. </summary>
-        public GeneType? GeneType { get; }
+        public GeneType GeneType { get; }
         /// <summary> Gets the gene set. </summary>
         public string GeneSet { get; }
         /// <summary> Gets the name. </summary>
         public string Name { get; }
         /// <summary> Gets the size. </summary>
-        public long? Size { get; }
+        public long Size { get; }
         /// <summary> Gets the hash. </summary>
         public string Hash { get; }
         /// <summary> Gets the catlets. </summary>
-        public IReadOnlyList<Guid> Catlets { get; }
+        public IReadOnlyList<string> Catlets { get; }
         /// <summary> Gets the disks. </summary>
-        public IReadOnlyList<Guid> Disks { get; }
+        public IReadOnlyList<string> Disks { get; }
     }
 }

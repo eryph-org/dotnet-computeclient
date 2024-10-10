@@ -5,33 +5,34 @@
 
 #nullable disable
 
+using System;
+
 namespace Eryph.ComputeClient.Models
 {
     /// <summary> The VirtualNetwork. </summary>
     public partial class VirtualNetwork
     {
         /// <summary> Initializes a new instance of <see cref="VirtualNetwork"/>. </summary>
-        internal VirtualNetwork()
-        {
-        }
-
-        /// <summary> Initializes a new instance of <see cref="VirtualNetwork"/>. </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
-        /// <param name="projectId"></param>
-        /// <param name="projectName"></param>
+        /// <param name="project"></param>
         /// <param name="environment"></param>
-        /// <param name="tenantId"></param>
         /// <param name="providerName"></param>
         /// <param name="ipNetwork"></param>
-        internal VirtualNetwork(string id, string name, string projectId, string projectName, string environment, string tenantId, string providerName, string ipNetwork)
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="name"/>, <paramref name="project"/>, <paramref name="environment"/>, <paramref name="providerName"/> or <paramref name="ipNetwork"/> is null. </exception>
+        internal VirtualNetwork(string id, string name, Project project, string environment, string providerName, string ipNetwork)
         {
+            Argument.AssertNotNull(id, nameof(id));
+            Argument.AssertNotNull(name, nameof(name));
+            Argument.AssertNotNull(project, nameof(project));
+            Argument.AssertNotNull(environment, nameof(environment));
+            Argument.AssertNotNull(providerName, nameof(providerName));
+            Argument.AssertNotNull(ipNetwork, nameof(ipNetwork));
+
             Id = id;
             Name = name;
-            ProjectId = projectId;
-            ProjectName = projectName;
+            Project = project;
             Environment = environment;
-            TenantId = tenantId;
             ProviderName = providerName;
             IpNetwork = ipNetwork;
         }
@@ -40,14 +41,10 @@ namespace Eryph.ComputeClient.Models
         public string Id { get; }
         /// <summary> Gets the name. </summary>
         public string Name { get; }
-        /// <summary> Gets the project id. </summary>
-        public string ProjectId { get; }
-        /// <summary> Gets the project name. </summary>
-        public string ProjectName { get; }
+        /// <summary> Gets the project. </summary>
+        public Project Project { get; }
         /// <summary> Gets the environment. </summary>
         public string Environment { get; }
-        /// <summary> Gets the tenant id. </summary>
-        public string TenantId { get; }
         /// <summary> Gets the provider name. </summary>
         public string ProviderName { get; }
         /// <summary> Gets the ip network. </summary>

@@ -25,31 +25,16 @@ namespace Eryph.ComputeClient.Models
             {
                 if (property.NameEquals("id"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        id = null;
-                        continue;
-                    }
                     id = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("name"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        name = null;
-                        continue;
-                    }
                     name = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("tenantId"u8))
+                if (property.NameEquals("tenant_id"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        tenantId = null;
-                        continue;
-                    }
                     tenantId = property.Value.GetString();
                     continue;
                 }

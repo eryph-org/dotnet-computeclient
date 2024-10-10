@@ -5,22 +5,23 @@
 
 #nullable disable
 
+using System;
+
 namespace Eryph.ComputeClient.Models
 {
     /// <summary> The OperationResource. </summary>
     public partial class OperationResource
     {
         /// <summary> Initializes a new instance of <see cref="OperationResource"/>. </summary>
-        internal OperationResource()
-        {
-        }
-
-        /// <summary> Initializes a new instance of <see cref="OperationResource"/>. </summary>
         /// <param name="id"></param>
         /// <param name="resourceId"></param>
         /// <param name="resourceType"></param>
-        internal OperationResource(string id, string resourceId, ResourceType? resourceType)
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="resourceId"/> is null. </exception>
+        internal OperationResource(string id, string resourceId, ResourceType resourceType)
         {
+            Argument.AssertNotNull(id, nameof(id));
+            Argument.AssertNotNull(resourceId, nameof(resourceId));
+
             Id = id;
             ResourceId = resourceId;
             ResourceType = resourceType;
@@ -31,6 +32,6 @@ namespace Eryph.ComputeClient.Models
         /// <summary> Gets the resource id. </summary>
         public string ResourceId { get; }
         /// <summary> Gets the resource type. </summary>
-        public ResourceType? ResourceType { get; }
+        public ResourceType ResourceType { get; }
     }
 }

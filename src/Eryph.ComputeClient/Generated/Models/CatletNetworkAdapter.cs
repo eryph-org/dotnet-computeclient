@@ -5,14 +5,21 @@
 
 #nullable disable
 
+using System;
+
 namespace Eryph.ComputeClient.Models
 {
     /// <summary> The CatletNetworkAdapter. </summary>
     public partial class CatletNetworkAdapter
     {
         /// <summary> Initializes a new instance of <see cref="CatletNetworkAdapter"/>. </summary>
-        internal CatletNetworkAdapter()
+        /// <param name="name"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="name"/> is null. </exception>
+        internal CatletNetworkAdapter(string name)
         {
+            Argument.AssertNotNull(name, nameof(name));
+
+            Name = name;
         }
 
         /// <summary> Initializes a new instance of <see cref="CatletNetworkAdapter"/>. </summary>

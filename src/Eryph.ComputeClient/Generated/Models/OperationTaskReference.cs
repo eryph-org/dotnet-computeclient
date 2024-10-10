@@ -5,22 +5,23 @@
 
 #nullable disable
 
+using System;
+
 namespace Eryph.ComputeClient.Models
 {
     /// <summary> The OperationTaskReference. </summary>
     public partial class OperationTaskReference
     {
         /// <summary> Initializes a new instance of <see cref="OperationTaskReference"/>. </summary>
-        internal OperationTaskReference()
-        {
-        }
-
-        /// <summary> Initializes a new instance of <see cref="OperationTaskReference"/>. </summary>
         /// <param name="id"></param>
         /// <param name="type"></param>
         /// <param name="projectName"></param>
-        internal OperationTaskReference(string id, TaskReferenceType? type, string projectName)
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="projectName"/> is null. </exception>
+        internal OperationTaskReference(string id, TaskReferenceType type, string projectName)
         {
+            Argument.AssertNotNull(id, nameof(id));
+            Argument.AssertNotNull(projectName, nameof(projectName));
+
             Id = id;
             Type = type;
             ProjectName = projectName;
@@ -29,7 +30,7 @@ namespace Eryph.ComputeClient.Models
         /// <summary> Gets the id. </summary>
         public string Id { get; }
         /// <summary> Gets the type. </summary>
-        public TaskReferenceType? Type { get; }
+        public TaskReferenceType Type { get; }
         /// <summary> Gets the project name. </summary>
         public string ProjectName { get; }
     }

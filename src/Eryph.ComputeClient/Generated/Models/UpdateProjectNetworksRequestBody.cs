@@ -9,23 +9,23 @@ using System;
 
 namespace Eryph.ComputeClient.Models
 {
-    /// <summary> The UpdateCatletRequestBody. </summary>
-    public partial class UpdateCatletRequestBody
+    /// <summary> The UpdateProjectNetworksRequestBody. </summary>
+    public partial class UpdateProjectNetworksRequestBody
     {
-        /// <summary> Initializes a new instance of <see cref="UpdateCatletRequestBody"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="UpdateProjectNetworksRequestBody"/>. </summary>
         /// <param name="configuration"> Anything. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="configuration"/> is null. </exception>
-        public UpdateCatletRequestBody(object configuration)
+        public UpdateProjectNetworksRequestBody(object configuration)
         {
             Argument.AssertNotNull(configuration, nameof(configuration));
 
             Configuration = configuration;
         }
 
-        /// <summary> Initializes a new instance of <see cref="UpdateCatletRequestBody"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="UpdateProjectNetworksRequestBody"/>. </summary>
         /// <param name="correlationId"></param>
         /// <param name="configuration"> Anything. </param>
-        internal UpdateCatletRequestBody(Guid? correlationId, object configuration)
+        internal UpdateProjectNetworksRequestBody(Guid? correlationId, object configuration)
         {
             CorrelationId = correlationId;
             Configuration = configuration;

@@ -10,13 +10,23 @@ using Azure.Core;
 
 namespace Eryph.ComputeClient.Models
 {
-    public partial class UpdateProjectNetworksRequest : IUtf8JsonSerializable
+    public partial class UpdateProjectNetworksRequestBody : IUtf8JsonSerializable
     {
         void IUtf8JsonSerializable.Write(Utf8JsonWriter writer)
         {
             writer.WriteStartObject();
-            writer.WritePropertyName("correlationId"u8);
-            writer.WriteStringValue(CorrelationId);
+            if (Optional.IsDefined(CorrelationId))
+            {
+                if (CorrelationId != null)
+                {
+                    writer.WritePropertyName("correlation_id"u8);
+                    writer.WriteStringValue(CorrelationId.Value);
+                }
+                else
+                {
+                    writer.WriteNull("correlation_id");
+                }
+            }
             writer.WritePropertyName("configuration"u8);
             writer.WriteObjectValue<object>(Configuration);
             writer.WriteEndObject();

@@ -5,28 +5,42 @@
 
 #nullable disable
 
+using System;
+
 namespace Eryph.ComputeClient.Models
 {
     /// <summary> The OperationTask. </summary>
     public partial class OperationTask
     {
         /// <summary> Initializes a new instance of <see cref="OperationTask"/>. </summary>
-        internal OperationTask()
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="progress"></param>
+        /// <param name="status"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="name"/> is null. </exception>
+        internal OperationTask(string id, string name, int progress, OperationTaskStatus status)
         {
+            Argument.AssertNotNull(id, nameof(id));
+            Argument.AssertNotNull(name, nameof(name));
+
+            Id = id;
+            Name = name;
+            Progress = progress;
+            Status = status;
         }
 
         /// <summary> Initializes a new instance of <see cref="OperationTask"/>. </summary>
         /// <param name="id"></param>
-        /// <param name="parentTask"></param>
+        /// <param name="parentTaskId"></param>
         /// <param name="name"></param>
         /// <param name="displayName"></param>
         /// <param name="progress"></param>
         /// <param name="status"></param>
         /// <param name="reference"></param>
-        internal OperationTask(string id, string parentTask, string name, string displayName, int? progress, OperationTaskStatus? status, OperationTaskReference reference)
+        internal OperationTask(string id, string parentTaskId, string name, string displayName, int progress, OperationTaskStatus status, OperationTaskReference reference)
         {
             Id = id;
-            ParentTask = parentTask;
+            ParentTaskId = parentTaskId;
             Name = name;
             DisplayName = displayName;
             Progress = progress;
@@ -36,16 +50,16 @@ namespace Eryph.ComputeClient.Models
 
         /// <summary> Gets the id. </summary>
         public string Id { get; }
-        /// <summary> Gets the parent task. </summary>
-        public string ParentTask { get; }
+        /// <summary> Gets the parent task id. </summary>
+        public string ParentTaskId { get; }
         /// <summary> Gets the name. </summary>
         public string Name { get; }
         /// <summary> Gets the display name. </summary>
         public string DisplayName { get; }
         /// <summary> Gets the progress. </summary>
-        public int? Progress { get; }
+        public int Progress { get; }
         /// <summary> Gets the status. </summary>
-        public OperationTaskStatus? Status { get; }
+        public OperationTaskStatus Status { get; }
         /// <summary> Gets the reference. </summary>
         public OperationTaskReference Reference { get; }
     }

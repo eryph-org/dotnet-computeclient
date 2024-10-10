@@ -13,8 +13,18 @@ namespace Eryph.ComputeClient.Models
     public partial class OperationLogEntry
     {
         /// <summary> Initializes a new instance of <see cref="OperationLogEntry"/>. </summary>
-        internal OperationLogEntry()
+        /// <param name="id"></param>
+        /// <param name="taskId"></param>
+        /// <param name="timestamp"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="taskId"/> is null. </exception>
+        internal OperationLogEntry(string id, string taskId, DateTimeOffset timestamp)
         {
+            Argument.AssertNotNull(id, nameof(id));
+            Argument.AssertNotNull(taskId, nameof(taskId));
+
+            Id = id;
+            TaskId = taskId;
+            Timestamp = timestamp;
         }
 
         /// <summary> Initializes a new instance of <see cref="OperationLogEntry"/>. </summary>
@@ -22,7 +32,7 @@ namespace Eryph.ComputeClient.Models
         /// <param name="taskId"></param>
         /// <param name="message"></param>
         /// <param name="timestamp"></param>
-        internal OperationLogEntry(string id, string taskId, string message, DateTimeOffset? timestamp)
+        internal OperationLogEntry(string id, string taskId, string message, DateTimeOffset timestamp)
         {
             Id = id;
             TaskId = taskId;
@@ -37,6 +47,6 @@ namespace Eryph.ComputeClient.Models
         /// <summary> Gets the message. </summary>
         public string Message { get; }
         /// <summary> Gets the timestamp. </summary>
-        public DateTimeOffset? Timestamp { get; }
+        public DateTimeOffset Timestamp { get; }
     }
 }

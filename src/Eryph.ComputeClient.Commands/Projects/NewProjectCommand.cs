@@ -31,7 +31,10 @@ namespace Eryph.ComputeClient.Commands.Projects
         {
             WaitForProject(
                 Factory.CreateProjectsClient().Create(
-                    new NewProjectRequest(Guid.NewGuid(), Name)),
+                    new NewProjectRequest(Name)
+                    {
+                        CorrelationId = Guid.NewGuid(),
+                    }),
                 _nowait,
                 true);
         }

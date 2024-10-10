@@ -5,6 +5,7 @@
 
 #nullable disable
 
+using System;
 using System.Collections.Generic;
 
 namespace Eryph.ComputeClient.Models
@@ -13,8 +14,15 @@ namespace Eryph.ComputeClient.Models
     public partial class Operation
     {
         /// <summary> Initializes a new instance of <see cref="Operation"/>. </summary>
-        internal Operation()
+        /// <param name="id"></param>
+        /// <param name="status"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
+        internal Operation(string id, OperationStatus status)
         {
+            Argument.AssertNotNull(id, nameof(id));
+
+            Id = id;
+            Status = status;
             Resources = new ChangeTrackingList<OperationResource>();
             LogEntries = new ChangeTrackingList<OperationLogEntry>();
             Projects = new ChangeTrackingList<Project>();
@@ -29,7 +37,7 @@ namespace Eryph.ComputeClient.Models
         /// <param name="logEntries"></param>
         /// <param name="projects"></param>
         /// <param name="tasks"></param>
-        internal Operation(string id, OperationStatus? status, string statusMessage, IReadOnlyList<OperationResource> resources, IReadOnlyList<OperationLogEntry> logEntries, IReadOnlyList<Project> projects, IReadOnlyList<OperationTask> tasks)
+        internal Operation(string id, OperationStatus status, string statusMessage, IReadOnlyList<OperationResource> resources, IReadOnlyList<OperationLogEntry> logEntries, IReadOnlyList<Project> projects, IReadOnlyList<OperationTask> tasks)
         {
             Id = id;
             Status = status;
@@ -43,7 +51,7 @@ namespace Eryph.ComputeClient.Models
         /// <summary> Gets the id. </summary>
         public string Id { get; }
         /// <summary> Gets the status. </summary>
-        public OperationStatus? Status { get; }
+        public OperationStatus Status { get; }
         /// <summary> Gets the status message. </summary>
         public string StatusMessage { get; }
         /// <summary> Gets the resources. </summary>

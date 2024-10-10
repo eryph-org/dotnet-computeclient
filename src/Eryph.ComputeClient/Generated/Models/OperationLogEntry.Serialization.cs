@@ -22,26 +22,16 @@ namespace Eryph.ComputeClient.Models
             string id = default;
             string taskId = default;
             string message = default;
-            DateTimeOffset? timestamp = default;
+            DateTimeOffset timestamp = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("id"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        id = null;
-                        continue;
-                    }
                     id = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("taskId"u8))
+                if (property.NameEquals("task_id"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        taskId = null;
-                        continue;
-                    }
                     taskId = property.Value.GetString();
                     continue;
                 }
@@ -57,10 +47,6 @@ namespace Eryph.ComputeClient.Models
                 }
                 if (property.NameEquals("timestamp"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
                     timestamp = property.Value.GetDateTimeOffset("O");
                     continue;
                 }

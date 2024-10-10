@@ -5,7 +5,9 @@
 
 #nullable disable
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Eryph.ComputeClient.Models
 {
@@ -13,26 +15,22 @@ namespace Eryph.ComputeClient.Models
     internal partial class VirtualDiskList
     {
         /// <summary> Initializes a new instance of <see cref="VirtualDiskList"/>. </summary>
-        internal VirtualDiskList()
+        /// <param name="value"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
+        internal VirtualDiskList(IEnumerable<VirtualDisk> value)
         {
-            Value = new ChangeTrackingList<VirtualDisk>();
+            Argument.AssertNotNull(value, nameof(value));
+
+            Value = value.ToList();
         }
 
         /// <summary> Initializes a new instance of <see cref="VirtualDiskList"/>. </summary>
-        /// <param name="count"></param>
-        /// <param name="nextLink"></param>
         /// <param name="value"></param>
-        internal VirtualDiskList(string count, string nextLink, IReadOnlyList<VirtualDisk> value)
+        internal VirtualDiskList(IReadOnlyList<VirtualDisk> value)
         {
-            Count = count;
-            NextLink = nextLink;
             Value = value;
         }
 
-        /// <summary> Gets the count. </summary>
-        public string Count { get; }
-        /// <summary> Gets the next link. </summary>
-        public string NextLink { get; }
         /// <summary> Gets the value. </summary>
         public IReadOnlyList<VirtualDisk> Value { get; }
     }

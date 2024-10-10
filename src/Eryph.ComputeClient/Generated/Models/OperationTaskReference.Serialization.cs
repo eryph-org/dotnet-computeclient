@@ -19,36 +19,22 @@ namespace Eryph.ComputeClient.Models
                 return null;
             }
             string id = default;
-            TaskReferenceType? type = default;
+            TaskReferenceType type = default;
             string projectName = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("id"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        id = null;
-                        continue;
-                    }
                     id = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("type"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
                     type = new TaskReferenceType(property.Value.GetString());
                     continue;
                 }
-                if (property.NameEquals("projectName"u8))
+                if (property.NameEquals("project_name"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        projectName = null;
-                        continue;
-                    }
                     projectName = property.Value.GetString();
                     continue;
                 }

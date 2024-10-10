@@ -45,7 +45,7 @@ namespace Eryph.ComputeClient
             uri.Reset(_endpoint);
             uri.AppendPath("/v1/virtualdisks", false);
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
+            request.Headers.Add("Accept", "application/json, application/problem+json");
             if (body != null)
             {
                 request.Headers.Add("Content-Type", "application/json");
@@ -56,7 +56,7 @@ namespace Eryph.ComputeClient
             return message;
         }
 
-        /// <summary> Creates a virtual disk. </summary>
+        /// <summary> Create a virtual disk. </summary>
         /// <param name="body"> The <see cref="NewVirtualDiskRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public async Task<Response<Models.Operation>> CreateAsync(NewVirtualDiskRequest body = null, CancellationToken cancellationToken = default)
@@ -77,7 +77,7 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Creates a virtual disk. </summary>
+        /// <summary> Create a virtual disk. </summary>
         /// <param name="body"> The <see cref="NewVirtualDiskRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public Response<Models.Operation> Create(NewVirtualDiskRequest body = null, CancellationToken cancellationToken = default)
@@ -98,7 +98,7 @@ namespace Eryph.ComputeClient
             }
         }
 
-        internal HttpMessage CreateListRequest(bool? count, Guid? projectId)
+        internal HttpMessage CreateListRequest(string projectId)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -106,26 +106,21 @@ namespace Eryph.ComputeClient
             var uri = new RawRequestUriBuilder();
             uri.Reset(_endpoint);
             uri.AppendPath("/v1/virtualdisks", false);
-            if (count != null)
-            {
-                uri.AppendQuery("count", count.Value, true);
-            }
             if (projectId != null)
             {
-                uri.AppendQuery("projectId", projectId.Value, true);
+                uri.AppendQuery("project_id", projectId, true);
             }
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
+            request.Headers.Add("Accept", "application/json, application/problem+json");
             return message;
         }
 
-        /// <summary> Get list of Virtual Disks. </summary>
-        /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
+        /// <summary> List all virtual disks. </summary>
+        /// <param name="projectId"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public async Task<Response<VirtualDiskList>> ListAsync(bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
+        public async Task<Response<VirtualDiskList>> ListAsync(string projectId = null, CancellationToken cancellationToken = default)
         {
-            using var message = CreateListRequest(count, projectId);
+            using var message = CreateListRequest(projectId);
             await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             switch (message.Response.Status)
             {
@@ -141,13 +136,12 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Get list of Virtual Disks. </summary>
-        /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
+        /// <summary> List all virtual disks. </summary>
+        /// <param name="projectId"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public Response<VirtualDiskList> List(bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
+        public Response<VirtualDiskList> List(string projectId = null, CancellationToken cancellationToken = default)
         {
-            using var message = CreateListRequest(count, projectId);
+            using var message = CreateListRequest(projectId);
             _pipeline.Send(message, cancellationToken);
             switch (message.Response.Status)
             {
@@ -173,11 +167,11 @@ namespace Eryph.ComputeClient
             uri.AppendPath("/v1/virtualdisks/", false);
             uri.AppendPath(id, true);
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
+            request.Headers.Add("Accept", "application/json, application/problem+json");
             return message;
         }
 
-        /// <summary> Deletes a virtual disk. </summary>
+        /// <summary> Delete a virtual disk. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
@@ -204,7 +198,7 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Deletes a virtual disk. </summary>
+        /// <summary> Delete a virtual disk. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
@@ -241,11 +235,11 @@ namespace Eryph.ComputeClient
             uri.AppendPath("/v1/virtualdisks/", false);
             uri.AppendPath(id, true);
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
+            request.Headers.Add("Accept", "application/json, application/problem+json");
             return message;
         }
 
-        /// <summary> Get a Virtual Disk. </summary>
+        /// <summary> Get a virtual disk. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
@@ -272,7 +266,7 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Get a Virtual Disk. </summary>
+        /// <summary> Get a virtual disk. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
@@ -292,77 +286,6 @@ namespace Eryph.ComputeClient
                         VirtualDisk value = default;
                         using var document = JsonDocument.Parse(message.Response.ContentStream);
                         value = VirtualDisk.DeserializeVirtualDisk(document.RootElement);
-                        return Response.FromValue(value, message.Response);
-                    }
-                default:
-                    throw new RequestFailedException(message.Response);
-            }
-        }
-
-        internal HttpMessage CreateListNextPageRequest(string nextLink, bool? count, Guid? projectId)
-        {
-            var message = _pipeline.CreateMessage();
-            var request = message.Request;
-            request.Method = RequestMethod.Get;
-            var uri = new RawRequestUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendRawNextLink(nextLink, false);
-            request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
-            return message;
-        }
-
-        /// <summary> Get list of Virtual Disks. </summary>
-        /// <param name="nextLink"> The URL to the next page of results. </param>
-        /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> is null. </exception>
-        public async Task<Response<VirtualDiskList>> ListNextPageAsync(string nextLink, bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
-        {
-            if (nextLink == null)
-            {
-                throw new ArgumentNullException(nameof(nextLink));
-            }
-
-            using var message = CreateListNextPageRequest(nextLink, count, projectId);
-            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
-            switch (message.Response.Status)
-            {
-                case 200:
-                    {
-                        VirtualDiskList value = default;
-                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
-                        value = VirtualDiskList.DeserializeVirtualDiskList(document.RootElement);
-                        return Response.FromValue(value, message.Response);
-                    }
-                default:
-                    throw new RequestFailedException(message.Response);
-            }
-        }
-
-        /// <summary> Get list of Virtual Disks. </summary>
-        /// <param name="nextLink"> The URL to the next page of results. </param>
-        /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> is null. </exception>
-        public Response<VirtualDiskList> ListNextPage(string nextLink, bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
-        {
-            if (nextLink == null)
-            {
-                throw new ArgumentNullException(nameof(nextLink));
-            }
-
-            using var message = CreateListNextPageRequest(nextLink, count, projectId);
-            _pipeline.Send(message, cancellationToken);
-            switch (message.Response.Status)
-            {
-                case 200:
-                    {
-                        VirtualDiskList value = default;
-                        using var document = JsonDocument.Parse(message.Response.ContentStream);
-                        value = VirtualDiskList.DeserializeVirtualDiskList(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:

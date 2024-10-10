@@ -5,43 +5,43 @@
 
 #nullable disable
 
-using System.Collections.Generic;
 using System.Text.Json;
 using Azure;
 
 namespace Eryph.ComputeClient.Models
 {
-    internal partial class CatletList
+    public partial class VirtualDiskAttachedCatlet
     {
-        internal static CatletList DeserializeCatletList(JsonElement element)
+        internal static VirtualDiskAttachedCatlet DeserializeVirtualDiskAttachedCatlet(JsonElement element)
         {
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
-            IReadOnlyList<Catlet> value = default;
+            CatletDriveType type = default;
+            string catletId = default;
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("value"u8))
+                if (property.NameEquals("type"u8))
                 {
-                    List<Catlet> array = new List<Catlet>();
-                    foreach (var item in property.Value.EnumerateArray())
-                    {
-                        array.Add(Catlet.DeserializeCatlet(item));
-                    }
-                    value = array;
+                    type = new CatletDriveType(property.Value.GetString());
+                    continue;
+                }
+                if (property.NameEquals("catlet_id"u8))
+                {
+                    catletId = property.Value.GetString();
                     continue;
                 }
             }
-            return new CatletList(value);
+            return new VirtualDiskAttachedCatlet(type, catletId);
         }
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The response to deserialize the model from. </param>
-        internal static CatletList FromResponse(Response response)
+        internal static VirtualDiskAttachedCatlet FromResponse(Response response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeCatletList(document.RootElement);
+            return DeserializeVirtualDiskAttachedCatlet(document.RootElement);
         }
     }
 }

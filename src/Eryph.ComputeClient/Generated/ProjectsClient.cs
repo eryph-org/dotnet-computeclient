@@ -40,10 +40,10 @@ namespace Eryph.ComputeClient
             _pipeline = pipeline;
         }
 
-        /// <summary> Creates a new project. </summary>
+        /// <summary> Create a new project. </summary>
         /// <param name="body"> The <see cref="NewProjectRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <remarks> Creates a project. </remarks>
+        /// <remarks> Create a project. </remarks>
         public virtual async Task<Response<Models.Operation>> CreateAsync(NewProjectRequest body = null, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("ProjectsClient.Create");
@@ -59,10 +59,10 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Creates a new project. </summary>
+        /// <summary> Create a new project. </summary>
         /// <param name="body"> The <see cref="NewProjectRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <remarks> Creates a project. </remarks>
+        /// <remarks> Create a project. </remarks>
         public virtual Response<Models.Operation> Create(NewProjectRequest body = null, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("ProjectsClient.Create");
@@ -78,7 +78,7 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Deletes a project. </summary>
+        /// <summary> Delete a project. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response<Models.Operation>> DeleteAsync(string id, CancellationToken cancellationToken = default)
@@ -96,7 +96,7 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Deletes a project. </summary>
+        /// <summary> Delete a project. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response<Models.Operation> Delete(string id, CancellationToken cancellationToken = default)
@@ -114,7 +114,7 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Get a projects. </summary>
+        /// <summary> Get a project. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response<Project>> GetAsync(string id, CancellationToken cancellationToken = default)
@@ -132,7 +132,7 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Get a projects. </summary>
+        /// <summary> Get a project. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response<Project> Get(string id, CancellationToken cancellationToken = default)
@@ -150,64 +150,20 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Updates a project. </summary>
-        /// <param name="id"> The <see cref="string"/> to use. </param>
-        /// <param name="body"> The <see cref="UpdateProjectBody"/> to use. </param>
+        /// <summary> List all projects. </summary>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response<Models.Operation>> UpdateAsync(string id, UpdateProjectBody body, CancellationToken cancellationToken = default)
+        public virtual AsyncPageable<Project> ListAsync(CancellationToken cancellationToken = default)
         {
-            using var scope = _clientDiagnostics.CreateScope("ProjectsClient.Update");
-            scope.Start();
-            try
-            {
-                return await RestClient.UpdateAsync(id, body, cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
-        }
-
-        /// <summary> Updates a project. </summary>
-        /// <param name="id"> The <see cref="string"/> to use. </param>
-        /// <param name="body"> The <see cref="UpdateProjectBody"/> to use. </param>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response<Models.Operation> Update(string id, UpdateProjectBody body, CancellationToken cancellationToken = default)
-        {
-            using var scope = _clientDiagnostics.CreateScope("ProjectsClient.Update");
-            scope.Start();
-            try
-            {
-                return RestClient.Update(id, body, cancellationToken);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
+            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest();
+            return GeneratorPageableHelpers.CreateAsyncPageable(FirstPageRequest, null, Project.DeserializeProject, _clientDiagnostics, _pipeline, "ProjectsClient.List", "value", null, cancellationToken);
         }
 
         /// <summary> List all projects. </summary>
-        /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual AsyncPageable<Project> ListAsync(bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
+        public virtual Pageable<Project> List(CancellationToken cancellationToken = default)
         {
-            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(count, projectId);
-            HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListNextPageRequest(nextLink, count, projectId);
-            return GeneratorPageableHelpers.CreateAsyncPageable(FirstPageRequest, NextPageRequest, Project.DeserializeProject, _clientDiagnostics, _pipeline, "ProjectsClient.List", "value", "nextLink", cancellationToken);
-        }
-
-        /// <summary> List all projects. </summary>
-        /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Pageable<Project> List(bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
-        {
-            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(count, projectId);
-            HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListNextPageRequest(nextLink, count, projectId);
-            return GeneratorPageableHelpers.CreatePageable(FirstPageRequest, NextPageRequest, Project.DeserializeProject, _clientDiagnostics, _pipeline, "ProjectsClient.List", "value", "nextLink", cancellationToken);
+            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest();
+            return GeneratorPageableHelpers.CreatePageable(FirstPageRequest, null, Project.DeserializeProject, _clientDiagnostics, _pipeline, "ProjectsClient.List", "value", null, cancellationToken);
         }
     }
 }

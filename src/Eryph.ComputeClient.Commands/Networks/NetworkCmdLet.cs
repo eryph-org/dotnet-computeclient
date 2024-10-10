@@ -8,7 +8,7 @@ namespace Eryph.ComputeClient.Commands.Networks
     {
         protected VirtualNetwork GetSingleNetwork(string id)
         {
-            return Factory.CreateVNetworksClient().Get(id);
+            return Factory.CreateVirtualNetworksClient().Get(id);
         }
 
 

@@ -13,11 +13,6 @@ namespace Eryph.ComputeClient.Models
     public partial class VirtualNetworkConfiguration
     {
         /// <summary> Initializes a new instance of <see cref="VirtualNetworkConfiguration"/>. </summary>
-        internal VirtualNetworkConfiguration()
-        {
-        }
-
-        /// <summary> Initializes a new instance of <see cref="VirtualNetworkConfiguration"/>. </summary>
         /// <param name="configuration"> Anything. </param>
         internal VirtualNetworkConfiguration(JsonElement configuration)
         {
