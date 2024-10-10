@@ -47,7 +47,7 @@ namespace Eryph.ComputeClient
             uri.AppendPath(id, true);
             if (logTimeStamp != null)
             {
-                uri.AppendQuery("logTimeStamp", logTimeStamp.Value, "O", true);
+                uri.AppendQuery("log_time_stamp", logTimeStamp.Value, "O", true);
             }
             if (expand != null)
             {
@@ -126,7 +126,7 @@ namespace Eryph.ComputeClient
             uri.AppendPath("/v1/operations", false);
             if (logTimeStamp != null)
             {
-                uri.AppendQuery("logTimeStamp", logTimeStamp.Value, "O", true);
+                uri.AppendQuery("log_time_stamp", logTimeStamp.Value, "O", true);
             }
             if (expand != null)
             {
