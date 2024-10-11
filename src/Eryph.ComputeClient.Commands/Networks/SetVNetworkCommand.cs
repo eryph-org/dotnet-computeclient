@@ -67,8 +67,7 @@ namespace Eryph.ComputeClient.Commands.Networks
             if (config is null)
                 return;
 
-            var projectId = GetProjectId(config.Project);
-
+            var projectId = GetProjectId(ProjectName);
 
             if (config.Project != ProjectName
                 && !Force
