@@ -24,15 +24,10 @@ namespace Eryph.ComputeClient.Models
             {
                 if (property.NameEquals("name"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        name = null;
-                        continue;
-                    }
                     name = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("macAddress"u8))
+                if (property.NameEquals("mac_address"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {

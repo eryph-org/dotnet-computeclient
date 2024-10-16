@@ -49,7 +49,7 @@ public class NewCatletDiskCmdlet : CatletDiskCmdlet
         
         WaitForOperation(
             Factory.CreateVirtualDisksClient().Create(
-                new NewVirtualDiskRequest(projectId.GetValueOrDefault(), Name, Location, Size)
+                new NewVirtualDiskRequest(projectId, Name, Location, Size)
                 {
                     CorrelationId = recordId,
                     Environment = Environment,

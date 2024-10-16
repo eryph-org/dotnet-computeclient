@@ -35,7 +35,7 @@ namespace Eryph.ComputeClient.Commands.ProjectMembers
 
         protected override void ProcessRecord()
         {
-            var projectId = GetProjectId(ProjectName).GetValueOrDefault();
+            var projectId = GetProjectId(ProjectName);
             foreach (var id in Id)
             {
                 WaitForMember(

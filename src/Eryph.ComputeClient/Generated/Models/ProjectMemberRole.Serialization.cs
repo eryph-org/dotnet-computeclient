@@ -19,8 +19,7 @@ namespace Eryph.ComputeClient.Models
                 return null;
             }
             string id = default;
-            string projectId = default;
-            string projectName = default;
+            Project project = default;
             string memberId = default;
             string roleId = default;
             string roleName = default;
@@ -28,72 +27,31 @@ namespace Eryph.ComputeClient.Models
             {
                 if (property.NameEquals("id"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        id = null;
-                        continue;
-                    }
                     id = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("projectId"u8))
+                if (property.NameEquals("project"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        projectId = null;
-                        continue;
-                    }
-                    projectId = property.Value.GetString();
+                    project = Project.DeserializeProject(property.Value);
                     continue;
                 }
-                if (property.NameEquals("projectName"u8))
+                if (property.NameEquals("member_id"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        projectName = null;
-                        continue;
-                    }
-                    projectName = property.Value.GetString();
-                    continue;
-                }
-                if (property.NameEquals("memberId"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        memberId = null;
-                        continue;
-                    }
                     memberId = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("roleId"u8))
+                if (property.NameEquals("role_id"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        roleId = null;
-                        continue;
-                    }
                     roleId = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("roleName"u8))
+                if (property.NameEquals("role_name"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        roleName = null;
-                        continue;
-                    }
                     roleName = property.Value.GetString();
                     continue;
                 }
             }
-            return new ProjectMemberRole(
-                id,
-                projectId,
-                projectName,
-                memberId,
-                roleId,
-                roleName);
+            return new ProjectMemberRole(id, project, memberId, roleId, roleName);
         }
 
         /// <summary> Deserializes the model from a raw response. </summary>

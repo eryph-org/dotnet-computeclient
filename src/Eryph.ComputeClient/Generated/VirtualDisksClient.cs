@@ -40,7 +40,7 @@ namespace Eryph.ComputeClient
             _pipeline = pipeline;
         }
 
-        /// <summary> Creates a virtual disk. </summary>
+        /// <summary> Create a virtual disk. </summary>
         /// <param name="body"> The <see cref="NewVirtualDiskRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response<Models.Operation>> CreateAsync(NewVirtualDiskRequest body = null, CancellationToken cancellationToken = default)
@@ -58,7 +58,7 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Creates a virtual disk. </summary>
+        /// <summary> Create a virtual disk. </summary>
         /// <param name="body"> The <see cref="NewVirtualDiskRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response<Models.Operation> Create(NewVirtualDiskRequest body = null, CancellationToken cancellationToken = default)
@@ -76,7 +76,7 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Deletes a virtual disk. </summary>
+        /// <summary> Delete a virtual disk. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response<Models.Operation>> DeleteAsync(string id, CancellationToken cancellationToken = default)
@@ -94,7 +94,7 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Deletes a virtual disk. </summary>
+        /// <summary> Delete a virtual disk. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response<Models.Operation> Delete(string id, CancellationToken cancellationToken = default)
@@ -112,7 +112,7 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Get a Virtual Disk. </summary>
+        /// <summary> Get a virtual disk. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response<VirtualDisk>> GetAsync(string id, CancellationToken cancellationToken = default)
@@ -130,7 +130,7 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Get a Virtual Disk. </summary>
+        /// <summary> Get a virtual disk. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response<VirtualDisk> Get(string id, CancellationToken cancellationToken = default)
@@ -148,26 +148,22 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Get list of Virtual Disks. </summary>
-        /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
+        /// <summary> List all virtual disks. </summary>
+        /// <param name="projectId"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual AsyncPageable<VirtualDisk> ListAsync(bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
+        public virtual AsyncPageable<VirtualDisk> ListAsync(string projectId = null, CancellationToken cancellationToken = default)
         {
-            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(count, projectId);
-            HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListNextPageRequest(nextLink, count, projectId);
-            return GeneratorPageableHelpers.CreateAsyncPageable(FirstPageRequest, NextPageRequest, VirtualDisk.DeserializeVirtualDisk, _clientDiagnostics, _pipeline, "VirtualDisksClient.List", "value", "nextLink", cancellationToken);
+            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(projectId);
+            return GeneratorPageableHelpers.CreateAsyncPageable(FirstPageRequest, null, VirtualDisk.DeserializeVirtualDisk, _clientDiagnostics, _pipeline, "VirtualDisksClient.List", "value", null, cancellationToken);
         }
 
-        /// <summary> Get list of Virtual Disks. </summary>
-        /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
+        /// <summary> List all virtual disks. </summary>
+        /// <param name="projectId"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Pageable<VirtualDisk> List(bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
+        public virtual Pageable<VirtualDisk> List(string projectId = null, CancellationToken cancellationToken = default)
         {
-            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(count, projectId);
-            HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListNextPageRequest(nextLink, count, projectId);
-            return GeneratorPageableHelpers.CreatePageable(FirstPageRequest, NextPageRequest, VirtualDisk.DeserializeVirtualDisk, _clientDiagnostics, _pipeline, "VirtualDisksClient.List", "value", "nextLink", cancellationToken);
+            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(projectId);
+            return GeneratorPageableHelpers.CreatePageable(FirstPageRequest, null, VirtualDisk.DeserializeVirtualDisk, _clientDiagnostics, _pipeline, "VirtualDisksClient.List", "value", null, cancellationToken);
         }
     }
 }

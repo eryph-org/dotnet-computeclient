@@ -19,37 +19,11 @@ namespace Eryph.ComputeClient.Models
             {
                 return null;
             }
-            string count = default;
-            string nextLink = default;
             IReadOnlyList<ProjectMemberRole> value = default;
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("count"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        count = null;
-                        continue;
-                    }
-                    count = property.Value.GetString();
-                    continue;
-                }
-                if (property.NameEquals("nextLink"u8))
-                {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        nextLink = null;
-                        continue;
-                    }
-                    nextLink = property.Value.GetString();
-                    continue;
-                }
                 if (property.NameEquals("value"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
                     List<ProjectMemberRole> array = new List<ProjectMemberRole>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
@@ -59,7 +33,7 @@ namespace Eryph.ComputeClient.Models
                     continue;
                 }
             }
-            return new ProjectMemberRoleList(count, nextLink, value ?? new ChangeTrackingList<ProjectMemberRole>());
+            return new ProjectMemberRoleList(value);
         }
 
         /// <summary> Deserializes the model from a raw response. </summary>

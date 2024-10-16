@@ -5,16 +5,13 @@
 
 #nullable disable
 
+using System;
+
 namespace Eryph.ComputeClient.Models
 {
     /// <summary> The Gene. </summary>
     public partial class Gene
     {
-        /// <summary> Initializes a new instance of <see cref="Gene"/>. </summary>
-        internal Gene()
-        {
-        }
-
         /// <summary> Initializes a new instance of <see cref="Gene"/>. </summary>
         /// <param name="id"></param>
         /// <param name="geneType"></param>
@@ -22,8 +19,14 @@ namespace Eryph.ComputeClient.Models
         /// <param name="name"></param>
         /// <param name="size"></param>
         /// <param name="hash"></param>
-        internal Gene(string id, GeneType? geneType, string geneSet, string name, long? size, string hash)
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="geneSet"/>, <paramref name="name"/> or <paramref name="hash"/> is null. </exception>
+        internal Gene(string id, GeneType geneType, string geneSet, string name, long size, string hash)
         {
+            Argument.AssertNotNull(id, nameof(id));
+            Argument.AssertNotNull(geneSet, nameof(geneSet));
+            Argument.AssertNotNull(name, nameof(name));
+            Argument.AssertNotNull(hash, nameof(hash));
+
             Id = id;
             GeneType = geneType;
             GeneSet = geneSet;
@@ -35,13 +38,13 @@ namespace Eryph.ComputeClient.Models
         /// <summary> Gets the id. </summary>
         public string Id { get; }
         /// <summary> Gets the gene type. </summary>
-        public GeneType? GeneType { get; }
+        public GeneType GeneType { get; }
         /// <summary> Gets the gene set. </summary>
         public string GeneSet { get; }
         /// <summary> Gets the name. </summary>
         public string Name { get; }
         /// <summary> Gets the size. </summary>
-        public long? Size { get; }
+        public long Size { get; }
         /// <summary> Gets the hash. </summary>
         public string Hash { get; }
     }

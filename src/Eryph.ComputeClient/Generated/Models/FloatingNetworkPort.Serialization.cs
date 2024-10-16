@@ -28,35 +28,20 @@ namespace Eryph.ComputeClient.Models
             {
                 if (property.NameEquals("name"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        name = null;
-                        continue;
-                    }
                     name = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("provider"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        provider = null;
-                        continue;
-                    }
                     provider = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("subnet"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        subnet = null;
-                        continue;
-                    }
                     subnet = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("ipV4Addresses"u8))
+                if (property.NameEquals("ip_v4_addresses"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
@@ -70,7 +55,7 @@ namespace Eryph.ComputeClient.Models
                     ipV4Addresses = array;
                     continue;
                 }
-                if (property.NameEquals("ipV4Subnets"u8))
+                if (property.NameEquals("ip_v4_subnets"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {

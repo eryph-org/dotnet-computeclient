@@ -17,8 +17,13 @@ namespace Eryph.ComputeClient.Models
         /// <param name="name"></param>
         /// <param name="location"></param>
         /// <param name="size"></param>
-        public NewVirtualDiskRequest(Guid projectId, string name, string location, int size)
+        /// <exception cref="ArgumentNullException"> <paramref name="projectId"/>, <paramref name="name"/> or <paramref name="location"/> is null. </exception>
+        public NewVirtualDiskRequest(string projectId, string name, string location, int size)
         {
+            Argument.AssertNotNull(projectId, nameof(projectId));
+            Argument.AssertNotNull(name, nameof(name));
+            Argument.AssertNotNull(location, nameof(location));
+
             ProjectId = projectId;
             Name = name;
             Location = location;
@@ -33,7 +38,7 @@ namespace Eryph.ComputeClient.Models
         /// <param name="size"></param>
         /// <param name="environment"></param>
         /// <param name="store"></param>
-        internal NewVirtualDiskRequest(Guid? correlationId, Guid projectId, string name, string location, int size, string environment, string store)
+        internal NewVirtualDiskRequest(Guid? correlationId, string projectId, string name, string location, int size, string environment, string store)
         {
             CorrelationId = correlationId;
             ProjectId = projectId;
@@ -47,7 +52,7 @@ namespace Eryph.ComputeClient.Models
         /// <summary> Gets or sets the correlation id. </summary>
         public Guid? CorrelationId { get; set; }
         /// <summary> Gets the project id. </summary>
-        public Guid ProjectId { get; }
+        public string ProjectId { get; }
         /// <summary> Gets the name. </summary>
         public string Name { get; }
         /// <summary> Gets the location. </summary>

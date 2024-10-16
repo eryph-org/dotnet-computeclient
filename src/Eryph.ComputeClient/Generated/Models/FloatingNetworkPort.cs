@@ -5,6 +5,7 @@
 
 #nullable disable
 
+using System;
 using System.Collections.Generic;
 
 namespace Eryph.ComputeClient.Models
@@ -13,8 +14,19 @@ namespace Eryph.ComputeClient.Models
     public partial class FloatingNetworkPort
     {
         /// <summary> Initializes a new instance of <see cref="FloatingNetworkPort"/>. </summary>
-        internal FloatingNetworkPort()
+        /// <param name="name"></param>
+        /// <param name="provider"></param>
+        /// <param name="subnet"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="name"/>, <paramref name="provider"/> or <paramref name="subnet"/> is null. </exception>
+        internal FloatingNetworkPort(string name, string provider, string subnet)
         {
+            Argument.AssertNotNull(name, nameof(name));
+            Argument.AssertNotNull(provider, nameof(provider));
+            Argument.AssertNotNull(subnet, nameof(subnet));
+
+            Name = name;
+            Provider = provider;
+            Subnet = subnet;
             IpV4Addresses = new ChangeTrackingList<string>();
             IpV4Subnets = new ChangeTrackingList<string>();
         }

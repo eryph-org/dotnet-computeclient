@@ -76,7 +76,7 @@ namespace Eryph.ComputeClient.Commands
 
                 foreach (var resource in resourceData.Resources.Where(x => !string.IsNullOrWhiteSpace(x.ResourceId)))
                 {
-                    resourceWriterDelegate(resource.ResourceType.GetValueOrDefault(), resource.ResourceId);
+                    resourceWriterDelegate(resource.ResourceType, resource.ResourceId);
                 }
 
                 if (resourceData.Resources.Count > 0)
@@ -89,13 +89,13 @@ namespace Eryph.ComputeClient.Commands
 
         }
 
-        protected Guid? GetProjectId(string projectName)
+        protected string GetProjectId(string projectName)
         {
-            if(string.IsNullOrWhiteSpace(projectName))
+            if (string.IsNullOrWhiteSpace(projectName))
                 return null;
 
             var project = Factory.CreateProjectsClient().List().FirstOrDefault(x => x.Name == projectName);
-            return project == null ? throw new ProjectNotFoundException(projectName) : Guid.Parse(project.Id);
+            return project == null ? throw new ProjectNotFoundException(projectName) : project.Id;
         }
 
         protected void ListOutput<T>(Pageable<T> pageable)
@@ -137,7 +137,7 @@ namespace Eryph.ComputeClient.Commands
                     var displayName = operationTask.DisplayName;
                     if(string.IsNullOrWhiteSpace(displayName))
                     {
-                        if (operationTask.ParentTask == operation.Id)
+                        if (operationTask.ParentTaskId == operation.Id)
                         {
                             displayName = operationTask.Name;
                             if(displayName.EndsWith("Command"))
@@ -148,20 +148,20 @@ namespace Eryph.ComputeClient.Commands
 
                     if (!string.IsNullOrWhiteSpace(displayName))
                     {
-                        var activityName = operationTask.ParentTask == operation.Id
+                        var activityName = operationTask.ParentTaskId == operation.Id
                             ? $"{displayName} (Operation: {operation.Id})"
                             : $"{displayName} (Task: {operationTask.Id})";
 
                         var progressRecord = new ProgressRecord(activityIds[operationTask.Id], activityName,
                             operationTask.Status.ToString())
                         {
-                            PercentComplete = operationTask.Status.GetValueOrDefault() == OperationTaskStatus.Completed
+                            PercentComplete = operationTask.Status == OperationTaskStatus.Completed
                                 ? 100
-                                : operationTask.Progress.GetValueOrDefault(),
-                            ParentActivityId = !string.IsNullOrWhiteSpace(operationTask.ParentTask)
-                                ? activityIds[operationTask.ParentTask]
+                                : operationTask.Progress,
+                            ParentActivityId = !string.IsNullOrWhiteSpace(operationTask.ParentTaskId)
+                                ? activityIds[operationTask.ParentTaskId]
                                 : 0,
-                            RecordType = operationTask.Status.GetValueOrDefault() == OperationTaskStatus.Completed
+                            RecordType = operationTask.Status == OperationTaskStatus.Completed
                                 ? ProgressRecordType.Completed
                                 : ProgressRecordType.Processing,
                         };
@@ -182,7 +182,7 @@ namespace Eryph.ComputeClient.Commands
                 }
 
                 // second pass for tasks without display name - to show them as operation of parent task
-                foreach (var operationTask in currentOperation.Tasks.Where(x => x.ParentTask != operation.Id))
+                foreach (var operationTask in currentOperation.Tasks.Where(x => x.ParentTaskId != operation.Id))
                 {
                     var displayName = operationTask.DisplayName;
                     if (!string.IsNullOrWhiteSpace(displayName))
@@ -194,14 +194,14 @@ namespace Eryph.ComputeClient.Commands
 
                     if (lastTaskLogEntry == null) continue; // no log, so no need to update parent
 
-                    var parentId = operationTask.ParentTask;
+                    var parentId = operationTask.ParentTaskId;
                     while (parentId!= null)
                     {
                         var parentTask = currentOperation.Tasks.FirstOrDefault(x => x.Id == parentId);
                         if(parentTask == null)
                             break;
                         
-                        parentId = parentTask.ParentTask;
+                        parentId = parentTask.ParentTaskId;
 
                         if (!activities.TryGetValue(parentTask.Id, out var activity)) continue;
                         activity.CurrentOperation = lastTaskLogEntry.Message;
@@ -238,11 +238,11 @@ namespace Eryph.ComputeClient.Commands
                     processedLogIds.Add(logEntry.Id);
 
                     WriteVerbose($"Operation {currentOperation.Id}: {logEntry.Message}");
-                    timeStamp = logEntry.Timestamp.GetValueOrDefault().DateTime;
+                    timeStamp = logEntry.Timestamp.DateTime;
                     Task.Delay(100).GetAwaiter().GetResult();
                 }
 
-                switch (currentOperation.Status.GetValueOrDefault().ToString())
+                switch (currentOperation.Status.ToString())
                 {
                     case "Queued":
                     case "Running":

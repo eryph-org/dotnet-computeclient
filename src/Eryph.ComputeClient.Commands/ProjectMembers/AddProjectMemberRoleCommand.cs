@@ -28,7 +28,7 @@ namespace Eryph.ComputeClient.Commands.ProjectMembers
             Mandatory = true,
             ValueFromPipeline = true,
             ValueFromPipelineByPropertyName = true)]
-        public Guid RoleId { get; set; }
+        public string RoleId { get; set; }
 
         [Parameter(
             ParameterSetName = "Role",
@@ -51,28 +51,21 @@ namespace Eryph.ComputeClient.Commands.ProjectMembers
         {
             var projectId = GetProjectId(ProjectName);
 
-            if (RoleId == Guid.Empty)
+            if (string.IsNullOrEmpty(RoleId))
             {
-                switch (Role)
+                RoleId = Role switch
                 {
-                    case BuildInRole.Owner:
-                        RoleId = Guid.Parse("{918D2C23-8E9A-41AE-8F0E-ADACA3BECBC4}");
-                        break;
-                    case BuildInRole.Contributor:
-                        RoleId = Guid.Parse("{6C526814-2466-4BC1-92FD-1728C1152F3D}");
-                        break;
-                    case BuildInRole.Reader:
-                        RoleId = Guid.Parse("{47982531-A6D2-41E4-AD6C-D5023DEB7710}");
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(Role));
-                }
+                    BuildInRole.Owner => "918d2c23-8e9a-41ae-8f0e-adaca3becbc4",
+                    BuildInRole.Contributor => "6c526814-2466-4bc1-92fd-1728c1152f3d",
+                    BuildInRole.Reader => "47982531-a6d2-41e4-ad6c-d5023deb7710",
+                    _ => throw new PSArgumentOutOfRangeException("The Role is not supported", Role, nameof(Role)),
+                };
             }
 
             var recordId = Guid.NewGuid();
             WaitForMember(
                 Factory.CreateProjectMembersClient().Add(
-                    projectId.GetValueOrDefault(),
+                    projectId,
                     new NewProjectMemberBody(MemberId, RoleId)
                     {
                         CorrelationId = recordId,

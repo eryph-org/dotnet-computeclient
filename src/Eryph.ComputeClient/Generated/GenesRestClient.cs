@@ -45,13 +45,13 @@ namespace Eryph.ComputeClient
             uri.Reset(_endpoint);
             uri.AppendPath("/v1/genes", false);
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
+            request.Headers.Add("Accept", "application/json, application/problem+json");
             return message;
         }
 
-        /// <summary> Removes unused genes. </summary>
+        /// <summary> Remove all unused genes. </summary>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <remarks> Removes unused genes from the local gene pool. </remarks>
+        /// <remarks> Remove all unused genes from the local gene pool. </remarks>
         public async Task<Response<Models.Operation>> CleanupAsync(CancellationToken cancellationToken = default)
         {
             using var message = CreateCleanupRequest();
@@ -70,9 +70,9 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Removes unused genes. </summary>
+        /// <summary> Remove all unused genes. </summary>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <remarks> Removes unused genes from the local gene pool. </remarks>
+        /// <remarks> Remove all unused genes from the local gene pool. </remarks>
         public Response<Models.Operation> Cleanup(CancellationToken cancellationToken = default)
         {
             using var message = CreateCleanupRequest();
@@ -91,7 +91,7 @@ namespace Eryph.ComputeClient
             }
         }
 
-        internal HttpMessage CreateListRequest(bool? count, Guid? projectId)
+        internal HttpMessage CreateListRequest()
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -99,26 +99,16 @@ namespace Eryph.ComputeClient
             var uri = new RawRequestUriBuilder();
             uri.Reset(_endpoint);
             uri.AppendPath("/v1/genes", false);
-            if (count != null)
-            {
-                uri.AppendQuery("count", count.Value, true);
-            }
-            if (projectId != null)
-            {
-                uri.AppendQuery("projectId", projectId.Value, true);
-            }
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
+            request.Headers.Add("Accept", "application/json, application/problem+json");
             return message;
         }
 
         /// <summary> List all genes. </summary>
-        /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public async Task<Response<GeneList>> ListAsync(bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
+        public async Task<Response<GeneList>> ListAsync(CancellationToken cancellationToken = default)
         {
-            using var message = CreateListRequest(count, projectId);
+            using var message = CreateListRequest();
             await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             switch (message.Response.Status)
             {
@@ -135,12 +125,10 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> List all genes. </summary>
-        /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public Response<GeneList> List(bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
+        public Response<GeneList> List(CancellationToken cancellationToken = default)
         {
-            using var message = CreateListRequest(count, projectId);
+            using var message = CreateListRequest();
             _pipeline.Send(message, cancellationToken);
             switch (message.Response.Status)
             {
@@ -166,15 +154,15 @@ namespace Eryph.ComputeClient
             uri.AppendPath("/v1/genes/", false);
             uri.AppendPath(id, true);
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
+            request.Headers.Add("Accept", "application/json, application/problem+json");
             return message;
         }
 
-        /// <summary> Removes a gene. </summary>
+        /// <summary> Remove a gene. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
-        /// <remarks> Removes a gene from the local gene pool. </remarks>
+        /// <remarks> Remove a gene from the local gene pool. </remarks>
         public async Task<Response<Models.Operation>> DeleteAsync(string id, CancellationToken cancellationToken = default)
         {
             if (id == null)
@@ -198,11 +186,11 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Removes a gene. </summary>
+        /// <summary> Remove a gene. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
-        /// <remarks> Removes a gene from the local gene pool. </remarks>
+        /// <remarks> Remove a gene from the local gene pool. </remarks>
         public Response<Models.Operation> Delete(string id, CancellationToken cancellationToken = default)
         {
             if (id == null)
@@ -236,7 +224,7 @@ namespace Eryph.ComputeClient
             uri.AppendPath("/v1/genes/", false);
             uri.AppendPath(id, true);
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
+            request.Headers.Add("Accept", "application/json, application/problem+json");
             return message;
         }
 
@@ -287,77 +275,6 @@ namespace Eryph.ComputeClient
                         GeneWithUsage value = default;
                         using var document = JsonDocument.Parse(message.Response.ContentStream);
                         value = GeneWithUsage.DeserializeGeneWithUsage(document.RootElement);
-                        return Response.FromValue(value, message.Response);
-                    }
-                default:
-                    throw new RequestFailedException(message.Response);
-            }
-        }
-
-        internal HttpMessage CreateListNextPageRequest(string nextLink, bool? count, Guid? projectId)
-        {
-            var message = _pipeline.CreateMessage();
-            var request = message.Request;
-            request.Method = RequestMethod.Get;
-            var uri = new RawRequestUriBuilder();
-            uri.Reset(_endpoint);
-            uri.AppendRawNextLink(nextLink, false);
-            request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
-            return message;
-        }
-
-        /// <summary> List all genes. </summary>
-        /// <param name="nextLink"> The URL to the next page of results. </param>
-        /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> is null. </exception>
-        public async Task<Response<GeneList>> ListNextPageAsync(string nextLink, bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
-        {
-            if (nextLink == null)
-            {
-                throw new ArgumentNullException(nameof(nextLink));
-            }
-
-            using var message = CreateListNextPageRequest(nextLink, count, projectId);
-            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
-            switch (message.Response.Status)
-            {
-                case 200:
-                    {
-                        GeneList value = default;
-                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
-                        value = GeneList.DeserializeGeneList(document.RootElement);
-                        return Response.FromValue(value, message.Response);
-                    }
-                default:
-                    throw new RequestFailedException(message.Response);
-            }
-        }
-
-        /// <summary> List all genes. </summary>
-        /// <param name="nextLink"> The URL to the next page of results. </param>
-        /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> is null. </exception>
-        public Response<GeneList> ListNextPage(string nextLink, bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
-        {
-            if (nextLink == null)
-            {
-                throw new ArgumentNullException(nameof(nextLink));
-            }
-
-            using var message = CreateListNextPageRequest(nextLink, count, projectId);
-            _pipeline.Send(message, cancellationToken);
-            switch (message.Response.Status)
-            {
-                case 200:
-                    {
-                        GeneList value = default;
-                        using var document = JsonDocument.Parse(message.Response.ContentStream);
-                        value = GeneList.DeserializeGeneList(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:

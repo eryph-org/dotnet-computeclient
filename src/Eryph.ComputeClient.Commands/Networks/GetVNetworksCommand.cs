@@ -18,7 +18,6 @@ namespace Eryph.ComputeClient.Commands.Networks
             Position = 0,
             ValueFromPipeline = true,
             ValueFromPipelineByPropertyName = true)]
-
         public string[] Id { get; set; }
 
         [Parameter(
@@ -26,6 +25,9 @@ namespace Eryph.ComputeClient.Commands.Networks
             Mandatory = true)]
         public SwitchParameter Config { get; set; }
 
+        [Parameter(
+            ParameterSetName = "get",
+            ValueFromPipelineByPropertyName = true)]
         [Parameter(
             ParameterSetName = "getconfig",
             Mandatory = true,
@@ -40,7 +42,7 @@ namespace Eryph.ComputeClient.Commands.Networks
             if (Config.IsPresent)
             {
 
-                WriteConfig(Factory.CreateVNetworksClient().GetConfig(projectId.GetValueOrDefault()).Value);
+                WriteConfig(Factory.CreateVirtualNetworksClient().GetConfig(projectId).Value);
                 return;
             }
 
@@ -56,7 +58,7 @@ namespace Eryph.ComputeClient.Commands.Networks
             }
 
 
-            ListOutput(Factory.CreateVNetworksClient().List());
+            ListOutput(Factory.CreateVirtualNetworksClient().List(projectId: projectId));
 
         }
 

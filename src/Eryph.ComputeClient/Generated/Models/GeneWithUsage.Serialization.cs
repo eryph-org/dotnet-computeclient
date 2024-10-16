@@ -5,7 +5,6 @@
 
 #nullable disable
 
-using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using Azure;
@@ -21,70 +20,42 @@ namespace Eryph.ComputeClient.Models
                 return null;
             }
             string id = default;
-            GeneType? geneType = default;
+            GeneType geneType = default;
             string geneSet = default;
             string name = default;
-            long? size = default;
+            long size = default;
             string hash = default;
-            IReadOnlyList<Guid> catlets = default;
-            IReadOnlyList<Guid> disks = default;
+            IReadOnlyList<string> catlets = default;
+            IReadOnlyList<string> disks = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("id"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        id = null;
-                        continue;
-                    }
                     id = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("geneType"u8))
+                if (property.NameEquals("gene_type"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
                     geneType = new GeneType(property.Value.GetString());
                     continue;
                 }
-                if (property.NameEquals("geneSet"u8))
+                if (property.NameEquals("gene_set"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        geneSet = null;
-                        continue;
-                    }
                     geneSet = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("name"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        name = null;
-                        continue;
-                    }
                     name = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("size"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
                     size = property.Value.GetInt64();
                     continue;
                 }
                 if (property.NameEquals("hash"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        hash = null;
-                        continue;
-                    }
                     hash = property.Value.GetString();
                     continue;
                 }
@@ -94,10 +65,10 @@ namespace Eryph.ComputeClient.Models
                     {
                         continue;
                     }
-                    List<Guid> array = new List<Guid>();
+                    List<string> array = new List<string>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(item.GetGuid());
+                        array.Add(item.GetString());
                     }
                     catlets = array;
                     continue;
@@ -108,10 +79,10 @@ namespace Eryph.ComputeClient.Models
                     {
                         continue;
                     }
-                    List<Guid> array = new List<Guid>();
+                    List<string> array = new List<string>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(item.GetGuid());
+                        array.Add(item.GetString());
                     }
                     disks = array;
                     continue;
@@ -124,8 +95,8 @@ namespace Eryph.ComputeClient.Models
                 name,
                 size,
                 hash,
-                catlets ?? new ChangeTrackingList<Guid>(),
-                disks ?? new ChangeTrackingList<Guid>());
+                catlets ?? new ChangeTrackingList<string>(),
+                disks ?? new ChangeTrackingList<string>());
         }
 
         /// <summary> Deserializes the model from a raw response. </summary>

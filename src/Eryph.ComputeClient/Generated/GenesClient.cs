@@ -40,9 +40,9 @@ namespace Eryph.ComputeClient
             _pipeline = pipeline;
         }
 
-        /// <summary> Removes unused genes. </summary>
+        /// <summary> Remove all unused genes. </summary>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <remarks> Removes unused genes from the local gene pool. </remarks>
+        /// <remarks> Remove all unused genes from the local gene pool. </remarks>
         public virtual async Task<Response<Models.Operation>> CleanupAsync(CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("GenesClient.Cleanup");
@@ -58,9 +58,9 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Removes unused genes. </summary>
+        /// <summary> Remove all unused genes. </summary>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <remarks> Removes unused genes from the local gene pool. </remarks>
+        /// <remarks> Remove all unused genes from the local gene pool. </remarks>
         public virtual Response<Models.Operation> Cleanup(CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("GenesClient.Cleanup");
@@ -76,10 +76,10 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Removes a gene. </summary>
+        /// <summary> Remove a gene. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <remarks> Removes a gene from the local gene pool. </remarks>
+        /// <remarks> Remove a gene from the local gene pool. </remarks>
         public virtual async Task<Response<Models.Operation>> DeleteAsync(string id, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("GenesClient.Delete");
@@ -95,10 +95,10 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Removes a gene. </summary>
+        /// <summary> Remove a gene. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <remarks> Removes a gene from the local gene pool. </remarks>
+        /// <remarks> Remove a gene from the local gene pool. </remarks>
         public virtual Response<Models.Operation> Delete(string id, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("GenesClient.Delete");
@@ -151,25 +151,19 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> List all genes. </summary>
-        /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual AsyncPageable<Gene> ListAsync(bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
+        public virtual AsyncPageable<Gene> ListAsync(CancellationToken cancellationToken = default)
         {
-            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(count, projectId);
-            HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListNextPageRequest(nextLink, count, projectId);
-            return GeneratorPageableHelpers.CreateAsyncPageable(FirstPageRequest, NextPageRequest, Gene.DeserializeGene, _clientDiagnostics, _pipeline, "GenesClient.List", "value", "nextLink", cancellationToken);
+            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest();
+            return GeneratorPageableHelpers.CreateAsyncPageable(FirstPageRequest, null, Gene.DeserializeGene, _clientDiagnostics, _pipeline, "GenesClient.List", "value", null, cancellationToken);
         }
 
         /// <summary> List all genes. </summary>
-        /// <param name="count"> The <see cref="bool"/>? to use. </param>
-        /// <param name="projectId"> The <see cref="Guid"/>? to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Pageable<Gene> List(bool? count = null, Guid? projectId = null, CancellationToken cancellationToken = default)
+        public virtual Pageable<Gene> List(CancellationToken cancellationToken = default)
         {
-            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(count, projectId);
-            HttpMessage NextPageRequest(int? pageSizeHint, string nextLink) => RestClient.CreateListNextPageRequest(nextLink, count, projectId);
-            return GeneratorPageableHelpers.CreatePageable(FirstPageRequest, NextPageRequest, Gene.DeserializeGene, _clientDiagnostics, _pipeline, "GenesClient.List", "value", "nextLink", cancellationToken);
+            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest();
+            return GeneratorPageableHelpers.CreatePageable(FirstPageRequest, null, Gene.DeserializeGene, _clientDiagnostics, _pipeline, "GenesClient.List", "value", null, cancellationToken);
         }
     }
 }

@@ -39,9 +39,13 @@ namespace Eryph.ComputeClient.Commands.Catlets
             {
                 var config = DeserializeConfigString(Config);
 
-                WaitForOperation(Factory.CreateCatletsClient().Update(id, new UpdateCatletRequestBody(Guid.NewGuid(),
-                        JsonSerializer.SerializeToElement(config)))
-                    , _nowait, true);
+                WaitForOperation(Factory.CreateCatletsClient().Update(
+                        id,
+                        new UpdateCatletRequestBody(JsonSerializer.SerializeToElement(config))
+                        {
+                            CorrelationId = Guid.NewGuid(),
+                        })
+                    ,_nowait, true);
             }
         }
     }

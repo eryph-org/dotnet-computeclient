@@ -28,20 +28,18 @@ namespace Eryph.ComputeClient.Commands.Networks
         [ValidateNotNullOrEmpty]
         public string Config { get; set; }
 
-        [Parameter]
-        public SwitchParameter NoWait
-        {
-            get => _nowait;
-            set => _nowait = value;
-        }
 
-        [Parameter]
+        [Parameter(Mandatory = true)]
         [ValidateNotNullOrEmpty]
         public string ProjectName { get; set; }
 
-        private bool _nowait;
-        private StringBuilder _input = new StringBuilder();
+        [Parameter]
+        public SwitchParameter Force { get; set; }
 
+        [Parameter]
+        public SwitchParameter NoWait { get; set; }
+
+        private readonly StringBuilder _input = new();
 
         protected override void ProcessRecord()
         {
@@ -56,33 +54,39 @@ namespace Eryph.ComputeClient.Commands.Networks
 
             if (Config != null)
                 _input.Append(Config);
-
         }
 
         protected override void EndProcessing()
         {
             var input = _input.ToString();
-            ProjectNetworksConfig config = null;
 
-            if (!string.IsNullOrWhiteSpace(input))
-            {
-                config = DeserializeConfigString(input);
-            }
-
-            if (config == null)
+            if (string.IsNullOrWhiteSpace(input))
                 return;
 
-            if (!string.IsNullOrWhiteSpace(ProjectName))
-                config.Project = ProjectName;
+            var config = DeserializeConfigString(input);
+            if (config is null)
+                return;
+
+            var projectId = GetProjectId(ProjectName);
+
+            if (config.Project != ProjectName
+                && !Force
+                && !ShouldContinue($"The network configuration was exported from project '{config.Project}' but will be imported to '{ProjectName}'. Continue?", "Warning!"))
+            {
+                return;
+            }
+                
+            config.Project = ProjectName;
+            var configJson = JsonSerializer.SerializeToElement(config, ConfigModelJsonSerializer.DefaultOptions);
             
-            WaitForOperation(Factory.CreateVNetworksClient()
-                .Create(
-                    new UpdateProjectNetworksRequest(Guid.NewGuid(),
-                       JsonSerializer.SerializeToElement(config, 
-                           ConfigModelJsonSerializer.DefaultOptions))), _nowait, false);
+            WaitForOperation(
+                Factory.CreateVirtualNetworksClient().UpdateConfig(
+                    projectId,
+                    new UpdateProjectNetworksRequestBody(configJson)
+                    {
+                        CorrelationId = Guid.NewGuid(),
+                    }),
+                NoWait, false);
         }
     }
-
-
-
 }
