@@ -6,8 +6,8 @@ namespace Eryph.ComputeClient.Commands.Catlets;
 
 [PublicAPI]
 [Cmdlet(VerbsCommon.Get, "CatletDisk", DefaultParameterSetName = "get")]
-[OutputType(typeof(Catlet), ParameterSetName = ["get"])]
-[OutputType(typeof(Catlet), ParameterSetName = ["list"])]
+[OutputType(typeof(VirtualDisk), ParameterSetName = ["get"])]
+[OutputType(typeof(VirtualDisk), ParameterSetName = ["list"])]
 public class GetCatletDiskCommand : CatletDiskCmdlet
 {
     [Parameter(
