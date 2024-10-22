@@ -142,11 +142,12 @@ namespace Eryph.ComputeClient.Models
         /// <param name="geneType"></param>
         /// <param name="geneSet"></param>
         /// <param name="name"></param>
+        /// <param name="architecture"></param>
         /// <param name="size"></param>
         /// <param name="hash"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="geneSet"/>, <paramref name="name"/> or <paramref name="hash"/> is null. </exception>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="geneSet"/>, <paramref name="name"/>, <paramref name="architecture"/> or <paramref name="hash"/> is null. </exception>
         /// <returns> A new <see cref="Models.Gene"/> instance for mocking. </returns>
-        public static Gene Gene(string id = null, GeneType geneType = default, string geneSet = null, string name = null, long size = default, string hash = null)
+        public static Gene Gene(string id = null, GeneType geneType = default, string geneSet = null, string name = null, string architecture = null, long size = default, string hash = null)
         {
             if (id == null)
             {
@@ -160,6 +161,10 @@ namespace Eryph.ComputeClient.Models
             {
                 throw new ArgumentNullException(nameof(name));
             }
+            if (architecture == null)
+            {
+                throw new ArgumentNullException(nameof(architecture));
+            }
             if (hash == null)
             {
                 throw new ArgumentNullException(nameof(hash));
@@ -170,6 +175,7 @@ namespace Eryph.ComputeClient.Models
                 geneType,
                 geneSet,
                 name,
+                architecture,
                 size,
                 hash);
         }
@@ -181,12 +187,13 @@ namespace Eryph.ComputeClient.Models
         /// <param name="dataStore"></param>
         /// <param name="project"></param>
         /// <param name="environment"></param>
+        /// <param name="gene"></param>
         /// <param name="path"></param>
         /// <param name="sizeBytes"></param>
         /// <param name="parentId"></param>
         /// <param name="attachedCatlets"></param>
         /// <returns> A new <see cref="Models.VirtualDisk"/> instance for mocking. </returns>
-        public static VirtualDisk VirtualDisk(string id = null, string name = null, string location = null, string dataStore = null, Project project = null, string environment = null, string path = null, long? sizeBytes = null, string parentId = null, IEnumerable<VirtualDiskAttachedCatlet> attachedCatlets = null)
+        public static VirtualDisk VirtualDisk(string id = null, string name = null, string location = null, string dataStore = null, Project project = null, string environment = null, VirtualDiskGeneInfo gene = null, string path = null, long? sizeBytes = null, string parentId = null, IEnumerable<VirtualDiskAttachedCatlet> attachedCatlets = null)
         {
             attachedCatlets ??= new List<VirtualDiskAttachedCatlet>();
 
@@ -197,10 +204,35 @@ namespace Eryph.ComputeClient.Models
                 dataStore,
                 project,
                 environment,
+                gene,
                 path,
                 sizeBytes,
                 parentId,
                 attachedCatlets?.ToList());
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.VirtualDiskGeneInfo"/>. </summary>
+        /// <param name="geneSet"></param>
+        /// <param name="geneName"></param>
+        /// <param name="architecture"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="geneSet"/>, <paramref name="geneName"/> or <paramref name="architecture"/> is null. </exception>
+        /// <returns> A new <see cref="Models.VirtualDiskGeneInfo"/> instance for mocking. </returns>
+        public static VirtualDiskGeneInfo VirtualDiskGeneInfo(string geneSet = null, string geneName = null, string architecture = null)
+        {
+            if (geneSet == null)
+            {
+                throw new ArgumentNullException(nameof(geneSet));
+            }
+            if (geneName == null)
+            {
+                throw new ArgumentNullException(nameof(geneName));
+            }
+            if (architecture == null)
+            {
+                throw new ArgumentNullException(nameof(architecture));
+            }
+
+            return new VirtualDiskGeneInfo(geneSet, geneName, architecture);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.VirtualDiskAttachedCatlet"/>. </summary>
@@ -340,12 +372,13 @@ namespace Eryph.ComputeClient.Models
         /// <param name="geneType"></param>
         /// <param name="geneSet"></param>
         /// <param name="name"></param>
+        /// <param name="architecture"></param>
         /// <param name="size"></param>
         /// <param name="hash"></param>
         /// <param name="catlets"></param>
         /// <param name="disks"></param>
         /// <returns> A new <see cref="Models.GeneWithUsage"/> instance for mocking. </returns>
-        public static GeneWithUsage GeneWithUsage(string id = null, GeneType geneType = default, string geneSet = null, string name = null, long size = default, string hash = null, IEnumerable<string> catlets = null, IEnumerable<string> disks = null)
+        public static GeneWithUsage GeneWithUsage(string id = null, GeneType geneType = default, string geneSet = null, string name = null, string architecture = null, long size = default, string hash = null, IEnumerable<string> catlets = null, IEnumerable<string> disks = null)
         {
             catlets ??= new List<string>();
             disks ??= new List<string>();
@@ -355,6 +388,7 @@ namespace Eryph.ComputeClient.Models
                 geneType,
                 geneSet,
                 name,
+                architecture,
                 size,
                 hash,
                 catlets?.ToList(),

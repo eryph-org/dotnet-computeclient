@@ -17,20 +17,23 @@ namespace Eryph.ComputeClient.Models
         /// <param name="geneType"></param>
         /// <param name="geneSet"></param>
         /// <param name="name"></param>
+        /// <param name="architecture"></param>
         /// <param name="size"></param>
         /// <param name="hash"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="geneSet"/>, <paramref name="name"/> or <paramref name="hash"/> is null. </exception>
-        internal Gene(string id, GeneType geneType, string geneSet, string name, long size, string hash)
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="geneSet"/>, <paramref name="name"/>, <paramref name="architecture"/> or <paramref name="hash"/> is null. </exception>
+        internal Gene(string id, GeneType geneType, string geneSet, string name, string architecture, long size, string hash)
         {
             Argument.AssertNotNull(id, nameof(id));
             Argument.AssertNotNull(geneSet, nameof(geneSet));
             Argument.AssertNotNull(name, nameof(name));
+            Argument.AssertNotNull(architecture, nameof(architecture));
             Argument.AssertNotNull(hash, nameof(hash));
 
             Id = id;
             GeneType = geneType;
             GeneSet = geneSet;
             Name = name;
+            Architecture = architecture;
             Size = size;
             Hash = hash;
         }
@@ -43,6 +46,8 @@ namespace Eryph.ComputeClient.Models
         public string GeneSet { get; }
         /// <summary> Gets the name. </summary>
         public string Name { get; }
+        /// <summary> Gets the architecture. </summary>
+        public string Architecture { get; }
         /// <summary> Gets the size. </summary>
         public long Size { get; }
         /// <summary> Gets the hash. </summary>

@@ -22,6 +22,7 @@ namespace Eryph.ComputeClient.Models
             GeneType geneType = default;
             string geneSet = default;
             string name = default;
+            string architecture = default;
             long size = default;
             string hash = default;
             foreach (var property in element.EnumerateObject())
@@ -46,6 +47,11 @@ namespace Eryph.ComputeClient.Models
                     name = property.Value.GetString();
                     continue;
                 }
+                if (property.NameEquals("architecture"u8))
+                {
+                    architecture = property.Value.GetString();
+                    continue;
+                }
                 if (property.NameEquals("size"u8))
                 {
                     size = property.Value.GetInt64();
@@ -62,6 +68,7 @@ namespace Eryph.ComputeClient.Models
                 geneType,
                 geneSet,
                 name,
+                architecture,
                 size,
                 hash);
         }
