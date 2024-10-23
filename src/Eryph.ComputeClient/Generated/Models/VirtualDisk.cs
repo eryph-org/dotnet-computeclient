@@ -46,11 +46,12 @@ namespace Eryph.ComputeClient.Models
         /// <param name="dataStore"></param>
         /// <param name="project"></param>
         /// <param name="environment"></param>
+        /// <param name="gene"></param>
         /// <param name="path"></param>
         /// <param name="sizeBytes"></param>
         /// <param name="parentId"></param>
         /// <param name="attachedCatlets"></param>
-        internal VirtualDisk(string id, string name, string location, string dataStore, Project project, string environment, string path, long? sizeBytes, string parentId, IReadOnlyList<VirtualDiskAttachedCatlet> attachedCatlets)
+        internal VirtualDisk(string id, string name, string location, string dataStore, Project project, string environment, VirtualDiskGeneInfo gene, string path, long? sizeBytes, string parentId, IReadOnlyList<VirtualDiskAttachedCatlet> attachedCatlets)
         {
             Id = id;
             Name = name;
@@ -58,6 +59,7 @@ namespace Eryph.ComputeClient.Models
             DataStore = dataStore;
             Project = project;
             Environment = environment;
+            Gene = gene;
             Path = path;
             SizeBytes = sizeBytes;
             ParentId = parentId;
@@ -76,6 +78,8 @@ namespace Eryph.ComputeClient.Models
         public Project Project { get; }
         /// <summary> Gets the environment. </summary>
         public string Environment { get; }
+        /// <summary> Gets the gene. </summary>
+        public VirtualDiskGeneInfo Gene { get; }
         /// <summary> Gets the path. </summary>
         public string Path { get; }
         /// <summary> Gets the size bytes. </summary>

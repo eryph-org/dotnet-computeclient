@@ -23,6 +23,7 @@ namespace Eryph.ComputeClient.Models
             GeneType geneType = default;
             string geneSet = default;
             string name = default;
+            string architecture = default;
             long size = default;
             string hash = default;
             IReadOnlyList<string> catlets = default;
@@ -47,6 +48,11 @@ namespace Eryph.ComputeClient.Models
                 if (property.NameEquals("name"u8))
                 {
                     name = property.Value.GetString();
+                    continue;
+                }
+                if (property.NameEquals("architecture"u8))
+                {
+                    architecture = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("size"u8))
@@ -93,6 +99,7 @@ namespace Eryph.ComputeClient.Models
                 geneType,
                 geneSet,
                 name,
+                architecture,
                 size,
                 hash,
                 catlets ?? new ChangeTrackingList<string>(),

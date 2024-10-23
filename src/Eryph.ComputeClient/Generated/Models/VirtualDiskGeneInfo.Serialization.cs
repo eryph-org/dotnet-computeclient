@@ -10,33 +10,19 @@ using Azure;
 
 namespace Eryph.ComputeClient.Models
 {
-    public partial class Gene
+    public partial class VirtualDiskGeneInfo
     {
-        internal static Gene DeserializeGene(JsonElement element)
+        internal static VirtualDiskGeneInfo DeserializeVirtualDiskGeneInfo(JsonElement element)
         {
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
-            string id = default;
-            GeneType geneType = default;
             string geneSet = default;
             string name = default;
             string architecture = default;
-            long size = default;
-            string hash = default;
             foreach (var property in element.EnumerateObject())
             {
-                if (property.NameEquals("id"u8))
-                {
-                    id = property.Value.GetString();
-                    continue;
-                }
-                if (property.NameEquals("gene_type"u8))
-                {
-                    geneType = new GeneType(property.Value.GetString());
-                    continue;
-                }
                 if (property.NameEquals("gene_set"u8))
                 {
                     geneSet = property.Value.GetString();
@@ -52,33 +38,16 @@ namespace Eryph.ComputeClient.Models
                     architecture = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("size"u8))
-                {
-                    size = property.Value.GetInt64();
-                    continue;
-                }
-                if (property.NameEquals("hash"u8))
-                {
-                    hash = property.Value.GetString();
-                    continue;
-                }
             }
-            return new Gene(
-                id,
-                geneType,
-                geneSet,
-                name,
-                architecture,
-                size,
-                hash);
+            return new VirtualDiskGeneInfo(geneSet, name, architecture);
         }
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The response to deserialize the model from. </param>
-        internal static Gene FromResponse(Response response)
+        internal static VirtualDiskGeneInfo FromResponse(Response response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeGene(document.RootElement);
+            return DeserializeVirtualDiskGeneInfo(document.RootElement);
         }
     }
 }
