@@ -14,24 +14,24 @@ namespace Eryph.ComputeClient.Models
     {
         /// <summary> Initializes a new instance of <see cref="VirtualDiskGeneInfo"/>. </summary>
         /// <param name="geneSet"></param>
-        /// <param name="geneName"></param>
+        /// <param name="name"></param>
         /// <param name="architecture"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="geneSet"/>, <paramref name="geneName"/> or <paramref name="architecture"/> is null. </exception>
-        internal VirtualDiskGeneInfo(string geneSet, string geneName, string architecture)
+        /// <exception cref="ArgumentNullException"> <paramref name="geneSet"/>, <paramref name="name"/> or <paramref name="architecture"/> is null. </exception>
+        internal VirtualDiskGeneInfo(string geneSet, string name, string architecture)
         {
             Argument.AssertNotNull(geneSet, nameof(geneSet));
-            Argument.AssertNotNull(geneName, nameof(geneName));
+            Argument.AssertNotNull(name, nameof(name));
             Argument.AssertNotNull(architecture, nameof(architecture));
 
             GeneSet = geneSet;
-            GeneName = geneName;
+            Name = name;
             Architecture = architecture;
         }
 
         /// <summary> Gets the gene set. </summary>
         public string GeneSet { get; }
-        /// <summary> Gets the gene name. </summary>
-        public string GeneName { get; }
+        /// <summary> Gets the name. </summary>
+        public string Name { get; }
         /// <summary> Gets the architecture. </summary>
         public string Architecture { get; }
     }

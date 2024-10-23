@@ -19,7 +19,7 @@ namespace Eryph.ComputeClient.Models
                 return null;
             }
             string geneSet = default;
-            string geneName = default;
+            string name = default;
             string architecture = default;
             foreach (var property in element.EnumerateObject())
             {
@@ -28,9 +28,9 @@ namespace Eryph.ComputeClient.Models
                     geneSet = property.Value.GetString();
                     continue;
                 }
-                if (property.NameEquals("gene_name"u8))
+                if (property.NameEquals("name"u8))
                 {
-                    geneName = property.Value.GetString();
+                    name = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("architecture"u8))
@@ -39,7 +39,7 @@ namespace Eryph.ComputeClient.Models
                     continue;
                 }
             }
-            return new VirtualDiskGeneInfo(geneSet, geneName, architecture);
+            return new VirtualDiskGeneInfo(geneSet, name, architecture);
         }
 
         /// <summary> Deserializes the model from a raw response. </summary>

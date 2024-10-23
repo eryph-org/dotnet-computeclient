@@ -213,26 +213,26 @@ namespace Eryph.ComputeClient.Models
 
         /// <summary> Initializes a new instance of <see cref="Models.VirtualDiskGeneInfo"/>. </summary>
         /// <param name="geneSet"></param>
-        /// <param name="geneName"></param>
+        /// <param name="name"></param>
         /// <param name="architecture"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="geneSet"/>, <paramref name="geneName"/> or <paramref name="architecture"/> is null. </exception>
+        /// <exception cref="ArgumentNullException"> <paramref name="geneSet"/>, <paramref name="name"/> or <paramref name="architecture"/> is null. </exception>
         /// <returns> A new <see cref="Models.VirtualDiskGeneInfo"/> instance for mocking. </returns>
-        public static VirtualDiskGeneInfo VirtualDiskGeneInfo(string geneSet = null, string geneName = null, string architecture = null)
+        public static VirtualDiskGeneInfo VirtualDiskGeneInfo(string geneSet = null, string name = null, string architecture = null)
         {
             if (geneSet == null)
             {
                 throw new ArgumentNullException(nameof(geneSet));
             }
-            if (geneName == null)
+            if (name == null)
             {
-                throw new ArgumentNullException(nameof(geneName));
+                throw new ArgumentNullException(nameof(name));
             }
             if (architecture == null)
             {
                 throw new ArgumentNullException(nameof(architecture));
             }
 
-            return new VirtualDiskGeneInfo(geneSet, geneName, architecture);
+            return new VirtualDiskGeneInfo(geneSet, name, architecture);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.VirtualDiskAttachedCatlet"/>. </summary>

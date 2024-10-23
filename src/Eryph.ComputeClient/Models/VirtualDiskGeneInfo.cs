@@ -6,5 +6,5 @@ namespace Eryph.ComputeClient.Models;
 
 public partial class VirtualDiskGeneInfo
 {
-    public override string ToString() => $"gene:{GeneSet}:{GeneName} ({Architecture})";
+    public override string ToString() => $"gene:{GeneSet}:{Name} ({Architecture})";
 }
