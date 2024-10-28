@@ -25,6 +25,7 @@ namespace Eryph.ComputeClient.Models
             string dataStore = default;
             Project project = default;
             string environment = default;
+            VirtualDiskGeneInfo gene = default;
             string path = default;
             long? sizeBytes = default;
             string parentId = default;
@@ -59,6 +60,15 @@ namespace Eryph.ComputeClient.Models
                 if (property.NameEquals("environment"u8))
                 {
                     environment = property.Value.GetString();
+                    continue;
+                }
+                if (property.NameEquals("gene"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    gene = VirtualDiskGeneInfo.DeserializeVirtualDiskGeneInfo(property.Value);
                     continue;
                 }
                 if (property.NameEquals("path"u8))
@@ -113,6 +123,7 @@ namespace Eryph.ComputeClient.Models
                 dataStore,
                 project,
                 environment,
+                gene,
                 path,
                 sizeBytes,
                 parentId,
