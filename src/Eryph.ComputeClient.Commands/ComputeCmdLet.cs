@@ -23,6 +23,7 @@ namespace Eryph.ComputeClient.Commands
         {
             get
             {
+                // TODO just for testing
                 bool debug;
                 var containsDebug = MyInvocation.BoundParameters.ContainsKey("Debug");
                 if (containsDebug)
