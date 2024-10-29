@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Management.Automation;
 using System.Text;
-using System.Text.Json;
 using Eryph.ComputeClient.Models;
 using Eryph.ConfigModel.Json;
-using Eryph.ConfigModel.Networks;
 using JetBrains.Annotations;
 
 namespace Eryph.ComputeClient.Commands.Networks
@@ -77,7 +75,7 @@ namespace Eryph.ComputeClient.Commands.Networks
             }
                 
             config.Project = ProjectName;
-            var configJson = JsonSerializer.SerializeToElement(config, ConfigModelJsonSerializer.DefaultOptions);
+            var configJson = ProjectNetworksConfigJsonSerializer.SerializeToElement(config);
             
             WaitForOperation(
                 Factory.CreateVirtualNetworksClient().UpdateConfig(

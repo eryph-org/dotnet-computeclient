@@ -2,8 +2,6 @@
 using System.Collections;
 using System.Management.Automation;
 using System.Text;
-using System.Text.Json;
-using System.Text.RegularExpressions;
 using Eryph.ComputeClient.Models;
 using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.Json;
@@ -105,7 +103,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
             if (!PopulateVariables(config, Variables, SkipVariablesPrompt))
                 return;
 
-            var serializedConfig = JsonSerializer.SerializeToElement(config, ConfigModelJsonSerializer.DefaultOptions);
+            var serializedConfig = CatletConfigJsonSerializer.SerializeToElement(config);
 
             WaitForOperation(
                 Factory.CreateCatletsClient().Create(

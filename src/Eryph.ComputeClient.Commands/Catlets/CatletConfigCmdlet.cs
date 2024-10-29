@@ -23,17 +23,10 @@ namespace Eryph.ComputeClient.Commands.Catlets
             configString = configString.Replace("\r\n", "\n");
 
             if (configString.StartsWith("{") && configString.EndsWith("}"))
-                return CatletConfigDictionaryConverter.Convert(ConfigModelJsonSerializer.DeserializeToDictionary(configString));
+                return CatletConfigJsonSerializer.Deserialize(configString);
 
-            //YAML
-            try
-            {
-                return CatletConfigYamlSerializer.Deserialize(configString);
-            }
-            catch (YamlException ex)
-            {
-                throw ex;
-            }
+            
+            return CatletConfigYamlSerializer.Deserialize(configString);
 
         }
 

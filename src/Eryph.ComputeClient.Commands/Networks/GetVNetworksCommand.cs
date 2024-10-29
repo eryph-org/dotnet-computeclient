@@ -64,13 +64,11 @@ namespace Eryph.ComputeClient.Commands.Networks
 
         private void WriteConfig(VirtualNetworkConfiguration config)
         {
+            var networkConfig = ProjectNetworksConfigJsonSerializer.Deserialize(
+                config.Configuration);
 
-            var catletConfig = ProjectNetworksConfigDictionaryConverter.Convert(
-                ConfigModelJsonSerializer.DeserializeToDictionary(config.Configuration));
-
-            var yaml = ProjectNetworkConfigYamlSerializer.Serialize(catletConfig);
+            var yaml = ProjectNetworksConfigYamlSerializer.Serialize(networkConfig);
             WriteObject(yaml);
-
         }
 
     }
