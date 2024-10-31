@@ -76,8 +76,8 @@ namespace Eryph.ComputeClient.Commands.Catlets
 
         private void WriteConfig(CatletConfiguration config)
         {
-            var catletConfig = CatletConfigDictionaryConverter.Convert(
-                ConfigModelJsonSerializer.DeserializeToDictionary(config.Configuration));
+            var catletConfig = CatletConfigJsonSerializer.Deserialize(
+                config.Configuration);
 
             var yaml = CatletConfigYamlSerializer.Serialize(catletConfig);
             WriteObject(yaml);

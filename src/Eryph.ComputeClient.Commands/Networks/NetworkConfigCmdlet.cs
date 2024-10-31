@@ -5,32 +5,20 @@ using Eryph.ConfigModel.Networks;
 using Eryph.ConfigModel.Yaml;
 using YamlDotNet.Core;
 
-namespace Eryph.ComputeClient.Commands.Networks
+namespace Eryph.ComputeClient.Commands.Networks;
+
+public class NetworkConfigCmdlet : NetworkCmdLet
 {
-    public class NetworkConfigCmdlet : NetworkCmdLet
+
+    protected static ProjectNetworksConfig DeserializeConfigString(string configString)
     {
+        configString = configString.Trim();
+        configString = configString.Replace("\r\n", "\n");
 
-        protected static ProjectNetworksConfig DeserializeConfigString(string configString)
-        {
-            configString = configString.Trim();
-            configString = configString.Replace("\r\n", "\n");
+        if (configString.StartsWith("{") && configString.EndsWith("}"))
+            return ProjectNetworksConfigJsonSerializer.Deserialize(configString);
 
-            if (configString.StartsWith("{") && configString.EndsWith("}"))
-                return  ProjectNetworksConfigDictionaryConverter.Convert(
-                    ConfigModelJsonSerializer.DeserializeToDictionary(configString));
 
-            
-            //YAML
-            try
-            {
-                return ProjectNetworkConfigYamlSerializer.Deserialize(configString);
-            }
-            catch (YamlException ex)
-            {
-                throw ex;
-            }
-
-        }
-
+        return ProjectNetworksConfigYamlSerializer.Deserialize(configString);
     }
 }
