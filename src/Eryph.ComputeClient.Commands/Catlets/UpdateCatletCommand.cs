@@ -4,6 +4,7 @@ using System.Management.Automation;
 using System.Text.Json;
 using Eryph.ClientRuntime;
 using Eryph.ComputeClient.Models;
+using Eryph.ConfigModel.Json;
 using JetBrains.Annotations;
 using Operation = Eryph.ComputeClient.Models.Operation;
 
@@ -38,10 +39,11 @@ namespace Eryph.ComputeClient.Commands.Catlets
             foreach (var id in Id)
             {
                 var config = DeserializeConfigString(Config);
+                var configJson = CatletConfigJsonSerializer.SerializeToElement(config);
 
                 WaitForOperation(Factory.CreateCatletsClient().Update(
                         id,
-                        new UpdateCatletRequestBody(JsonSerializer.SerializeToElement(config))
+                        new UpdateCatletRequestBody(configJson)
                         {
                             CorrelationId = Guid.NewGuid(),
                         })
