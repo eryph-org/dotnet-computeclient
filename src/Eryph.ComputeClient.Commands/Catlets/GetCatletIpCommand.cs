@@ -4,104 +4,79 @@ using System.Net.Sockets;
 using Eryph.ComputeClient.Models;
 using JetBrains.Annotations;
 
-namespace Eryph.ComputeClient.Commands.Catlets
+namespace Eryph.ComputeClient.Commands.Catlets;
+
+[PublicAPI]
+[Cmdlet(VerbsCommon.Get, "CatletIp", DefaultParameterSetName = "get")]
+[OutputType(typeof(NetworkPortIp), ParameterSetName = ["get"])]
+public class GetCatletIpCommand : CatletCmdLet
 {
-    [PublicAPI]
-    [Cmdlet(VerbsCommon.Get, "CatletIp", DefaultParameterSetName = "get")]
-    [OutputType(typeof(NetworkPortIp), ParameterSetName = new[] { "get" })]
-    public class GetCatletIpCommand : CatletCmdLet
+    [Parameter(
+        ParameterSetName = "get",
+        Position = 0,
+        ValueFromPipeline = true,
+        ValueFromPipelineByPropertyName = true)]
+
+    public string[] Id { get; set; }
+
+    [Parameter(
+        ParameterSetName = "get",
+        Mandatory = false)]
+    public SwitchParameter InternalIp { get; set; }
+
+    [Parameter(
+        ParameterSetName = "get",
+        Mandatory = false)]
+    public string Network { get; set; }
+
+    protected override void ProcessRecord()
     {
-        [Parameter(
-            ParameterSetName = "get",
-            Position = 0,
-            ValueFromPipeline = true,
-            ValueFromPipelineByPropertyName = true)]
-
-        public string[] Id { get; set; }
-
-        [Parameter(
-            ParameterSetName = "get",
-            Mandatory = false)]
-        public SwitchParameter InternalIp { get; set; }
-
-        [Parameter(
-            ParameterSetName = "get",
-            Mandatory = false)]
-        public string Network { get; set; }
-
-        protected override void ProcessRecord()
+        if (Id != null)
         {
-
-            if (Id != null)
+            foreach (var id in Id)
             {
-                foreach (var id in Id)
-                {
-                    var catlet = GetSingleCatlet(id);
-
-                    WriteIp(catlet);
-                }
-
-
-                return;
-            }
-
-
-            foreach (var catlet in Factory.CreateCatletsClient().List())
-            {
-                if (Stopping) break;
+                var catlet = GetSingleCatlet(id);
 
                 WriteIp(catlet);
-
             }
 
-
+            return;
         }
 
-        private void WriteIp(Catlet catlet)
+        foreach (var catlet in Factory.CreateCatletsClient().List())
         {
-            var addresses = catlet.Networks.Where(nw =>
-            {
-                if(!string.IsNullOrEmpty(Network))
-                    return nw.Name == Network;
-                return true;
+            if (Stopping) break;
 
-            }).SelectMany(x =>
-            {
-                if (InternalIp.IsPresent)
-                {
-                    return x.IpV4Addresses.Select(ip => new NetworkPortIp
-                    {
-                        Id = catlet.Id,
-                        Name = catlet.Name,
-                        IpAddress = ip,
-                        AddressFamily = AddressFamily.InterNetwork
-                    });
-                }
-
-                return x.FloatingPort.IpV4Addresses.Select(ip => new NetworkPortIp
-                {
-                    Id = catlet.Id,
-                    Name = catlet.Name,
-                    IpAddress = ip,
-                    AddressFamily = AddressFamily.InterNetwork
-
-                });
-            });
-
-            WriteObject(addresses, true);
-
+            WriteIp(catlet);
         }
-
     }
 
-
-    public class NetworkPortIp
+    private void WriteIp(Catlet catlet)
     {
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public string IpAddress { get; set; }
+        var addresses = (catlet.Networks ?? [])
+            .Where(n => string.IsNullOrEmpty(Network) || n.Name == Network)
+            .SelectMany(n => InternalIp ? n.IpV4Addresses ?? [] : n.FloatingPort?.IpV4Addresses ?? [])
+            .Select(ip => new NetworkPortIp
+            {
+                Id = catlet.Id,
+                Name = catlet.Name,
+                IpAddress = ip,
+                AddressFamily = AddressFamily.InterNetwork
 
-        public AddressFamily AddressFamily { get; set; }
+            })
+            .ToList();
+
+        WriteObject(addresses, true);
     }
+}
 
+public class NetworkPortIp
+{
+    public string Id { get; set; }
+    
+    public string Name { get; set; }
+    
+    public string IpAddress { get; set; }
+
+    public AddressFamily AddressFamily { get; set; }
 }
