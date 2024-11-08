@@ -33,7 +33,7 @@ namespace Eryph.ComputeClient.Models
         public static bool operator ==(CatletStopMode left, CatletStopMode right) => left.Equals(right);
         /// <summary> Determines if two <see cref="CatletStopMode"/> values are not the same. </summary>
         public static bool operator !=(CatletStopMode left, CatletStopMode right) => !left.Equals(right);
-        /// <summary> Converts a string to a <see cref="CatletStopMode"/>. </summary>
+        /// <summary> Converts a <see cref="string"/> to a <see cref="CatletStopMode"/>. </summary>
         public static implicit operator CatletStopMode(string value) => new CatletStopMode(value);
 
         /// <inheritdoc />
@@ -44,7 +44,7 @@ namespace Eryph.ComputeClient.Models
 
         /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public override int GetHashCode() => _value?.GetHashCode() ?? 0;
+        public override int GetHashCode() => _value != null ? StringComparer.InvariantCultureIgnoreCase.GetHashCode(_value) : 0;
         /// <inheritdoc />
         public override string ToString() => _value;
     }
