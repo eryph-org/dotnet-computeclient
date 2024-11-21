@@ -4,21 +4,17 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <Nullable>annotations</Nullable>
+    <description>Client library for the eryph compute API.</description>
   </PropertyGroup>
 
   <PropertyGroup>
-    <LangVersion>12</LangVersion>
     <IncludeGeneratorSharedCode>true</IncludeGeneratorSharedCode>
     <RestoreAdditionalProjectSources>https://pkgs.dev.azure.com/azure-sdk/public/_packaging/azure-sdk-for-net/nuget/v3/index.json</RestoreAdditionalProjectSources>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Eryph.ClientRuntime.Authentication" Version="0.7.0" />
-    <PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Azure.AutoRest.CSharp" Version="3.0.0-beta.20240527.2" PrivateAssets="All" />
+    <PackageReference Include="Eryph.ClientRuntime.Authentication" Version="0.8.1-beta.1" />
+    <PackageReference Include="Microsoft.Azure.AutoRest.CSharp" Version="3.0.0-beta.20241108.1" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>
