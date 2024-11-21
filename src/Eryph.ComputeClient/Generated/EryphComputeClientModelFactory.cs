@@ -402,35 +402,9 @@ namespace Eryph.ComputeClient.Models
         /// <param name="environment"></param>
         /// <param name="providerName"></param>
         /// <param name="ipNetwork"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="name"/>, <paramref name="project"/>, <paramref name="environment"/>, <paramref name="providerName"/> or <paramref name="ipNetwork"/> is null. </exception>
         /// <returns> A new <see cref="Models.VirtualNetwork"/> instance for mocking. </returns>
         public static VirtualNetwork VirtualNetwork(string id = null, string name = null, Project project = null, string environment = null, string providerName = null, string ipNetwork = null)
         {
-            if (id == null)
-            {
-                throw new ArgumentNullException(nameof(id));
-            }
-            if (name == null)
-            {
-                throw new ArgumentNullException(nameof(name));
-            }
-            if (project == null)
-            {
-                throw new ArgumentNullException(nameof(project));
-            }
-            if (environment == null)
-            {
-                throw new ArgumentNullException(nameof(environment));
-            }
-            if (providerName == null)
-            {
-                throw new ArgumentNullException(nameof(providerName));
-            }
-            if (ipNetwork == null)
-            {
-                throw new ArgumentNullException(nameof(ipNetwork));
-            }
-
             return new VirtualNetwork(
                 id,
                 name,

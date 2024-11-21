@@ -53,6 +53,11 @@ namespace Eryph.ComputeClient.Models
                 }
                 if (property.NameEquals("ip_network"u8))
                 {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        ipNetwork = null;
+                        continue;
+                    }
                     ipNetwork = property.Value.GetString();
                     continue;
                 }
