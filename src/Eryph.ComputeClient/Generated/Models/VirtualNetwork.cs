@@ -18,17 +18,31 @@ namespace Eryph.ComputeClient.Models
         /// <param name="project"></param>
         /// <param name="environment"></param>
         /// <param name="providerName"></param>
-        /// <param name="ipNetwork"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="name"/>, <paramref name="project"/>, <paramref name="environment"/>, <paramref name="providerName"/> or <paramref name="ipNetwork"/> is null. </exception>
-        internal VirtualNetwork(string id, string name, Project project, string environment, string providerName, string ipNetwork)
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="name"/>, <paramref name="project"/>, <paramref name="environment"/> or <paramref name="providerName"/> is null. </exception>
+        internal VirtualNetwork(string id, string name, Project project, string environment, string providerName)
         {
             Argument.AssertNotNull(id, nameof(id));
             Argument.AssertNotNull(name, nameof(name));
             Argument.AssertNotNull(project, nameof(project));
             Argument.AssertNotNull(environment, nameof(environment));
             Argument.AssertNotNull(providerName, nameof(providerName));
-            Argument.AssertNotNull(ipNetwork, nameof(ipNetwork));
 
+            Id = id;
+            Name = name;
+            Project = project;
+            Environment = environment;
+            ProviderName = providerName;
+        }
+
+        /// <summary> Initializes a new instance of <see cref="VirtualNetwork"/>. </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="project"></param>
+        /// <param name="environment"></param>
+        /// <param name="providerName"></param>
+        /// <param name="ipNetwork"></param>
+        internal VirtualNetwork(string id, string name, Project project, string environment, string providerName, string ipNetwork)
+        {
             Id = id;
             Name = name;
             Project = project;
