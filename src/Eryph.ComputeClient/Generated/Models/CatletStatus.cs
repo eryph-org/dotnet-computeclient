@@ -22,11 +22,14 @@ namespace Eryph.ComputeClient.Models
             _value = value ?? throw new ArgumentNullException(nameof(value));
         }
 
+        private const string UnknownValue = "Unknown";
         private const string StoppedValue = "Stopped";
         private const string RunningValue = "Running";
         private const string PendingValue = "Pending";
         private const string ErrorValue = "Error";
 
+        /// <summary> Unknown. </summary>
+        public static CatletStatus Unknown { get; } = new CatletStatus(UnknownValue);
         /// <summary> Stopped. </summary>
         public static CatletStatus Stopped { get; } = new CatletStatus(StoppedValue);
         /// <summary> Running. </summary>
