@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Eryph.ClientRuntime.Authentication" Version="0.8.1-beta.1" />
+    <PackageReference Include="Eryph.ClientRuntime.Authentication" Version="0.8.1" />
     <PackageReference Include="Microsoft.Azure.AutoRest.CSharp" Version="3.0.0-beta.20241108.1" PrivateAssets="All" />
   </ItemGroup>
 
