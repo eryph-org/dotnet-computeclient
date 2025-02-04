@@ -190,6 +190,44 @@ namespace Eryph.ComputeClient
             }
         }
 
+        /// <summary> Expand new catlet config. </summary>
+        /// <param name="body"> The <see cref="ExpandCatletConfigRequest"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Expand the config for a new catlet. </remarks>
+        public virtual async Task<Response<Models.Operation>> ExpandConfigAsync(ExpandCatletConfigRequest body = null, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("CatletsClient.ExpandConfig");
+            scope.Start();
+            try
+            {
+                return await RestClient.ExpandConfigAsync(body, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Expand new catlet config. </summary>
+        /// <param name="body"> The <see cref="ExpandCatletConfigRequest"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Expand the config for a new catlet. </remarks>
+        public virtual Response<Models.Operation> ExpandConfig(ExpandCatletConfigRequest body = null, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("CatletsClient.ExpandConfig");
+            scope.Start();
+            try
+            {
+                return RestClient.ExpandConfig(body, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
         /// <summary> Get a catlet configuration. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
@@ -220,6 +258,44 @@ namespace Eryph.ComputeClient
             try
             {
                 return RestClient.GetConfig(id, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Validate catlet config. </summary>
+        /// <param name="body"> The <see cref="QuickValidateConfigRequest"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Performs a quick validation of the catlet configuration. </remarks>
+        public virtual async Task<Response<CatletConfigValidationResult>> ValidateConfigAsync(QuickValidateConfigRequest body = null, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("CatletsClient.ValidateConfig");
+            scope.Start();
+            try
+            {
+                return await RestClient.ValidateConfigAsync(body, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Validate catlet config. </summary>
+        /// <param name="body"> The <see cref="QuickValidateConfigRequest"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Performs a quick validation of the catlet configuration. </remarks>
+        public virtual Response<CatletConfigValidationResult> ValidateConfig(QuickValidateConfigRequest body = null, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("CatletsClient.ValidateConfig");
+            scope.Start();
+            try
+            {
+                return RestClient.ValidateConfig(body, cancellationToken);
             }
             catch (Exception e)
             {

@@ -1,18 +1,22 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Management.Automation;
 using System.Text;
+using System.Threading.Tasks;
 using Eryph.ComputeClient.Models;
 using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.Json;
+using Eryph.ConfigModel.Yaml;
 using JetBrains.Annotations;
 
 namespace Eryph.ComputeClient.Commands.Catlets
 {
     [PublicAPI]
-    [Cmdlet(VerbsCommon.New, "Catlet")]
-    [OutputType(typeof(Operation), typeof(Catlet), typeof(Catlet))]
-    public class NewCatletCommand : CatletConfigCmdlet
+    [Cmdlet(VerbsDiagnostic.Test, "CatletConfig")]
+    [OutputType(typeof(Operation), typeof(string))]
+    public class TestCatletConfigCommand : CatletConfigCmdlet
     {
         [Parameter(
             ParameterSetName = "InputObject",
@@ -29,11 +33,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
         public string Config { get; set; }
 
         [Parameter]
-        public SwitchParameter NoWait
-        {
-            get => _noWait;
-            set => _noWait = value;
-        }
+        public SwitchParameter NoWait { get; set; }
 
         [Parameter]
         [ValidateNotNullOrEmpty]
@@ -53,7 +53,6 @@ namespace Eryph.ComputeClient.Commands.Catlets
         [Parameter]
         public SwitchParameter SkipVariablesPrompt { get; set; }
 
-        private bool _noWait;
         private StringBuilder _input = new StringBuilder();
 
         protected override void ProcessRecord()
@@ -104,14 +103,27 @@ namespace Eryph.ComputeClient.Commands.Catlets
 
             var serializedConfig = CatletConfigJsonSerializer.SerializeToElement(config);
 
-            WaitForOperation(
-                Factory.CreateCatletsClient().Create(
-                    new NewCatletRequest(serializedConfig)
-                    {
-                        CorrelationId = Guid.NewGuid(),
-                    }),
-                _noWait,
-                true);
+            var operation = Factory.CreateCatletsClient().ExpandConfig(
+                new ExpandCatletConfigRequest(serializedConfig)
+                {
+                    CorrelationId = Guid.NewGuid(),
+                });
+            if (NoWait)
+            {
+                WriteObject(operation);
+                return;
+            }
+
+            WaitForOperation(operation, (op) =>
+            {
+                if (op.Result is CatletConfigOperationResult ccor)
+                {
+                    var expandedConfig = CatletConfigJsonSerializer.Deserialize(ccor.Configuration);
+                    var yaml = CatletConfigYamlSerializer.Serialize(expandedConfig);
+                    WriteObject(yaml);
+                }
+
+            });
         }
     }
 }

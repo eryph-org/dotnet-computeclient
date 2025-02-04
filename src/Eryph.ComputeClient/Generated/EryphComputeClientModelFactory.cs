@@ -23,8 +23,12 @@ namespace Eryph.ComputeClient.Models
         /// <param name="logEntries"></param>
         /// <param name="projects"></param>
         /// <param name="tasks"></param>
+        /// <param name="result">
+        /// Please note <see cref="OperationResult"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
+        /// The available derived classes include <see cref="CatletConfigOperationResult"/>.
+        /// </param>
         /// <returns> A new <see cref="Models.Operation"/> instance for mocking. </returns>
-        public static Operation Operation(string id = null, OperationStatus status = default, string statusMessage = null, IEnumerable<OperationResource> resources = null, IEnumerable<OperationLogEntry> logEntries = null, IEnumerable<Project> projects = null, IEnumerable<OperationTask> tasks = null)
+        public static Operation Operation(string id = null, OperationStatus status = default, string statusMessage = null, IEnumerable<OperationResource> resources = null, IEnumerable<OperationLogEntry> logEntries = null, IEnumerable<Project> projects = null, IEnumerable<OperationTask> tasks = null, OperationResult result = null)
         {
             resources ??= new List<OperationResource>();
             logEntries ??= new List<OperationLogEntry>();
@@ -38,7 +42,8 @@ namespace Eryph.ComputeClient.Models
                 resources?.ToList(),
                 logEntries?.ToList(),
                 projects?.ToList(),
-                tasks?.ToList());
+                tasks?.ToList(),
+                result);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.OperationResource"/>. </summary>
@@ -188,9 +193,12 @@ namespace Eryph.ComputeClient.Models
         /// <param name="project"></param>
         /// <param name="environment"></param>
         /// <param name="gene"></param>
-        /// <param name="path"></param>
+        /// <param name="path">
+        /// The file system path of the virtual disk. This information
+        /// is only available to administrators.
+        /// </param>
         /// <param name="sizeBytes"></param>
-        /// <param name="parentId"></param>
+        /// <param name="parentId"> The ID of the parent disk when this disk is a differential disk. </param>
         /// <param name="attachedCatlets"></param>
         /// <returns> A new <see cref="Models.VirtualDisk"/> instance for mocking. </returns>
         public static VirtualDisk VirtualDisk(string id = null, string name = null, string location = null, string dataStore = null, Project project = null, string environment = null, VirtualDiskGeneInfo gene = null, string path = null, long? sizeBytes = null, string parentId = null, IEnumerable<VirtualDiskAttachedCatlet> attachedCatlets = null)
@@ -360,7 +368,11 @@ namespace Eryph.ComputeClient.Models
 
         /// <summary> Initializes a new instance of <see cref="Models.CatletDrive"/>. </summary>
         /// <param name="type"></param>
-        /// <param name="attachedDiskId"></param>
+        /// <param name="attachedDiskId">
+        /// The ID of the actual virtual disk which is attached.
+        /// This can be null, e.g. when the VHD has been deleted,
+        /// but it is still configured in the virtual machine.
+        /// </param>
         /// <returns> A new <see cref="Models.CatletDrive"/> instance for mocking. </returns>
         public static CatletDrive CatletDrive(CatletDriveType type = default, string attachedDiskId = null)
         {
@@ -428,6 +440,41 @@ namespace Eryph.ComputeClient.Models
         public static VirtualNetworkConfiguration VirtualNetworkConfiguration(JsonElement configuration = default)
         {
             return new VirtualNetworkConfiguration(configuration);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.ProjectNetworksConfigValidationResult"/>. </summary>
+        /// <param name="isValid"> Indicates whether the network configuration is valid. </param>
+        /// <param name="errors"> Contains a list of the issues when the configuration is invalid. </param>
+        /// <returns> A new <see cref="Models.ProjectNetworksConfigValidationResult"/> instance for mocking. </returns>
+        public static ProjectNetworksConfigValidationResult ProjectNetworksConfigValidationResult(bool? isValid = null, IEnumerable<ValidationIssue> errors = null)
+        {
+            errors ??= new List<ValidationIssue>();
+
+            return new ProjectNetworksConfigValidationResult(isValid, errors?.ToList());
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.ValidationIssue"/>. </summary>
+        /// <param name="member">
+        /// The member of the configuration that has the issue. The value is a
+        /// JSON path to the member. It can be null when the
+        /// issue is not related to a specific member.
+        /// </param>
+        /// <param name="message"> The details of the issue. </param>
+        /// <returns> A new <see cref="Models.ValidationIssue"/> instance for mocking. </returns>
+        public static ValidationIssue ValidationIssue(string member = null, string message = null)
+        {
+            return new ValidationIssue(member, message);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.CatletConfigValidationResult"/>. </summary>
+        /// <param name="isValid"> Indicates whether the catlet configuration is valid. </param>
+        /// <param name="errors"> Contains a list of the issues when the configuration is invalid. </param>
+        /// <returns> A new <see cref="Models.CatletConfigValidationResult"/> instance for mocking. </returns>
+        public static CatletConfigValidationResult CatletConfigValidationResult(bool? isValid = null, IEnumerable<ValidationIssue> errors = null)
+        {
+            errors ??= new List<ValidationIssue>();
+
+            return new CatletConfigValidationResult(isValid, errors?.ToList());
         }
     }
 }

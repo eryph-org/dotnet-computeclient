@@ -150,6 +150,44 @@ namespace Eryph.ComputeClient
             }
         }
 
+        /// <summary> Validate virtual networks config. </summary>
+        /// <param name="body"> The <see cref="ValidateProjectNetworksConfigRequest"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Performs a quick validation of the virtual networks configuration. </remarks>
+        public virtual async Task<Response<ProjectNetworksConfigValidationResult>> ValidateConfigAsync(ValidateProjectNetworksConfigRequest body = null, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("VirtualNetworksClient.ValidateConfig");
+            scope.Start();
+            try
+            {
+                return await RestClient.ValidateConfigAsync(body, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Validate virtual networks config. </summary>
+        /// <param name="body"> The <see cref="ValidateProjectNetworksConfigRequest"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Performs a quick validation of the virtual networks configuration. </remarks>
+        public virtual Response<ProjectNetworksConfigValidationResult> ValidateConfig(ValidateProjectNetworksConfigRequest body = null, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("VirtualNetworksClient.ValidateConfig");
+            scope.Start();
+            try
+            {
+                return RestClient.ValidateConfig(body, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
         /// <summary> List all virtual networks. </summary>
         /// <param name="projectId"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>

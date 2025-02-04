@@ -379,6 +379,70 @@ namespace Eryph.ComputeClient
             }
         }
 
+        internal HttpMessage CreateExpandConfigRequest(ExpandCatletConfigRequest body)
+        {
+            var message = _pipeline.CreateMessage();
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/v1/catlets/config/expand", false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json, application/problem+json");
+            if (body != null)
+            {
+                request.Headers.Add("Content-Type", "application/json");
+                var content = new Utf8JsonRequestContent();
+                content.JsonWriter.WriteObjectValue(body);
+                request.Content = content;
+            }
+            return message;
+        }
+
+        /// <summary> Expand new catlet config. </summary>
+        /// <param name="body"> The <see cref="ExpandCatletConfigRequest"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Expand the config for a new catlet. </remarks>
+        public async Task<Response<Models.Operation>> ExpandConfigAsync(ExpandCatletConfigRequest body = null, CancellationToken cancellationToken = default)
+        {
+            using var message = CreateExpandConfigRequest(body);
+            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            switch (message.Response.Status)
+            {
+                case 202:
+                    {
+                        Models.Operation value = default;
+                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
+                        value = Models.Operation.DeserializeOperation(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        /// <summary> Expand new catlet config. </summary>
+        /// <param name="body"> The <see cref="ExpandCatletConfigRequest"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Expand the config for a new catlet. </remarks>
+        public Response<Models.Operation> ExpandConfig(ExpandCatletConfigRequest body = null, CancellationToken cancellationToken = default)
+        {
+            using var message = CreateExpandConfigRequest(body);
+            _pipeline.Send(message, cancellationToken);
+            switch (message.Response.Status)
+            {
+                case 202:
+                    {
+                        Models.Operation value = default;
+                        using var document = JsonDocument.Parse(message.Response.ContentStream);
+                        value = Models.Operation.DeserializeOperation(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
         internal HttpMessage CreateGetConfigRequest(string id)
         {
             var message = _pipeline.CreateMessage();
@@ -443,6 +507,70 @@ namespace Eryph.ComputeClient
                         CatletConfiguration value = default;
                         using var document = JsonDocument.Parse(message.Response.ContentStream);
                         value = CatletConfiguration.DeserializeCatletConfiguration(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        internal HttpMessage CreateValidateConfigRequest(QuickValidateConfigRequest body)
+        {
+            var message = _pipeline.CreateMessage();
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/v1/catlets/config/validate", false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
+            if (body != null)
+            {
+                request.Headers.Add("Content-Type", "application/json");
+                var content = new Utf8JsonRequestContent();
+                content.JsonWriter.WriteObjectValue(body);
+                request.Content = content;
+            }
+            return message;
+        }
+
+        /// <summary> Validate catlet config. </summary>
+        /// <param name="body"> The <see cref="QuickValidateConfigRequest"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Performs a quick validation of the catlet configuration. </remarks>
+        public async Task<Response<CatletConfigValidationResult>> ValidateConfigAsync(QuickValidateConfigRequest body = null, CancellationToken cancellationToken = default)
+        {
+            using var message = CreateValidateConfigRequest(body);
+            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        CatletConfigValidationResult value = default;
+                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
+                        value = CatletConfigValidationResult.DeserializeCatletConfigValidationResult(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        /// <summary> Validate catlet config. </summary>
+        /// <param name="body"> The <see cref="QuickValidateConfigRequest"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Performs a quick validation of the catlet configuration. </remarks>
+        public Response<CatletConfigValidationResult> ValidateConfig(QuickValidateConfigRequest body = null, CancellationToken cancellationToken = default)
+        {
+            using var message = CreateValidateConfigRequest(body);
+            _pipeline.Send(message, cancellationToken);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        CatletConfigValidationResult value = default;
+                        using var document = JsonDocument.Parse(message.Response.ContentStream);
+                        value = CatletConfigValidationResult.DeserializeCatletConfigValidationResult(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:

@@ -47,9 +47,12 @@ namespace Eryph.ComputeClient.Models
         /// <param name="project"></param>
         /// <param name="environment"></param>
         /// <param name="gene"></param>
-        /// <param name="path"></param>
+        /// <param name="path">
+        /// The file system path of the virtual disk. This information
+        /// is only available to administrators.
+        /// </param>
         /// <param name="sizeBytes"></param>
-        /// <param name="parentId"></param>
+        /// <param name="parentId"> The ID of the parent disk when this disk is a differential disk. </param>
         /// <param name="attachedCatlets"></param>
         internal VirtualDisk(string id, string name, string location, string dataStore, Project project, string environment, VirtualDiskGeneInfo gene, string path, long? sizeBytes, string parentId, IReadOnlyList<VirtualDiskAttachedCatlet> attachedCatlets)
         {
@@ -80,11 +83,14 @@ namespace Eryph.ComputeClient.Models
         public string Environment { get; }
         /// <summary> Gets the gene. </summary>
         public VirtualDiskGeneInfo Gene { get; }
-        /// <summary> Gets the path. </summary>
+        /// <summary>
+        /// The file system path of the virtual disk. This information
+        /// is only available to administrators.
+        /// </summary>
         public string Path { get; }
         /// <summary> Gets the size bytes. </summary>
         public long? SizeBytes { get; }
-        /// <summary> Gets the parent id. </summary>
+        /// <summary> The ID of the parent disk when this disk is a differential disk. </summary>
         public string ParentId { get; }
         /// <summary> Gets the attached catlets. </summary>
         public IReadOnlyList<VirtualDiskAttachedCatlet> AttachedCatlets { get; }
