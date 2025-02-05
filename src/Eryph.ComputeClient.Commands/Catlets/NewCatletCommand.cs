@@ -29,11 +29,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
         public string Config { get; set; }
 
         [Parameter]
-        public SwitchParameter NoWait
-        {
-            get => _noWait;
-            set => _noWait = value;
-        }
+        public SwitchParameter NoWait { get; set; }
 
         [Parameter]
         [ValidateNotNullOrEmpty]
@@ -53,7 +49,6 @@ namespace Eryph.ComputeClient.Commands.Catlets
         [Parameter]
         public SwitchParameter SkipVariablesPrompt { get; set; }
 
-        private bool _noWait;
         private StringBuilder _input = new StringBuilder();
 
         protected override void ProcessRecord()
@@ -103,14 +98,22 @@ namespace Eryph.ComputeClient.Commands.Catlets
                 return;
 
             var serializedConfig = CatletConfigJsonSerializer.SerializeToElement(config);
+            
+            var client = Factory.CreateCatletsClient();
 
-            WaitForOperation(
-                Factory.CreateCatletsClient().Create(
-                    new NewCatletRequest(serializedConfig)
+            if (!NoWait)
+            {
+                WaitForOperation(client.ExpandNewConfig(new ExpandNewCatletConfigRequest(serializedConfig)
+                {
+                    CorrelationId = Guid.NewGuid(),
+                }));
+            }
+            
+            WaitForOperation(client.Create(new NewCatletRequest(serializedConfig)
                     {
                         CorrelationId = Guid.NewGuid(),
                     }),
-                _noWait,
+                NoWait,
                 true);
         }
     }

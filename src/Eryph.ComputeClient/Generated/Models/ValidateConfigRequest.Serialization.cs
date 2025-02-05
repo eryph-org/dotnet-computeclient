@@ -10,13 +10,13 @@ using Azure.Core;
 
 namespace Eryph.ComputeClient.Models
 {
-    public partial class QuickValidateConfigRequest : IUtf8JsonSerializable
+    public partial class ValidateConfigRequest : IUtf8JsonSerializable
     {
         void IUtf8JsonSerializable.Write(Utf8JsonWriter writer)
         {
             writer.WriteStartObject();
             writer.WritePropertyName("configuration"u8);
-            writer.WriteObjectValue<object>(Configuration);
+            Configuration.WriteTo(writer);
             writer.WriteEndObject();
         }
 
