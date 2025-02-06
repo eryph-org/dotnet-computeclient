@@ -10,13 +10,14 @@ using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.Json;
 using Eryph.ConfigModel.Yaml;
 using JetBrains.Annotations;
+using Org.BouncyCastle.Asn1;
 
 namespace Eryph.ComputeClient.Commands.Catlets
 {
     [PublicAPI]
     [Cmdlet(VerbsDiagnostic.Test, "CatletConfig")]
     [OutputType(typeof(Operation), typeof(string))]
-    [OutputType(typeof(bool), ParameterSetName = ["Quick"])]
+    [OutputType(typeof(bool), ParameterSetName = ["QuickConfig", "QuickInputObject"])]
     public class TestCatletConfigCommand : CatletConfigCmdlet
     {
         [Parameter(
@@ -37,22 +38,14 @@ namespace Eryph.ComputeClient.Commands.Catlets
         [AllowEmptyString]
         public string[] InputObject { get; set; }
 
-        [Parameter(
-            ParameterSetName = "Config",
-            Mandatory = true)]
-        [Parameter(
-            ParameterSetName = "ConfigAndId",
-            Mandatory = true)]
-        [Parameter(ParameterSetName = "QuickConfig")]
+        [Parameter(ParameterSetName = "Config", Mandatory = true)]
+        [Parameter(ParameterSetName = "ConfigAndId", Mandatory = true)]
+        [Parameter(ParameterSetName = "QuickConfig", Mandatory = true)]
         [ValidateNotNullOrEmpty]
         public string Config { get; set; }
 
-        [Parameter(
-            ParameterSetName = "InputObjectAndId",
-            Mandatory = true)]
-        [Parameter(
-            ParameterSetName = "ConfigAndId",
-            Mandatory = true)]
+        [Parameter(ParameterSetName = "InputObjectAndId", Mandatory = true)]
+        [Parameter(ParameterSetName = "ConfigAndId", Mandatory = true)]
         [ValidateNotNullOrEmpty]
         public string Id { get; set; }
 
@@ -60,26 +53,19 @@ namespace Eryph.ComputeClient.Commands.Catlets
         [Parameter(ParameterSetName = "ConfigAndId")]
         [Parameter(ParameterSetName = "InputObject")]
         [Parameter(ParameterSetName = "InputObjectAndId")]
-        [Parameter(ParameterSetName = "Parent")]
         public SwitchParameter NoWait { get; set; }
 
-        [Parameter(ParameterSetName = "QuickConfig")]
-        [Parameter(ParameterSetName = "QuickInputObject")]
+        [Parameter(ParameterSetName = "QuickConfig", Mandatory = true)]
+        [Parameter(ParameterSetName = "QuickInputObject", Mandatory = true)]
         public SwitchParameter Quick { get; set; }
 
         [Parameter(ParameterSetName = "Config")]
         [Parameter(ParameterSetName = "InputObject")]
-        [Parameter(ParameterSetName = "Parent")]
         [ValidateNotNullOrEmpty]
         public string ProjectName { get; set; }
 
-        [Parameter(ParameterSetName = "Parent")]
-        [ValidateNotNullOrEmpty]
-        public string Parent { get; set; }
-
         [Parameter(ParameterSetName = "Config")]
         [Parameter(ParameterSetName = "InputObject")]
-        [Parameter(ParameterSetName = "Parent")]
         [ValidateNotNullOrEmpty]
         public string Name { get; set; }
 
@@ -87,17 +73,15 @@ namespace Eryph.ComputeClient.Commands.Catlets
         [Parameter(ParameterSetName = "ConfigAndId")]
         [Parameter(ParameterSetName = "InputObject")]
         [Parameter(ParameterSetName = "InputObjectAndId")]
-        [Parameter(ParameterSetName = "Parent")]
         public Hashtable Variables { get; set; }
 
         [Parameter(ParameterSetName = "Config")]
         [Parameter(ParameterSetName = "ConfigAndId")]
         [Parameter(ParameterSetName = "InputObject")]
         [Parameter(ParameterSetName = "InputObjectAndId")]
-        [Parameter(ParameterSetName = "Parent")]
         public SwitchParameter SkipVariablesPrompt { get; set; }
 
-        private StringBuilder _input = new StringBuilder();
+        private readonly StringBuilder _input = new();
 
         protected override void ProcessRecord()
         {
@@ -117,25 +101,12 @@ namespace Eryph.ComputeClient.Commands.Catlets
         protected override void EndProcessing()
         {
             var input = _input.ToString();
-            CatletConfig config = null;
-            
-            if (!string.IsNullOrWhiteSpace(input))
-            {
-                config = DeserializeConfigString(input);
-            }
-
-            if (!string.IsNullOrWhiteSpace(Parent))
-            {
-                config = new CatletConfig
-                {
-                    Parent = Parent
-                };
-            }
-
-            if (config == null)
+            if (string.IsNullOrWhiteSpace(input))
                 return;
-
+            
+            var config = DeserializeConfigString(input);
             var client = Factory.CreateCatletsClient();
+
             if (Quick)
             {
                 var result = client.ValidateConfig(new ValidateConfigRequest(
@@ -173,12 +144,12 @@ namespace Eryph.ComputeClient.Commands.Catlets
 
             WaitForOperation(operation, op =>
             {
-                if (op.Result is CatletConfigOperationResult configResult)
-                {
-                    var expandedConfig = CatletConfigJsonSerializer.Deserialize(configResult.Configuration);
-                    var yaml = CatletConfigYamlSerializer.Serialize(expandedConfig);
-                    WriteObject(yaml);
-                }
+                if (op.Result is not CatletConfigOperationResult configResult)
+                    return;
+                
+                var expandedConfig = CatletConfigJsonSerializer.Deserialize(configResult.Configuration);
+                var yaml = CatletConfigYamlSerializer.Serialize(expandedConfig);
+                WriteObject(yaml);
             });
         }
     }
