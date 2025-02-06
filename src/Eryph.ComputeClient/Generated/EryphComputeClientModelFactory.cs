@@ -442,15 +442,15 @@ namespace Eryph.ComputeClient.Models
             return new VirtualNetworkConfiguration(configuration);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.ProjectNetworksConfigValidationResult"/>. </summary>
-        /// <param name="isValid"> Indicates whether the network configuration is valid. </param>
+        /// <summary> Initializes a new instance of <see cref="Models.CatletConfigValidationResult"/>. </summary>
+        /// <param name="isValid"> Indicates whether the catlet configuration is valid. </param>
         /// <param name="errors"> Contains a list of the issues when the configuration is invalid. </param>
-        /// <returns> A new <see cref="Models.ProjectNetworksConfigValidationResult"/> instance for mocking. </returns>
-        public static ProjectNetworksConfigValidationResult ProjectNetworksConfigValidationResult(bool? isValid = null, IEnumerable<ValidationIssue> errors = null)
+        /// <returns> A new <see cref="Models.CatletConfigValidationResult"/> instance for mocking. </returns>
+        public static CatletConfigValidationResult CatletConfigValidationResult(bool? isValid = null, IEnumerable<ValidationIssue> errors = null)
         {
             errors ??= new List<ValidationIssue>();
 
-            return new ProjectNetworksConfigValidationResult(isValid, errors?.ToList());
+            return new CatletConfigValidationResult(isValid, errors?.ToList());
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.ValidationIssue"/>. </summary>
@@ -464,17 +464,6 @@ namespace Eryph.ComputeClient.Models
         public static ValidationIssue ValidationIssue(string member = null, string message = null)
         {
             return new ValidationIssue(member, message);
-        }
-
-        /// <summary> Initializes a new instance of <see cref="Models.CatletConfigValidationResult"/>. </summary>
-        /// <param name="isValid"> Indicates whether the catlet configuration is valid. </param>
-        /// <param name="errors"> Contains a list of the issues when the configuration is invalid. </param>
-        /// <returns> A new <see cref="Models.CatletConfigValidationResult"/> instance for mocking. </returns>
-        public static CatletConfigValidationResult CatletConfigValidationResult(bool? isValid = null, IEnumerable<ValidationIssue> errors = null)
-        {
-            errors ??= new List<ValidationIssue>();
-
-            return new CatletConfigValidationResult(isValid, errors?.ToList());
         }
     }
 }
