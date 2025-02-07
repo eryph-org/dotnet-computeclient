@@ -446,7 +446,7 @@ namespace Eryph.ComputeClient.Models
         /// <param name="isValid"> Indicates whether the catlet configuration is valid. </param>
         /// <param name="errors"> Contains a list of the issues when the configuration is invalid. </param>
         /// <returns> A new <see cref="Models.CatletConfigValidationResult"/> instance for mocking. </returns>
-        public static CatletConfigValidationResult CatletConfigValidationResult(bool? isValid = null, IEnumerable<ValidationIssue> errors = null)
+        public static CatletConfigValidationResult CatletConfigValidationResult(bool isValid = default, IEnumerable<ValidationIssue> errors = null)
         {
             errors ??= new List<ValidationIssue>();
 

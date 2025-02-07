@@ -19,16 +19,12 @@ namespace Eryph.ComputeClient.Models
             {
                 return null;
             }
-            bool? isValid = default;
+            bool isValid = default;
             IReadOnlyList<ValidationIssue> errors = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("is_valid"u8))
                 {
-                    if (property.Value.ValueKind == JsonValueKind.Null)
-                    {
-                        continue;
-                    }
                     isValid = property.Value.GetBoolean();
                     continue;
                 }

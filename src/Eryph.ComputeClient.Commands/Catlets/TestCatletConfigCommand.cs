@@ -17,7 +17,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
     [PublicAPI]
     [Cmdlet(VerbsDiagnostic.Test, "CatletConfig")]
     [OutputType(typeof(Operation), typeof(string))]
-    [OutputType(typeof(bool), ParameterSetName = ["QuickConfig", "QuickInputObject"])]
+    [OutputType(typeof(CatletConfigValidationResult), ParameterSetName = ["QuickConfig", "QuickInputObject"])]
     public class TestCatletConfigCommand : CatletConfigCmdlet
     {
         [Parameter(

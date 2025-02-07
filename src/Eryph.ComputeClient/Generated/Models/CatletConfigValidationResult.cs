@@ -13,22 +13,24 @@ namespace Eryph.ComputeClient.Models
     public partial class CatletConfigValidationResult
     {
         /// <summary> Initializes a new instance of <see cref="CatletConfigValidationResult"/>. </summary>
-        internal CatletConfigValidationResult()
+        /// <param name="isValid"> Indicates whether the catlet configuration is valid. </param>
+        internal CatletConfigValidationResult(bool isValid)
         {
+            IsValid = isValid;
             Errors = new ChangeTrackingList<ValidationIssue>();
         }
 
         /// <summary> Initializes a new instance of <see cref="CatletConfigValidationResult"/>. </summary>
         /// <param name="isValid"> Indicates whether the catlet configuration is valid. </param>
         /// <param name="errors"> Contains a list of the issues when the configuration is invalid. </param>
-        internal CatletConfigValidationResult(bool? isValid, IReadOnlyList<ValidationIssue> errors)
+        internal CatletConfigValidationResult(bool isValid, IReadOnlyList<ValidationIssue> errors)
         {
             IsValid = isValid;
             Errors = errors;
         }
 
         /// <summary> Indicates whether the catlet configuration is valid. </summary>
-        public bool? IsValid { get; }
+        public bool IsValid { get; }
         /// <summary> Contains a list of the issues when the configuration is invalid. </summary>
         public IReadOnlyList<ValidationIssue> Errors { get; }
     }

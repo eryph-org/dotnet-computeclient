@@ -13,8 +13,10 @@ namespace Eryph.ComputeClient.Models
     public partial class CatletConfigOperationResult : OperationResult
     {
         /// <summary> Initializes a new instance of <see cref="CatletConfigOperationResult"/>. </summary>
-        internal CatletConfigOperationResult()
+        /// <param name="configuration"> Anything. </param>
+        internal CatletConfigOperationResult(JsonElement configuration)
         {
+            Configuration = configuration;
             ResultType = "CatletConfig";
         }
 
