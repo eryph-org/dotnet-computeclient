@@ -121,7 +121,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
             if (!string.IsNullOrWhiteSpace(Name))
                 config.Name = Name;
 
-            if (!PopulateVariables(config, Variables, SkipVariablesPrompt))
+            if (!PopulateVariables(config, Variables, SkipVariablesPrompt, true))
                 return;
 
             var serializedConfig = CatletConfigJsonSerializer.SerializeToElement(config);

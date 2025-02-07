@@ -15,7 +15,7 @@ namespace Eryph.ComputeClient.Models
         /// <summary> Initializes a new instance of <see cref="CatletConfigOperationResult"/>. </summary>
         internal CatletConfigOperationResult()
         {
-            ResultType = "catlet_config";
+            ResultType = "CatletConfig";
         }
 
         /// <summary> Initializes a new instance of <see cref="CatletConfigOperationResult"/>. </summary>
@@ -24,7 +24,7 @@ namespace Eryph.ComputeClient.Models
         internal CatletConfigOperationResult(string resultType, JsonElement configuration) : base(resultType)
         {
             Configuration = configuration;
-            ResultType = resultType ?? "catlet_config";
+            ResultType = resultType ?? "CatletConfig";
         }
     }
 }

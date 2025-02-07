@@ -24,9 +24,9 @@ namespace Eryph.ComputeClient.Models
 
         /// <summary> Initializes a new instance of <see cref="ValidationIssue"/>. </summary>
         /// <param name="member">
-        /// The member of the configuration that has the issue. The value is a
-        /// JSON path to the member. It can be null when the
-        /// issue is not related to a specific member.
+        /// The JSON path which identifies the member which has the issue.
+        /// Can be null when the issue is not related to
+        /// a specific member.
         /// </param>
         /// <param name="message"> The details of the issue. </param>
         internal ValidationIssue(string member, string message)
@@ -36,9 +36,9 @@ namespace Eryph.ComputeClient.Models
         }
 
         /// <summary>
-        /// The member of the configuration that has the issue. The value is a
-        /// JSON path to the member. It can be null when the
-        /// issue is not related to a specific member.
+        /// The JSON path which identifies the member which has the issue.
+        /// Can be null when the issue is not related to
+        /// a specific member.
         /// </summary>
         public string Member { get; }
         /// <summary> The details of the issue. </summary>
