@@ -26,6 +26,7 @@ namespace Eryph.ComputeClient.Models
             IReadOnlyList<OperationLogEntry> logEntries = default;
             IReadOnlyList<Project> projects = default;
             IReadOnlyList<OperationTask> tasks = default;
+            OperationResult result = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("id"u8))
@@ -104,6 +105,15 @@ namespace Eryph.ComputeClient.Models
                     tasks = array;
                     continue;
                 }
+                if (property.NameEquals("result"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    result = OperationResult.DeserializeOperationResult(property.Value);
+                    continue;
+                }
             }
             return new Operation(
                 id,
@@ -112,7 +122,8 @@ namespace Eryph.ComputeClient.Models
                 resources ?? new ChangeTrackingList<OperationResource>(),
                 logEntries ?? new ChangeTrackingList<OperationLogEntry>(),
                 projects ?? new ChangeTrackingList<Project>(),
-                tasks ?? new ChangeTrackingList<OperationTask>());
+                tasks ?? new ChangeTrackingList<OperationTask>(),
+                result);
         }
 
         /// <summary> Deserializes the model from a raw response. </summary>

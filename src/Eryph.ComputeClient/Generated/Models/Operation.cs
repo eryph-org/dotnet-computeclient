@@ -37,7 +37,11 @@ namespace Eryph.ComputeClient.Models
         /// <param name="logEntries"></param>
         /// <param name="projects"></param>
         /// <param name="tasks"></param>
-        internal Operation(string id, OperationStatus status, string statusMessage, IReadOnlyList<OperationResource> resources, IReadOnlyList<OperationLogEntry> logEntries, IReadOnlyList<Project> projects, IReadOnlyList<OperationTask> tasks)
+        /// <param name="result">
+        /// Please note <see cref="OperationResult"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
+        /// The available derived classes include <see cref="CatletConfigOperationResult"/>.
+        /// </param>
+        internal Operation(string id, OperationStatus status, string statusMessage, IReadOnlyList<OperationResource> resources, IReadOnlyList<OperationLogEntry> logEntries, IReadOnlyList<Project> projects, IReadOnlyList<OperationTask> tasks, OperationResult result)
         {
             Id = id;
             Status = status;
@@ -46,6 +50,7 @@ namespace Eryph.ComputeClient.Models
             LogEntries = logEntries;
             Projects = projects;
             Tasks = tasks;
+            Result = result;
         }
 
         /// <summary> Gets the id. </summary>
@@ -62,5 +67,11 @@ namespace Eryph.ComputeClient.Models
         public IReadOnlyList<Project> Projects { get; }
         /// <summary> Gets the tasks. </summary>
         public IReadOnlyList<OperationTask> Tasks { get; }
+        /// <summary>
+        /// Gets the result
+        /// Please note <see cref="OperationResult"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
+        /// The available derived classes include <see cref="CatletConfigOperationResult"/>.
+        /// </summary>
+        public OperationResult Result { get; }
     }
 }

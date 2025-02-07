@@ -19,7 +19,11 @@ namespace Eryph.ComputeClient.Models
 
         /// <summary> Initializes a new instance of <see cref="CatletDrive"/>. </summary>
         /// <param name="type"></param>
-        /// <param name="attachedDiskId"></param>
+        /// <param name="attachedDiskId">
+        /// The ID of the actual virtual disk which is attached.
+        /// This can be null, e.g. when the VHD has been deleted,
+        /// but it is still configured in the virtual machine.
+        /// </param>
         internal CatletDrive(CatletDriveType type, string attachedDiskId)
         {
             Type = type;
@@ -28,7 +32,11 @@ namespace Eryph.ComputeClient.Models
 
         /// <summary> Gets the type. </summary>
         public CatletDriveType Type { get; }
-        /// <summary> Gets the attached disk id. </summary>
+        /// <summary>
+        /// The ID of the actual virtual disk which is attached.
+        /// This can be null, e.g. when the VHD has been deleted,
+        /// but it is still configured in the virtual machine.
+        /// </summary>
         public string AttachedDiskId { get; }
     }
 }

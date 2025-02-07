@@ -118,11 +118,12 @@ namespace Eryph.ComputeClient.Commands
 
             var completedActivities = new List<int>();
 
+            var currentOperation = operation;
             while (!Stopping)
             {
                 Task.Delay(1000).GetAwaiter().GetResult();
 
-                var currentOperation = Factory.CreateOperationsClient()
+                currentOperation = Factory.CreateOperationsClient()
                     .Get(operation.Id, timeStamp, expand: "logs,tasks").Value;
 
                 foreach (var operationTask in currentOperation.Tasks)
@@ -259,11 +260,11 @@ namespace Eryph.ComputeClient.Commands
 
             if (writerDelegate != null)
             {
-                writerDelegate(operation);
+                writerDelegate(currentOperation);
                 return;
             }
 
-            WriteObject(Factory.CreateOperationsClient().Get(operation.Id).Value);
+            WriteObject(Factory.CreateOperationsClient().Get(currentOperation.Id).Value);
         }
     }
 }

@@ -10,20 +10,20 @@ using System.Text.Json;
 
 namespace Eryph.ComputeClient.Models
 {
-    /// <summary> The UpdateCatletRequestBody. </summary>
-    public partial class UpdateCatletRequestBody
+    /// <summary> The ExpandCatletConfigRequestBody. </summary>
+    public partial class ExpandCatletConfigRequestBody
     {
-        /// <summary> Initializes a new instance of <see cref="UpdateCatletRequestBody"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="ExpandCatletConfigRequestBody"/>. </summary>
         /// <param name="configuration"> Anything. </param>
-        public UpdateCatletRequestBody(JsonElement configuration)
+        public ExpandCatletConfigRequestBody(JsonElement configuration)
         {
             Configuration = configuration;
         }
 
-        /// <summary> Initializes a new instance of <see cref="UpdateCatletRequestBody"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="ExpandCatletConfigRequestBody"/>. </summary>
         /// <param name="correlationId"></param>
         /// <param name="configuration"> Anything. </param>
-        internal UpdateCatletRequestBody(Guid? correlationId, JsonElement configuration)
+        internal ExpandCatletConfigRequestBody(Guid? correlationId, JsonElement configuration)
         {
             CorrelationId = correlationId;
             Configuration = configuration;
