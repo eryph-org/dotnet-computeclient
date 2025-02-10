@@ -23,7 +23,7 @@ namespace Eryph.ComputeClient.Commands.ProjectMembers
                 return;
             }
 
-            WaitForOperation(operation, preferWriteMember ? (Action<Operation>)WriteMember : null);
+            WaitForOperation(operation, preferWriteMember ? WriteMember : WriteObject);
         }
 
 

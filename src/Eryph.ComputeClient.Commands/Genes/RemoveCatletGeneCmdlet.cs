@@ -48,7 +48,7 @@ public class RemoveCatletGeneCmdlet : CatletGeneCmdlet
                 return;
             }
 
-            WaitForOperation(Factory.CreateGenesClient().Cleanup());
+            WaitForOperation(Factory.CreateGenesClient().Cleanup(), WriteObject);
             return;
         }
 
@@ -76,7 +76,7 @@ public class RemoveCatletGeneCmdlet : CatletGeneCmdlet
                 continue;
             }
 
-            WaitForOperation(Factory.CreateGenesClient().Delete(id).Value);
+            WaitForOperation(Factory.CreateGenesClient().Delete(id).Value, WriteObject);
         }
     }
 }

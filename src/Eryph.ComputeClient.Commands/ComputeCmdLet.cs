@@ -257,14 +257,10 @@ namespace Eryph.ComputeClient.Commands
                 break;
             }
 
-
-            if (writerDelegate != null)
-            {
-                writerDelegate(currentOperation);
+            if (writerDelegate is null)
                 return;
-            }
-
-            WriteObject(Factory.CreateOperationsClient().Get(currentOperation.Id).Value);
+            
+            writerDelegate(currentOperation);
         }
     }
 }

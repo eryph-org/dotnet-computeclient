@@ -17,7 +17,7 @@ namespace Eryph.ComputeClient.Commands.Projects
                 return;
             }
 
-            WaitForOperation(operation, preferWriteProject ? (Action<Operation>)WriteProject : null);
+            WaitForOperation(operation, preferWriteProject ? WriteProject : WriteObject);
         }
 
 
