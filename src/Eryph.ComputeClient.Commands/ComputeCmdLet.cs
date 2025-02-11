@@ -118,13 +118,13 @@ namespace Eryph.ComputeClient.Commands
 
             var completedActivities = new List<int>();
 
+            var operationsClient = Factory.CreateOperationsClient();
             var currentOperation = operation;
             while (!Stopping)
             {
                 Task.Delay(1000).GetAwaiter().GetResult();
 
-                currentOperation = Factory.CreateOperationsClient()
-                    .Get(operation.Id, timeStamp, expand: "logs,tasks").Value;
+                currentOperation = operationsClient.Get(operation.Id, timeStamp, expand: "logs,tasks").Value;
 
                 foreach (var operationTask in currentOperation.Tasks)
                 {
