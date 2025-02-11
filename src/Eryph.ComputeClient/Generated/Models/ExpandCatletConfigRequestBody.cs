@@ -23,13 +23,17 @@ namespace Eryph.ComputeClient.Models
         /// <summary> Initializes a new instance of <see cref="ExpandCatletConfigRequestBody"/>. </summary>
         /// <param name="correlationId"></param>
         /// <param name="configuration"> Anything. </param>
-        internal ExpandCatletConfigRequestBody(Guid? correlationId, JsonElement configuration)
+        /// <param name="showSecrets"></param>
+        internal ExpandCatletConfigRequestBody(Guid? correlationId, JsonElement configuration, bool? showSecrets)
         {
             CorrelationId = correlationId;
             Configuration = configuration;
+            ShowSecrets = showSecrets;
         }
 
         /// <summary> Gets or sets the correlation id. </summary>
         public Guid? CorrelationId { get; set; }
+        /// <summary> Gets or sets the show secrets. </summary>
+        public bool? ShowSecrets { get; set; }
     }
 }

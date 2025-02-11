@@ -81,6 +81,12 @@ namespace Eryph.ComputeClient.Commands.Catlets
         [Parameter(ParameterSetName = "InputObjectAndId")]
         public SwitchParameter SkipVariablesPrompt { get; set; }
 
+        [Parameter(ParameterSetName = "Config")]
+        [Parameter(ParameterSetName = "ConfigAndId")]
+        [Parameter(ParameterSetName = "InputObject")]
+        [Parameter(ParameterSetName = "InputObjectAndId")]
+        public SwitchParameter ShowSecrets { get; set; }
+
         private readonly StringBuilder _input = new();
 
         protected override void ProcessRecord()
@@ -121,7 +127,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
             if (!string.IsNullOrWhiteSpace(Name))
                 config.Name = Name;
 
-            if (!PopulateVariables(config, Variables, SkipVariablesPrompt, true))
+            if (!PopulateVariables(config, Variables, SkipVariablesPrompt, ShowSecrets))
                 return;
 
             var serializedConfig = CatletConfigJsonSerializer.SerializeToElement(config);
@@ -130,10 +136,12 @@ namespace Eryph.ComputeClient.Commands.Catlets
                 ? client.ExpandNewConfig(new ExpandNewCatletConfigRequest(serializedConfig)
                 {   
                     CorrelationId = Guid.NewGuid(),
+                    ShowSecrets = ShowSecrets,
                 })
                 : client.ExpandConfig(Id, new ExpandCatletConfigRequestBody(serializedConfig)
                 {
                     CorrelationId = Guid.NewGuid(),
+                    ShowSecrets = ShowSecrets,
                 });
 
             if (NoWait)
