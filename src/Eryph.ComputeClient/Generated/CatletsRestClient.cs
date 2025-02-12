@@ -760,7 +760,7 @@ namespace Eryph.ComputeClient
             uri.Reset(_endpoint);
             uri.AppendPath("/v1/catlets/config/validate", false);
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
+            request.Headers.Add("Accept", "application/json, application/problem+json");
             if (body != null)
             {
                 request.Headers.Add("Content-Type", "application/json");

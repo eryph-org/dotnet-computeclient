@@ -54,7 +54,7 @@ namespace Eryph.ComputeClient
                 uri.AppendQuery("expand", expand, true);
             }
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json, text/json, application/problem+json");
+            request.Headers.Add("Accept", "application/json, application/problem+json");
             return message;
         }
 
