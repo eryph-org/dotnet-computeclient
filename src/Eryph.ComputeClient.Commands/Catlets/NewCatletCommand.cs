@@ -99,17 +99,8 @@ namespace Eryph.ComputeClient.Commands.Catlets
 
             var serializedConfig = CatletConfigJsonSerializer.SerializeToElement(config);
             
-            var client = Factory.CreateCatletsClient();
-
-            if (!NoWait)
-            {
-                WaitForOperation(client.ExpandNewConfig(new ExpandNewCatletConfigRequest(serializedConfig)
-                {
-                    CorrelationId = Guid.NewGuid(),
-                }));
-            }
-            
-            WaitForOperation(client.Create(new NewCatletRequest(serializedConfig)
+            WaitForOperation(Factory.CreateCatletsClient().Create(
+                    new NewCatletRequest(serializedConfig)
                     {
                         CorrelationId = Guid.NewGuid(),
                     }),

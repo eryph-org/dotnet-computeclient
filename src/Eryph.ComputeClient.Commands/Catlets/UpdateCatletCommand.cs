@@ -34,16 +34,6 @@ namespace Eryph.ComputeClient.Commands.Catlets
                 var config = DeserializeConfigString(Config);
                 var configJson = CatletConfigJsonSerializer.SerializeToElement(config);
 
-                if (!NoWait)
-                {
-                    WaitForOperation(client.ExpandConfig(
-                        id,
-                        new ExpandCatletConfigRequestBody(configJson)
-                        {
-                            CorrelationId = Guid.NewGuid(),
-                        }));
-                }
-
                 WaitForOperation(client.Update(
                         id,
                         new UpdateCatletRequestBody(configJson)
