@@ -309,7 +309,7 @@ namespace Eryph.ComputeClient
         /// <summary> Populate catlet config variables. </summary>
         /// <param name="body"> The <see cref="PopulateCatletConfigVariablesRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <remarks> Populates all variables in a config for a new catlet based on the parent and fodder genes. </remarks>
+        /// <remarks> Populates the variables in a config for a new catlet based on the parent. </remarks>
         public virtual async Task<Response<Models.Operation>> PopulateConfigVariablesAsync(PopulateCatletConfigVariablesRequest body = null, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("CatletsClient.PopulateConfigVariables");
@@ -328,7 +328,7 @@ namespace Eryph.ComputeClient
         /// <summary> Populate catlet config variables. </summary>
         /// <param name="body"> The <see cref="PopulateCatletConfigVariablesRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <remarks> Populates all variables in a config for a new catlet based on the parent and fodder genes. </remarks>
+        /// <remarks> Populates the variables in a config for a new catlet based on the parent. </remarks>
         public virtual Response<Models.Operation> PopulateConfigVariables(PopulateCatletConfigVariablesRequest body = null, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("CatletsClient.PopulateConfigVariables");
