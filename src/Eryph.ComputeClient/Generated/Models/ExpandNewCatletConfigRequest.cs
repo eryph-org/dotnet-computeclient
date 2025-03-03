@@ -6,6 +6,7 @@
 #nullable disable
 
 using System;
+using System.Text.Json;
 
 namespace Eryph.ComputeClient.Models
 {
@@ -14,11 +15,8 @@ namespace Eryph.ComputeClient.Models
     {
         /// <summary> Initializes a new instance of <see cref="ExpandNewCatletConfigRequest"/>. </summary>
         /// <param name="configuration"> Anything. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="configuration"/> is null. </exception>
-        public ExpandNewCatletConfigRequest(object configuration)
+        public ExpandNewCatletConfigRequest(JsonElement configuration)
         {
-            Argument.AssertNotNull(configuration, nameof(configuration));
-
             Configuration = configuration;
         }
 
@@ -26,7 +24,7 @@ namespace Eryph.ComputeClient.Models
         /// <param name="correlationId"></param>
         /// <param name="configuration"> Anything. </param>
         /// <param name="showSecrets"></param>
-        internal ExpandNewCatletConfigRequest(Guid? correlationId, object configuration, bool? showSecrets)
+        internal ExpandNewCatletConfigRequest(Guid? correlationId, JsonElement configuration, bool? showSecrets)
         {
             CorrelationId = correlationId;
             Configuration = configuration;
@@ -35,8 +33,6 @@ namespace Eryph.ComputeClient.Models
 
         /// <summary> Gets or sets the correlation id. </summary>
         public Guid? CorrelationId { get; set; }
-        /// <summary> Anything. </summary>
-        public object Configuration { get; }
         /// <summary> Gets or sets the show secrets. </summary>
         public bool? ShowSecrets { get; set; }
     }

@@ -10,12 +10,12 @@ namespace Eryph.ComputeClient.Commands.ProjectMembers
             Operation operation,
             bool noWait, 
             bool preferWriteMember,
-            string knownMemberId = default,
-            string knownProjectId = default)
+            string knownMemberId = null,
+            string knownProjectId = null)
         {
             if (noWait)
             {
-                if (knownMemberId == default || knownProjectId == default || !preferWriteMember)
+                if (knownMemberId == null || knownProjectId == null || !preferWriteMember)
                     WriteObject(operation);
                 else
                     WriteObject(Factory.CreateProjectMembersClient()
@@ -23,25 +23,31 @@ namespace Eryph.ComputeClient.Commands.ProjectMembers
                 return;
             }
 
-            WaitForOperation(operation, preferWriteMember ? WriteMember : WriteObject);
-        }
+            var completedOperation = WaitForOperation(operation);
+            if (preferWriteMember)
+            {
+                WriteMember(completedOperation);
+                return;
+            }
 
+            WriteObject(completedOperation);
+        }
 
         private void WriteMember(Operation operation)
         {
-            
-            var newOp = Factory.CreateOperationsClient().Get(operation.Id, 
-                expand: "tasks").Value;
-            var memberData = newOp.Tasks
+            var operationWithTasks = Factory.CreateOperationsClient()
+                .Get(operation.Id, expand: "tasks").Value;
+            var memberData = operationWithTasks.Tasks
                 .Where(x => x.Reference != null)
                 .FirstOrDefault(x => x.Reference.Type == TaskReferenceType.ProjectMember);
-            if (memberData != null)
-            {
-                var projectId = GetProjectId(memberData.Reference.ProjectName);
-                WriteObject(Factory.CreateProjectMembersClient()
-                    .Get(projectId, memberData.Reference.Id).Value);
-            }
 
+            if (memberData == null)
+                return;
+
+            var projectId = GetProjectId(memberData.Reference.ProjectName);
+            var projectMember = Factory.CreateProjectMembersClient()
+                .Get(projectId, memberData.Reference.Id).Value;
+            WriteObject(projectMember);
         }
     }
 }

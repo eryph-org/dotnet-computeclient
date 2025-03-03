@@ -306,6 +306,44 @@ namespace Eryph.ComputeClient
             }
         }
 
+        /// <summary> Populate catlet config variables. </summary>
+        /// <param name="body"> The <see cref="PopulateCatletConfigVariablesRequest"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Populates all variables in a config for a new catlet based on the parent and fodder genes. </remarks>
+        public virtual async Task<Response<Models.Operation>> PopulateConfigVariablesAsync(PopulateCatletConfigVariablesRequest body = null, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("CatletsClient.PopulateConfigVariables");
+            scope.Start();
+            try
+            {
+                return await RestClient.PopulateConfigVariablesAsync(body, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Populate catlet config variables. </summary>
+        /// <param name="body"> The <see cref="PopulateCatletConfigVariablesRequest"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Populates all variables in a config for a new catlet based on the parent and fodder genes. </remarks>
+        public virtual Response<Models.Operation> PopulateConfigVariables(PopulateCatletConfigVariablesRequest body = null, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("CatletsClient.PopulateConfigVariables");
+            scope.Start();
+            try
+            {
+                return RestClient.PopulateConfigVariables(body, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
         /// <summary> Start a catlet. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>

@@ -95,7 +95,7 @@ CmdletsToExport = @(
     "Add-EryphProjectMemberRole",
     "Get-EryphProjectMemberRole",
     "Remove-EryphProjectMemberRole",
-    "Test-CatletConfig"
+    "Test-Catlet"
 )
 
 # Variables to export from this module

@@ -599,6 +599,70 @@ namespace Eryph.ComputeClient
             }
         }
 
+        internal HttpMessage CreatePopulateConfigVariablesRequest(PopulateCatletConfigVariablesRequest body)
+        {
+            var message = _pipeline.CreateMessage();
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/v1/catlets/config/populate-variables", false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json, application/problem+json");
+            if (body != null)
+            {
+                request.Headers.Add("Content-Type", "application/json");
+                var content = new Utf8JsonRequestContent();
+                content.JsonWriter.WriteObjectValue(body);
+                request.Content = content;
+            }
+            return message;
+        }
+
+        /// <summary> Populate catlet config variables. </summary>
+        /// <param name="body"> The <see cref="PopulateCatletConfigVariablesRequest"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Populates all variables in a config for a new catlet based on the parent and fodder genes. </remarks>
+        public async Task<Response<Models.Operation>> PopulateConfigVariablesAsync(PopulateCatletConfigVariablesRequest body = null, CancellationToken cancellationToken = default)
+        {
+            using var message = CreatePopulateConfigVariablesRequest(body);
+            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            switch (message.Response.Status)
+            {
+                case 202:
+                    {
+                        Models.Operation value = default;
+                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
+                        value = Models.Operation.DeserializeOperation(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        /// <summary> Populate catlet config variables. </summary>
+        /// <param name="body"> The <see cref="PopulateCatletConfigVariablesRequest"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Populates all variables in a config for a new catlet based on the parent and fodder genes. </remarks>
+        public Response<Models.Operation> PopulateConfigVariables(PopulateCatletConfigVariablesRequest body = null, CancellationToken cancellationToken = default)
+        {
+            using var message = CreatePopulateConfigVariablesRequest(body);
+            _pipeline.Send(message, cancellationToken);
+            switch (message.Response.Status)
+            {
+                case 202:
+                    {
+                        Models.Operation value = default;
+                        using var document = JsonDocument.Parse(message.Response.ContentStream);
+                        value = Models.Operation.DeserializeOperation(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
         internal HttpMessage CreateStartRequest(string id)
         {
             var message = _pipeline.CreateMessage();

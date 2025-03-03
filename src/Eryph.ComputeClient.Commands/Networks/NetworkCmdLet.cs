@@ -11,27 +11,23 @@ namespace Eryph.ComputeClient.Commands.Networks
             return Factory.CreateVirtualNetworksClient().Get(id);
         }
 
-
-        protected void WaitForOperation(Operation operation, bool noWait, bool alwaysWriteNetwork, string knownNetworkId = default)
+        protected void WaitForOperation(
+            Operation operation,
+            bool noWait,
+            bool alwaysWriteNetwork,
+            string knownNetworkId = null)
         {
             if (noWait)
             {
-                if (knownNetworkId == default || !alwaysWriteNetwork)
+                if (knownNetworkId == null || !alwaysWriteNetwork)
                     WriteObject(operation);
                 else
                     WriteObject(GetSingleNetwork(knownNetworkId));
                 return;
             }
 
-            WaitForOperation(operation, (op) => ResourceWriter(op, Write));
-            return;
-
-            void Write(ResourceType resourceType, string id)
-            {
-                if (resourceType == ResourceType.VirtualNetwork)
-                    WriteObject(GetSingleNetwork(id));
-
-            }
+            var completedOperation = WaitForOperation(operation);
+            WriteResources(completedOperation, ResourceType.VirtualNetwork);
         }
     }
 }

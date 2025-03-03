@@ -5,7 +5,7 @@ using System.Text.Json;
 
 namespace Eryph.ComputeClient.Models;
 
-public partial class ExpandCatletConfigRequest
+public partial class PopulateCatletConfigVariablesRequest
 {
     public JsonElement Configuration { get; set; }
 }

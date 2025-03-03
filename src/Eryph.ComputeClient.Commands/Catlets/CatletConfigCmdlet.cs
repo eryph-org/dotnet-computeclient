@@ -8,9 +8,9 @@ using Eryph.ConfigModel.Json;
 using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.Variables;
 using Eryph.ConfigModel.Yaml;
-using YamlDotNet.Core;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using Eryph.ComputeClient.Models;
 
 namespace Eryph.ComputeClient.Commands.Catlets
 {
@@ -42,6 +42,23 @@ namespace Eryph.ComputeClient.Commands.Catlets
             bool skipVariablesPrompt,
             bool showSecrets)
         {
+            if (!skipVariablesPrompt)
+            {
+                var serializedConfig = CatletConfigJsonSerializer.SerializeToElement(catletConfig);
+                var operation = Factory.CreateCatletsClient().PopulateConfigVariables(
+                    new PopulateCatletConfigVariablesRequest(serializedConfig)
+                    {
+                        CorrelationId = Guid.NewGuid(),
+                    });
+
+                var completedOperation = WaitForOperation(operation);
+                if (completedOperation.Result is CatletConfigOperationResult configResult)
+                {
+                    var populatedConfig = CatletConfigJsonSerializer.Deserialize(configResult.Configuration);
+                    catletConfig.Variables = populatedConfig.Variables;
+                }
+            }
+
             if (catletConfig.Variables is not { Length: > 0 })
                 return true;
 
