@@ -11,26 +11,23 @@ namespace Eryph.ComputeClient.Commands.Catlets
             return Factory.CreateCatletsClient().Get(id);
         }
 
-        protected void WaitForOperation(Operation operation, bool noWait, bool alwaysWriteMachine, string knownMachineId = default)
+        protected void WaitForOperation(
+            Operation operation,
+            bool noWait,
+            bool alwaysWriteMachine,
+            string knownMachineId = null)
         {
             if (noWait)
             {
-                if (knownMachineId == default || !alwaysWriteMachine)
+                if (knownMachineId == null || !alwaysWriteMachine)
                     WriteObject(operation);
                 else
                     WriteObject(GetSingleCatlet(knownMachineId));
                 return;
             }
 
-            WaitForOperation(operation, (op) => ResourceWriter(op, WriteCatlet));
-            return;
-
-            void WriteCatlet(ResourceType resourceType, string id)
-            {
-                if (resourceType == ResourceType.Catlet)
-                    WriteObject(GetSingleCatlet(id));
-
-            }
+            var completedOperation = WaitForOperation(operation);
+            WriteResources(completedOperation, ResourceType.Catlet);
         }
     }
 }

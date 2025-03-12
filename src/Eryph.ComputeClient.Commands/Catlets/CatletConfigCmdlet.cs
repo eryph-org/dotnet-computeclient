@@ -8,9 +8,9 @@ using Eryph.ConfigModel.Json;
 using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.Variables;
 using Eryph.ConfigModel.Yaml;
-using YamlDotNet.Core;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using Eryph.ComputeClient.Models;
 
 namespace Eryph.ComputeClient.Commands.Catlets
 {
@@ -36,14 +36,35 @@ namespace Eryph.ComputeClient.Commands.Catlets
         /// interactively asking the user for the values. Returns <see langword="false"/>
         /// when the user aborted the interactive prompt and <see langword="true"/> otherwise.
         /// </summary>
-        protected bool PopulateVariables(CatletConfig catletConfig, Hashtable variables, bool skipVariablesPrompt)
+        protected bool PopulateVariables(
+            CatletConfig catletConfig,
+            Hashtable variables,
+            bool skipVariablesPrompt,
+            bool showSecrets)
         {
+            if (!skipVariablesPrompt)
+            {
+                var serializedConfig = CatletConfigJsonSerializer.SerializeToElement(catletConfig);
+                var operation = Factory.CreateCatletsClient().PopulateConfigVariables(
+                    new PopulateCatletConfigVariablesRequest(serializedConfig)
+                    {
+                        CorrelationId = Guid.NewGuid(),
+                    });
+
+                var completedOperation = WaitForOperation(operation);
+                if (completedOperation.Result is CatletConfigOperationResult configResult)
+                {
+                    var populatedConfig = CatletConfigJsonSerializer.Deserialize(configResult.Configuration);
+                    catletConfig.Variables = populatedConfig.Variables;
+                }
+            }
+
             if (catletConfig.Variables is not { Length: > 0 })
                 return true;
 
             ApplyVariablesFromParameter(catletConfig.Variables, variables);
             
-            return skipVariablesPrompt || ReadVariablesFromInput(catletConfig.Variables);
+            return skipVariablesPrompt || ReadVariablesFromInput(catletConfig.Variables, showSecrets);
         }
 
         private static void ApplyVariablesFromParameter(VariableConfig[] variableConfigs, Hashtable variables)
@@ -66,7 +87,9 @@ namespace Eryph.ComputeClient.Commands.Catlets
             }
         }
 
-        private bool ReadVariablesFromInput(VariableConfig[] variableConfigs)
+        private bool ReadVariablesFromInput(
+            VariableConfig[] variableConfigs,
+            bool showSecrets)
         {
             var anyRequired = variableConfigs.Any(vc =>
                 vc.Required.GetValueOrDefault()
@@ -74,6 +97,11 @@ namespace Eryph.ComputeClient.Commands.Catlets
 
             try
             {
+                if (showSecrets)
+                {
+                    Host.UI.WriteWarningLine("Secrets will be displayed in clear text.");
+                }
+
                 var choices = new Collection<ChoiceDescription>()
                 {
                     new("&Yes", "You will be asked to provide values for all variables."),
@@ -109,7 +137,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
 
                 foreach (var variableConfig in configsToRead)
                 {
-                    var result = ReadVariableFromInput(variableConfig);
+                    var result = ReadVariableFromInput(variableConfig, showSecrets);
                     if (result is null)
                         return false;
 
@@ -126,13 +154,15 @@ namespace Eryph.ComputeClient.Commands.Catlets
             return true;
         }
 
-        private string ReadVariableFromInput(VariableConfig config)
+        private string ReadVariableFromInput(
+            VariableConfig config,
+            bool showSecrets)
         {
             var prompt = PreparePrompt(config);
             
             while (true)
             {
-                var result = ReadFromInput(prompt, config.Secret ?? false);
+                var result = ReadFromInput(prompt, (config.Secret ?? false) && !showSecrets);
 
                 // Null indicates that the user cancelled the input (e.g. with Ctrl+C).
                 // In this case, we return null and cancel the whole operation.

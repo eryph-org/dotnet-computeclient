@@ -14,24 +14,22 @@ public abstract class CatletDiskCmdlet : ComputeCmdLet
         return Factory.CreateVirtualDisksClient().Get(id);
     }
 
-    protected void WaitForOperation(Operation operation, bool noWait, bool alwaysWriteCatletDisk, string knownCatletDiskId = default)
+    protected void WaitForOperation(
+        Operation operation,
+        bool noWait,
+        bool alwaysWriteCatletDisk,
+        string knownCatletDiskId = null)
     {
         if (noWait)
         {
-            if (knownCatletDiskId == default || !alwaysWriteCatletDisk)
+            if (knownCatletDiskId == null || !alwaysWriteCatletDisk)
                 WriteObject(operation);
             else
                 WriteObject(GetSingleCatletDisk(knownCatletDiskId));
             return;
         }
 
-        WaitForOperation(operation, (op) => ResourceWriter(op, Write));
-        return;
-
-        void Write(ResourceType resourceType, string id)
-        {
-            if (resourceType == ResourceType.VirtualDisk)
-                WriteObject(GetSingleCatletDisk(id));
-        }
+        var completedOperation = WaitForOperation(operation);
+        WriteResources(completedOperation, ResourceType.VirtualDisk);
     }
 }

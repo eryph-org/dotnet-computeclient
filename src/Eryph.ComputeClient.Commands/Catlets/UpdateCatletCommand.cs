@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Management.Automation;
-using System.Text.Json;
-using Eryph.ClientRuntime;
 using Eryph.ComputeClient.Models;
 using Eryph.ConfigModel.Json;
 using JetBrains.Annotations;
-using Operation = Eryph.ComputeClient.Models.Operation;
 
 namespace Eryph.ComputeClient.Commands.Catlets
 {
@@ -26,28 +23,24 @@ namespace Eryph.ComputeClient.Commands.Catlets
         public string Config { get; set; }
 
         [Parameter]
-        public SwitchParameter NoWait
-        {
-            get => _nowait;
-            set => _nowait = value;
-        }
-
-        private bool _nowait;
+        public SwitchParameter NoWait { get; set; }
 
         protected override void ProcessRecord()
         {
+            var client = Factory.CreateCatletsClient();
+
             foreach (var id in Id)
             {
                 var config = DeserializeConfigString(Config);
                 var configJson = CatletConfigJsonSerializer.SerializeToElement(config);
 
-                WaitForOperation(Factory.CreateCatletsClient().Update(
+                WaitForOperation(client.Update(
                         id,
                         new UpdateCatletRequestBody(configJson)
                         {
                             CorrelationId = Guid.NewGuid(),
-                        })
-                    ,_nowait, true);
+                        }),
+                    NoWait, true);
             }
         }
     }

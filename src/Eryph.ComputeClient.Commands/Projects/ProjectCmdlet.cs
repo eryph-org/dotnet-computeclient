@@ -6,30 +6,43 @@ namespace Eryph.ComputeClient.Commands.Projects
 {
     public class ProjectCmdlet : ComputeCmdLet
     {
-        protected void WaitForProject(Operation operation, bool noWait, bool preferWriteProject, string knownProjectId = default)
+        protected void WaitForProject(
+            Operation operation,
+            bool noWait,
+            bool preferWriteProject,
+            string knownProjectId = null)
         {
             if (noWait)
             {
-                if (knownProjectId == default || !preferWriteProject)
+                if (knownProjectId == null || !preferWriteProject)
                     WriteObject(operation);
                 else
                     WriteObject(Factory.CreateProjectsClient().Get(knownProjectId).Value);
                 return;
             }
 
-            WaitForOperation(operation, preferWriteProject ? (Action<Operation>)WriteProject : null);
+            var completedOperation = WaitForOperation(operation);
+
+            if (preferWriteProject)
+            {
+                WriteProject(operation);
+                return;
+            }
+
+            WriteObject(completedOperation);
         }
 
 
         private void WriteProject(Operation operation)
         {
-            var newOp = Factory.CreateOperationsClient().Get(operation.Id, expand: "projects").Value;
-            var projectData = newOp.Projects.FirstOrDefault();
-            if (projectData != null)
-            {
-                WriteObject(Factory.CreateProjectsClient().Get(projectData.Id).Value);
-            }
-
+            var operationWithProjects = Factory.CreateOperationsClient()
+                .Get(operation.Id, expand: "projects").Value;
+            var projectData = operationWithProjects.Projects.FirstOrDefault();
+            if (projectData is null)
+                return;
+            
+            var project = Factory.CreateProjectsClient().Get(projectData.Id).Value;
+            WriteObject(project);
         }
     }
 }

@@ -65,28 +65,44 @@ namespace Eryph.ComputeClient.Commands
 
         }
 
-
-        protected void ResourceWriter(Operation operation, Action<ResourceType, string> resourceWriterDelegate)
+        protected void WriteResources(Operation operation, ResourceType resourceType)
         {
-            var resourceData =
-                Factory.CreateOperationsClient().Get(operation.Id, expand: "resources").Value;
+            var resourceData = Factory.CreateOperationsClient()
+                .Get(operation.Id, expand: "resources").Value;
+
+            var resourceIds = resourceData.Resources
+                .Where(r => r.ResourceType == resourceType && !string.IsNullOrWhiteSpace(r.ResourceId))
+                .Select(r => r.ResourceId)
+                .ToList();
 
             try
             {
-
-                foreach (var resource in resourceData.Resources.Where(x => !string.IsNullOrWhiteSpace(x.ResourceId)))
+                foreach (var resourceId in resourceIds)
                 {
-                    resourceWriterDelegate(resource.ResourceType, resource.ResourceId);
+                    WriteResource(resourceType, resourceId);
                 }
-
-                if (resourceData.Resources.Count > 0)
-                    return;
             }
             catch
             {
                 WriteObject(resourceData);
             }
 
+        }
+
+        protected void WriteResource(ResourceType resourceType, string id)
+        {
+            object resource = resourceType switch
+            {
+                _ when resourceType == ResourceType.Catlet =>
+                    Factory.CreateCatletsClient().Get(id).Value,
+                _ when resourceType == ResourceType.VirtualDisk =>
+                    Factory.CreateVirtualDisksClient().Get(id).Value,
+                _ when resourceType == ResourceType.VirtualNetwork =>
+                    Factory.CreateVirtualNetworksClient().Get(id).Value,
+                _ => throw new NotSupportedException($"The resource type {resourceType} is not supported")
+            };
+
+            WriteObject(resource);
         }
 
         protected string GetProjectId(string projectName)
@@ -107,7 +123,7 @@ namespace Eryph.ComputeClient.Commands
             }
         }
 
-        protected void WaitForOperation(Operation operation, Action<Operation> writerDelegate = null)
+        protected Operation WaitForOperation(Operation operation)
         {
             var timeStamp = DateTime.Parse("2018-01-01", CultureInfo.InvariantCulture);
 
@@ -118,12 +134,13 @@ namespace Eryph.ComputeClient.Commands
 
             var completedActivities = new List<int>();
 
+            var operationsClient = Factory.CreateOperationsClient();
+            var currentOperation = operation;
             while (!Stopping)
             {
                 Task.Delay(1000).GetAwaiter().GetResult();
 
-                var currentOperation = Factory.CreateOperationsClient()
-                    .Get(operation.Id, timeStamp, expand: "logs,tasks").Value;
+                currentOperation = operationsClient.Get(operation.Id, timeStamp, expand: "logs,tasks").Value;
 
                 foreach (var operationTask in currentOperation.Tasks)
                 {
@@ -256,14 +273,7 @@ namespace Eryph.ComputeClient.Commands
                 break;
             }
 
-
-            if (writerDelegate != null)
-            {
-                writerDelegate(operation);
-                return;
-            }
-
-            WriteObject(Factory.CreateOperationsClient().Get(operation.Id).Value);
+            return currentOperation;
         }
     }
 }

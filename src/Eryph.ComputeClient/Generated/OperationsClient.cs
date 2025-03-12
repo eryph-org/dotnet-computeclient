@@ -42,8 +42,8 @@ namespace Eryph.ComputeClient
 
         /// <summary> Get an operation. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
-        /// <param name="logTimeStamp"> The <see cref="DateTimeOffset"/>? to use. </param>
-        /// <param name="expand"> The <see cref="string"/> to use. </param>
+        /// <param name="logTimeStamp"> Filters returned log entries by the requested timestamp. </param>
+        /// <param name="expand"> Expand details. Supported details are: logs,resources,projects,tasks. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual async Task<Response<Models.Operation>> GetAsync(string id, DateTimeOffset? logTimeStamp = null, string expand = null, CancellationToken cancellationToken = default)
         {
@@ -62,8 +62,8 @@ namespace Eryph.ComputeClient
 
         /// <summary> Get an operation. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
-        /// <param name="logTimeStamp"> The <see cref="DateTimeOffset"/>? to use. </param>
-        /// <param name="expand"> The <see cref="string"/> to use. </param>
+        /// <param name="logTimeStamp"> Filters returned log entries by the requested timestamp. </param>
+        /// <param name="expand"> Expand details. Supported details are: logs,resources,projects,tasks. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Response<Models.Operation> Get(string id, DateTimeOffset? logTimeStamp = null, string expand = null, CancellationToken cancellationToken = default)
         {
@@ -81,8 +81,8 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> List all operations. </summary>
-        /// <param name="logTimeStamp"> The <see cref="DateTimeOffset"/>? to use. </param>
-        /// <param name="expand"> The <see cref="string"/> to use. </param>
+        /// <param name="logTimeStamp"> Filters returned log entries by the requested timestamp. </param>
+        /// <param name="expand"> Expand details. Supported details are: logs,resources,projects,tasks. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual AsyncPageable<Models.Operation> ListAsync(DateTimeOffset? logTimeStamp = null, string expand = null, CancellationToken cancellationToken = default)
         {
@@ -91,8 +91,8 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> List all operations. </summary>
-        /// <param name="logTimeStamp"> The <see cref="DateTimeOffset"/>? to use. </param>
-        /// <param name="expand"> The <see cref="string"/> to use. </param>
+        /// <param name="logTimeStamp"> Filters returned log entries by the requested timestamp. </param>
+        /// <param name="expand"> Expand details. Supported details are: logs,resources,projects,tasks. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         public virtual Pageable<Models.Operation> List(DateTimeOffset? logTimeStamp = null, string expand = null, CancellationToken cancellationToken = default)
         {
