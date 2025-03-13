@@ -295,13 +295,14 @@ namespace Eryph.ComputeClient.Models
         /// <summary> Initializes a new instance of <see cref="Models.Catlet"/>. </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
+        /// <param name="vmId"> The ID of the corresponding Hyper-V virtual machine. </param>
         /// <param name="project"></param>
         /// <param name="status"></param>
         /// <param name="networks"></param>
         /// <param name="networkAdapters"></param>
         /// <param name="drives"></param>
         /// <returns> A new <see cref="Models.Catlet"/> instance for mocking. </returns>
-        public static Catlet Catlet(string id = null, string name = null, Project project = null, CatletStatus status = default, IEnumerable<CatletNetwork> networks = null, IEnumerable<CatletNetworkAdapter> networkAdapters = null, IEnumerable<CatletDrive> drives = null)
+        public static Catlet Catlet(string id = null, string name = null, string vmId = null, Project project = null, CatletStatus status = default, IEnumerable<CatletNetwork> networks = null, IEnumerable<CatletNetworkAdapter> networkAdapters = null, IEnumerable<CatletDrive> drives = null)
         {
             networks ??= new List<CatletNetwork>();
             networkAdapters ??= new List<CatletNetworkAdapter>();
@@ -310,6 +311,7 @@ namespace Eryph.ComputeClient.Models
             return new Catlet(
                 id,
                 name,
+                vmId,
                 project,
                 status,
                 networks?.ToList(),

@@ -21,6 +21,7 @@ namespace Eryph.ComputeClient.Models
             }
             string id = default;
             string name = default;
+            string vmId = default;
             Project project = default;
             CatletStatus status = default;
             IReadOnlyList<CatletNetwork> networks = default;
@@ -36,6 +37,11 @@ namespace Eryph.ComputeClient.Models
                 if (property.NameEquals("name"u8))
                 {
                     name = property.Value.GetString();
+                    continue;
+                }
+                if (property.NameEquals("vm_id"u8))
+                {
+                    vmId = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("project"u8))
@@ -94,6 +100,7 @@ namespace Eryph.ComputeClient.Models
             return new Catlet(
                 id,
                 name,
+                vmId,
                 project,
                 status,
                 networks ?? new ChangeTrackingList<CatletNetwork>(),
