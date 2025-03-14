@@ -16,17 +16,20 @@ namespace Eryph.ComputeClient.Models
         /// <summary> Initializes a new instance of <see cref="Catlet"/>. </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
+        /// <param name="vmId"> The ID of the corresponding Hyper-V virtual machine. </param>
         /// <param name="project"></param>
         /// <param name="status"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="name"/> or <paramref name="project"/> is null. </exception>
-        internal Catlet(string id, string name, Project project, CatletStatus status)
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="name"/>, <paramref name="vmId"/> or <paramref name="project"/> is null. </exception>
+        internal Catlet(string id, string name, string vmId, Project project, CatletStatus status)
         {
             Argument.AssertNotNull(id, nameof(id));
             Argument.AssertNotNull(name, nameof(name));
+            Argument.AssertNotNull(vmId, nameof(vmId));
             Argument.AssertNotNull(project, nameof(project));
 
             Id = id;
             Name = name;
+            VmId = vmId;
             Project = project;
             Status = status;
             Networks = new ChangeTrackingList<CatletNetwork>();
@@ -37,15 +40,17 @@ namespace Eryph.ComputeClient.Models
         /// <summary> Initializes a new instance of <see cref="Catlet"/>. </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
+        /// <param name="vmId"> The ID of the corresponding Hyper-V virtual machine. </param>
         /// <param name="project"></param>
         /// <param name="status"></param>
         /// <param name="networks"></param>
         /// <param name="networkAdapters"></param>
         /// <param name="drives"></param>
-        internal Catlet(string id, string name, Project project, CatletStatus status, IReadOnlyList<CatletNetwork> networks, IReadOnlyList<CatletNetworkAdapter> networkAdapters, IReadOnlyList<CatletDrive> drives)
+        internal Catlet(string id, string name, string vmId, Project project, CatletStatus status, IReadOnlyList<CatletNetwork> networks, IReadOnlyList<CatletNetworkAdapter> networkAdapters, IReadOnlyList<CatletDrive> drives)
         {
             Id = id;
             Name = name;
+            VmId = vmId;
             Project = project;
             Status = status;
             Networks = networks;
@@ -57,6 +62,8 @@ namespace Eryph.ComputeClient.Models
         public string Id { get; }
         /// <summary> Gets the name. </summary>
         public string Name { get; }
+        /// <summary> The ID of the corresponding Hyper-V virtual machine. </summary>
+        public string VmId { get; }
         /// <summary> Gets the project. </summary>
         public Project Project { get; }
         /// <summary> Gets the status. </summary>
