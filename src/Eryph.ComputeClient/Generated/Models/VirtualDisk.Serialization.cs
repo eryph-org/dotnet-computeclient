@@ -25,10 +25,12 @@ namespace Eryph.ComputeClient.Models
             string dataStore = default;
             Project project = default;
             string environment = default;
+            DiskStatus status = default;
             VirtualDiskGeneInfo gene = default;
             string path = default;
             long? sizeBytes = default;
             string parentId = default;
+            string parentPath = default;
             IReadOnlyList<VirtualDiskAttachedCatlet> attachedCatlets = default;
             foreach (var property in element.EnumerateObject())
             {
@@ -60,6 +62,11 @@ namespace Eryph.ComputeClient.Models
                 if (property.NameEquals("environment"u8))
                 {
                     environment = property.Value.GetString();
+                    continue;
+                }
+                if (property.NameEquals("status"u8))
+                {
+                    status = new DiskStatus(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("gene"u8))
@@ -101,6 +108,16 @@ namespace Eryph.ComputeClient.Models
                     parentId = property.Value.GetString();
                     continue;
                 }
+                if (property.NameEquals("parent_path"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        parentPath = null;
+                        continue;
+                    }
+                    parentPath = property.Value.GetString();
+                    continue;
+                }
                 if (property.NameEquals("attached_catlets"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
@@ -123,10 +140,12 @@ namespace Eryph.ComputeClient.Models
                 dataStore,
                 project,
                 environment,
+                status,
                 gene,
                 path,
                 sizeBytes,
                 parentId,
+                parentPath,
                 attachedCatlets ?? new ChangeTrackingList<VirtualDiskAttachedCatlet>());
         }
 
