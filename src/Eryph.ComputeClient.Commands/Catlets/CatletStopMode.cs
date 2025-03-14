@@ -10,4 +10,5 @@ public enum CatletStopMode
 {
     Shutdown = 0,
     Hard = 1,
+    Kill = 2,
 }

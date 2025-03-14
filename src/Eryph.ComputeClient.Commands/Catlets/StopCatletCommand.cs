@@ -39,6 +39,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
             {
                 CatletStopMode.Shutdown => Models.CatletStopMode.Shutdown,
                 CatletStopMode.Hard => Models.CatletStopMode.Hard,
+                CatletStopMode.Kill => Models.CatletStopMode.Kill,
                 _ => throw new PSArgumentOutOfRangeException("The stop mode is not supported", Mode, nameof(Mode)),
             };
 
