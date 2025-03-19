@@ -31,7 +31,10 @@ namespace Eryph.ComputeClient.Commands.Catlets
         [Parameter]
         public CatletStopMode Mode { get; set; }
 
-        private bool _yesToAll, _noToAll;
+        private bool _yesToAll;
+        private bool _noToAll;
+        private bool _yesToKillAll;
+        private bool _noToKillAll;
 
         protected override void ProcessRecord()
         {
@@ -58,6 +61,17 @@ namespace Eryph.ComputeClient.Commands.Catlets
 
                 if (!Force && !ShouldContinue($"Catlet '{catlet.Name}' (Id:{id}) will be stopped!", "Warning!",
                     ref _yesToAll, ref _noToAll))
+                {
+                    continue;
+                }
+
+                if (Mode == CatletStopMode.Kill
+                    && !Force
+                    && !ShouldContinue(
+                        $"The worker process of catlet '{catlet.Name}' (Id:{id}) will be terminated! "
+                        + "This can cause inconsistent behavior in Hyper-V and should only be done when the VM does not respond to normal commands.",
+                        "Danger!",
+                        true, ref _yesToKillAll, ref _noToKillAll))
                 {
                     continue;
                 }
