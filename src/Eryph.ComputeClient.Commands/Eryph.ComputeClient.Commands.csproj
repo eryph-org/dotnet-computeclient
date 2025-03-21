@@ -8,10 +8,10 @@
 
   <ItemGroup>
     <PackageReference Include="Eryph.ClientRuntime.Powershell" Version="0.8.1" />
-    <PackageReference Include="Eryph.ConfigModel.Catlets.Json" Version="0.8.0" />
-    <PackageReference Include="Eryph.ConfigModel.Catlets.Yaml" Version="0.8.0" />
-    <PackageReference Include="Eryph.ConfigModel.Networks.Json" Version="0.8.0" />
-    <PackageReference Include="Eryph.ConfigModel.Networks.Yaml" Version="0.8.0" />
+    <PackageReference Include="Eryph.ConfigModel.Catlets.Json" Version="0.8.1-PullRequest0102.2" />
+    <PackageReference Include="Eryph.ConfigModel.Catlets.Yaml" Version="0.8.1-PullRequest0102.2" />
+    <PackageReference Include="Eryph.ConfigModel.Networks.Json" Version="0.8.1-PullRequest0102.2" />
+    <PackageReference Include="Eryph.ConfigModel.Networks.Yaml" Version="0.8.1-PullRequest0102.2" />
     <PackageReference Include="PowerShellStandard.Library" Version="5.1.1">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
