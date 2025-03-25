@@ -192,6 +192,7 @@ namespace Eryph.ComputeClient.Models
         /// <param name="dataStore"></param>
         /// <param name="project"></param>
         /// <param name="environment"></param>
+        /// <param name="status"></param>
         /// <param name="gene"></param>
         /// <param name="path">
         /// The file system path of the virtual disk. This information
@@ -199,9 +200,14 @@ namespace Eryph.ComputeClient.Models
         /// </param>
         /// <param name="sizeBytes"></param>
         /// <param name="parentId"> The ID of the parent disk when this disk is a differential disk. </param>
+        /// <param name="parentPath">
+        /// The file system path of the virtual disk's parent. This information
+        /// is only available to administrators. The ParentPath might be populated
+        /// even if the ParentId is missing. In this case, the disk chain is corrupted.
+        /// </param>
         /// <param name="attachedCatlets"></param>
         /// <returns> A new <see cref="Models.VirtualDisk"/> instance for mocking. </returns>
-        public static VirtualDisk VirtualDisk(string id = null, string name = null, string location = null, string dataStore = null, Project project = null, string environment = null, VirtualDiskGeneInfo gene = null, string path = null, long? sizeBytes = null, string parentId = null, IEnumerable<VirtualDiskAttachedCatlet> attachedCatlets = null)
+        public static VirtualDisk VirtualDisk(string id = null, string name = null, string location = null, string dataStore = null, Project project = null, string environment = null, DiskStatus status = default, VirtualDiskGeneInfo gene = null, string path = null, long? sizeBytes = null, string parentId = null, string parentPath = null, IEnumerable<VirtualDiskAttachedCatlet> attachedCatlets = null)
         {
             attachedCatlets ??= new List<VirtualDiskAttachedCatlet>();
 
@@ -212,10 +218,12 @@ namespace Eryph.ComputeClient.Models
                 dataStore,
                 project,
                 environment,
+                status,
                 gene,
                 path,
                 sizeBytes,
                 parentId,
+                parentPath,
                 attachedCatlets?.ToList());
         }
 

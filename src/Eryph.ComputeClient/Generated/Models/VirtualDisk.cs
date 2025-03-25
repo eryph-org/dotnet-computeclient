@@ -20,8 +20,9 @@ namespace Eryph.ComputeClient.Models
         /// <param name="dataStore"></param>
         /// <param name="project"></param>
         /// <param name="environment"></param>
+        /// <param name="status"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="name"/>, <paramref name="location"/>, <paramref name="dataStore"/>, <paramref name="project"/> or <paramref name="environment"/> is null. </exception>
-        internal VirtualDisk(string id, string name, string location, string dataStore, Project project, string environment)
+        internal VirtualDisk(string id, string name, string location, string dataStore, Project project, string environment, DiskStatus status)
         {
             Argument.AssertNotNull(id, nameof(id));
             Argument.AssertNotNull(name, nameof(name));
@@ -36,6 +37,7 @@ namespace Eryph.ComputeClient.Models
             DataStore = dataStore;
             Project = project;
             Environment = environment;
+            Status = status;
             AttachedCatlets = new ChangeTrackingList<VirtualDiskAttachedCatlet>();
         }
 
@@ -46,6 +48,7 @@ namespace Eryph.ComputeClient.Models
         /// <param name="dataStore"></param>
         /// <param name="project"></param>
         /// <param name="environment"></param>
+        /// <param name="status"></param>
         /// <param name="gene"></param>
         /// <param name="path">
         /// The file system path of the virtual disk. This information
@@ -53,8 +56,13 @@ namespace Eryph.ComputeClient.Models
         /// </param>
         /// <param name="sizeBytes"></param>
         /// <param name="parentId"> The ID of the parent disk when this disk is a differential disk. </param>
+        /// <param name="parentPath">
+        /// The file system path of the virtual disk's parent. This information
+        /// is only available to administrators. The ParentPath might be populated
+        /// even if the ParentId is missing. In this case, the disk chain is corrupted.
+        /// </param>
         /// <param name="attachedCatlets"></param>
-        internal VirtualDisk(string id, string name, string location, string dataStore, Project project, string environment, VirtualDiskGeneInfo gene, string path, long? sizeBytes, string parentId, IReadOnlyList<VirtualDiskAttachedCatlet> attachedCatlets)
+        internal VirtualDisk(string id, string name, string location, string dataStore, Project project, string environment, DiskStatus status, VirtualDiskGeneInfo gene, string path, long? sizeBytes, string parentId, string parentPath, IReadOnlyList<VirtualDiskAttachedCatlet> attachedCatlets)
         {
             Id = id;
             Name = name;
@@ -62,10 +70,12 @@ namespace Eryph.ComputeClient.Models
             DataStore = dataStore;
             Project = project;
             Environment = environment;
+            Status = status;
             Gene = gene;
             Path = path;
             SizeBytes = sizeBytes;
             ParentId = parentId;
+            ParentPath = parentPath;
             AttachedCatlets = attachedCatlets;
         }
 
@@ -81,6 +91,8 @@ namespace Eryph.ComputeClient.Models
         public Project Project { get; }
         /// <summary> Gets the environment. </summary>
         public string Environment { get; }
+        /// <summary> Gets the status. </summary>
+        public DiskStatus Status { get; }
         /// <summary> Gets the gene. </summary>
         public VirtualDiskGeneInfo Gene { get; }
         /// <summary>
@@ -92,6 +104,12 @@ namespace Eryph.ComputeClient.Models
         public long? SizeBytes { get; }
         /// <summary> The ID of the parent disk when this disk is a differential disk. </summary>
         public string ParentId { get; }
+        /// <summary>
+        /// The file system path of the virtual disk's parent. This information
+        /// is only available to administrators. The ParentPath might be populated
+        /// even if the ParentId is missing. In this case, the disk chain is corrupted.
+        /// </summary>
+        public string ParentPath { get; }
         /// <summary> Gets the attached catlets. </summary>
         public IReadOnlyList<VirtualDiskAttachedCatlet> AttachedCatlets { get; }
     }
