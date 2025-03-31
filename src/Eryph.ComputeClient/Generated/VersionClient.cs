@@ -40,7 +40,7 @@ namespace Eryph.ComputeClient
 
         /// <summary> Get the API version. </summary>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <remarks> Gets the API version which can be used by clients for compatibility checks. This endpoint has been added with eryph v0.3. </remarks>
+        /// <remarks> Gets the API version which can be used by clients for compatibility checks. This endpoint was added with eryph v0.3. </remarks>
         public virtual async Task<Response<ApiVersionResponse>> GetAsync(CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("VersionClient.Get");
@@ -58,7 +58,7 @@ namespace Eryph.ComputeClient
 
         /// <summary> Get the API version. </summary>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <remarks> Gets the API version which can be used by clients for compatibility checks. This endpoint has been added with eryph v0.3. </remarks>
+        /// <remarks> Gets the API version which can be used by clients for compatibility checks. This endpoint was added with eryph v0.3. </remarks>
         public virtual Response<ApiVersionResponse> Get(CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("VersionClient.Get");
