@@ -42,7 +42,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
             bool skipVariablesPrompt,
             bool showSecrets)
         {
-            if (!skipVariablesPrompt)
+            if (!skipVariablesPrompt && GetApiVersion().IsCompatible(1, 1))
             {
                 var serializedConfig = CatletConfigJsonSerializer.SerializeToElement(catletConfig);
                 var operation = Factory.CreateCatletsClient().PopulateConfigVariables(

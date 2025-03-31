@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Management.Automation;
+using System.Net;
 using System.Threading.Tasks;
 using Azure;
 using Eryph.ClientRuntime.Configuration;
@@ -18,6 +19,8 @@ namespace Eryph.ComputeClient.Commands
     public abstract class ComputeCmdLet : EryphCmdLet
     {
         protected ComputeClientsFactory Factory;
+
+        [CanBeNull] private ApiVersionInfo _apiVersionInfo;
 
         protected bool IsDebugEnabled
         {
@@ -62,7 +65,26 @@ namespace Eryph.ComputeClient.Commands
             var credentials = GetClientCredentials();
             var endpointLookup = new EndpointLookup(new PowershellEnvironment(SessionState));
             return endpointLookup.GetEndpoint(endpoint, credentials.Configuration);
+        }
 
+        protected ApiVersionInfo GetApiVersion()
+        {
+            if (_apiVersionInfo is not null)
+                return _apiVersionInfo;
+
+            try
+            {
+                var response = Factory.CreateVersionClient().Get();
+                var version = response.Value.LatestVersion;
+                _apiVersionInfo = new ApiVersionInfo(version.Major, version.Minor);
+            }
+            catch (RequestFailedException rfe) when (rfe.Status == (int)HttpStatusCode.NotFound)
+            {
+                // Fallback for versions of eryph which do not support the version endpoint yet
+                _apiVersionInfo = new ApiVersionInfo(1, 0);
+            }
+
+            return _apiVersionInfo;
         }
 
         protected void WriteResources(Operation operation, ResourceType resourceType)
