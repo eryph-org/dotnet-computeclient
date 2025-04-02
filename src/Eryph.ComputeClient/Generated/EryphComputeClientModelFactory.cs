@@ -444,6 +444,29 @@ namespace Eryph.ComputeClient.Models
             return new CatletConfiguration(configuration);
         }
 
+        /// <summary> Initializes a new instance of <see cref="Models.ApiVersionResponse"/>. </summary>
+        /// <param name="latestVersion"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="latestVersion"/> is null. </exception>
+        /// <returns> A new <see cref="Models.ApiVersionResponse"/> instance for mocking. </returns>
+        public static ApiVersionResponse ApiVersionResponse(ApiVersion latestVersion = null)
+        {
+            if (latestVersion == null)
+            {
+                throw new ArgumentNullException(nameof(latestVersion));
+            }
+
+            return new ApiVersionResponse(latestVersion);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.ApiVersion"/>. </summary>
+        /// <param name="major"></param>
+        /// <param name="minor"></param>
+        /// <returns> A new <see cref="Models.ApiVersion"/> instance for mocking. </returns>
+        public static ApiVersion ApiVersion(int major = default, int minor = default)
+        {
+            return new ApiVersion(major, minor);
+        }
+
         /// <summary> Initializes a new instance of <see cref="Models.VirtualNetworkConfiguration"/>. </summary>
         /// <param name="configuration"> Anything. </param>
         /// <returns> A new <see cref="Models.VirtualNetworkConfiguration"/> instance for mocking. </returns>

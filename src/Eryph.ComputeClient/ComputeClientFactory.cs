@@ -39,5 +39,8 @@ namespace Eryph.ComputeClient
 
         public VirtualDisksClient CreateVirtualDisksClient(string? scopes = null) =>
             new(new ClientDiagnostics(_options), _options.BuildHttpPipeline(_options.ClientCredentials, scopes), _endpoint);
+
+        public VersionClient CreateVersionClient(string? scopes = null) =>
+            new(new ClientDiagnostics(_options), _options.BuildHttpPipeline(_options.ClientCredentials, scopes), _endpoint);
     }
 }
