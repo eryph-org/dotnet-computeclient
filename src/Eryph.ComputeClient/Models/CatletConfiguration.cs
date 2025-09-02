@@ -8,4 +8,6 @@ namespace Eryph.ComputeClient.Models;
 public partial class CatletConfiguration
 {
     public JsonElement Configuration { get; }
+
+    public JsonElement DeployedConfig { get; }
 }

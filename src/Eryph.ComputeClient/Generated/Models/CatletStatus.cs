@@ -27,6 +27,7 @@ namespace Eryph.ComputeClient.Models
         private const string RunningValue = "Running";
         private const string PendingValue = "Pending";
         private const string ErrorValue = "Error";
+        private const string MissingValue = "Missing";
 
         /// <summary> Unknown. </summary>
         public static CatletStatus Unknown { get; } = new CatletStatus(UnknownValue);
@@ -38,6 +39,8 @@ namespace Eryph.ComputeClient.Models
         public static CatletStatus Pending { get; } = new CatletStatus(PendingValue);
         /// <summary> Error. </summary>
         public static CatletStatus Error { get; } = new CatletStatus(ErrorValue);
+        /// <summary> Missing. </summary>
+        public static CatletStatus Missing { get; } = new CatletStatus(MissingValue);
         /// <summary> Determines if two <see cref="CatletStatus"/> values are the same. </summary>
         public static bool operator ==(CatletStatus left, CatletStatus right) => left.Equals(right);
         /// <summary> Determines if two <see cref="CatletStatus"/> values are not the same. </summary>

@@ -24,6 +24,7 @@ namespace Eryph.ComputeClient.Models
             string vmId = default;
             Project project = default;
             CatletStatus status = default;
+            bool isDeprecated = default;
             IReadOnlyList<CatletNetwork> networks = default;
             IReadOnlyList<CatletNetworkAdapter> networkAdapters = default;
             IReadOnlyList<CatletDrive> drives = default;
@@ -52,6 +53,11 @@ namespace Eryph.ComputeClient.Models
                 if (property.NameEquals("status"u8))
                 {
                     status = new CatletStatus(property.Value.GetString());
+                    continue;
+                }
+                if (property.NameEquals("is_deprecated"u8))
+                {
+                    isDeprecated = property.Value.GetBoolean();
                     continue;
                 }
                 if (property.NameEquals("networks"u8))
@@ -103,6 +109,7 @@ namespace Eryph.ComputeClient.Models
                 vmId,
                 project,
                 status,
+                isDeprecated,
                 networks ?? new ChangeTrackingList<CatletNetwork>(),
                 networkAdapters ?? new ChangeTrackingList<CatletNetworkAdapter>(),
                 drives ?? new ChangeTrackingList<CatletDrive>());

@@ -306,11 +306,16 @@ namespace Eryph.ComputeClient.Models
         /// <param name="vmId"> The ID of the corresponding Hyper-V virtual machine. </param>
         /// <param name="project"></param>
         /// <param name="status"></param>
+        /// <param name="isDeprecated">
+        /// Indicates that the catlet has been created with an old
+        /// version of eryph and is missing some metadata. Hence,
+        /// it cannot be edited and its configuration cannot be inspected.
+        /// </param>
         /// <param name="networks"></param>
         /// <param name="networkAdapters"></param>
         /// <param name="drives"></param>
         /// <returns> A new <see cref="Models.Catlet"/> instance for mocking. </returns>
-        public static Catlet Catlet(string id = null, string name = null, string vmId = null, Project project = null, CatletStatus status = default, IEnumerable<CatletNetwork> networks = null, IEnumerable<CatletNetworkAdapter> networkAdapters = null, IEnumerable<CatletDrive> drives = null)
+        public static Catlet Catlet(string id = null, string name = null, string vmId = null, Project project = null, CatletStatus status = default, bool isDeprecated = default, IEnumerable<CatletNetwork> networks = null, IEnumerable<CatletNetworkAdapter> networkAdapters = null, IEnumerable<CatletDrive> drives = null)
         {
             networks ??= new List<CatletNetwork>();
             networkAdapters ??= new List<CatletNetworkAdapter>();
@@ -322,6 +327,7 @@ namespace Eryph.ComputeClient.Models
                 vmId,
                 project,
                 status,
+                isDeprecated,
                 networks?.ToList(),
                 networkAdapters?.ToList(),
                 drives?.ToList());
@@ -438,10 +444,18 @@ namespace Eryph.ComputeClient.Models
 
         /// <summary> Initializes a new instance of <see cref="Models.CatletConfiguration"/>. </summary>
         /// <param name="configuration"> Anything. </param>
+        /// <param name="deployedConfig"> Anything. </param>
+        /// <param name="configYaml"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="configYaml"/> is null. </exception>
         /// <returns> A new <see cref="Models.CatletConfiguration"/> instance for mocking. </returns>
-        public static CatletConfiguration CatletConfiguration(JsonElement configuration = default)
+        public static CatletConfiguration CatletConfiguration(JsonElement configuration = default, JsonElement deployedConfig = default, string configYaml = null)
         {
-            return new CatletConfiguration(configuration);
+            if (configYaml == null)
+            {
+                throw new ArgumentNullException(nameof(configYaml));
+            }
+
+            return new CatletConfiguration(configuration, deployedConfig, configYaml);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.ApiVersionResponse"/>. </summary>

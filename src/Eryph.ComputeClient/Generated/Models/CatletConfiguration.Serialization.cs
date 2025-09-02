@@ -19,6 +19,8 @@ namespace Eryph.ComputeClient.Models
                 return null;
             }
             JsonElement configuration = default;
+            JsonElement deployedConfig = default;
+            string configYaml = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("configuration"u8))
@@ -26,8 +28,18 @@ namespace Eryph.ComputeClient.Models
                     configuration = property.Value.Clone();
                     continue;
                 }
+                if (property.NameEquals("deployed_config"u8))
+                {
+                    deployedConfig = property.Value.Clone();
+                    continue;
+                }
+                if (property.NameEquals("config_yaml"u8))
+                {
+                    configYaml = property.Value.GetString();
+                    continue;
+                }
             }
-            return new CatletConfiguration(configuration);
+            return new CatletConfiguration(configuration, deployedConfig, configYaml);
         }
 
         /// <summary> Deserializes the model from a raw response. </summary>
