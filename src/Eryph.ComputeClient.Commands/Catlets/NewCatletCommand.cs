@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
 using System.Management.Automation;
 using System.Text;
 using Eryph.ComputeClient.Models;
@@ -84,15 +85,25 @@ namespace Eryph.ComputeClient.Commands.Catlets
                 };
             }
 
-            if (config == null)
+            if (config is null)
                 return;
+
+            if (config.ConfigType is not (null or CatletConfigType.Specification))
+                throw new InvalidOperationException($"The provided configuration has the type {config.ConfigType}. "
+                                                    + "Please use a fresh configuration when creating a new catlet.");
 
             if (!string.IsNullOrWhiteSpace(ProjectName))
                 config.Project = ProjectName;
 
-
             if (!string.IsNullOrWhiteSpace(Name))
                 config.Name = Name;
+
+            var catletName = string.IsNullOrWhiteSpace(config.Name) ? "catlet" : config.Name;
+            var projectName = string.IsNullOrWhiteSpace(config.Project) ? "default" : config.Project;
+            var projectId = GetProjectId(projectName);
+            var existingCatlets = Factory.CreateCatletsClient().List(projectId: projectId).ToList();
+            if (existingCatlets.Any(c => string.Equals(c.Name, catletName, StringComparison.OrdinalIgnoreCase)))
+                throw new InvalidOperationException($"A catlet with name '{catletName}' already exists in project '{projectName}'. Catlet names must be unique within a project.");
 
             if (!PopulateVariables(config, Variables, SkipVariablesPrompt, false))
                 return;
