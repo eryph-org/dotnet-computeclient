@@ -190,46 +190,6 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Expand catlet config. </summary>
-        /// <param name="id"> The <see cref="string"/> to use. </param>
-        /// <param name="body"> The <see cref="ExpandCatletConfigRequestBody"/> to use. </param>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <remarks> Expand the config for an existing catlet. </remarks>
-        public virtual async Task<Response<Models.Operation>> ExpandConfigAsync(string id, ExpandCatletConfigRequestBody body, CancellationToken cancellationToken = default)
-        {
-            using var scope = _clientDiagnostics.CreateScope("CatletsClient.ExpandConfig");
-            scope.Start();
-            try
-            {
-                return await RestClient.ExpandConfigAsync(id, body, cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
-        }
-
-        /// <summary> Expand catlet config. </summary>
-        /// <param name="id"> The <see cref="string"/> to use. </param>
-        /// <param name="body"> The <see cref="ExpandCatletConfigRequestBody"/> to use. </param>
-        /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <remarks> Expand the config for an existing catlet. </remarks>
-        public virtual Response<Models.Operation> ExpandConfig(string id, ExpandCatletConfigRequestBody body, CancellationToken cancellationToken = default)
-        {
-            using var scope = _clientDiagnostics.CreateScope("CatletsClient.ExpandConfig");
-            scope.Start();
-            try
-            {
-                return RestClient.ExpandConfig(id, body, cancellationToken);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
-        }
-
         /// <summary> Expand new catlet config. </summary>
         /// <param name="body"> The <see cref="ExpandNewCatletConfigRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>

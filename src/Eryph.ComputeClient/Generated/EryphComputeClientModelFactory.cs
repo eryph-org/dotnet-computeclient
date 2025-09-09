@@ -444,18 +444,10 @@ namespace Eryph.ComputeClient.Models
 
         /// <summary> Initializes a new instance of <see cref="Models.CatletConfiguration"/>. </summary>
         /// <param name="configuration"> Anything. </param>
-        /// <param name="deployedConfig"> Anything. </param>
-        /// <param name="configYaml"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="configYaml"/> is null. </exception>
         /// <returns> A new <see cref="Models.CatletConfiguration"/> instance for mocking. </returns>
-        public static CatletConfiguration CatletConfiguration(JsonElement configuration = default, JsonElement deployedConfig = default, string configYaml = null)
+        public static CatletConfiguration CatletConfiguration(JsonElement configuration = default)
         {
-            if (configYaml == null)
-            {
-                throw new ArgumentNullException(nameof(configYaml));
-            }
-
-            return new CatletConfiguration(configuration, deployedConfig, configYaml);
+            return new CatletConfiguration(configuration);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.ApiVersionResponse"/>. </summary>

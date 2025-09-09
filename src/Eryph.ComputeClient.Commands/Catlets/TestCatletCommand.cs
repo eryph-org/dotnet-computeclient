@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Management.Automation;
 using System.Text;
-using System.Threading.Tasks;
 using Eryph.ComputeClient.Models;
 using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.Json;
@@ -25,11 +22,6 @@ namespace Eryph.ComputeClient.Commands.Catlets
             ValueFromPipeline = true,
             Mandatory = true)]
         [Parameter(
-            ParameterSetName = "InputObjectAndId",
-            Position = 0,
-            ValueFromPipeline = true,
-            Mandatory = true)]
-        [Parameter(
             ParameterSetName = "QuickInputObject",
             Position = 0,
             ValueFromPipeline = true,
@@ -38,20 +30,12 @@ namespace Eryph.ComputeClient.Commands.Catlets
         public string[] InputObject { get; set; }
 
         [Parameter(ParameterSetName = "Config", Mandatory = true)]
-        [Parameter(ParameterSetName = "ConfigAndId", Mandatory = true)]
         [Parameter(ParameterSetName = "QuickConfig", Mandatory = true)]
         [ValidateNotNullOrEmpty]
         public string Config { get; set; }
 
-        [Parameter(ParameterSetName = "InputObjectAndId", Mandatory = true)]
-        [Parameter(ParameterSetName = "ConfigAndId", Mandatory = true)]
-        [ValidateNotNullOrEmpty]
-        public string Id { get; set; }
-
         [Parameter(ParameterSetName = "Config")]
-        [Parameter(ParameterSetName = "ConfigAndId")]
         [Parameter(ParameterSetName = "InputObject")]
-        [Parameter(ParameterSetName = "InputObjectAndId")]
         [Parameter(ParameterSetName = "Parent")]
         public SwitchParameter NoWait { get; set; }
 
@@ -86,9 +70,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
         public SwitchParameter SkipVariablesPrompt { get; set; }
 
         [Parameter(ParameterSetName = "Config")]
-        [Parameter(ParameterSetName = "ConfigAndId")]
         [Parameter(ParameterSetName = "InputObject")]
-        [Parameter(ParameterSetName = "InputObjectAndId")]
         [Parameter(ParameterSetName = "Parent")]
         public SwitchParameter ShowSecrets { get; set; }
 
@@ -144,22 +126,16 @@ namespace Eryph.ComputeClient.Commands.Catlets
             if (!string.IsNullOrWhiteSpace(Name))
                 config.Name = Name;
 
-            if (string.IsNullOrWhiteSpace(Id) && !PopulateVariables(config, Variables, SkipVariablesPrompt, ShowSecrets))
+            if (!PopulateVariables(config, Variables, SkipVariablesPrompt, ShowSecrets))
                 return;
 
             var serializedConfig = CatletConfigJsonSerializer.SerializeToElement(config);
 
-            var operation = string.IsNullOrWhiteSpace(Id)
-                ? client.ExpandNewConfig(new ExpandNewCatletConfigRequest(serializedConfig)
-                {   
-                    CorrelationId = Guid.NewGuid(),
-                    ShowSecrets = ShowSecrets,
-                })
-                : client.ExpandConfig(Id, new ExpandCatletConfigRequestBody(serializedConfig)
-                {
-                    CorrelationId = Guid.NewGuid(),
-                    ShowSecrets = ShowSecrets,
-                });
+            var operation = client.ExpandNewConfig(new ExpandNewCatletConfigRequest(serializedConfig)
+            {   
+                CorrelationId = Guid.NewGuid(),
+                ShowSecrets = ShowSecrets,
+            });
 
             if (NoWait)
             {

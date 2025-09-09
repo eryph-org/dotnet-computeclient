@@ -5,7 +5,6 @@
 
 #nullable disable
 
-using System;
 using System.Text.Json;
 
 namespace Eryph.ComputeClient.Models
@@ -15,18 +14,9 @@ namespace Eryph.ComputeClient.Models
     {
         /// <summary> Initializes a new instance of <see cref="CatletConfiguration"/>. </summary>
         /// <param name="configuration"> Anything. </param>
-        /// <param name="deployedConfig"> Anything. </param>
-        /// <param name="configYaml"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="configYaml"/> is null. </exception>
-        internal CatletConfiguration(JsonElement configuration, JsonElement deployedConfig, string configYaml)
+        internal CatletConfiguration(JsonElement configuration)
         {
-            Argument.AssertNotNull(configYaml, nameof(configYaml));
-
             Configuration = configuration;
-            DeployedConfig = deployedConfig;
-            ConfigYaml = configYaml;
         }
-        /// <summary> Gets the config yaml. </summary>
-        public string ConfigYaml { get; }
     }
 }
