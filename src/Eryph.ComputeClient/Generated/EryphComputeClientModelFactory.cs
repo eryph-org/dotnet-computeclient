@@ -306,11 +306,16 @@ namespace Eryph.ComputeClient.Models
         /// <param name="vmId"> The ID of the corresponding Hyper-V virtual machine. </param>
         /// <param name="project"></param>
         /// <param name="status"></param>
+        /// <param name="isDeprecated">
+        /// Indicates that the catlet has been created with an old
+        /// version of eryph and is missing some metadata. Hence,
+        /// it cannot be edited and its configuration cannot be inspected.
+        /// </param>
         /// <param name="networks"></param>
         /// <param name="networkAdapters"></param>
         /// <param name="drives"></param>
         /// <returns> A new <see cref="Models.Catlet"/> instance for mocking. </returns>
-        public static Catlet Catlet(string id = null, string name = null, string vmId = null, Project project = null, CatletStatus status = default, IEnumerable<CatletNetwork> networks = null, IEnumerable<CatletNetworkAdapter> networkAdapters = null, IEnumerable<CatletDrive> drives = null)
+        public static Catlet Catlet(string id = null, string name = null, string vmId = null, Project project = null, CatletStatus status = default, bool isDeprecated = default, IEnumerable<CatletNetwork> networks = null, IEnumerable<CatletNetworkAdapter> networkAdapters = null, IEnumerable<CatletDrive> drives = null)
         {
             networks ??= new List<CatletNetwork>();
             networkAdapters ??= new List<CatletNetworkAdapter>();
@@ -322,6 +327,7 @@ namespace Eryph.ComputeClient.Models
                 vmId,
                 project,
                 status,
+                isDeprecated,
                 networks?.ToList(),
                 networkAdapters?.ToList(),
                 drives?.ToList());

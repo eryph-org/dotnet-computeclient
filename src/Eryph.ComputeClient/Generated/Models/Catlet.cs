@@ -19,8 +19,13 @@ namespace Eryph.ComputeClient.Models
         /// <param name="vmId"> The ID of the corresponding Hyper-V virtual machine. </param>
         /// <param name="project"></param>
         /// <param name="status"></param>
+        /// <param name="isDeprecated">
+        /// Indicates that the catlet has been created with an old
+        /// version of eryph and is missing some metadata. Hence,
+        /// it cannot be edited and its configuration cannot be inspected.
+        /// </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="name"/>, <paramref name="vmId"/> or <paramref name="project"/> is null. </exception>
-        internal Catlet(string id, string name, string vmId, Project project, CatletStatus status)
+        internal Catlet(string id, string name, string vmId, Project project, CatletStatus status, bool isDeprecated)
         {
             Argument.AssertNotNull(id, nameof(id));
             Argument.AssertNotNull(name, nameof(name));
@@ -32,6 +37,7 @@ namespace Eryph.ComputeClient.Models
             VmId = vmId;
             Project = project;
             Status = status;
+            IsDeprecated = isDeprecated;
             Networks = new ChangeTrackingList<CatletNetwork>();
             NetworkAdapters = new ChangeTrackingList<CatletNetworkAdapter>();
             Drives = new ChangeTrackingList<CatletDrive>();
@@ -43,16 +49,22 @@ namespace Eryph.ComputeClient.Models
         /// <param name="vmId"> The ID of the corresponding Hyper-V virtual machine. </param>
         /// <param name="project"></param>
         /// <param name="status"></param>
+        /// <param name="isDeprecated">
+        /// Indicates that the catlet has been created with an old
+        /// version of eryph and is missing some metadata. Hence,
+        /// it cannot be edited and its configuration cannot be inspected.
+        /// </param>
         /// <param name="networks"></param>
         /// <param name="networkAdapters"></param>
         /// <param name="drives"></param>
-        internal Catlet(string id, string name, string vmId, Project project, CatletStatus status, IReadOnlyList<CatletNetwork> networks, IReadOnlyList<CatletNetworkAdapter> networkAdapters, IReadOnlyList<CatletDrive> drives)
+        internal Catlet(string id, string name, string vmId, Project project, CatletStatus status, bool isDeprecated, IReadOnlyList<CatletNetwork> networks, IReadOnlyList<CatletNetworkAdapter> networkAdapters, IReadOnlyList<CatletDrive> drives)
         {
             Id = id;
             Name = name;
             VmId = vmId;
             Project = project;
             Status = status;
+            IsDeprecated = isDeprecated;
             Networks = networks;
             NetworkAdapters = networkAdapters;
             Drives = drives;
@@ -68,6 +80,12 @@ namespace Eryph.ComputeClient.Models
         public Project Project { get; }
         /// <summary> Gets the status. </summary>
         public CatletStatus Status { get; }
+        /// <summary>
+        /// Indicates that the catlet has been created with an old
+        /// version of eryph and is missing some metadata. Hence,
+        /// it cannot be edited and its configuration cannot be inspected.
+        /// </summary>
+        public bool IsDeprecated { get; }
         /// <summary> Gets the networks. </summary>
         public IReadOnlyList<CatletNetwork> Networks { get; }
         /// <summary> Gets the network adapters. </summary>

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Management.Automation;
 using Eryph.ComputeClient.Models;
+using Eryph.ConfigModel.Catlets;
 using Eryph.ConfigModel.Json;
 using JetBrains.Annotations;
 
@@ -32,6 +33,24 @@ namespace Eryph.ComputeClient.Commands.Catlets
             foreach (var id in Id)
             {
                 var config = DeserializeConfigString(Config);
+
+                if (config.ConfigType is not CatletConfigType.Instance)
+                {
+                    WriteError(new ErrorRecord(
+                        new InvalidOperationException("The catlet configuration is not an instance configuration "
+                                                      + "and cannot be used to update an existing catlet. Please "
+                                                      + "use Get-Catlet -Config to get a configuration for update purposes."),
+                        "ConfigIsNotInstanceSpecific",
+                        ErrorCategory.InvalidOperation,
+                        id));
+                }
+
+                if (config.Fodder is not null || config.Variables is not null)
+                    WriteWarning("The fodder and variables cannot be changed when updating a catlet. The provided data will be ignored.");
+
+                config.Fodder = null;
+                config.Variables = null;
+
                 var configJson = CatletConfigJsonSerializer.SerializeToElement(config);
 
                 WaitForOperation(client.Update(

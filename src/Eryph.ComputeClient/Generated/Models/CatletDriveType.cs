@@ -22,22 +22,22 @@ namespace Eryph.ComputeClient.Models
             _value = value ?? throw new ArgumentNullException(nameof(value));
         }
 
-        private const string VHDValue = "VHD";
-        private const string SharedVHDValue = "SharedVHD";
-        private const string PHDValue = "PHD";
-        private const string DVDValue = "DVD";
-        private const string VHDSetValue = "VHDSet";
+        private const string VhdValue = "Vhd";
+        private const string SharedVhdValue = "SharedVhd";
+        private const string PhdValue = "Phd";
+        private const string DvdValue = "Dvd";
+        private const string VhdSetValue = "VhdSet";
 
-        /// <summary> VHD. </summary>
-        public static CatletDriveType VHD { get; } = new CatletDriveType(VHDValue);
-        /// <summary> SharedVHD. </summary>
-        public static CatletDriveType SharedVHD { get; } = new CatletDriveType(SharedVHDValue);
-        /// <summary> PHD. </summary>
-        public static CatletDriveType PHD { get; } = new CatletDriveType(PHDValue);
-        /// <summary> DVD. </summary>
-        public static CatletDriveType DVD { get; } = new CatletDriveType(DVDValue);
-        /// <summary> VHDSet. </summary>
-        public static CatletDriveType VHDSet { get; } = new CatletDriveType(VHDSetValue);
+        /// <summary> Vhd. </summary>
+        public static CatletDriveType Vhd { get; } = new CatletDriveType(VhdValue);
+        /// <summary> SharedVhd. </summary>
+        public static CatletDriveType SharedVhd { get; } = new CatletDriveType(SharedVhdValue);
+        /// <summary> Phd. </summary>
+        public static CatletDriveType Phd { get; } = new CatletDriveType(PhdValue);
+        /// <summary> Dvd. </summary>
+        public static CatletDriveType Dvd { get; } = new CatletDriveType(DvdValue);
+        /// <summary> VhdSet. </summary>
+        public static CatletDriveType VhdSet { get; } = new CatletDriveType(VhdSetValue);
         /// <summary> Determines if two <see cref="CatletDriveType"/> values are the same. </summary>
         public static bool operator ==(CatletDriveType left, CatletDriveType right) => left.Equals(right);
         /// <summary> Determines if two <see cref="CatletDriveType"/> values are not the same. </summary>
