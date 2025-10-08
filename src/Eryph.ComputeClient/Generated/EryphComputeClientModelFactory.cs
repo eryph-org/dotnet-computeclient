@@ -442,6 +442,35 @@ namespace Eryph.ComputeClient.Models
                 ipNetwork);
         }
 
+        /// <summary> Initializes a new instance of <see cref="Models.CatletSpecification"/>. </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="project"></param>
+        /// <param name="latestId"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="name"/>, <paramref name="project"/> or <paramref name="latestId"/> is null. </exception>
+        /// <returns> A new <see cref="Models.CatletSpecification"/> instance for mocking. </returns>
+        public static CatletSpecification CatletSpecification(string id = null, string name = null, Project project = null, string latestId = null)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+            if (name == null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            if (project == null)
+            {
+                throw new ArgumentNullException(nameof(project));
+            }
+            if (latestId == null)
+            {
+                throw new ArgumentNullException(nameof(latestId));
+            }
+
+            return new CatletSpecification(id, name, project, latestId);
+        }
+
         /// <summary> Initializes a new instance of <see cref="Models.CatletConfiguration"/>. </summary>
         /// <param name="configuration"> Anything. </param>
         /// <returns> A new <see cref="Models.CatletConfiguration"/> instance for mocking. </returns>

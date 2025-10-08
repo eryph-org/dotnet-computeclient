@@ -23,12 +23,15 @@ namespace Eryph.ComputeClient.Models
         }
 
         private const string CatletValue = "Catlet";
+        private const string CatletSpecificationValue = "CatletSpecification";
         private const string VirtualDiskValue = "VirtualDisk";
         private const string VirtualNetworkValue = "VirtualNetwork";
         private const string CatletFarmValue = "CatletFarm";
 
         /// <summary> Catlet. </summary>
         public static ResourceType Catlet { get; } = new ResourceType(CatletValue);
+        /// <summary> CatletSpecification. </summary>
+        public static ResourceType CatletSpecification { get; } = new ResourceType(CatletSpecificationValue);
         /// <summary> VirtualDisk. </summary>
         public static ResourceType VirtualDisk { get; } = new ResourceType(VirtualDiskValue);
         /// <summary> VirtualNetwork. </summary>
