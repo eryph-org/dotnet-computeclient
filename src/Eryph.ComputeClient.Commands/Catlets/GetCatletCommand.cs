@@ -83,21 +83,5 @@ namespace Eryph.ComputeClient.Commands.Catlets
             WriteObject(yaml);
 
         }
-
-    }
-
-    public class ProjectNotFoundException : Exception
-    {
-        public ProjectNotFoundException()
-        {
-        }
-
-        public ProjectNotFoundException(string project) : base($"Project {project} not found")
-        {
-        }
-
-        public ProjectNotFoundException(string project, Exception inner) : base($"Project {project} not found", inner)
-        {
-        }
     }
 }

@@ -20,8 +20,9 @@ namespace Eryph.ComputeClient.Models
             }
             string id = default;
             string name = default;
+            string architecture = default;
             Project project = default;
-            string latestId = default;
+            CatletSpecificationVersionInfo latest = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("id"u8))
@@ -34,18 +35,23 @@ namespace Eryph.ComputeClient.Models
                     name = property.Value.GetString();
                     continue;
                 }
+                if (property.NameEquals("architecture"u8))
+                {
+                    architecture = property.Value.GetString();
+                    continue;
+                }
                 if (property.NameEquals("project"u8))
                 {
                     project = Project.DeserializeProject(property.Value);
                     continue;
                 }
-                if (property.NameEquals("latest_id"u8))
+                if (property.NameEquals("latest"u8))
                 {
-                    latestId = property.Value.GetString();
+                    latest = CatletSpecificationVersionInfo.DeserializeCatletSpecificationVersionInfo(property.Value);
                     continue;
                 }
             }
-            return new CatletSpecification(id, name, project, latestId);
+            return new CatletSpecification(id, name, architecture, project, latest);
         }
 
         /// <summary> Deserializes the model from a raw response. </summary>

@@ -20,6 +20,7 @@ namespace Eryph.ComputeClient
     {
         private readonly HttpPipeline _pipeline;
         private readonly Uri _endpoint;
+        private readonly string _apiVersion;
 
         /// <summary> The ClientDiagnostics is used to provide tracing support for the client library. </summary>
         internal ClientDiagnostics ClientDiagnostics { get; }
@@ -28,12 +29,14 @@ namespace Eryph.ComputeClient
         /// <param name="clientDiagnostics"> The handler for diagnostic messaging in the client. </param>
         /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
         /// <param name="endpoint"> server parameter. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="clientDiagnostics"/> or <paramref name="pipeline"/> is null. </exception>
-        public CatletSpecificationsRestClient(ClientDiagnostics clientDiagnostics, HttpPipeline pipeline, Uri endpoint = null)
+        /// <param name="apiVersion"> Api Version. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="clientDiagnostics"/>, <paramref name="pipeline"/> or <paramref name="apiVersion"/> is null. </exception>
+        public CatletSpecificationsRestClient(ClientDiagnostics clientDiagnostics, HttpPipeline pipeline, Uri endpoint = null, string apiVersion = "1.0")
         {
             ClientDiagnostics = clientDiagnostics ?? throw new ArgumentNullException(nameof(clientDiagnostics));
             _pipeline = pipeline ?? throw new ArgumentNullException(nameof(pipeline));
             _endpoint = endpoint ?? new Uri("https://localhost:8000/compute");
+            _apiVersion = apiVersion ?? throw new ArgumentNullException(nameof(apiVersion));
         }
 
         internal HttpMessage CreateCreateRequest(NewCatletSpecificationRequest body)
@@ -83,6 +86,135 @@ namespace Eryph.ComputeClient
         public Response<Models.Operation> Create(NewCatletSpecificationRequest body = null, CancellationToken cancellationToken = default)
         {
             using var message = CreateCreateRequest(body);
+            _pipeline.Send(message, cancellationToken);
+            switch (message.Response.Status)
+            {
+                case 202:
+                    {
+                        Models.Operation value = default;
+                        using var document = JsonDocument.Parse(message.Response.ContentStream);
+                        value = Models.Operation.DeserializeOperation(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        internal HttpMessage CreateListRequest(string projectId)
+        {
+            var message = _pipeline.CreateMessage();
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/v1/catlet_specifications", false);
+            if (projectId != null)
+            {
+                uri.AppendQuery("project_id", projectId, true);
+            }
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json, application/problem+json");
+            return message;
+        }
+
+        /// <summary> List all catlet specifications. </summary>
+        /// <param name="projectId"> The <see cref="string"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public async Task<Response<CatletSpecificationList>> ListAsync(string projectId = null, CancellationToken cancellationToken = default)
+        {
+            using var message = CreateListRequest(projectId);
+            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        CatletSpecificationList value = default;
+                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
+                        value = CatletSpecificationList.DeserializeCatletSpecificationList(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        /// <summary> List all catlet specifications. </summary>
+        /// <param name="projectId"> The <see cref="string"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public Response<CatletSpecificationList> List(string projectId = null, CancellationToken cancellationToken = default)
+        {
+            using var message = CreateListRequest(projectId);
+            _pipeline.Send(message, cancellationToken);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        CatletSpecificationList value = default;
+                        using var document = JsonDocument.Parse(message.Response.ContentStream);
+                        value = CatletSpecificationList.DeserializeCatletSpecificationList(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        internal HttpMessage CreateDeleteRequest(string id)
+        {
+            var message = _pipeline.CreateMessage();
+            var request = message.Request;
+            request.Method = RequestMethod.Delete;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/v1/catlet_specifications/", false);
+            uri.AppendPath(id, true);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json, application/problem+json");
+            return message;
+        }
+
+        /// <summary> Delete a catlet specification. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
+        /// <remarks> Deletes a catlet specification. </remarks>
+        public async Task<Response<Models.Operation>> DeleteAsync(string id, CancellationToken cancellationToken = default)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            using var message = CreateDeleteRequest(id);
+            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            switch (message.Response.Status)
+            {
+                case 202:
+                    {
+                        Models.Operation value = default;
+                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
+                        value = Models.Operation.DeserializeOperation(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        /// <summary> Delete a catlet specification. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
+        /// <remarks> Deletes a catlet specification. </remarks>
+        public Response<Models.Operation> Delete(string id, CancellationToken cancellationToken = default)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            using var message = CreateDeleteRequest(id);
             _pipeline.Send(message, cancellationToken);
             switch (message.Response.Status)
             {
@@ -159,6 +291,322 @@ namespace Eryph.ComputeClient
                         CatletSpecification value = default;
                         using var document = JsonDocument.Parse(message.Response.ContentStream);
                         value = CatletSpecification.DeserializeCatletSpecification(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        internal HttpMessage CreateUpdateRequest(string id, UpdateCatletSpecificationRequestBody body)
+        {
+            var message = _pipeline.CreateMessage();
+            var request = message.Request;
+            request.Method = RequestMethod.Put;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/v1/catlet_specifications/", false);
+            uri.AppendPath(id, true);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json, application/problem+json");
+            request.Headers.Add("Content-Type", "application/json");
+            var content = new Utf8JsonRequestContent();
+            content.JsonWriter.WriteObjectValue(body);
+            request.Content = content;
+            return message;
+        }
+
+        /// <summary> Update a catlet specification. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="UpdateCatletSpecificationRequestBody"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="body"/> is null. </exception>
+        public async Task<Response<Models.Operation>> UpdateAsync(string id, UpdateCatletSpecificationRequestBody body, CancellationToken cancellationToken = default)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+            if (body == null)
+            {
+                throw new ArgumentNullException(nameof(body));
+            }
+
+            using var message = CreateUpdateRequest(id, body);
+            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            switch (message.Response.Status)
+            {
+                case 202:
+                    {
+                        Models.Operation value = default;
+                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
+                        value = Models.Operation.DeserializeOperation(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        /// <summary> Update a catlet specification. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="UpdateCatletSpecificationRequestBody"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="body"/> is null. </exception>
+        public Response<Models.Operation> Update(string id, UpdateCatletSpecificationRequestBody body, CancellationToken cancellationToken = default)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+            if (body == null)
+            {
+                throw new ArgumentNullException(nameof(body));
+            }
+
+            using var message = CreateUpdateRequest(id, body);
+            _pipeline.Send(message, cancellationToken);
+            switch (message.Response.Status)
+            {
+                case 202:
+                    {
+                        Models.Operation value = default;
+                        using var document = JsonDocument.Parse(message.Response.ContentStream);
+                        value = Models.Operation.DeserializeOperation(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        internal HttpMessage CreateDeployRequest(string id, DeployCatletSpecificationRequestBody body)
+        {
+            var message = _pipeline.CreateMessage();
+            var request = message.Request;
+            request.Method = RequestMethod.Put;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/v1/catlet_specifications/", false);
+            uri.AppendPath(id, true);
+            uri.AppendPath("/deploy", false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json, application/problem+json");
+            request.Headers.Add("Content-Type", "application/json");
+            var content = new Utf8JsonRequestContent();
+            content.JsonWriter.WriteObjectValue(body);
+            request.Content = content;
+            return message;
+        }
+
+        /// <summary> Deploy a catlet specification. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="DeployCatletSpecificationRequestBody"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="body"/> is null. </exception>
+        public async Task<Response<Models.Operation>> DeployAsync(string id, DeployCatletSpecificationRequestBody body, CancellationToken cancellationToken = default)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+            if (body == null)
+            {
+                throw new ArgumentNullException(nameof(body));
+            }
+
+            using var message = CreateDeployRequest(id, body);
+            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            switch (message.Response.Status)
+            {
+                case 202:
+                    {
+                        Models.Operation value = default;
+                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
+                        value = Models.Operation.DeserializeOperation(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        /// <summary> Deploy a catlet specification. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="DeployCatletSpecificationRequestBody"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="body"/> is null. </exception>
+        public Response<Models.Operation> Deploy(string id, DeployCatletSpecificationRequestBody body, CancellationToken cancellationToken = default)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+            if (body == null)
+            {
+                throw new ArgumentNullException(nameof(body));
+            }
+
+            using var message = CreateDeployRequest(id, body);
+            _pipeline.Send(message, cancellationToken);
+            switch (message.Response.Status)
+            {
+                case 202:
+                    {
+                        Models.Operation value = default;
+                        using var document = JsonDocument.Parse(message.Response.ContentStream);
+                        value = Models.Operation.DeserializeOperation(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        internal HttpMessage CreateGetVersionRequest(string specificationId, string id)
+        {
+            var message = _pipeline.CreateMessage();
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/catlet_specifications/", false);
+            uri.AppendPath(specificationId, true);
+            uri.AppendPath("/versions/", false);
+            uri.AppendPath(id, true);
+            uri.AppendQuery("api-version", _apiVersion, true);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json, application/problem+json");
+            return message;
+        }
+
+        /// <summary> Get a catlet specification version. </summary>
+        /// <param name="specificationId"> The <see cref="string"/> to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="specificationId"/> or <paramref name="id"/> is null. </exception>
+        public async Task<Response<CatletSpecificationVersion>> GetVersionAsync(string specificationId, string id, CancellationToken cancellationToken = default)
+        {
+            if (specificationId == null)
+            {
+                throw new ArgumentNullException(nameof(specificationId));
+            }
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            using var message = CreateGetVersionRequest(specificationId, id);
+            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        CatletSpecificationVersion value = default;
+                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
+                        value = CatletSpecificationVersion.DeserializeCatletSpecificationVersion(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        /// <summary> Get a catlet specification version. </summary>
+        /// <param name="specificationId"> The <see cref="string"/> to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="specificationId"/> or <paramref name="id"/> is null. </exception>
+        public Response<CatletSpecificationVersion> GetVersion(string specificationId, string id, CancellationToken cancellationToken = default)
+        {
+            if (specificationId == null)
+            {
+                throw new ArgumentNullException(nameof(specificationId));
+            }
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            using var message = CreateGetVersionRequest(specificationId, id);
+            _pipeline.Send(message, cancellationToken);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        CatletSpecificationVersion value = default;
+                        using var document = JsonDocument.Parse(message.Response.ContentStream);
+                        value = CatletSpecificationVersion.DeserializeCatletSpecificationVersion(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        internal HttpMessage CreateListVersionsRequest(string specificationId)
+        {
+            var message = _pipeline.CreateMessage();
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/catlet_specifications/", false);
+            uri.AppendPath(specificationId, true);
+            uri.AppendPath("/versions", false);
+            uri.AppendQuery("api-version", _apiVersion, true);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json, application/problem+json");
+            return message;
+        }
+
+        /// <summary> List all catlet specification versions. </summary>
+        /// <param name="specificationId"> The <see cref="string"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="specificationId"/> is null. </exception>
+        public async Task<Response<CatletSpecificationVersionList>> ListVersionsAsync(string specificationId, CancellationToken cancellationToken = default)
+        {
+            if (specificationId == null)
+            {
+                throw new ArgumentNullException(nameof(specificationId));
+            }
+
+            using var message = CreateListVersionsRequest(specificationId);
+            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        CatletSpecificationVersionList value = default;
+                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
+                        value = CatletSpecificationVersionList.DeserializeCatletSpecificationVersionList(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        /// <summary> List all catlet specification versions. </summary>
+        /// <param name="specificationId"> The <see cref="string"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="specificationId"/> is null. </exception>
+        public Response<CatletSpecificationVersionList> ListVersions(string specificationId, CancellationToken cancellationToken = default)
+        {
+            if (specificationId == null)
+            {
+                throw new ArgumentNullException(nameof(specificationId));
+            }
+
+            using var message = CreateListVersionsRequest(specificationId);
+            _pipeline.Send(message, cancellationToken);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        CatletSpecificationVersionList value = default;
+                        using var document = JsonDocument.Parse(message.Response.ContentStream);
+                        value = CatletSpecificationVersionList.DeserializeCatletSpecificationVersionList(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:

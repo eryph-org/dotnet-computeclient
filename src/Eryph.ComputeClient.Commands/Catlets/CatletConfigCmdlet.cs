@@ -59,12 +59,21 @@ namespace Eryph.ComputeClient.Commands.Catlets
                 }
             }
 
-            if (catletConfig.Variables is not { Length: > 0 })
+            return PopulateVariables(catletConfig.Variables, variables, skipVariablesPrompt, showSecrets);
+        }
+
+        protected bool PopulateVariables(
+            VariableConfig[] variableConfigs,
+            Hashtable variables,
+            bool skipVariablesPrompt,
+            bool showSecrets)
+        {
+            if (variableConfigs is not { Length: > 0 })
                 return true;
 
-            ApplyVariablesFromParameter(catletConfig.Variables, variables);
-            
-            return skipVariablesPrompt || ReadVariablesFromInput(catletConfig.Variables, showSecrets);
+            ApplyVariablesFromParameter(variableConfigs, variables);
+
+            return skipVariablesPrompt || ReadVariablesFromInput(variableConfigs, showSecrets);
         }
 
         private static void ApplyVariablesFromParameter(VariableConfig[] variableConfigs, Hashtable variables)

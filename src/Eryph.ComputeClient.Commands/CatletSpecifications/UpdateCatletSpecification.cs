@@ -1,15 +1,18 @@
-﻿using System;
+﻿using JetBrains.Annotations;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Management.Automation;
 using System.Text;
+using System.Threading.Tasks;
 using Eryph.ComputeClient.Models;
-using JetBrains.Annotations;
 
 namespace Eryph.ComputeClient.Commands.CatletSpecifications;
 
 [PublicAPI]
-[Cmdlet(VerbsCommon.New, "CatletSpecification")]
-[OutputType(typeof(Operation), typeof(CatletSpecification))]
-public class NewCatletSpecification : CatletSpecificationCmdlet
+[Cmdlet(VerbsData.Update, "CatletSpecification")]
+[OutputType(typeof(Operation))]
+public class UpdateCatletSpecification : CatletSpecificationCmdlet
 {
     [Parameter(
         ParameterSetName = "InputObject",
@@ -19,24 +22,26 @@ public class NewCatletSpecification : CatletSpecificationCmdlet
     [AllowEmptyString]
     public string[] InputObject { get; set; }
 
-    [Parameter(ParameterSetName = "Config", Mandatory = true)]
+    [Parameter(
+        ParameterSetName = "Config",
+        Mandatory = true)]
     [ValidateNotNullOrEmpty]
     public string Config { get; set; }
 
-    [Parameter]
+    [Parameter(Mandatory = true)]
     [ValidateNotNullOrEmpty]
-    public string Name { get; set; }
+    public string Id { get; set; }
 
     [Parameter]
     [ValidateNotNullOrEmpty]
     public string Comment { get; set; }
 
     [Parameter]
-    [ValidateNotNullOrEmpty]
-    public string ProjectName { get; set; }
+    public SwitchParameter NoWait { get; set; }
 
     [Parameter]
-    public SwitchParameter NoWait { get; set; }
+    [ValidateNotNullOrEmpty]
+    public string Name { get; set; }
 
     private StringBuilder _input = new StringBuilder();
 
@@ -47,6 +52,7 @@ public class NewCatletSpecification : CatletSpecificationCmdlet
             foreach (var input in InputObject)
             {
                 _input.AppendLine($"{input}");
+
             }
         }
 
@@ -60,8 +66,7 @@ public class NewCatletSpecification : CatletSpecificationCmdlet
         if (string.IsNullOrEmpty(input))
             return;
 
-        var projectName = string.IsNullOrWhiteSpace(ProjectName) ? "default" : ProjectName;
-        var projectId = GetProjectId(projectName);
+        
         //var existingCatlets = Factory.CreateCatletsClient().List(projectId: projectId).ToList();
         //if (existingCatlets.Any(c => string.Equals(c.Name, catletName, StringComparison.OrdinalIgnoreCase)))
         //    throw new InvalidOperationException($"A catlet with name '{catletName}' already exists in project '{projectName}'. Catlet names must be unique within a project.");
@@ -71,10 +76,10 @@ public class NewCatletSpecification : CatletSpecificationCmdlet
 
         //var serializedConfig = CatletConfigJsonSerializer.SerializeToElement(config);
 
-        WaitForOperation(Factory.CreateCatletSpecificationsClient().Create(
-                new NewCatletSpecificationRequest(Guid.Parse(projectId), Name, input)
+        WaitForOperation(Factory.CreateCatletSpecificationsClient().Update(
+                Id,
+                new UpdateCatletSpecificationRequestBody(input)
                 {
-                    Comment = Comment,
                     CorrelationId = Guid.NewGuid(),
                 }),
             NoWait,

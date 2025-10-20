@@ -12,7 +12,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
 {
     [PublicAPI]
     [Cmdlet(VerbsCommon.New, "Catlet")]
-    [OutputType(typeof(Operation), typeof(Catlet), typeof(Catlet))]
+    [OutputType(typeof(Operation), typeof(Catlet))]
     public class NewCatletCommand : CatletConfigCmdlet
     {
         [Parameter(

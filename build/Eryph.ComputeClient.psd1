@@ -77,6 +77,7 @@ CmdletsToExport = @(
     "New-Catlet",
     "Remove-Catlet",
     "Update-Catlet",
+    "Deploy-Catlet",
     "Start-Catlet",
     "Stop-Catlet",
     "Get-CatletIp",
@@ -96,7 +97,11 @@ CmdletsToExport = @(
     "Get-EryphProjectMemberRole",
     "Remove-EryphProjectMemberRole",
     "Test-Catlet",
-    "New-CatletSpecification"
+    "Get-CatletSpecification",
+    "New-CatletSpecification",
+    "Update-CatletSpecification",
+    "Remove-CatletSpecification",
+    "Get-CatletSpecificationVersion"
 )
 
 # Variables to export from this module

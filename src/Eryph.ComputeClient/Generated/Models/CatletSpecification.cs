@@ -15,29 +15,34 @@ namespace Eryph.ComputeClient.Models
         /// <summary> Initializes a new instance of <see cref="CatletSpecification"/>. </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
+        /// <param name="architecture"></param>
         /// <param name="project"></param>
-        /// <param name="latestId"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="name"/>, <paramref name="project"/> or <paramref name="latestId"/> is null. </exception>
-        internal CatletSpecification(string id, string name, Project project, string latestId)
+        /// <param name="latest"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="name"/>, <paramref name="architecture"/>, <paramref name="project"/> or <paramref name="latest"/> is null. </exception>
+        internal CatletSpecification(string id, string name, string architecture, Project project, CatletSpecificationVersionInfo latest)
         {
             Argument.AssertNotNull(id, nameof(id));
             Argument.AssertNotNull(name, nameof(name));
+            Argument.AssertNotNull(architecture, nameof(architecture));
             Argument.AssertNotNull(project, nameof(project));
-            Argument.AssertNotNull(latestId, nameof(latestId));
+            Argument.AssertNotNull(latest, nameof(latest));
 
             Id = id;
             Name = name;
+            Architecture = architecture;
             Project = project;
-            LatestId = latestId;
+            Latest = latest;
         }
 
         /// <summary> Gets the id. </summary>
         public string Id { get; }
         /// <summary> Gets the name. </summary>
         public string Name { get; }
+        /// <summary> Gets the architecture. </summary>
+        public string Architecture { get; }
         /// <summary> Gets the project. </summary>
         public Project Project { get; }
-        /// <summary> Gets the latest id. </summary>
-        public string LatestId { get; }
+        /// <summary> Gets the latest. </summary>
+        public CatletSpecificationVersionInfo Latest { get; }
     }
 }

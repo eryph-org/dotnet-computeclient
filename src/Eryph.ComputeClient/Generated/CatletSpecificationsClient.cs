@@ -8,7 +8,9 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Autorest.CSharp.Core;
 using Azure;
+using Azure.Core;
 using Azure.Core.Pipeline;
 using Eryph.ComputeClient.Models;
 
@@ -30,10 +32,11 @@ namespace Eryph.ComputeClient
         /// <param name="clientDiagnostics"> The handler for diagnostic messaging in the client. </param>
         /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
         /// <param name="endpoint"> server parameter. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="clientDiagnostics"/> or <paramref name="pipeline"/> is null. </exception>
-        internal CatletSpecificationsClient(ClientDiagnostics clientDiagnostics, HttpPipeline pipeline, Uri endpoint = null)
+        /// <param name="apiVersion"> Api Version. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="clientDiagnostics"/>, <paramref name="pipeline"/> or <paramref name="apiVersion"/> is null. </exception>
+        internal CatletSpecificationsClient(ClientDiagnostics clientDiagnostics, HttpPipeline pipeline, Uri endpoint = null, string apiVersion = "1.0")
         {
-            RestClient = new CatletSpecificationsRestClient(clientDiagnostics, pipeline, endpoint);
+            RestClient = new CatletSpecificationsRestClient(clientDiagnostics, pipeline, endpoint, apiVersion);
             _clientDiagnostics = clientDiagnostics;
             _pipeline = pipeline;
         }
@@ -66,6 +69,44 @@ namespace Eryph.ComputeClient
             try
             {
                 return RestClient.Create(body, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Delete a catlet specification. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Deletes a catlet specification. </remarks>
+        public virtual async Task<Response<Models.Operation>> DeleteAsync(string id, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("CatletSpecificationsClient.Delete");
+            scope.Start();
+            try
+            {
+                return await RestClient.DeleteAsync(id, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Delete a catlet specification. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Deletes a catlet specification. </remarks>
+        public virtual Response<Models.Operation> Delete(string id, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("CatletSpecificationsClient.Delete");
+            scope.Start();
+            try
+            {
+                return RestClient.Delete(id, cancellationToken);
             }
             catch (Exception e)
             {
@@ -108,6 +149,162 @@ namespace Eryph.ComputeClient
                 scope.Failed(e);
                 throw;
             }
+        }
+
+        /// <summary> Update a catlet specification. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="UpdateCatletSpecificationRequestBody"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public virtual async Task<Response<Models.Operation>> UpdateAsync(string id, UpdateCatletSpecificationRequestBody body, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("CatletSpecificationsClient.Update");
+            scope.Start();
+            try
+            {
+                return await RestClient.UpdateAsync(id, body, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Update a catlet specification. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="UpdateCatletSpecificationRequestBody"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public virtual Response<Models.Operation> Update(string id, UpdateCatletSpecificationRequestBody body, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("CatletSpecificationsClient.Update");
+            scope.Start();
+            try
+            {
+                return RestClient.Update(id, body, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Deploy a catlet specification. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="DeployCatletSpecificationRequestBody"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public virtual async Task<Response<Models.Operation>> DeployAsync(string id, DeployCatletSpecificationRequestBody body, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("CatletSpecificationsClient.Deploy");
+            scope.Start();
+            try
+            {
+                return await RestClient.DeployAsync(id, body, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Deploy a catlet specification. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="DeployCatletSpecificationRequestBody"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public virtual Response<Models.Operation> Deploy(string id, DeployCatletSpecificationRequestBody body, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("CatletSpecificationsClient.Deploy");
+            scope.Start();
+            try
+            {
+                return RestClient.Deploy(id, body, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Get a catlet specification version. </summary>
+        /// <param name="specificationId"> The <see cref="string"/> to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public virtual async Task<Response<CatletSpecificationVersion>> GetVersionAsync(string specificationId, string id, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("CatletSpecificationsClient.GetVersion");
+            scope.Start();
+            try
+            {
+                return await RestClient.GetVersionAsync(specificationId, id, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Get a catlet specification version. </summary>
+        /// <param name="specificationId"> The <see cref="string"/> to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public virtual Response<CatletSpecificationVersion> GetVersion(string specificationId, string id, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("CatletSpecificationsClient.GetVersion");
+            scope.Start();
+            try
+            {
+                return RestClient.GetVersion(specificationId, id, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> List all catlet specifications. </summary>
+        /// <param name="projectId"> The <see cref="string"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public virtual AsyncPageable<CatletSpecification> ListAsync(string projectId = null, CancellationToken cancellationToken = default)
+        {
+            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(projectId);
+            return GeneratorPageableHelpers.CreateAsyncPageable(FirstPageRequest, null, CatletSpecification.DeserializeCatletSpecification, _clientDiagnostics, _pipeline, "CatletSpecificationsClient.List", "value", null, cancellationToken);
+        }
+
+        /// <summary> List all catlet specifications. </summary>
+        /// <param name="projectId"> The <see cref="string"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        public virtual Pageable<CatletSpecification> List(string projectId = null, CancellationToken cancellationToken = default)
+        {
+            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListRequest(projectId);
+            return GeneratorPageableHelpers.CreatePageable(FirstPageRequest, null, CatletSpecification.DeserializeCatletSpecification, _clientDiagnostics, _pipeline, "CatletSpecificationsClient.List", "value", null, cancellationToken);
+        }
+
+        /// <summary> List all catlet specification versions. </summary>
+        /// <param name="specificationId"> The <see cref="string"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="specificationId"/> is null. </exception>
+        public virtual AsyncPageable<CatletSpecificationVersion> ListVersionsAsync(string specificationId, CancellationToken cancellationToken = default)
+        {
+            Argument.AssertNotNullOrEmpty(specificationId, nameof(specificationId));
+
+            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListVersionsRequest(specificationId);
+            return GeneratorPageableHelpers.CreateAsyncPageable(FirstPageRequest, null, CatletSpecificationVersion.DeserializeCatletSpecificationVersion, _clientDiagnostics, _pipeline, "CatletSpecificationsClient.ListVersions", "value", null, cancellationToken);
+        }
+
+        /// <summary> List all catlet specification versions. </summary>
+        /// <param name="specificationId"> The <see cref="string"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="specificationId"/> is null. </exception>
+        public virtual Pageable<CatletSpecificationVersion> ListVersions(string specificationId, CancellationToken cancellationToken = default)
+        {
+            Argument.AssertNotNullOrEmpty(specificationId, nameof(specificationId));
+
+            HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListVersionsRequest(specificationId);
+            return GeneratorPageableHelpers.CreatePageable(FirstPageRequest, null, CatletSpecificationVersion.DeserializeCatletSpecificationVersion, _clientDiagnostics, _pipeline, "CatletSpecificationsClient.ListVersions", "value", null, cancellationToken);
         }
     }
 }

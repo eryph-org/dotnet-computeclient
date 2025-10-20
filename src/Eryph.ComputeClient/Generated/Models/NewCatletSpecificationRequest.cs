@@ -31,12 +31,14 @@ namespace Eryph.ComputeClient.Models
         /// <param name="correlationId"></param>
         /// <param name="projectId"></param>
         /// <param name="name"></param>
+        /// <param name="comment"></param>
         /// <param name="configuration"></param>
-        internal NewCatletSpecificationRequest(Guid? correlationId, Guid projectId, string name, string configuration)
+        internal NewCatletSpecificationRequest(Guid? correlationId, Guid projectId, string name, string comment, string configuration)
         {
             CorrelationId = correlationId;
             ProjectId = projectId;
             Name = name;
+            Comment = comment;
             Configuration = configuration;
         }
 
@@ -46,6 +48,8 @@ namespace Eryph.ComputeClient.Models
         public Guid ProjectId { get; }
         /// <summary> Gets the name. </summary>
         public string Name { get; }
+        /// <summary> Gets or sets the comment. </summary>
+        public string Comment { get; set; }
         /// <summary> Gets the configuration. </summary>
         public string Configuration { get; }
     }

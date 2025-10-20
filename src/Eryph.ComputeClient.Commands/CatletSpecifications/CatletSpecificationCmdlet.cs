@@ -19,19 +19,19 @@ public abstract class CatletSpecificationCmdlet : ComputeCmdLet
     protected void WaitForOperation(
         Operation operation,
         bool noWait,
-        bool alwaysWriteMachine,
-        string knownMachineId = null)
+        bool alwaysWriteSpecification,
+        string knownSpecificationId = null)
     {
         if (noWait)
         {
-            if (knownMachineId == null || !alwaysWriteMachine)
+            if (knownSpecificationId == null || !alwaysWriteSpecification)
                 WriteObject(operation);
             else
-                WriteObject(GetSingleCatletSpecification(knownMachineId));
+                WriteObject(GetSingleCatletSpecification(knownSpecificationId));
             return;
         }
 
         var completedOperation = WaitForOperation(operation);
-        WriteResources(completedOperation, ResourceType.Catlet);
+        WriteResources(completedOperation, ResourceType.CatletSpecification);
     }
 }

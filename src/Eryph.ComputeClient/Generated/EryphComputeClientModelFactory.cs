@@ -395,6 +395,50 @@ namespace Eryph.ComputeClient.Models
             return new CatletDrive(type, attachedDiskId);
         }
 
+        /// <summary> Initializes a new instance of <see cref="Models.CatletSpecification"/>. </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="architecture"></param>
+        /// <param name="project"></param>
+        /// <param name="latest"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="name"/>, <paramref name="architecture"/>, <paramref name="project"/> or <paramref name="latest"/> is null. </exception>
+        /// <returns> A new <see cref="Models.CatletSpecification"/> instance for mocking. </returns>
+        public static CatletSpecification CatletSpecification(string id = null, string name = null, string architecture = null, Project project = null, CatletSpecificationVersionInfo latest = null)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+            if (name == null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            if (architecture == null)
+            {
+                throw new ArgumentNullException(nameof(architecture));
+            }
+            if (project == null)
+            {
+                throw new ArgumentNullException(nameof(project));
+            }
+            if (latest == null)
+            {
+                throw new ArgumentNullException(nameof(latest));
+            }
+
+            return new CatletSpecification(id, name, architecture, project, latest);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.CatletSpecificationVersionInfo"/>. </summary>
+        /// <param name="id"></param>
+        /// <param name="createdAt"></param>
+        /// <param name="comment"></param>
+        /// <returns> A new <see cref="Models.CatletSpecificationVersionInfo"/> instance for mocking. </returns>
+        public static CatletSpecificationVersionInfo CatletSpecificationVersionInfo(string id = null, DateTimeOffset createdAt = default, string comment = null)
+        {
+            return new CatletSpecificationVersionInfo(id, createdAt, comment);
+        }
+
         /// <summary> Initializes a new instance of <see cref="Models.GeneWithUsage"/>. </summary>
         /// <param name="id"></param>
         /// <param name="geneType"></param>
@@ -442,35 +486,6 @@ namespace Eryph.ComputeClient.Models
                 ipNetwork);
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.CatletSpecification"/>. </summary>
-        /// <param name="id"></param>
-        /// <param name="name"></param>
-        /// <param name="project"></param>
-        /// <param name="latestId"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="name"/>, <paramref name="project"/> or <paramref name="latestId"/> is null. </exception>
-        /// <returns> A new <see cref="Models.CatletSpecification"/> instance for mocking. </returns>
-        public static CatletSpecification CatletSpecification(string id = null, string name = null, Project project = null, string latestId = null)
-        {
-            if (id == null)
-            {
-                throw new ArgumentNullException(nameof(id));
-            }
-            if (name == null)
-            {
-                throw new ArgumentNullException(nameof(name));
-            }
-            if (project == null)
-            {
-                throw new ArgumentNullException(nameof(project));
-            }
-            if (latestId == null)
-            {
-                throw new ArgumentNullException(nameof(latestId));
-            }
-
-            return new CatletSpecification(id, name, project, latestId);
-        }
-
         /// <summary> Initializes a new instance of <see cref="Models.CatletConfiguration"/>. </summary>
         /// <param name="configuration"> Anything. </param>
         /// <returns> A new <see cref="Models.CatletConfiguration"/> instance for mocking. </returns>
@@ -500,6 +515,18 @@ namespace Eryph.ComputeClient.Models
         public static ApiVersion ApiVersion(int major = default, int minor = default)
         {
             return new ApiVersion(major, minor);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.CatletSpecificationVersion"/>. </summary>
+        /// <param name="id"></param>
+        /// <param name="specificationId"></param>
+        /// <param name="comment"></param>
+        /// <param name="configuration"></param>
+        /// <param name="resolvedConfig"></param>
+        /// <returns> A new <see cref="Models.CatletSpecificationVersion"/> instance for mocking. </returns>
+        public static CatletSpecificationVersion CatletSpecificationVersion(string id = null, string specificationId = null, string comment = null, string configuration = null, string resolvedConfig = null)
+        {
+            return new CatletSpecificationVersion(id, specificationId, comment, configuration, resolvedConfig);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.VirtualNetworkConfiguration"/>. </summary>
