@@ -66,21 +66,13 @@ public class UpdateCatletSpecification : CatletSpecificationCmdlet
         if (string.IsNullOrEmpty(input))
             return;
 
-        
-        //var existingCatlets = Factory.CreateCatletsClient().List(projectId: projectId).ToList();
-        //if (existingCatlets.Any(c => string.Equals(c.Name, catletName, StringComparison.OrdinalIgnoreCase)))
-        //    throw new InvalidOperationException($"A catlet with name '{catletName}' already exists in project '{projectName}'. Catlet names must be unique within a project.");
-
-        //if (!PopulateVariables(config, Variables, SkipVariablesPrompt, false))
-        //    return;
-
-        //var serializedConfig = CatletConfigJsonSerializer.SerializeToElement(config);
-
         WaitForOperation(Factory.CreateCatletSpecificationsClient().Update(
                 Id,
                 new UpdateCatletSpecificationRequestBody(input)
                 {
                     CorrelationId = Guid.NewGuid(),
+                    Comment = Comment,
+                    Name = Name,
                 }),
             NoWait,
             true);

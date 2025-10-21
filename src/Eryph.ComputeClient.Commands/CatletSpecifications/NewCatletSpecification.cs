@@ -62,14 +62,6 @@ public class NewCatletSpecification : CatletSpecificationCmdlet
 
         var projectName = string.IsNullOrWhiteSpace(ProjectName) ? "default" : ProjectName;
         var projectId = GetProjectId(projectName);
-        //var existingCatlets = Factory.CreateCatletsClient().List(projectId: projectId).ToList();
-        //if (existingCatlets.Any(c => string.Equals(c.Name, catletName, StringComparison.OrdinalIgnoreCase)))
-        //    throw new InvalidOperationException($"A catlet with name '{catletName}' already exists in project '{projectName}'. Catlet names must be unique within a project.");
-
-        //if (!PopulateVariables(config, Variables, SkipVariablesPrompt, false))
-        //    return;
-
-        //var serializedConfig = CatletConfigJsonSerializer.SerializeToElement(config);
 
         WaitForOperation(Factory.CreateCatletSpecificationsClient().Create(
                 new NewCatletSpecificationRequest(Guid.Parse(projectId), Name, input)

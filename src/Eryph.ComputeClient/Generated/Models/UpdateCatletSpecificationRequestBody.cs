@@ -25,11 +25,13 @@ namespace Eryph.ComputeClient.Models
         /// <summary> Initializes a new instance of <see cref="UpdateCatletSpecificationRequestBody"/>. </summary>
         /// <param name="correlationId"></param>
         /// <param name="comment"></param>
+        /// <param name="name"></param>
         /// <param name="configuration"></param>
-        internal UpdateCatletSpecificationRequestBody(Guid? correlationId, string comment, string configuration)
+        internal UpdateCatletSpecificationRequestBody(Guid? correlationId, string comment, string name, string configuration)
         {
             CorrelationId = correlationId;
             Comment = comment;
+            Name = name;
             Configuration = configuration;
         }
 
@@ -37,6 +39,8 @@ namespace Eryph.ComputeClient.Models
         public Guid? CorrelationId { get; set; }
         /// <summary> Gets or sets the comment. </summary>
         public string Comment { get; set; }
+        /// <summary> Gets or sets the name. </summary>
+        public string Name { get; set; }
         /// <summary> Gets the configuration. </summary>
         public string Configuration { get; }
     }

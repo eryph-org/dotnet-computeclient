@@ -39,6 +39,18 @@ namespace Eryph.ComputeClient.Models
                     writer.WriteNull("comment");
                 }
             }
+            if (Optional.IsDefined(Name))
+            {
+                if (Name != null)
+                {
+                    writer.WritePropertyName("name"u8);
+                    writer.WriteStringValue(Name);
+                }
+                else
+                {
+                    writer.WriteNull("name");
+                }
+            }
             writer.WritePropertyName("configuration"u8);
             writer.WriteStringValue(Configuration);
             writer.WriteEndObject();
