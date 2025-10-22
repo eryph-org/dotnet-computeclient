@@ -28,6 +28,7 @@ namespace Eryph.ComputeClient.Models
             IReadOnlyList<CatletNetwork> networks = default;
             IReadOnlyList<CatletNetworkAdapter> networkAdapters = default;
             IReadOnlyList<CatletDrive> drives = default;
+            CatletSpecificationInfo specification = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("id"u8))
@@ -102,6 +103,15 @@ namespace Eryph.ComputeClient.Models
                     drives = array;
                     continue;
                 }
+                if (property.NameEquals("specification"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    specification = CatletSpecificationInfo.DeserializeCatletSpecificationInfo(property.Value);
+                    continue;
+                }
             }
             return new Catlet(
                 id,
@@ -112,7 +122,8 @@ namespace Eryph.ComputeClient.Models
                 isDeprecated,
                 networks ?? new ChangeTrackingList<CatletNetwork>(),
                 networkAdapters ?? new ChangeTrackingList<CatletNetworkAdapter>(),
-                drives ?? new ChangeTrackingList<CatletDrive>());
+                drives ?? new ChangeTrackingList<CatletDrive>(),
+                specification);
         }
 
         /// <summary> Deserializes the model from a raw response. </summary>

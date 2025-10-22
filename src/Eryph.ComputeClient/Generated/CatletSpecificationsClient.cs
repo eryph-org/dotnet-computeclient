@@ -265,6 +265,44 @@ namespace Eryph.ComputeClient
             }
         }
 
+        /// <summary> Validate a catlet specification. </summary>
+        /// <param name="body"> The <see cref="ValidateSpecificationRequest"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Validates a catlet specification. </remarks>
+        public virtual async Task<Response<Models.Operation>> ValidateAsync(ValidateSpecificationRequest body = null, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("CatletSpecificationsClient.Validate");
+            scope.Start();
+            try
+            {
+                return await RestClient.ValidateAsync(body, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Validate a catlet specification. </summary>
+        /// <param name="body"> The <see cref="ValidateSpecificationRequest"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Validates a catlet specification. </remarks>
+        public virtual Response<Models.Operation> Validate(ValidateSpecificationRequest body = null, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("CatletSpecificationsClient.Validate");
+            scope.Start();
+            try
+            {
+                return RestClient.Validate(body, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
         /// <summary> List all catlet specifications. </summary>
         /// <param name="projectId"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
@@ -287,24 +325,24 @@ namespace Eryph.ComputeClient
         /// <param name="specificationId"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="specificationId"/> is null. </exception>
-        public virtual AsyncPageable<CatletSpecificationVersion> ListVersionsAsync(string specificationId, CancellationToken cancellationToken = default)
+        public virtual AsyncPageable<CatletSpecificationVersionInfo> ListVersionsAsync(string specificationId, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNullOrEmpty(specificationId, nameof(specificationId));
 
             HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListVersionsRequest(specificationId);
-            return GeneratorPageableHelpers.CreateAsyncPageable(FirstPageRequest, null, CatletSpecificationVersion.DeserializeCatletSpecificationVersion, _clientDiagnostics, _pipeline, "CatletSpecificationsClient.ListVersions", "value", null, cancellationToken);
+            return GeneratorPageableHelpers.CreateAsyncPageable(FirstPageRequest, null, CatletSpecificationVersionInfo.DeserializeCatletSpecificationVersionInfo, _clientDiagnostics, _pipeline, "CatletSpecificationsClient.ListVersions", "value", null, cancellationToken);
         }
 
         /// <summary> List all catlet specification versions. </summary>
         /// <param name="specificationId"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="specificationId"/> is null. </exception>
-        public virtual Pageable<CatletSpecificationVersion> ListVersions(string specificationId, CancellationToken cancellationToken = default)
+        public virtual Pageable<CatletSpecificationVersionInfo> ListVersions(string specificationId, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNullOrEmpty(specificationId, nameof(specificationId));
 
             HttpMessage FirstPageRequest(int? pageSizeHint) => RestClient.CreateListVersionsRequest(specificationId);
-            return GeneratorPageableHelpers.CreatePageable(FirstPageRequest, null, CatletSpecificationVersion.DeserializeCatletSpecificationVersion, _clientDiagnostics, _pipeline, "CatletSpecificationsClient.ListVersions", "value", null, cancellationToken);
+            return GeneratorPageableHelpers.CreatePageable(FirstPageRequest, null, CatletSpecificationVersionInfo.DeserializeCatletSpecificationVersionInfo, _clientDiagnostics, _pipeline, "CatletSpecificationsClient.ListVersions", "value", null, cancellationToken);
         }
     }
 }

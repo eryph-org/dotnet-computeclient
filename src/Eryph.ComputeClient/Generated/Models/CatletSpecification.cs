@@ -34,6 +34,23 @@ namespace Eryph.ComputeClient.Models
             Latest = latest;
         }
 
+        /// <summary> Initializes a new instance of <see cref="CatletSpecification"/>. </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="architecture"></param>
+        /// <param name="project"></param>
+        /// <param name="latest"></param>
+        /// <param name="catletId"></param>
+        internal CatletSpecification(string id, string name, string architecture, Project project, CatletSpecificationVersionInfo latest, string catletId)
+        {
+            Id = id;
+            Name = name;
+            Architecture = architecture;
+            Project = project;
+            Latest = latest;
+            CatletId = catletId;
+        }
+
         /// <summary> Gets the id. </summary>
         public string Id { get; }
         /// <summary> Gets the name. </summary>
@@ -44,5 +61,7 @@ namespace Eryph.ComputeClient.Models
         public Project Project { get; }
         /// <summary> Gets the latest. </summary>
         public CatletSpecificationVersionInfo Latest { get; }
+        /// <summary> Gets the catlet id. </summary>
+        public string CatletId { get; }
     }
 }

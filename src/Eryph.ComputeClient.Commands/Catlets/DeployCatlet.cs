@@ -18,7 +18,7 @@ public class DeployCatlet : CatletConfigCmdlet
         ValueFromPipeline = true,
         Mandatory = true)]
     [AllowEmptyString]
-    public string Id { get; set; }
+    public string SpecificationId { get; set; }
 
     [Parameter]
     public Hashtable Variables { get; set; }
@@ -31,11 +31,11 @@ public class DeployCatlet : CatletConfigCmdlet
 
     protected override void ProcessRecord()
     {
-        if (string.IsNullOrEmpty(Id))
+        if (string.IsNullOrEmpty(SpecificationId))
             return;
 
         var specificationsClient = Factory.CreateCatletSpecificationsClient();
-        var specification = specificationsClient.Get(Id);
+        var specification = specificationsClient.Get(SpecificationId);
 
         var latestVersion = Factory.CreateCatletSpecificationsClient().GetVersion(
             specification.Value.Id,
@@ -49,7 +49,7 @@ public class DeployCatlet : CatletConfigCmdlet
 
         WaitForCatlet(
             Factory.CreateCatletSpecificationsClient().Deploy(
-                Id,
+                SpecificationId,
                 new DeployCatletSpecificationRequestBody(variables.ToDictionary(v => v.Name, v => v.Value))),
             NoWait);
     }

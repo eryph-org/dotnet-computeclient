@@ -11,27 +11,27 @@ using System.Linq;
 
 namespace Eryph.ComputeClient.Models
 {
-    /// <summary> The CatletSpecificationVersionList. </summary>
-    internal partial class CatletSpecificationVersionList
+    /// <summary> The CatletSpecificationVersionInfoList. </summary>
+    internal partial class CatletSpecificationVersionInfoList
     {
-        /// <summary> Initializes a new instance of <see cref="CatletSpecificationVersionList"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="CatletSpecificationVersionInfoList"/>. </summary>
         /// <param name="value"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="value"/> is null. </exception>
-        internal CatletSpecificationVersionList(IEnumerable<CatletSpecificationVersion> value)
+        internal CatletSpecificationVersionInfoList(IEnumerable<CatletSpecificationVersionInfo> value)
         {
             Argument.AssertNotNull(value, nameof(value));
 
             Value = value.ToList();
         }
 
-        /// <summary> Initializes a new instance of <see cref="CatletSpecificationVersionList"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="CatletSpecificationVersionInfoList"/>. </summary>
         /// <param name="value"></param>
-        internal CatletSpecificationVersionList(IReadOnlyList<CatletSpecificationVersion> value)
+        internal CatletSpecificationVersionInfoList(IReadOnlyList<CatletSpecificationVersionInfo> value)
         {
             Value = value;
         }
 
         /// <summary> Gets the value. </summary>
-        public IReadOnlyList<CatletSpecificationVersion> Value { get; }
+        public IReadOnlyList<CatletSpecificationVersionInfo> Value { get; }
     }
 }

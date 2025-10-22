@@ -57,7 +57,8 @@ namespace Eryph.ComputeClient.Models
         /// <param name="networks"></param>
         /// <param name="networkAdapters"></param>
         /// <param name="drives"></param>
-        internal Catlet(string id, string name, string vmId, Project project, CatletStatus status, bool isDeprecated, IReadOnlyList<CatletNetwork> networks, IReadOnlyList<CatletNetworkAdapter> networkAdapters, IReadOnlyList<CatletDrive> drives)
+        /// <param name="specification"></param>
+        internal Catlet(string id, string name, string vmId, Project project, CatletStatus status, bool isDeprecated, IReadOnlyList<CatletNetwork> networks, IReadOnlyList<CatletNetworkAdapter> networkAdapters, IReadOnlyList<CatletDrive> drives, CatletSpecificationInfo specification)
         {
             Id = id;
             Name = name;
@@ -68,6 +69,7 @@ namespace Eryph.ComputeClient.Models
             Networks = networks;
             NetworkAdapters = networkAdapters;
             Drives = drives;
+            Specification = specification;
         }
 
         /// <summary> Gets the id. </summary>
@@ -92,5 +94,7 @@ namespace Eryph.ComputeClient.Models
         public IReadOnlyList<CatletNetworkAdapter> NetworkAdapters { get; }
         /// <summary> Gets the drives. </summary>
         public IReadOnlyList<CatletDrive> Drives { get; }
+        /// <summary> Gets the specification. </summary>
+        public CatletSpecificationInfo Specification { get; }
     }
 }

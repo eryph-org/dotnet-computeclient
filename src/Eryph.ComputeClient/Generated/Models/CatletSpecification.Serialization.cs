@@ -23,6 +23,7 @@ namespace Eryph.ComputeClient.Models
             string architecture = default;
             Project project = default;
             CatletSpecificationVersionInfo latest = default;
+            string catletId = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("id"u8))
@@ -50,8 +51,24 @@ namespace Eryph.ComputeClient.Models
                     latest = CatletSpecificationVersionInfo.DeserializeCatletSpecificationVersionInfo(property.Value);
                     continue;
                 }
+                if (property.NameEquals("catlet_id"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        catletId = null;
+                        continue;
+                    }
+                    catletId = property.Value.GetString();
+                    continue;
+                }
             }
-            return new CatletSpecification(id, name, architecture, project, latest);
+            return new CatletSpecification(
+                id,
+                name,
+                architecture,
+                project,
+                latest,
+                catletId);
         }
 
         /// <summary> Deserializes the model from a raw response. </summary>

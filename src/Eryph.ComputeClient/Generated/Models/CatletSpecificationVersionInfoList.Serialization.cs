@@ -11,37 +11,37 @@ using Azure;
 
 namespace Eryph.ComputeClient.Models
 {
-    internal partial class CatletSpecificationVersionList
+    internal partial class CatletSpecificationVersionInfoList
     {
-        internal static CatletSpecificationVersionList DeserializeCatletSpecificationVersionList(JsonElement element)
+        internal static CatletSpecificationVersionInfoList DeserializeCatletSpecificationVersionInfoList(JsonElement element)
         {
             if (element.ValueKind == JsonValueKind.Null)
             {
                 return null;
             }
-            IReadOnlyList<CatletSpecificationVersion> value = default;
+            IReadOnlyList<CatletSpecificationVersionInfo> value = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("value"u8))
                 {
-                    List<CatletSpecificationVersion> array = new List<CatletSpecificationVersion>();
+                    List<CatletSpecificationVersionInfo> array = new List<CatletSpecificationVersionInfo>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(CatletSpecificationVersion.DeserializeCatletSpecificationVersion(item));
+                        array.Add(CatletSpecificationVersionInfo.DeserializeCatletSpecificationVersionInfo(item));
                     }
                     value = array;
                     continue;
                 }
             }
-            return new CatletSpecificationVersionList(value);
+            return new CatletSpecificationVersionInfoList(value);
         }
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The response to deserialize the model from. </param>
-        internal static CatletSpecificationVersionList FromResponse(Response response)
+        internal static CatletSpecificationVersionInfoList FromResponse(Response response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeCatletSpecificationVersionList(document.RootElement);
+            return DeserializeCatletSpecificationVersionInfoList(document.RootElement);
         }
     }
 }
