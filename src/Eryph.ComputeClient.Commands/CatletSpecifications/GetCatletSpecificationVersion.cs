@@ -31,7 +31,7 @@ public class GetCatletSpecificationVersion : CatletSpecificationCmdlet
             var specificationsClient = Factory.CreateCatletSpecificationsClient();
             foreach (var id in Id)
             {
-                WriteObject(specificationsClient.GetVersion(SpecificationId, id));
+                WriteObject(specificationsClient.GetVersion(SpecificationId, id).Value);
             }
 
             return;

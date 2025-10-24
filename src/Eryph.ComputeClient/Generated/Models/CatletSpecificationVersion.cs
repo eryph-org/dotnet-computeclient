@@ -6,6 +6,9 @@
 #nullable disable
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
 
 namespace Eryph.ComputeClient.Models
 {
@@ -16,19 +19,20 @@ namespace Eryph.ComputeClient.Models
         /// <param name="id"></param>
         /// <param name="specificationId"></param>
         /// <param name="configuration"></param>
-        /// <param name="resolvedConfig"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="specificationId"/>, <paramref name="configuration"/> or <paramref name="resolvedConfig"/> is null. </exception>
-        internal CatletSpecificationVersion(string id, string specificationId, string configuration, string resolvedConfig)
+        /// <param name="resolvedConfig"> Anything. </param>
+        /// <param name="genes"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="specificationId"/> or <paramref name="configuration"/> is null. </exception>
+        internal CatletSpecificationVersion(string id, string specificationId, string configuration, JsonElement resolvedConfig, IEnumerable<CatletSpecificationVersionGene> genes)
         {
             Argument.AssertNotNull(id, nameof(id));
             Argument.AssertNotNull(specificationId, nameof(specificationId));
             Argument.AssertNotNull(configuration, nameof(configuration));
-            Argument.AssertNotNull(resolvedConfig, nameof(resolvedConfig));
 
             Id = id;
             SpecificationId = specificationId;
             Configuration = configuration;
             ResolvedConfig = resolvedConfig;
+            Genes = genes?.ToList();
         }
 
         /// <summary> Initializes a new instance of <see cref="CatletSpecificationVersion"/>. </summary>
@@ -36,14 +40,16 @@ namespace Eryph.ComputeClient.Models
         /// <param name="specificationId"></param>
         /// <param name="comment"></param>
         /// <param name="configuration"></param>
-        /// <param name="resolvedConfig"></param>
-        internal CatletSpecificationVersion(string id, string specificationId, string comment, string configuration, string resolvedConfig)
+        /// <param name="resolvedConfig"> Anything. </param>
+        /// <param name="genes"></param>
+        internal CatletSpecificationVersion(string id, string specificationId, string comment, string configuration, JsonElement resolvedConfig, IReadOnlyList<CatletSpecificationVersionGene> genes)
         {
             Id = id;
             SpecificationId = specificationId;
             Comment = comment;
             Configuration = configuration;
             ResolvedConfig = resolvedConfig;
+            Genes = genes;
         }
 
         /// <summary> Gets the id. </summary>
@@ -54,7 +60,7 @@ namespace Eryph.ComputeClient.Models
         public string Comment { get; }
         /// <summary> Gets the configuration. </summary>
         public string Configuration { get; }
-        /// <summary> Gets the resolved config. </summary>
-        public string ResolvedConfig { get; }
+        /// <summary> Gets the genes. </summary>
+        public IReadOnlyList<CatletSpecificationVersionGene> Genes { get; }
     }
 }
