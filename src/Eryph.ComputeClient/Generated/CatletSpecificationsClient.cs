@@ -190,16 +190,17 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Deploy a catlet specification. </summary>
+        /// <param name="specificationId"> The <see cref="string"/> to use. </param>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="body"> The <see cref="DeployCatletSpecificationRequestBody"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual async Task<Response<Models.Operation>> DeployAsync(string id, DeployCatletSpecificationRequestBody body, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<Models.Operation>> DeployAsync(string specificationId, string id, DeployCatletSpecificationRequestBody body, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("CatletSpecificationsClient.Deploy");
             scope.Start();
             try
             {
-                return await RestClient.DeployAsync(id, body, cancellationToken).ConfigureAwait(false);
+                return await RestClient.DeployAsync(specificationId, id, body, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -209,16 +210,17 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Deploy a catlet specification. </summary>
+        /// <param name="specificationId"> The <see cref="string"/> to use. </param>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="body"> The <see cref="DeployCatletSpecificationRequestBody"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public virtual Response<Models.Operation> Deploy(string id, DeployCatletSpecificationRequestBody body, CancellationToken cancellationToken = default)
+        public virtual Response<Models.Operation> Deploy(string specificationId, string id, DeployCatletSpecificationRequestBody body, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("CatletSpecificationsClient.Deploy");
             scope.Start();
             try
             {
-                return RestClient.Deploy(id, body, cancellationToken);
+                return RestClient.Deploy(specificationId, id, body, cancellationToken);
             }
             catch (Exception e)
             {

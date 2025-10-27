@@ -39,20 +39,25 @@ namespace Eryph.ComputeClient.Models
                     writer.WriteNull("comment");
                 }
             }
-            if (Optional.IsDefined(Name))
+            writer.WritePropertyName("configuration"u8);
+            writer.WriteObjectValue(Configuration);
+            if (Optional.IsCollectionDefined(Architectures))
             {
-                if (Name != null)
+                if (Architectures != null)
                 {
-                    writer.WritePropertyName("name"u8);
-                    writer.WriteStringValue(Name);
+                    writer.WritePropertyName("architectures"u8);
+                    writer.WriteStartArray();
+                    foreach (var item in Architectures)
+                    {
+                        writer.WriteStringValue(item);
+                    }
+                    writer.WriteEndArray();
                 }
                 else
                 {
-                    writer.WriteNull("name");
+                    writer.WriteNull("architectures");
                 }
             }
-            writer.WritePropertyName("configuration"u8);
-            writer.WriteStringValue(Configuration);
             writer.WriteEndObject();
         }
 

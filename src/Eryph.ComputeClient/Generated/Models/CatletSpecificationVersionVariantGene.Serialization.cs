@@ -10,9 +10,9 @@ using Azure;
 
 namespace Eryph.ComputeClient.Models
 {
-    public partial class CatletSpecificationVersionGene
+    public partial class CatletSpecificationVersionVariantGene
     {
-        internal static CatletSpecificationVersionGene DeserializeCatletSpecificationVersionGene(JsonElement element)
+        internal static CatletSpecificationVersionVariantGene DeserializeCatletSpecificationVersionVariantGene(JsonElement element)
         {
             if (element.ValueKind == JsonValueKind.Null)
             {
@@ -51,15 +51,15 @@ namespace Eryph.ComputeClient.Models
                     continue;
                 }
             }
-            return new CatletSpecificationVersionGene(geneType, geneSet, name, architecture, hash);
+            return new CatletSpecificationVersionVariantGene(geneType, geneSet, name, architecture, hash);
         }
 
         /// <summary> Deserializes the model from a raw response. </summary>
         /// <param name="response"> The response to deserialize the model from. </param>
-        internal static CatletSpecificationVersionGene FromResponse(Response response)
+        internal static CatletSpecificationVersionVariantGene FromResponse(Response response)
         {
             using var document = JsonDocument.Parse(response.Content);
-            return DeserializeCatletSpecificationVersionGene(document.RootElement);
+            return DeserializeCatletSpecificationVersionVariantGene(document.RootElement);
         }
     }
 }

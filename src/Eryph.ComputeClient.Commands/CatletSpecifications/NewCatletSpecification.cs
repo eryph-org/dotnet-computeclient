@@ -2,6 +2,7 @@
 using System.Management.Automation;
 using System.Text;
 using Eryph.ComputeClient.Models;
+using Eryph.ConfigModel.Variables;
 using JetBrains.Annotations;
 
 namespace Eryph.ComputeClient.Commands.CatletSpecifications;
@@ -25,15 +26,17 @@ public class NewCatletSpecification : CatletSpecificationCmdlet
 
     [Parameter]
     [ValidateNotNullOrEmpty]
-    public string Name { get; set; }
-
-    [Parameter]
-    [ValidateNotNullOrEmpty]
     public string Comment { get; set; }
 
     [Parameter]
     [ValidateNotNullOrEmpty]
     public string ProjectName { get; set; }
+
+    [Parameter]
+    public SwitchParameter Json { get; set; }
+
+    [Parameter]
+    public string[] Architectures { get; set; }
 
     [Parameter]
     public SwitchParameter NoWait { get; set; }
@@ -63,11 +66,16 @@ public class NewCatletSpecification : CatletSpecificationCmdlet
         var projectName = string.IsNullOrWhiteSpace(ProjectName) ? "default" : ProjectName;
         var projectId = GetProjectId(projectName);
 
+        var config = new CatletSpecificationConfig(
+            Json.ToBool() ? "application/json" : "application/yaml",
+            input);
+
         WaitForOperation(Factory.CreateCatletSpecificationsClient().Create(
-                new NewCatletSpecificationRequest(Guid.Parse(projectId), Name, input)
+                new NewCatletSpecificationRequest(Guid.Parse(projectId), config)
                 {
                     Comment = Comment,
                     CorrelationId = Guid.NewGuid(),
+                    Architectures = Architectures,
                 }),
             NoWait,
             true);

@@ -6,6 +6,7 @@
 #nullable disable
 
 using System;
+using System.Collections.Generic;
 
 namespace Eryph.ComputeClient.Models
 {
@@ -15,33 +16,34 @@ namespace Eryph.ComputeClient.Models
         /// <summary> Initializes a new instance of <see cref="UpdateCatletSpecificationRequestBody"/>. </summary>
         /// <param name="configuration"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="configuration"/> is null. </exception>
-        public UpdateCatletSpecificationRequestBody(string configuration)
+        public UpdateCatletSpecificationRequestBody(CatletSpecificationConfig configuration)
         {
             Argument.AssertNotNull(configuration, nameof(configuration));
 
             Configuration = configuration;
+            Architectures = new ChangeTrackingList<string>();
         }
 
         /// <summary> Initializes a new instance of <see cref="UpdateCatletSpecificationRequestBody"/>. </summary>
         /// <param name="correlationId"></param>
         /// <param name="comment"></param>
-        /// <param name="name"></param>
         /// <param name="configuration"></param>
-        internal UpdateCatletSpecificationRequestBody(Guid? correlationId, string comment, string name, string configuration)
+        /// <param name="architectures"></param>
+        internal UpdateCatletSpecificationRequestBody(Guid? correlationId, string comment, CatletSpecificationConfig configuration, IList<string> architectures)
         {
             CorrelationId = correlationId;
             Comment = comment;
-            Name = name;
             Configuration = configuration;
+            Architectures = architectures;
         }
 
         /// <summary> Gets or sets the correlation id. </summary>
         public Guid? CorrelationId { get; set; }
         /// <summary> Gets or sets the comment. </summary>
         public string Comment { get; set; }
-        /// <summary> Gets or sets the name. </summary>
-        public string Name { get; set; }
         /// <summary> Gets the configuration. </summary>
-        public string Configuration { get; }
+        public CatletSpecificationConfig Configuration { get; }
+        /// <summary> Gets or sets the architectures. </summary>
+        public IList<string> Architectures { get; set; }
     }
 }

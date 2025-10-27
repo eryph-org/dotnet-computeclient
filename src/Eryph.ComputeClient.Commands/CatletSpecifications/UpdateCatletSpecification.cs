@@ -37,11 +37,13 @@ public class UpdateCatletSpecification : CatletSpecificationCmdlet
     public string Comment { get; set; }
 
     [Parameter]
-    public SwitchParameter NoWait { get; set; }
+    public SwitchParameter Json { get; set; }
 
     [Parameter]
-    [ValidateNotNullOrEmpty]
-    public string Name { get; set; }
+    public string[] Architectures { get; set; }
+
+    [Parameter]
+    public SwitchParameter NoWait { get; set; }
 
     private StringBuilder _input = new StringBuilder();
 
@@ -66,13 +68,17 @@ public class UpdateCatletSpecification : CatletSpecificationCmdlet
         if (string.IsNullOrEmpty(input))
             return;
 
+        var config = new CatletSpecificationConfig(
+            Json.ToBool() ? "application/json" : "application/yaml",
+            input);
+
         WaitForOperation(Factory.CreateCatletSpecificationsClient().Update(
                 Id,
-                new UpdateCatletSpecificationRequestBody(input)
+                new UpdateCatletSpecificationRequestBody(config)
                 {
                     CorrelationId = Guid.NewGuid(),
                     Comment = Comment,
-                    Name = Name,
+                    Architectures = Architectures,
                 }),
             NoWait,
             true);

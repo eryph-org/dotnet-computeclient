@@ -6,6 +6,7 @@
 #nullable disable
 
 using System;
+using System.Collections.Generic;
 
 namespace Eryph.ComputeClient.Models
 {
@@ -15,25 +16,30 @@ namespace Eryph.ComputeClient.Models
         /// <summary> Initializes a new instance of <see cref="ValidateSpecificationRequest"/>. </summary>
         /// <param name="configuration"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="configuration"/> is null. </exception>
-        public ValidateSpecificationRequest(string configuration)
+        public ValidateSpecificationRequest(CatletSpecificationConfig configuration)
         {
             Argument.AssertNotNull(configuration, nameof(configuration));
 
             Configuration = configuration;
+            Architectures = new ChangeTrackingList<string>();
         }
 
         /// <summary> Initializes a new instance of <see cref="ValidateSpecificationRequest"/>. </summary>
         /// <param name="correlationId"></param>
         /// <param name="configuration"></param>
-        internal ValidateSpecificationRequest(Guid? correlationId, string configuration)
+        /// <param name="architectures"></param>
+        internal ValidateSpecificationRequest(Guid? correlationId, CatletSpecificationConfig configuration, IList<string> architectures)
         {
             CorrelationId = correlationId;
             Configuration = configuration;
+            Architectures = architectures;
         }
 
         /// <summary> Gets or sets the correlation id. </summary>
         public Guid? CorrelationId { get; set; }
         /// <summary> Gets the configuration. </summary>
-        public string Configuration { get; }
+        public CatletSpecificationConfig Configuration { get; }
+        /// <summary> Gets or sets the architectures. </summary>
+        public IList<string> Architectures { get; set; }
     }
 }

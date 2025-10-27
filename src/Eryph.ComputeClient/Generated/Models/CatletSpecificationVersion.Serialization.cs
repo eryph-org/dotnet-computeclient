@@ -22,9 +22,8 @@ namespace Eryph.ComputeClient.Models
             string id = default;
             string specificationId = default;
             string comment = default;
-            string configuration = default;
-            JsonElement resolvedConfig = default;
-            IReadOnlyList<CatletSpecificationVersionGene> genes = default;
+            CatletSpecificationConfig configuration = default;
+            IReadOnlyList<CatletSpecificationVersionVariant> variants = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("id"u8))
@@ -49,37 +48,26 @@ namespace Eryph.ComputeClient.Models
                 }
                 if (property.NameEquals("configuration"u8))
                 {
-                    configuration = property.Value.GetString();
+                    configuration = CatletSpecificationConfig.DeserializeCatletSpecificationConfig(property.Value);
                     continue;
                 }
-                if (property.NameEquals("resolved_config"u8))
-                {
-                    resolvedConfig = property.Value.Clone();
-                    continue;
-                }
-                if (property.NameEquals("genes"u8))
+                if (property.NameEquals("variants"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        genes = new ChangeTrackingList<CatletSpecificationVersionGene>();
+                        variants = new ChangeTrackingList<CatletSpecificationVersionVariant>();
                         continue;
                     }
-                    List<CatletSpecificationVersionGene> array = new List<CatletSpecificationVersionGene>();
+                    List<CatletSpecificationVersionVariant> array = new List<CatletSpecificationVersionVariant>();
                     foreach (var item in property.Value.EnumerateArray())
                     {
-                        array.Add(CatletSpecificationVersionGene.DeserializeCatletSpecificationVersionGene(item));
+                        array.Add(CatletSpecificationVersionVariant.DeserializeCatletSpecificationVersionVariant(item));
                     }
-                    genes = array;
+                    variants = array;
                     continue;
                 }
             }
-            return new CatletSpecificationVersion(
-                id,
-                specificationId,
-                comment,
-                configuration,
-                resolvedConfig,
-                genes);
+            return new CatletSpecificationVersion(id, specificationId, comment, configuration, variants);
         }
 
         /// <summary> Deserializes the model from a raw response. </summary>

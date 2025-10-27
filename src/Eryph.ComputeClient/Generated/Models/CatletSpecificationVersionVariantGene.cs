@@ -9,17 +9,17 @@ using System;
 
 namespace Eryph.ComputeClient.Models
 {
-    /// <summary> The CatletSpecificationVersionGene. </summary>
-    public partial class CatletSpecificationVersionGene
+    /// <summary> The CatletSpecificationVersionVariantGene. </summary>
+    public partial class CatletSpecificationVersionVariantGene
     {
-        /// <summary> Initializes a new instance of <see cref="CatletSpecificationVersionGene"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="CatletSpecificationVersionVariantGene"/>. </summary>
         /// <param name="geneType"></param>
         /// <param name="geneSet"></param>
         /// <param name="name"></param>
         /// <param name="architecture"></param>
         /// <param name="hash"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="geneSet"/>, <paramref name="name"/>, <paramref name="architecture"/> or <paramref name="hash"/> is null. </exception>
-        internal CatletSpecificationVersionGene(GeneType geneType, string geneSet, string name, string architecture, string hash)
+        internal CatletSpecificationVersionVariantGene(GeneType geneType, string geneSet, string name, string architecture, string hash)
         {
             Argument.AssertNotNull(geneSet, nameof(geneSet));
             Argument.AssertNotNull(name, nameof(name));

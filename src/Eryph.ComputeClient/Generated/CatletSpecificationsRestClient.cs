@@ -380,16 +380,19 @@ namespace Eryph.ComputeClient
             }
         }
 
-        internal HttpMessage CreateDeployRequest(string id, DeployCatletSpecificationRequestBody body)
+        internal HttpMessage CreateDeployRequest(string specificationId, string id, DeployCatletSpecificationRequestBody body)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
-            request.Method = RequestMethod.Put;
+            request.Method = RequestMethod.Post;
             var uri = new RawRequestUriBuilder();
             uri.Reset(_endpoint);
-            uri.AppendPath("/v1/catlet_specifications/", false);
+            uri.AppendPath("/catlet_specifications/", false);
+            uri.AppendPath(specificationId, true);
+            uri.AppendPath("/versions/", false);
             uri.AppendPath(id, true);
             uri.AppendPath("/deploy", false);
+            uri.AppendQuery("api-version", _apiVersion, true);
             request.Uri = uri;
             request.Headers.Add("Accept", "application/json, application/problem+json");
             request.Headers.Add("Content-Type", "application/json");
@@ -400,12 +403,17 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Deploy a catlet specification. </summary>
+        /// <param name="specificationId"> The <see cref="string"/> to use. </param>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="body"> The <see cref="DeployCatletSpecificationRequestBody"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="body"/> is null. </exception>
-        public async Task<Response<Models.Operation>> DeployAsync(string id, DeployCatletSpecificationRequestBody body, CancellationToken cancellationToken = default)
+        /// <exception cref="ArgumentNullException"> <paramref name="specificationId"/>, <paramref name="id"/> or <paramref name="body"/> is null. </exception>
+        public async Task<Response<Models.Operation>> DeployAsync(string specificationId, string id, DeployCatletSpecificationRequestBody body, CancellationToken cancellationToken = default)
         {
+            if (specificationId == null)
+            {
+                throw new ArgumentNullException(nameof(specificationId));
+            }
             if (id == null)
             {
                 throw new ArgumentNullException(nameof(id));
@@ -415,7 +423,7 @@ namespace Eryph.ComputeClient
                 throw new ArgumentNullException(nameof(body));
             }
 
-            using var message = CreateDeployRequest(id, body);
+            using var message = CreateDeployRequest(specificationId, id, body);
             await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             switch (message.Response.Status)
             {
@@ -432,12 +440,17 @@ namespace Eryph.ComputeClient
         }
 
         /// <summary> Deploy a catlet specification. </summary>
+        /// <param name="specificationId"> The <see cref="string"/> to use. </param>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="body"> The <see cref="DeployCatletSpecificationRequestBody"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="body"/> is null. </exception>
-        public Response<Models.Operation> Deploy(string id, DeployCatletSpecificationRequestBody body, CancellationToken cancellationToken = default)
+        /// <exception cref="ArgumentNullException"> <paramref name="specificationId"/>, <paramref name="id"/> or <paramref name="body"/> is null. </exception>
+        public Response<Models.Operation> Deploy(string specificationId, string id, DeployCatletSpecificationRequestBody body, CancellationToken cancellationToken = default)
         {
+            if (specificationId == null)
+            {
+                throw new ArgumentNullException(nameof(specificationId));
+            }
             if (id == null)
             {
                 throw new ArgumentNullException(nameof(id));
@@ -447,7 +460,7 @@ namespace Eryph.ComputeClient
                 throw new ArgumentNullException(nameof(body));
             }
 
-            using var message = CreateDeployRequest(id, body);
+            using var message = CreateDeployRequest(specificationId, id, body);
             _pipeline.Send(message, cancellationToken);
             switch (message.Response.Status)
             {
@@ -470,11 +483,10 @@ namespace Eryph.ComputeClient
             request.Method = RequestMethod.Get;
             var uri = new RawRequestUriBuilder();
             uri.Reset(_endpoint);
-            uri.AppendPath("/catlet_specifications/", false);
+            uri.AppendPath("/v1/catlet_specifications/", false);
             uri.AppendPath(specificationId, true);
             uri.AppendPath("/versions/", false);
             uri.AppendPath(id, true);
-            uri.AppendQuery("api-version", _apiVersion, true);
             request.Uri = uri;
             request.Headers.Add("Accept", "application/json, application/problem+json");
             return message;
@@ -551,10 +563,9 @@ namespace Eryph.ComputeClient
             request.Method = RequestMethod.Get;
             var uri = new RawRequestUriBuilder();
             uri.Reset(_endpoint);
-            uri.AppendPath("/catlet_specifications/", false);
+            uri.AppendPath("/v1/catlet_specifications/", false);
             uri.AppendPath(specificationId, true);
             uri.AppendPath("/versions", false);
-            uri.AppendQuery("api-version", _apiVersion, true);
             request.Uri = uri;
             request.Headers.Add("Accept", "application/json, application/problem+json");
             return message;

@@ -29,8 +29,6 @@ namespace Eryph.ComputeClient.Models
             }
             writer.WritePropertyName("project_id"u8);
             writer.WriteStringValue(ProjectId);
-            writer.WritePropertyName("name"u8);
-            writer.WriteStringValue(Name);
             if (Optional.IsDefined(Comment))
             {
                 if (Comment != null)
@@ -44,7 +42,24 @@ namespace Eryph.ComputeClient.Models
                 }
             }
             writer.WritePropertyName("configuration"u8);
-            writer.WriteStringValue(Configuration);
+            writer.WriteObjectValue(Configuration);
+            if (Optional.IsCollectionDefined(Architectures))
+            {
+                if (Architectures != null)
+                {
+                    writer.WritePropertyName("architectures"u8);
+                    writer.WriteStartArray();
+                    foreach (var item in Architectures)
+                    {
+                        writer.WriteStringValue(item);
+                    }
+                    writer.WriteEndArray();
+                }
+                else
+                {
+                    writer.WriteNull("architectures");
+                }
+            }
             writer.WriteEndObject();
         }
 

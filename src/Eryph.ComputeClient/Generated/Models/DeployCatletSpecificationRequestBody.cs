@@ -23,6 +23,21 @@ namespace Eryph.ComputeClient.Models
             Variables = variables;
         }
 
+        /// <summary> Initializes a new instance of <see cref="DeployCatletSpecificationRequestBody"/>. </summary>
+        /// <param name="architecture"></param>
+        /// <param name="redeploy"></param>
+        /// <param name="variables"> Dictionary of &lt;string&gt;. </param>
+        internal DeployCatletSpecificationRequestBody(string architecture, bool? redeploy, IDictionary<string, string> variables)
+        {
+            Architecture = architecture;
+            Redeploy = redeploy;
+            Variables = variables;
+        }
+
+        /// <summary> Gets or sets the architecture. </summary>
+        public string Architecture { get; set; }
+        /// <summary> Gets or sets the redeploy. </summary>
+        public bool? Redeploy { get; set; }
         /// <summary> Dictionary of &lt;string&gt;. </summary>
         public IDictionary<string, string> Variables { get; }
     }

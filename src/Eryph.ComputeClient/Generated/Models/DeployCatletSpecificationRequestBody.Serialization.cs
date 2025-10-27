@@ -15,6 +15,30 @@ namespace Eryph.ComputeClient.Models
         void IUtf8JsonSerializable.Write(Utf8JsonWriter writer)
         {
             writer.WriteStartObject();
+            if (Optional.IsDefined(Architecture))
+            {
+                if (Architecture != null)
+                {
+                    writer.WritePropertyName("architecture"u8);
+                    writer.WriteStringValue(Architecture);
+                }
+                else
+                {
+                    writer.WriteNull("architecture");
+                }
+            }
+            if (Optional.IsDefined(Redeploy))
+            {
+                if (Redeploy != null)
+                {
+                    writer.WritePropertyName("redeploy"u8);
+                    writer.WriteBooleanValue(Redeploy.Value);
+                }
+                else
+                {
+                    writer.WriteNull("redeploy");
+                }
+            }
             writer.WritePropertyName("variables"u8);
             writer.WriteStartObject();
             foreach (var item in Variables)

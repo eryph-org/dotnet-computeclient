@@ -528,31 +528,36 @@ namespace Eryph.ComputeClient.Models
         /// <param name="specificationId"></param>
         /// <param name="comment"></param>
         /// <param name="configuration"></param>
-        /// <param name="resolvedConfig"> Anything. </param>
-        /// <param name="genes"></param>
+        /// <param name="variants"></param>
         /// <returns> A new <see cref="Models.CatletSpecificationVersion"/> instance for mocking. </returns>
-        public static CatletSpecificationVersion CatletSpecificationVersion(string id = null, string specificationId = null, string comment = null, string configuration = null, JsonElement resolvedConfig = default, IEnumerable<CatletSpecificationVersionGene> genes = null)
+        public static CatletSpecificationVersion CatletSpecificationVersion(string id = null, string specificationId = null, string comment = null, CatletSpecificationConfig configuration = null, IEnumerable<CatletSpecificationVersionVariant> variants = null)
         {
-            genes ??= new List<CatletSpecificationVersionGene>();
+            variants ??= new List<CatletSpecificationVersionVariant>();
 
-            return new CatletSpecificationVersion(
-                id,
-                specificationId,
-                comment,
-                configuration,
-                resolvedConfig,
-                genes?.ToList());
+            return new CatletSpecificationVersion(id, specificationId, comment, configuration, variants?.ToList());
         }
 
-        /// <summary> Initializes a new instance of <see cref="Models.CatletSpecificationVersionGene"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="Models.CatletSpecificationVersionVariant"/>. </summary>
+        /// <param name="architecture"></param>
+        /// <param name="builtConfig"> Anything. </param>
+        /// <param name="pinnedGenes"></param>
+        /// <returns> A new <see cref="Models.CatletSpecificationVersionVariant"/> instance for mocking. </returns>
+        public static CatletSpecificationVersionVariant CatletSpecificationVersionVariant(string architecture = null, JsonElement builtConfig = default, IEnumerable<CatletSpecificationVersionVariantGene> pinnedGenes = null)
+        {
+            pinnedGenes ??= new List<CatletSpecificationVersionVariantGene>();
+
+            return new CatletSpecificationVersionVariant(architecture, builtConfig, pinnedGenes?.ToList());
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.CatletSpecificationVersionVariantGene"/>. </summary>
         /// <param name="geneType"></param>
         /// <param name="geneSet"></param>
         /// <param name="name"></param>
         /// <param name="architecture"></param>
         /// <param name="hash"></param>
         /// <exception cref="ArgumentNullException"> <paramref name="geneSet"/>, <paramref name="name"/>, <paramref name="architecture"/> or <paramref name="hash"/> is null. </exception>
-        /// <returns> A new <see cref="Models.CatletSpecificationVersionGene"/> instance for mocking. </returns>
-        public static CatletSpecificationVersionGene CatletSpecificationVersionGene(GeneType geneType = default, string geneSet = null, string name = null, string architecture = null, string hash = null)
+        /// <returns> A new <see cref="Models.CatletSpecificationVersionVariantGene"/> instance for mocking. </returns>
+        public static CatletSpecificationVersionVariantGene CatletSpecificationVersionVariantGene(GeneType geneType = default, string geneSet = null, string name = null, string architecture = null, string hash = null)
         {
             if (geneSet == null)
             {
@@ -571,7 +576,7 @@ namespace Eryph.ComputeClient.Models
                 throw new ArgumentNullException(nameof(hash));
             }
 
-            return new CatletSpecificationVersionGene(geneType, geneSet, name, architecture, hash);
+            return new CatletSpecificationVersionVariantGene(geneType, geneSet, name, architecture, hash);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.VirtualNetworkConfiguration"/>. </summary>

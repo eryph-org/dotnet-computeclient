@@ -28,7 +28,24 @@ namespace Eryph.ComputeClient.Models
                 }
             }
             writer.WritePropertyName("configuration"u8);
-            writer.WriteStringValue(Configuration);
+            writer.WriteObjectValue(Configuration);
+            if (Optional.IsCollectionDefined(Architectures))
+            {
+                if (Architectures != null)
+                {
+                    writer.WritePropertyName("architectures"u8);
+                    writer.WriteStartArray();
+                    foreach (var item in Architectures)
+                    {
+                        writer.WriteStringValue(item);
+                    }
+                    writer.WriteEndArray();
+                }
+                else
+                {
+                    writer.WriteNull("architectures");
+                }
+            }
             writer.WriteEndObject();
         }
 

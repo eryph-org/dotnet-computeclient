@@ -6,6 +6,7 @@
 #nullable disable
 
 using System;
+using System.Collections.Generic;
 
 namespace Eryph.ComputeClient.Models
 {
@@ -14,43 +15,41 @@ namespace Eryph.ComputeClient.Models
     {
         /// <summary> Initializes a new instance of <see cref="NewCatletSpecificationRequest"/>. </summary>
         /// <param name="projectId"></param>
-        /// <param name="name"></param>
         /// <param name="configuration"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="configuration"/> is null. </exception>
-        public NewCatletSpecificationRequest(Guid projectId, string name, string configuration)
+        /// <exception cref="ArgumentNullException"> <paramref name="configuration"/> is null. </exception>
+        public NewCatletSpecificationRequest(Guid projectId, CatletSpecificationConfig configuration)
         {
-            Argument.AssertNotNull(name, nameof(name));
             Argument.AssertNotNull(configuration, nameof(configuration));
 
             ProjectId = projectId;
-            Name = name;
             Configuration = configuration;
+            Architectures = new ChangeTrackingList<string>();
         }
 
         /// <summary> Initializes a new instance of <see cref="NewCatletSpecificationRequest"/>. </summary>
         /// <param name="correlationId"></param>
         /// <param name="projectId"></param>
-        /// <param name="name"></param>
         /// <param name="comment"></param>
         /// <param name="configuration"></param>
-        internal NewCatletSpecificationRequest(Guid? correlationId, Guid projectId, string name, string comment, string configuration)
+        /// <param name="architectures"></param>
+        internal NewCatletSpecificationRequest(Guid? correlationId, Guid projectId, string comment, CatletSpecificationConfig configuration, IList<string> architectures)
         {
             CorrelationId = correlationId;
             ProjectId = projectId;
-            Name = name;
             Comment = comment;
             Configuration = configuration;
+            Architectures = architectures;
         }
 
         /// <summary> Gets or sets the correlation id. </summary>
         public Guid? CorrelationId { get; set; }
         /// <summary> Gets the project id. </summary>
         public Guid ProjectId { get; }
-        /// <summary> Gets the name. </summary>
-        public string Name { get; }
         /// <summary> Gets or sets the comment. </summary>
         public string Comment { get; set; }
         /// <summary> Gets the configuration. </summary>
-        public string Configuration { get; }
+        public CatletSpecificationConfig Configuration { get; }
+        /// <summary> Gets or sets the architectures. </summary>
+        public IList<string> Architectures { get; set; }
     }
 }
