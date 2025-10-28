@@ -6,7 +6,8 @@ namespace Eryph.ComputeClient.Commands.CatletSpecifications;
 
 [PublicAPI]
 [Cmdlet(VerbsCommon.Get, "CatletSpecificationVersion", DefaultParameterSetName = "get")]
-[OutputType(typeof(CatletSpecificationVersion), ParameterSetName = ["get", "list"])]
+[OutputType(typeof(CatletSpecificationVersion), ParameterSetName = ["get"])]
+[OutputType(typeof(CatletSpecificationVersionInfo), ParameterSetName = ["list"])]
 public class GetCatletSpecificationVersion : CatletSpecificationCmdlet
 {
     [Parameter(

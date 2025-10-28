@@ -2,7 +2,6 @@
 using System.Management.Automation;
 using System.Text;
 using Eryph.ComputeClient.Models;
-using Eryph.ConfigModel.Variables;
 using JetBrains.Annotations;
 
 namespace Eryph.ComputeClient.Commands.CatletSpecifications;
