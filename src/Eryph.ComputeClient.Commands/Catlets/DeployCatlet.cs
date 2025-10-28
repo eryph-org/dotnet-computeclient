@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
 using Eryph.ComputeClient.Models;
 using Eryph.ConfigModel.Json;
-using Eryph.ConfigModel.Variables;
 using JetBrains.Annotations;
 
 namespace Eryph.ComputeClient.Commands.Catlets;
@@ -47,7 +45,6 @@ public class DeployCatlet : CatletConfigCmdlet
     [Parameter]
     public SwitchParameter SkipVariablesPrompt { get; set; }
 
-
     [Parameter]
     public SwitchParameter Force { get; set; }
 
@@ -72,12 +69,15 @@ public class DeployCatlet : CatletConfigCmdlet
         if (Architecture is not null)
         {
             variant = specificationVersion.Value.Variants.FirstOrDefault(v => v.Architecture == Architecture);
-            WriteError(new ErrorRecord(
-                new InvalidOperationException($"The specification version does not support the architecture '{Architecture}'."),
-                "ArchitectureNotFound",
-                ErrorCategory.ObjectNotFound,
-                Architecture));
-            return;
+            if (variant is null)
+            {
+                WriteError(new ErrorRecord(
+                    new InvalidOperationException($"The specification version does not support the architecture '{Architecture}'."),
+                    "ArchitectureNotFound",
+                    ErrorCategory.ObjectNotFound,
+                    Architecture));
+                return;
+            }
         }
         else
         {
@@ -110,7 +110,11 @@ public class DeployCatlet : CatletConfigCmdlet
             Factory.CreateCatletSpecificationsClient().Deploy(
                 specificationId,
                 specificationVersionId,
-                new DeployCatletSpecificationRequestBody(variables.ToDictionary(v => v.Name, v => v.Value))),
+                new DeployCatletSpecificationRequestBody(variables.ToDictionary(v => v.Name, v => v.Value))
+                {
+                    Architecture = Architecture,
+                    Redeploy = Redeploy,
+                }),
             NoWait);
     }
 
@@ -121,8 +125,12 @@ public class DeployCatlet : CatletConfigCmdlet
             WriteObject(operation);
             return;
         }
-
+        
         var completedOperation = WaitForOperation(operation);
-        WriteResources(completedOperation, ResourceType.Catlet);
+        if (completedOperation.Result is not CatletOperationResult configResult)
+            return;
+
+        var catlet = GetSingleCatlet(configResult.CatletId);
+        WriteObject(catlet);
     }
 }

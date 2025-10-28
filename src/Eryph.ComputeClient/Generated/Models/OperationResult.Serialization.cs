@@ -22,6 +22,7 @@ namespace Eryph.ComputeClient.Models
             {
                 switch (discriminator.GetString())
                 {
+                    case "Catlet": return CatletOperationResult.DeserializeCatletOperationResult(element);
                     case "CatletConfig": return CatletConfigOperationResult.DeserializeCatletConfigOperationResult(element);
                     case "CatletSpecification": return CatletSpecificationOperationResult.DeserializeCatletSpecificationOperationResult(element);
                 }

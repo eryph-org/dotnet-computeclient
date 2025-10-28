@@ -39,7 +39,7 @@ namespace Eryph.ComputeClient.Models
         /// <param name="tasks"></param>
         /// <param name="result">
         /// Please note <see cref="OperationResult"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-        /// The available derived classes include <see cref="CatletConfigOperationResult"/> and <see cref="CatletSpecificationOperationResult"/>.
+        /// The available derived classes include <see cref="CatletOperationResult"/>, <see cref="CatletConfigOperationResult"/> and <see cref="CatletSpecificationOperationResult"/>.
         /// </param>
         internal Operation(string id, OperationStatus status, string statusMessage, IReadOnlyList<OperationResource> resources, IReadOnlyList<OperationLogEntry> logEntries, IReadOnlyList<Project> projects, IReadOnlyList<OperationTask> tasks, OperationResult result)
         {
@@ -70,7 +70,7 @@ namespace Eryph.ComputeClient.Models
         /// <summary>
         /// Gets the result
         /// Please note <see cref="OperationResult"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-        /// The available derived classes include <see cref="CatletConfigOperationResult"/> and <see cref="CatletSpecificationOperationResult"/>.
+        /// The available derived classes include <see cref="CatletOperationResult"/>, <see cref="CatletConfigOperationResult"/> and <see cref="CatletSpecificationOperationResult"/>.
         /// </summary>
         public OperationResult Result { get; }
     }

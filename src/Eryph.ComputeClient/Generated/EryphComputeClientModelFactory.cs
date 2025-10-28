@@ -25,7 +25,7 @@ namespace Eryph.ComputeClient.Models
         /// <param name="tasks"></param>
         /// <param name="result">
         /// Please note <see cref="OperationResult"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-        /// The available derived classes include <see cref="CatletConfigOperationResult"/> and <see cref="Models.CatletSpecificationOperationResult"/>.
+        /// The available derived classes include <see cref="Models.CatletOperationResult"/>, <see cref="CatletConfigOperationResult"/> and <see cref="Models.CatletSpecificationOperationResult"/>.
         /// </param>
         /// <returns> A new <see cref="Models.Operation"/> instance for mocking. </returns>
         public static Operation Operation(string id = null, OperationStatus status = default, string statusMessage = null, IEnumerable<OperationResource> resources = null, IEnumerable<OperationLogEntry> logEntries = null, IEnumerable<Project> projects = null, IEnumerable<OperationTask> tasks = null, OperationResult result = null)
@@ -609,6 +609,14 @@ namespace Eryph.ComputeClient.Models
         public static ValidationIssue ValidationIssue(string member = null, string message = null)
         {
             return new ValidationIssue(member, message);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.CatletOperationResult"/>. </summary>
+        /// <param name="catletId"></param>
+        /// <returns> A new <see cref="Models.CatletOperationResult"/> instance for mocking. </returns>
+        public static CatletOperationResult CatletOperationResult(string catletId = null)
+        {
+            return new CatletOperationResult("Catlet", catletId);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.CatletSpecificationOperationResult"/>. </summary>
