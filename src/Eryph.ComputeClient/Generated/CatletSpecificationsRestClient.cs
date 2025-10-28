@@ -20,7 +20,6 @@ namespace Eryph.ComputeClient
     {
         private readonly HttpPipeline _pipeline;
         private readonly Uri _endpoint;
-        private readonly string _apiVersion;
 
         /// <summary> The ClientDiagnostics is used to provide tracing support for the client library. </summary>
         internal ClientDiagnostics ClientDiagnostics { get; }
@@ -29,14 +28,12 @@ namespace Eryph.ComputeClient
         /// <param name="clientDiagnostics"> The handler for diagnostic messaging in the client. </param>
         /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
         /// <param name="endpoint"> server parameter. </param>
-        /// <param name="apiVersion"> Api Version. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="clientDiagnostics"/>, <paramref name="pipeline"/> or <paramref name="apiVersion"/> is null. </exception>
-        public CatletSpecificationsRestClient(ClientDiagnostics clientDiagnostics, HttpPipeline pipeline, Uri endpoint = null, string apiVersion = "1.0")
+        /// <exception cref="ArgumentNullException"> <paramref name="clientDiagnostics"/> or <paramref name="pipeline"/> is null. </exception>
+        public CatletSpecificationsRestClient(ClientDiagnostics clientDiagnostics, HttpPipeline pipeline, Uri endpoint = null)
         {
             ClientDiagnostics = clientDiagnostics ?? throw new ArgumentNullException(nameof(clientDiagnostics));
             _pipeline = pipeline ?? throw new ArgumentNullException(nameof(pipeline));
             _endpoint = endpoint ?? new Uri("https://localhost:8000/compute");
-            _apiVersion = apiVersion ?? throw new ArgumentNullException(nameof(apiVersion));
         }
 
         internal HttpMessage CreateCreateRequest(NewCatletSpecificationRequest body)
@@ -160,7 +157,7 @@ namespace Eryph.ComputeClient
             }
         }
 
-        internal HttpMessage CreateDeleteRequest(string id)
+        internal HttpMessage CreateDeleteRequest(string id, DeleteCatletSpecificationRequestBody body)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -171,22 +168,31 @@ namespace Eryph.ComputeClient
             uri.AppendPath(id, true);
             request.Uri = uri;
             request.Headers.Add("Accept", "application/json, application/problem+json");
+            request.Headers.Add("Content-Type", "application/json");
+            var content = new Utf8JsonRequestContent();
+            content.JsonWriter.WriteObjectValue(body);
+            request.Content = content;
             return message;
         }
 
         /// <summary> Delete a catlet specification. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="DeleteCatletSpecificationRequestBody"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="body"/> is null. </exception>
         /// <remarks> Deletes a catlet specification. </remarks>
-        public async Task<Response<Models.Operation>> DeleteAsync(string id, CancellationToken cancellationToken = default)
+        public async Task<Response<Models.Operation>> DeleteAsync(string id, DeleteCatletSpecificationRequestBody body, CancellationToken cancellationToken = default)
         {
             if (id == null)
             {
                 throw new ArgumentNullException(nameof(id));
             }
+            if (body == null)
+            {
+                throw new ArgumentNullException(nameof(body));
+            }
 
-            using var message = CreateDeleteRequest(id);
+            using var message = CreateDeleteRequest(id, body);
             await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             switch (message.Response.Status)
             {
@@ -204,17 +210,22 @@ namespace Eryph.ComputeClient
 
         /// <summary> Delete a catlet specification. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="DeleteCatletSpecificationRequestBody"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="body"/> is null. </exception>
         /// <remarks> Deletes a catlet specification. </remarks>
-        public Response<Models.Operation> Delete(string id, CancellationToken cancellationToken = default)
+        public Response<Models.Operation> Delete(string id, DeleteCatletSpecificationRequestBody body, CancellationToken cancellationToken = default)
         {
             if (id == null)
             {
                 throw new ArgumentNullException(nameof(id));
             }
+            if (body == null)
+            {
+                throw new ArgumentNullException(nameof(body));
+            }
 
-            using var message = CreateDeleteRequest(id);
+            using var message = CreateDeleteRequest(id, body);
             _pipeline.Send(message, cancellationToken);
             switch (message.Response.Status)
             {
@@ -387,12 +398,11 @@ namespace Eryph.ComputeClient
             request.Method = RequestMethod.Post;
             var uri = new RawRequestUriBuilder();
             uri.Reset(_endpoint);
-            uri.AppendPath("/catlet_specifications/", false);
+            uri.AppendPath("/v1/catlet_specifications/", false);
             uri.AppendPath(specificationId, true);
             uri.AppendPath("/versions/", false);
             uri.AppendPath(id, true);
             uri.AppendPath("/deploy", false);
-            uri.AppendQuery("api-version", _apiVersion, true);
             request.Uri = uri;
             request.Headers.Add("Accept", "application/json, application/problem+json");
             request.Headers.Add("Content-Type", "application/json");

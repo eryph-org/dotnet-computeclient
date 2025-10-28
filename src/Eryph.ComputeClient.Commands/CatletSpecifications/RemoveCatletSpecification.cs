@@ -18,6 +18,9 @@ public class RemoveCatletSpecification : CatletSpecificationCmdlet
     public string[] Id { get; set; }
 
     [Parameter]
+    public SwitchParameter RemoveCatlet { get; set; }
+
+    [Parameter]
     public SwitchParameter Force { get; set; }
     
     [Parameter]
@@ -50,7 +53,15 @@ public class RemoveCatletSpecification : CatletSpecificationCmdlet
                 continue;
             }
 
-            WaitForOperation(Factory.CreateCatletSpecificationsClient().Delete(id).Value, NoWait, false, id);
+            WaitForOperation(Factory.CreateCatletSpecificationsClient().Delete(
+                    id,
+                    new DeleteCatletSpecificationRequestBody
+                    {
+                        DeleteCatlet = RemoveCatlet,
+                    }),
+                NoWait,
+                false,
+                id);
 
             if (PassThru)
                 WriteObject(specification);

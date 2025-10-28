@@ -51,9 +51,6 @@ public class DeployCatlet : CatletConfigCmdlet
     [Parameter]
     public SwitchParameter NoWait { get; set; }
 
-    private bool _yesToAll;
-    private bool _noToAll;
-
     protected override void ProcessRecord()
     {
         var specificationId = Version?.SpecificationId ?? SpecificationId;
@@ -94,8 +91,7 @@ public class DeployCatlet : CatletConfigCmdlet
             variant = specificationVersion.Value.Variants[0];
         }
 
-        if (Redeploy && !Force && !ShouldContinue("Catlet specification will be redeployed. An existing catlet might be deleted!", "Warning!",
-                ref _yesToAll, ref _noToAll))
+        if (Redeploy && !Force && !ShouldContinue("Catlet specification will be redeployed. An existing catlet might be deleted!", "Warning!"))
         {
             return;
         }

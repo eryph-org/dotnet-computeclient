@@ -32,11 +32,10 @@ namespace Eryph.ComputeClient
         /// <param name="clientDiagnostics"> The handler for diagnostic messaging in the client. </param>
         /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
         /// <param name="endpoint"> server parameter. </param>
-        /// <param name="apiVersion"> Api Version. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="clientDiagnostics"/>, <paramref name="pipeline"/> or <paramref name="apiVersion"/> is null. </exception>
-        internal CatletSpecificationsClient(ClientDiagnostics clientDiagnostics, HttpPipeline pipeline, Uri endpoint = null, string apiVersion = "1.0")
+        /// <exception cref="ArgumentNullException"> <paramref name="clientDiagnostics"/> or <paramref name="pipeline"/> is null. </exception>
+        internal CatletSpecificationsClient(ClientDiagnostics clientDiagnostics, HttpPipeline pipeline, Uri endpoint = null)
         {
-            RestClient = new CatletSpecificationsRestClient(clientDiagnostics, pipeline, endpoint, apiVersion);
+            RestClient = new CatletSpecificationsRestClient(clientDiagnostics, pipeline, endpoint);
             _clientDiagnostics = clientDiagnostics;
             _pipeline = pipeline;
         }
@@ -79,15 +78,16 @@ namespace Eryph.ComputeClient
 
         /// <summary> Delete a catlet specification. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="DeleteCatletSpecificationRequestBody"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <remarks> Deletes a catlet specification. </remarks>
-        public virtual async Task<Response<Models.Operation>> DeleteAsync(string id, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<Models.Operation>> DeleteAsync(string id, DeleteCatletSpecificationRequestBody body, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("CatletSpecificationsClient.Delete");
             scope.Start();
             try
             {
-                return await RestClient.DeleteAsync(id, cancellationToken).ConfigureAwait(false);
+                return await RestClient.DeleteAsync(id, body, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -98,15 +98,16 @@ namespace Eryph.ComputeClient
 
         /// <summary> Delete a catlet specification. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="DeleteCatletSpecificationRequestBody"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <remarks> Deletes a catlet specification. </remarks>
-        public virtual Response<Models.Operation> Delete(string id, CancellationToken cancellationToken = default)
+        public virtual Response<Models.Operation> Delete(string id, DeleteCatletSpecificationRequestBody body, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("CatletSpecificationsClient.Delete");
             scope.Start();
             try
             {
-                return RestClient.Delete(id, cancellationToken);
+                return RestClient.Delete(id, body, cancellationToken);
             }
             catch (Exception e)
             {
