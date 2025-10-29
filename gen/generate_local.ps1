@@ -11,13 +11,13 @@ param()
 $PSNativeCommandUseErrorActionPreference = $true
 $ErrorActionPreference = 'Stop'
 
-# The version here must be aligned with version of the NuGet package.
+# The version here must be aligned with the version of the NuGet package.
 # Steps for updating the version:
 # 1. Update the version in the csproj
 # 2. Upload the package to our Azure Artifacts NuGet feed
 # The autorest csharp package is not released to nuget.org and the NuGet
 # feed of the Azure SDK team causes issues during package restore. Hence,
-# we upload the package to our NuGet feed.
+# we upload the package to our own NuGet feed.
 $autoRestCSharpVersion = "3.0.0-beta.20241108.1"
 
 $settings = Get-Content -Raw -Path "$PSScriptRoot/config.json" | ConvertFrom-Json
