@@ -4,6 +4,7 @@ resources:
     type: github
     name: eryph-org/build
     endpoint: eryph-org
+    ref: refs/heads/pull/improve-package-restore
 
 trigger:
 - main
