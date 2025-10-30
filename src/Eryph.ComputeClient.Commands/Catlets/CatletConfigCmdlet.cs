@@ -51,12 +51,16 @@ namespace Eryph.ComputeClient.Commands.Catlets
                         CorrelationId = Guid.NewGuid(),
                     });
 
+                // TODO Should we throw a terminating error when we cannot fetch the variables?
                 var completedOperation = WaitForOperation(operation);
-                if (completedOperation.Result is CatletConfigOperationResult configResult)
-                {
-                    var populatedConfig = CatletConfigJsonSerializer.Deserialize(configResult.Configuration);
-                    catletConfig.Variables = populatedConfig.Variables;
-                }
+                if (completedOperation.Status != OperationStatus.Completed)
+                    return false;
+
+                if (completedOperation.Result is not CatletConfigOperationResult configResult)
+                    return false;
+                
+                var populatedConfig = CatletConfigJsonSerializer.Deserialize(configResult.Configuration);
+                catletConfig.Variables = populatedConfig.Variables;
             }
 
             return PopulateVariables(catletConfig.Variables, variables, skipVariablesPrompt, showSecrets);
