@@ -51,7 +51,6 @@ namespace Eryph.ComputeClient.Commands.Catlets
                         CorrelationId = Guid.NewGuid(),
                     });
 
-                // TODO Should we throw a terminating error when we cannot fetch the variables?
                 var completedOperation = WaitForOperation(operation);
                 if (completedOperation.Status != OperationStatus.Completed)
                     return false;

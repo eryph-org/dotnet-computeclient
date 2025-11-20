@@ -25,7 +25,6 @@ public class DeployCatlet : CatletConfigCmdlet
     [ValidateNotNullOrEmpty]
     public string SpecificationVersionId { get; set; }
 
-    // TODO does the pipeline work?
     [Parameter(
         ParameterSetName = "Pipeline",
         Position = 0,

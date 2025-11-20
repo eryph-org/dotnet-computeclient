@@ -40,7 +40,7 @@ public class NewCatletSpecification : CatletSpecificationCmdlet
     [Parameter]
     public SwitchParameter NoWait { get; set; }
 
-    private StringBuilder _input = new StringBuilder();
+    private readonly StringBuilder _input = new StringBuilder();
 
     protected override void ProcessRecord()
     {
