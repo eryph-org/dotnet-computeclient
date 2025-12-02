@@ -52,19 +52,31 @@ namespace Eryph.ComputeClient.Commands.Catlets
                     });
 
                 var completedOperation = WaitForOperation(operation);
-                if (completedOperation.Result is CatletConfigOperationResult configResult)
-                {
-                    var populatedConfig = CatletConfigJsonSerializer.Deserialize(configResult.Configuration);
-                    catletConfig.Variables = populatedConfig.Variables;
-                }
+                if (completedOperation.Status != OperationStatus.Completed)
+                    return false;
+
+                if (completedOperation.Result is not CatletConfigOperationResult configResult)
+                    return false;
+                
+                var populatedConfig = CatletConfigJsonSerializer.Deserialize(configResult.Configuration);
+                catletConfig.Variables = populatedConfig.Variables;
             }
 
-            if (catletConfig.Variables is not { Length: > 0 })
+            return PopulateVariables(catletConfig.Variables, variables, skipVariablesPrompt, showSecrets);
+        }
+
+        protected bool PopulateVariables(
+            VariableConfig[] variableConfigs,
+            Hashtable variables,
+            bool skipVariablesPrompt,
+            bool showSecrets)
+        {
+            if (variableConfigs is not { Length: > 0 })
                 return true;
 
-            ApplyVariablesFromParameter(catletConfig.Variables, variables);
-            
-            return skipVariablesPrompt || ReadVariablesFromInput(catletConfig.Variables, showSecrets);
+            ApplyVariablesFromParameter(variableConfigs, variables);
+
+            return skipVariablesPrompt || ReadVariablesFromInput(variableConfigs, showSecrets);
         }
 
         private static void ApplyVariablesFromParameter(VariableConfig[] variableConfigs, Hashtable variables)

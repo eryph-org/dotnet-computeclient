@@ -12,7 +12,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
 {
     [PublicAPI]
     [Cmdlet(VerbsCommon.New, "Catlet")]
-    [OutputType(typeof(Operation), typeof(Catlet), typeof(Catlet))]
+    [OutputType(typeof(Operation), typeof(Catlet))]
     public class NewCatletCommand : CatletConfigCmdlet
     {
         [Parameter(
@@ -88,7 +88,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
             if (config is null)
                 return;
 
-            if (config.ConfigType is not (null or CatletConfigType.Specification))
+            if (config.ConfigType is not (null or CatletConfigType.Configuration))
                 throw new InvalidOperationException($"The provided configuration has the type {config.ConfigType}. "
                                                     + "Please use a fresh configuration when creating a new catlet.");
 

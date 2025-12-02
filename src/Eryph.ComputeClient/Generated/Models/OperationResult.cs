@@ -10,7 +10,7 @@ namespace Eryph.ComputeClient.Models
     /// <summary>
     /// The OperationResult.
     /// Please note <see cref="OperationResult"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-    /// The available derived classes include <see cref="CatletConfigOperationResult"/>.
+    /// The available derived classes include <see cref="CatletOperationResult"/>, <see cref="CatletConfigOperationResult"/> and <see cref="CatletSpecificationOperationResult"/>.
     /// </summary>
     public abstract partial class OperationResult
     {

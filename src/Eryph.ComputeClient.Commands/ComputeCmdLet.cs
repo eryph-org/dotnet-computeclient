@@ -117,6 +117,8 @@ namespace Eryph.ComputeClient.Commands
             {
                 _ when resourceType == ResourceType.Catlet =>
                     Factory.CreateCatletsClient().Get(id).Value,
+                _ when resourceType == ResourceType.CatletSpecification =>
+                    Factory.CreateCatletSpecificationsClient().Get(id).Value,
                 _ when resourceType == ResourceType.VirtualDisk =>
                     Factory.CreateVirtualDisksClient().Get(id).Value,
                 _ when resourceType == ResourceType.VirtualNetwork =>

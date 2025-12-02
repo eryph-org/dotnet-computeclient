@@ -34,6 +34,9 @@ namespace Eryph.ComputeClient
         public CatletsClient CreateCatletsClient(string? scopes = null) =>
             new(new ClientDiagnostics(_options), _options.BuildHttpPipeline(_options.ClientCredentials, scopes), _endpoint);
 
+        public CatletSpecificationsClient CreateCatletSpecificationsClient(string? scopes = null) =>
+            new(new ClientDiagnostics(_options), _options.BuildHttpPipeline(_options.ClientCredentials, scopes), _endpoint);
+
         public GenesClient CreateGenesClient(string? scopes = null) =>
             new(new ClientDiagnostics(_options), _options.BuildHttpPipeline(_options.ClientCredentials, scopes), _endpoint);
 

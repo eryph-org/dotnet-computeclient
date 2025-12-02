@@ -25,7 +25,7 @@ namespace Eryph.ComputeClient.Models
         /// <param name="tasks"></param>
         /// <param name="result">
         /// Please note <see cref="OperationResult"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-        /// The available derived classes include <see cref="CatletConfigOperationResult"/>.
+        /// The available derived classes include <see cref="Models.CatletOperationResult"/>, <see cref="CatletConfigOperationResult"/> and <see cref="Models.CatletSpecificationOperationResult"/>.
         /// </param>
         /// <returns> A new <see cref="Models.Operation"/> instance for mocking. </returns>
         public static Operation Operation(string id = null, OperationStatus status = default, string statusMessage = null, IEnumerable<OperationResource> resources = null, IEnumerable<OperationLogEntry> logEntries = null, IEnumerable<Project> projects = null, IEnumerable<OperationTask> tasks = null, OperationResult result = null)
@@ -314,8 +314,9 @@ namespace Eryph.ComputeClient.Models
         /// <param name="networks"></param>
         /// <param name="networkAdapters"></param>
         /// <param name="drives"></param>
+        /// <param name="specification"></param>
         /// <returns> A new <see cref="Models.Catlet"/> instance for mocking. </returns>
-        public static Catlet Catlet(string id = null, string name = null, string vmId = null, Project project = null, CatletStatus status = default, bool isDeprecated = default, IEnumerable<CatletNetwork> networks = null, IEnumerable<CatletNetworkAdapter> networkAdapters = null, IEnumerable<CatletDrive> drives = null)
+        public static Catlet Catlet(string id = null, string name = null, string vmId = null, Project project = null, CatletStatus status = default, bool isDeprecated = default, IEnumerable<CatletNetwork> networks = null, IEnumerable<CatletNetworkAdapter> networkAdapters = null, IEnumerable<CatletDrive> drives = null, CatletSpecificationInfo specification = null)
         {
             networks ??= new List<CatletNetwork>();
             networkAdapters ??= new List<CatletNetworkAdapter>();
@@ -330,7 +331,8 @@ namespace Eryph.ComputeClient.Models
                 isDeprecated,
                 networks?.ToList(),
                 networkAdapters?.ToList(),
-                drives?.ToList());
+                drives?.ToList(),
+                specification);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.CatletNetwork"/>. </summary>
@@ -393,6 +395,54 @@ namespace Eryph.ComputeClient.Models
         public static CatletDrive CatletDrive(CatletDriveType type = default, string attachedDiskId = null)
         {
             return new CatletDrive(type, attachedDiskId);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.CatletSpecificationInfo"/>. </summary>
+        /// <param name="specificationId"></param>
+        /// <param name="specificationVersionId"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="specificationId"/> or <paramref name="specificationVersionId"/> is null. </exception>
+        /// <returns> A new <see cref="Models.CatletSpecificationInfo"/> instance for mocking. </returns>
+        public static CatletSpecificationInfo CatletSpecificationInfo(string specificationId = null, string specificationVersionId = null)
+        {
+            if (specificationId == null)
+            {
+                throw new ArgumentNullException(nameof(specificationId));
+            }
+            if (specificationVersionId == null)
+            {
+                throw new ArgumentNullException(nameof(specificationVersionId));
+            }
+
+            return new CatletSpecificationInfo(specificationId, specificationVersionId);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.CatletSpecification"/>. </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="architecture"></param>
+        /// <param name="project"></param>
+        /// <param name="latest"></param>
+        /// <param name="catletId"></param>
+        /// <returns> A new <see cref="Models.CatletSpecification"/> instance for mocking. </returns>
+        public static CatletSpecification CatletSpecification(string id = null, string name = null, string architecture = null, Project project = null, CatletSpecificationVersionInfo latest = null, string catletId = null)
+        {
+            return new CatletSpecification(
+                id,
+                name,
+                architecture,
+                project,
+                latest,
+                catletId);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.CatletSpecificationVersionInfo"/>. </summary>
+        /// <param name="id"></param>
+        /// <param name="createdAt"></param>
+        /// <param name="comment"></param>
+        /// <returns> A new <see cref="Models.CatletSpecificationVersionInfo"/> instance for mocking. </returns>
+        public static CatletSpecificationVersionInfo CatletSpecificationVersionInfo(string id = null, DateTimeOffset createdAt = default, string comment = null)
+        {
+            return new CatletSpecificationVersionInfo(id, createdAt, comment);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.GeneWithUsage"/>. </summary>
@@ -473,6 +523,62 @@ namespace Eryph.ComputeClient.Models
             return new ApiVersion(major, minor);
         }
 
+        /// <summary> Initializes a new instance of <see cref="Models.CatletSpecificationVersion"/>. </summary>
+        /// <param name="id"></param>
+        /// <param name="specificationId"></param>
+        /// <param name="comment"></param>
+        /// <param name="configuration"></param>
+        /// <param name="variants"></param>
+        /// <returns> A new <see cref="Models.CatletSpecificationVersion"/> instance for mocking. </returns>
+        public static CatletSpecificationVersion CatletSpecificationVersion(string id = null, string specificationId = null, string comment = null, CatletSpecificationConfig configuration = null, IEnumerable<CatletSpecificationVersionVariant> variants = null)
+        {
+            variants ??= new List<CatletSpecificationVersionVariant>();
+
+            return new CatletSpecificationVersion(id, specificationId, comment, configuration, variants?.ToList());
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.CatletSpecificationVersionVariant"/>. </summary>
+        /// <param name="architecture"></param>
+        /// <param name="builtConfig"> Anything. </param>
+        /// <param name="pinnedGenes"></param>
+        /// <returns> A new <see cref="Models.CatletSpecificationVersionVariant"/> instance for mocking. </returns>
+        public static CatletSpecificationVersionVariant CatletSpecificationVersionVariant(string architecture = null, JsonElement builtConfig = default, IEnumerable<CatletSpecificationVersionVariantGene> pinnedGenes = null)
+        {
+            pinnedGenes ??= new List<CatletSpecificationVersionVariantGene>();
+
+            return new CatletSpecificationVersionVariant(architecture, builtConfig, pinnedGenes?.ToList());
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.CatletSpecificationVersionVariantGene"/>. </summary>
+        /// <param name="geneType"></param>
+        /// <param name="geneSet"></param>
+        /// <param name="name"></param>
+        /// <param name="architecture"></param>
+        /// <param name="hash"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="geneSet"/>, <paramref name="name"/>, <paramref name="architecture"/> or <paramref name="hash"/> is null. </exception>
+        /// <returns> A new <see cref="Models.CatletSpecificationVersionVariantGene"/> instance for mocking. </returns>
+        public static CatletSpecificationVersionVariantGene CatletSpecificationVersionVariantGene(GeneType geneType = default, string geneSet = null, string name = null, string architecture = null, string hash = null)
+        {
+            if (geneSet == null)
+            {
+                throw new ArgumentNullException(nameof(geneSet));
+            }
+            if (name == null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            if (architecture == null)
+            {
+                throw new ArgumentNullException(nameof(architecture));
+            }
+            if (hash == null)
+            {
+                throw new ArgumentNullException(nameof(hash));
+            }
+
+            return new CatletSpecificationVersionVariantGene(geneType, geneSet, name, architecture, hash);
+        }
+
         /// <summary> Initializes a new instance of <see cref="Models.VirtualNetworkConfiguration"/>. </summary>
         /// <param name="configuration"> Anything. </param>
         /// <returns> A new <see cref="Models.VirtualNetworkConfiguration"/> instance for mocking. </returns>
@@ -503,6 +609,25 @@ namespace Eryph.ComputeClient.Models
         public static ValidationIssue ValidationIssue(string member = null, string message = null)
         {
             return new ValidationIssue(member, message);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.CatletOperationResult"/>. </summary>
+        /// <param name="catletId"></param>
+        /// <returns> A new <see cref="Models.CatletOperationResult"/> instance for mocking. </returns>
+        public static CatletOperationResult CatletOperationResult(string catletId = null)
+        {
+            return new CatletOperationResult("Catlet", catletId);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.CatletSpecificationOperationResult"/>. </summary>
+        /// <param name="configuration"> Anything. </param>
+        /// <param name="genes"> Dictionary of &lt;string&gt;. </param>
+        /// <returns> A new <see cref="Models.CatletSpecificationOperationResult"/> instance for mocking. </returns>
+        public static CatletSpecificationOperationResult CatletSpecificationOperationResult(object configuration = null, IReadOnlyDictionary<string, string> genes = null)
+        {
+            genes ??= new Dictionary<string, string>();
+
+            return new CatletSpecificationOperationResult("CatletSpecification", configuration, genes);
         }
     }
 }
