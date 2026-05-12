@@ -11,6 +11,12 @@ namespace Eryph.ComputeClient.Commands.CatletSpecifications;
 [PublicAPI]
 public abstract class CatletSpecificationCmdlet : ComputeCmdLet
 {
+    protected override void BeginProcessing()
+    {
+        base.BeginProcessing();
+        RequireApiVersion(1, 2, "catlet specifications");
+    }
+
     protected CatletSpecification GetSingleCatletSpecification(string id)
     {
         return Factory.CreateCatletSpecificationsClient().Get(id);
