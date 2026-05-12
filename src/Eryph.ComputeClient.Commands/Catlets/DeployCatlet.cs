@@ -53,7 +53,7 @@ public class DeployCatlet : CatletConfigCmdlet
     protected override void BeginProcessing()
     {
         base.BeginProcessing();
-        RequireApiVersion(1, 2, "catlet specifications");
+        RequireApiVersion(1, 2, "Deploy-Catlet");
     }
 
     protected override void ProcessRecord()

@@ -99,7 +99,7 @@ namespace Eryph.ComputeClient.Commands
             ThrowTerminatingError(new ErrorRecord(
                 new InvalidOperationException(message),
                 "ApiVersionNotSupported",
-                ErrorCategory.NotInstalled,
+                ErrorCategory.InvalidOperation,
                 null));
         }
 
