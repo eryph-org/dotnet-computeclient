@@ -34,7 +34,10 @@ namespace Eryph.ComputeClient.Commands.Catlets
             {
                 var config = DeserializeConfigString(Config);
 
-                if (config.ConfigType is not CatletConfigType.Instance)
+                // The config_type field was introduced in API 1.2. Older servers neither
+                // emit nor expect it, so we only enforce the instance check against 1.2+.
+                if (GetApiVersion().IsCompatible(1, 2)
+                    && config.ConfigType is not CatletConfigType.Instance)
                 {
                     WriteError(new ErrorRecord(
                         new InvalidOperationException("The catlet configuration is not an instance configuration "

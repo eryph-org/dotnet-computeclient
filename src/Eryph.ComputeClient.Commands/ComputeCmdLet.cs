@@ -87,6 +87,22 @@ namespace Eryph.ComputeClient.Commands
             return _apiVersionInfo;
         }
 
+        protected void RequireApiVersion(int major, int minor, string feature)
+        {
+            var version = GetApiVersion();
+            if (version.IsCompatible(major, minor))
+                return;
+
+            var message = $"The feature '{feature}' requires eryph API version {major}.{minor} or higher, "
+                          + $"but the server reports version {version.Major}.{version.Minor}. "
+                          + "Please update the eryph server.";
+            ThrowTerminatingError(new ErrorRecord(
+                new InvalidOperationException(message),
+                "ApiVersionNotSupported",
+                ErrorCategory.InvalidOperation,
+                null));
+        }
+
         protected void WriteResources(Operation operation, ResourceType resourceType)
         {
             var resourceData = Factory.CreateOperationsClient()

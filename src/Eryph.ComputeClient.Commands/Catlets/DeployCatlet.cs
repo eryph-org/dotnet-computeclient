@@ -50,6 +50,12 @@ public class DeployCatlet : CatletConfigCmdlet
     [Parameter]
     public SwitchParameter NoWait { get; set; }
 
+    protected override void BeginProcessing()
+    {
+        base.BeginProcessing();
+        RequireApiVersion(1, 2, "Deploy-Catlet");
+    }
+
     protected override void ProcessRecord()
     {
         var specificationId = Version?.SpecificationId ?? SpecificationId;
