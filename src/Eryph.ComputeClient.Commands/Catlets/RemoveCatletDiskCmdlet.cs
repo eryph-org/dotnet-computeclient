@@ -60,7 +60,7 @@ public class RemoveCatletDiskCmdlet : CatletDiskCmdlet
                          projectId => Factory.CreateVirtualDisksClient().List(projectId: projectId)
                              .Where(d => string.IsNullOrWhiteSpace(Environment)
                                          || string.Equals(d.Environment, Environment, StringComparison.OrdinalIgnoreCase)),
-                         d => d.Name, "catlet disk"))
+                         d => d.Name, "catlet disk", ambiguityHint: "-Environment"))
             {
                 if (Stopping) break;
 

@@ -232,7 +232,8 @@ namespace Eryph.ComputeClient.Commands
             Func<string, T> getById,
             Func<string, IEnumerable<T>> listInProject,
             Func<T, string> nameSelector,
-            string resourceKind)
+            string resourceKind,
+            string ambiguityHint = null)
         {
             if (IsResourceId(nameOrId))
             {
@@ -283,11 +284,13 @@ namespace Eryph.ComputeClient.Commands
             var matches = FilterByName(listInProject(projectId), nameOrId, nameSelector, resourceKind).ToList();
             if (matches.Count > 1)
             {
+                var hint = string.IsNullOrWhiteSpace(ambiguityHint)
+                    ? "Specify the id to select one."
+                    : $"Narrow the selection with {ambiguityHint} or specify the id.";
                 WriteError(new ErrorRecord(
                     new PSArgumentException(
                         $"The {resourceKind} name '{nameOrId}' is ambiguous in project '{projectName}': "
-                        + $"it matches {matches.Count} resources. Narrow the selection (e.g. with -Environment) "
-                        + "or specify the id."),
+                        + $"it matches {matches.Count} resources. {hint}"),
                     "AmbiguousNameInProject",
                     ErrorCategory.InvalidArgument,
                     nameOrId));

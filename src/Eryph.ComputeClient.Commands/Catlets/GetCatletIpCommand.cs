@@ -23,7 +23,9 @@ public class GetCatletIpCommand : CatletCmdLet
     [ValidateNotNullOrEmpty]
     public string Name { get; set; }
 
-    [Parameter(ParameterSetName = "list")]
+    [Parameter(
+        ParameterSetName = "list",
+        ValueFromPipelineByPropertyName = true)]
     [ValidateNotNullOrEmpty]
     public string ProjectName { get; set; }
 
