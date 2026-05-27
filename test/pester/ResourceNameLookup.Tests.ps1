@@ -72,6 +72,18 @@ Describe 'Get-* -Name parameter surface (no server required)' {
         $p | Should -Not -BeNullOrEmpty
         $p.ParameterSets.Keys | Should -Contain 'list'
     }
+
+    It "<Cmd> exposes an optional -ProjectName filter in the 'list' set" -ForEach @(
+        @{ Cmd = 'Get-Catlet' }
+        @{ Cmd = 'Get-CatletDisk' }
+        @{ Cmd = 'Get-CatletIp' }
+        @{ Cmd = 'Get-VNetwork' }
+        @{ Cmd = 'Get-CatletSpecification' }
+    ) {
+        $p = (Get-Command $Cmd).Parameters['ProjectName']
+        $p | Should -Not -BeNullOrEmpty
+        $p.ParameterSets['list'].IsMandatory | Should -BeFalse
+    }
 }
 
 Describe 'Action cmdlets accept name-or-id (parameter surface)' {

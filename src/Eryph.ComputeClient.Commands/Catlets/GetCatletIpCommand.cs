@@ -23,6 +23,10 @@ public class GetCatletIpCommand : CatletCmdLet
     [ValidateNotNullOrEmpty]
     public string Name { get; set; }
 
+    [Parameter(ParameterSetName = "list")]
+    [ValidateNotNullOrEmpty]
+    public string ProjectName { get; set; }
+
     [Parameter]
     public SwitchParameter InternalIp { get; set; }
 
@@ -43,10 +47,11 @@ public class GetCatletIpCommand : CatletCmdLet
             return;
         }
 
+        var projectId = GetProjectId(ProjectName);
         WriteByNameOrId(
             Name,
             GetSingleCatlet,
-            () => Factory.CreateCatletsClient().List(),
+            () => Factory.CreateCatletsClient().List(projectId: projectId),
             catlet => catlet.Name,
             "catlet",
             WriteIp);
