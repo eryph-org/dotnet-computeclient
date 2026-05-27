@@ -58,6 +58,35 @@ Describe 'Get-* -Name parameter surface (no server required)' {
     }
 }
 
+Describe 'Action cmdlets accept name-or-id (parameter surface)' {
+
+    It "<Cmd> exposes a 'Name' alias on -Id" -ForEach @(
+        @{ Cmd = 'Start-Catlet' }
+        @{ Cmd = 'Stop-Catlet' }
+        @{ Cmd = 'Remove-Catlet' }
+        @{ Cmd = 'Update-Catlet' }
+        @{ Cmd = 'Remove-CatletDisk' }
+        @{ Cmd = 'Remove-CatletSpecification' }
+        @{ Cmd = 'Update-CatletSpecification' }
+        @{ Cmd = 'Remove-EryphProject' }
+    ) {
+        (Get-Command $Cmd).Parameters['Id'].Aliases | Should -Contain 'Name'
+    }
+
+    It "<Cmd> takes its id/name target as positional parameter 0" -ForEach @(
+        @{ Cmd = 'Start-Catlet' }
+        @{ Cmd = 'Stop-Catlet' }
+        @{ Cmd = 'Remove-Catlet' }
+        @{ Cmd = 'Update-Catlet' }
+        @{ Cmd = 'Remove-CatletDisk' }
+        @{ Cmd = 'Remove-CatletSpecification' }
+        @{ Cmd = 'Remove-EryphProject' }
+    ) {
+        $positions = (Get-Command $Cmd).Parameters['Id'].ParameterSets.Values.Position
+        $positions | Should -Contain 0
+    }
+}
+
 Describe 'Get-EryphProject name-or-id (integration)' -Skip:(-not $eryphAvailable) {
 
     BeforeAll {
@@ -158,6 +187,17 @@ Describe 'Get-CatletIp name-or-id (integration, read-only)' -Skip:(-not $eryphAv
         if ($withIp.Count -eq 0) { Set-ItResult -Skipped -Because 'no catlet has an IP'; return }
         $one = $withIp[0]
         Get-CatletIp $one.Id | ForEach-Object { $_.Id | Should -Be $one.Id }
+    }
+}
+
+Describe 'Action cmdlets name resolution (integration, non-destructive)' -Skip:(-not $eryphAvailable) {
+
+    It 'Start-Catlet errors on a non-existent exact name (nothing is started)' {
+        { Start-Catlet -Name "zzz-$([guid]::NewGuid().ToString('N'))" -ErrorAction Stop } | Should -Throw
+    }
+
+    It 'Remove-Catlet with a non-matching wildcard does nothing and does not error' {
+        { Remove-Catlet -Name 'zzzz-no-such-catlet-*' -Force -ErrorAction Stop } | Should -Not -Throw
     }
 }
 

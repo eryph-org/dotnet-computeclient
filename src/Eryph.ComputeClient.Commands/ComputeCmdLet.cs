@@ -175,10 +175,74 @@ namespace Eryph.ComputeClient.Commands
             && Guid.TryParse(value, out _);
 
         /// <summary>
-        /// Resolves a positional value that may be either a resource id (a GUID) or a
-        /// name pattern and writes the result to the pipeline. A GUID is looked up by
-        /// id; otherwise the listing is filtered by name. Use this when lookup by id
-        /// and listing return the same type.
+        /// Resolves a value that may be either a resource id (a GUID) or a name pattern
+        /// into the matching resources. A GUID is looked up by id; otherwise the listing
+        /// is filtered by name. Following the convention of cmdlets like Get-Process, an
+        /// exact name (no wildcards) that matches nothing produces a not-found error,
+        /// while a wildcard pattern simply yields nothing. Used both to write results
+        /// (Get-*) and to resolve action targets (Start-/Stop-/Remove-*).
+        /// </summary>
+        protected IEnumerable<T> ResolveByNameOrId<T>(
+            string nameOrId,
+            Func<string, T> getById,
+            Func<IEnumerable<T>> listFactory,
+            Func<T, string> nameSelector,
+            string resourceKind)
+        {
+            if (IsResourceId(nameOrId))
+            {
+                if (TryGetById(nameOrId, getById, resourceKind, out var item))
+                    yield return item;
+                yield break;
+            }
+
+            foreach (var item in FilterByName(listFactory(), nameOrId, nameSelector, resourceKind))
+                yield return item;
+        }
+
+        /// <summary>
+        /// Filters a listing by a name pattern (PowerShell wildcards, case-insensitive).
+        /// An exact name (no wildcards) that matches nothing produces a not-found error;
+        /// a wildcard pattern yields nothing; a null/empty pattern yields everything.
+        /// As eryph has no server-side search, the filtering is performed client-side.
+        /// </summary>
+        protected IEnumerable<T> FilterByName<T>(
+            IEnumerable<T> items,
+            string namePattern,
+            Func<T, string> nameSelector,
+            string resourceKind)
+        {
+            var hasWildcards = !string.IsNullOrEmpty(namePattern)
+                               && WildcardPattern.ContainsWildcardCharacters(namePattern);
+            var pattern = string.IsNullOrWhiteSpace(namePattern)
+                ? null
+                : new WildcardPattern(namePattern, WildcardOptions.IgnoreCase);
+
+            var matched = false;
+            foreach (var item in items)
+            {
+                if (Stopping) yield break;
+
+                if (pattern is not null)
+                {
+                    var name = nameSelector(item);
+                    if (name is null || !pattern.IsMatch(name))
+                        continue;
+                }
+
+                matched = true;
+                yield return item;
+            }
+
+            // An exact name (no wildcards) that matches nothing is an error, mirroring
+            // Get-Process/Get-Service. A wildcard pattern simply yields nothing. Do not
+            // raise the error when the pipeline was stopped before a match was found.
+            if (!Stopping && !matched && pattern is not null && !hasWildcards)
+                WriteError(ResourceNotFound(resourceKind, "name", namePattern));
+        }
+
+        /// <summary>
+        /// Resolves a name-or-id value and writes the matching resources to the pipeline.
         /// </summary>
         protected void WriteByNameOrId<T>(
             string nameOrId,
@@ -189,24 +253,12 @@ namespace Eryph.ComputeClient.Commands
             Action<T> writeItem = null)
         {
             writeItem ??= item => WriteObject(item);
-
-            if (IsResourceId(nameOrId))
-            {
-                if (TryGetById(nameOrId, getById, resourceKind, out var item))
-                    writeItem(item);
-                return;
-            }
-
-            WriteFilteredByName(listFactory(), nameOrId, nameSelector, resourceKind, writeItem);
+            foreach (var item in ResolveByNameOrId(nameOrId, getById, listFactory, nameSelector, resourceKind))
+                writeItem(item);
         }
 
         /// <summary>
         /// Writes the items of a listing to the pipeline, filtered by a name pattern.
-        /// The pattern supports PowerShell wildcards and is matched case-insensitively.
-        /// Following the convention of cmdlets like Get-Process, an exact name (no
-        /// wildcards) that matches nothing produces a not-found error, while a wildcard
-        /// pattern simply returns nothing. A null/empty pattern returns everything.
-        /// As eryph has no server-side search, the filtering is performed client-side.
         /// </summary>
         protected void WriteFilteredByName<T>(
             IEnumerable<T> items,
@@ -216,34 +268,8 @@ namespace Eryph.ComputeClient.Commands
             Action<T> writeItem = null)
         {
             writeItem ??= item => WriteObject(item);
-
-            var hasWildcards = !string.IsNullOrEmpty(namePattern)
-                               && WildcardPattern.ContainsWildcardCharacters(namePattern);
-            var pattern = string.IsNullOrWhiteSpace(namePattern)
-                ? null
-                : new WildcardPattern(namePattern, WildcardOptions.IgnoreCase);
-
-            var matched = false;
-            foreach (var item in items)
-            {
-                if (Stopping) break;
-
-                if (pattern is not null)
-                {
-                    var name = nameSelector(item);
-                    if (name is null || !pattern.IsMatch(name))
-                        continue;
-                }
-
-                matched = true;
+            foreach (var item in FilterByName(items, namePattern, nameSelector, resourceKind))
                 writeItem(item);
-            }
-
-            // An exact name (no wildcards) that matches nothing is an error, mirroring
-            // Get-Process/Get-Service. A wildcard pattern simply returns nothing. Do not
-            // raise the error when the pipeline was stopped before a match was found.
-            if (!Stopping && !matched && pattern is not null && !hasWildcards)
-                WriteError(ResourceNotFound(resourceKind, "name", namePattern));
         }
 
         /// <summary>

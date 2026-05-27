@@ -15,6 +15,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
             ValueFromPipeline = true,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true)]
+        [Alias("Name")]
         public string[] Id { get; set; }
 
         /// <summary>
@@ -46,39 +47,34 @@ namespace Eryph.ComputeClient.Commands.Catlets
                 _ => throw new PSArgumentOutOfRangeException("The stop mode is not supported", Mode, nameof(Mode)),
             };
 
-            foreach (var id in Id)
+            foreach (var nameOrId in Id)
             {
-                Catlet catlet;
-                try
+                foreach (var catlet in ResolveByNameOrId(nameOrId, GetSingleCatlet,
+                             () => Factory.CreateCatletsClient().List(), c => c.Name, "catlet"))
                 {
-                    catlet = Factory.CreateCatletsClient().Get(id);
-                }
-                catch (Exception ex)
-                {
-                    WriteError(new ErrorRecord(ex, "CatletNotFound", ErrorCategory.ObjectNotFound, id));
-                    continue;
-                }
+                    if (Stopping) break;
 
-                if (!Force && !ShouldContinue($"Catlet '{catlet.Name}' (Id:{id}) will be stopped!", "Warning!",
-                    ref _yesToAll, ref _noToAll))
-                {
-                    continue;
-                }
+                    if (!Force && !ShouldContinue($"Catlet '{catlet.Name}' (Id:{catlet.Id}) will be stopped!", "Warning!",
+                        ref _yesToAll, ref _noToAll))
+                    {
+                        continue;
+                    }
 
-                if (Mode == CatletStopMode.Kill
-                    && !Force
-                    && !ShouldContinue(
-                        $"The worker process of catlet '{catlet.Name}' (Id:{id}) will be terminated! "
-                        + "This can cause inconsistent behavior in Hyper-V and should only be done when the VM does not respond to normal commands.",
-                        "Danger!",
-                        true, ref _yesToKillAll, ref _noToKillAll))
-                {
-                    continue;
-                }
+                    if (Mode == CatletStopMode.Kill
+                        && !Force
+                        && !ShouldContinue(
+                            $"The worker process of catlet '{catlet.Name}' (Id:{catlet.Id}) will be terminated! "
+                            + "This can cause inconsistent behavior in Hyper-V and should only be done when the VM does not respond to normal commands.",
+                            "Danger!",
+                            true, ref _yesToKillAll, ref _noToKillAll))
+                    {
+                        continue;
+                    }
 
-                WaitForOperation(
-                    Factory.CreateCatletsClient().Stop(id, new StopCatletRequestBody(stopMode)).Value,
-                    NoWait, false, id);
+                    WaitForOperation(
+                        Factory.CreateCatletsClient().Stop(catlet.Id, new StopCatletRequestBody(stopMode)).Value,
+                        NoWait, false, catlet.Id);
+                }
             }
         }
     }

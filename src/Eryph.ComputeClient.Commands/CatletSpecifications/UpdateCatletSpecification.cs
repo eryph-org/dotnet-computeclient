@@ -27,6 +27,7 @@ public class UpdateCatletSpecification : CatletSpecificationCmdlet
 
     [Parameter(Mandatory = true)]
     [ValidateNotNullOrEmpty]
+    [Alias("Name")]
     public string Id { get; set; }
 
     [Parameter]
@@ -69,15 +70,22 @@ public class UpdateCatletSpecification : CatletSpecificationCmdlet
             Json.ToBool() ? "application/json" : "application/yaml",
             input);
 
-        WaitForOperation(Factory.CreateCatletSpecificationsClient().Update(
-                Id,
-                new UpdateCatletSpecificationRequestBody(config)
-                {
-                    CorrelationId = Guid.NewGuid(),
-                    Comment = Comment,
-                    Architectures = Architectures,
-                }),
-            NoWait,
-            true);
+        foreach (var specification in ResolveByNameOrId(Id, GetSingleCatletSpecification,
+                     () => Factory.CreateCatletSpecificationsClient().List(),
+                     s => s.Name, "catlet specification"))
+        {
+            if (Stopping) break;
+
+            WaitForOperation(Factory.CreateCatletSpecificationsClient().Update(
+                    specification.Id,
+                    new UpdateCatletSpecificationRequestBody(config)
+                    {
+                        CorrelationId = Guid.NewGuid(),
+                        Comment = Comment,
+                        Architectures = Architectures,
+                    }),
+                NoWait,
+                true);
+        }
     }
 }

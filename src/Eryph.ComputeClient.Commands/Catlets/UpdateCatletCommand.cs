@@ -18,6 +18,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
             ValueFromPipeline = true,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true)]
+        [Alias("Name")]
         public string[] Id { get; set; }
 
         [Parameter]
@@ -30,39 +31,45 @@ namespace Eryph.ComputeClient.Commands.Catlets
         {
             var client = Factory.CreateCatletsClient();
 
-            foreach (var id in Id)
+            foreach (var nameOrId in Id)
             {
-                var config = DeserializeConfigString(Config);
-
-                // The config_type field was introduced in API 1.2. Older servers neither
-                // emit nor expect it, so we only enforce the instance check against 1.2+.
-                if (GetApiVersion().IsCompatible(1, 2)
-                    && config.ConfigType is not CatletConfigType.Instance)
+                foreach (var catlet in ResolveByNameOrId(nameOrId, GetSingleCatlet,
+                             () => client.List(), c => c.Name, "catlet"))
                 {
-                    WriteError(new ErrorRecord(
-                        new InvalidOperationException("The catlet configuration is not an instance configuration "
-                                                      + "and cannot be used to update an existing catlet. Please "
-                                                      + "use Get-Catlet -Config to get a configuration for update purposes."),
-                        "ConfigIsNotInstanceSpecific",
-                        ErrorCategory.InvalidOperation,
-                        id));
+                    if (Stopping) break;
+
+                    var config = DeserializeConfigString(Config);
+
+                    // The config_type field was introduced in API 1.2. Older servers neither
+                    // emit nor expect it, so we only enforce the instance check against 1.2+.
+                    if (GetApiVersion().IsCompatible(1, 2)
+                        && config.ConfigType is not CatletConfigType.Instance)
+                    {
+                        WriteError(new ErrorRecord(
+                            new InvalidOperationException("The catlet configuration is not an instance configuration "
+                                                          + "and cannot be used to update an existing catlet. Please "
+                                                          + "use Get-Catlet -Config to get a configuration for update purposes."),
+                            "ConfigIsNotInstanceSpecific",
+                            ErrorCategory.InvalidOperation,
+                            catlet.Id));
+                    }
+
+                    if (config.Fodder is not null || config.Variables is not null)
+                        WriteWarning("The fodder and variables cannot be changed when updating a catlet. The provided data will be ignored.");
+
+                    config.Fodder = null;
+                    config.Variables = null;
+
+                    var configJson = CatletConfigJsonSerializer.SerializeToElement(config);
+
+                    WaitForOperation(client.Update(
+                            catlet.Id,
+                            new UpdateCatletRequestBody(configJson)
+                            {
+                                CorrelationId = Guid.NewGuid(),
+                            }),
+                        NoWait, true);
                 }
-
-                if (config.Fodder is not null || config.Variables is not null)
-                    WriteWarning("The fodder and variables cannot be changed when updating a catlet. The provided data will be ignored.");
-
-                config.Fodder = null;
-                config.Variables = null;
-
-                var configJson = CatletConfigJsonSerializer.SerializeToElement(config);
-
-                WaitForOperation(client.Update(
-                        id,
-                        new UpdateCatletRequestBody(configJson)
-                        {
-                            CorrelationId = Guid.NewGuid(),
-                        }),
-                    NoWait, true);
             }
         }
     }

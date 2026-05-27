@@ -15,6 +15,7 @@ public class RemoveCatletSpecification : CatletSpecificationCmdlet
         ValueFromPipeline = true,
         Mandatory = true,
         ValueFromPipelineByPropertyName = true)]
+    [Alias("Name")]
     public string[] Id { get; set; }
 
     [Parameter]
@@ -34,37 +35,33 @@ public class RemoveCatletSpecification : CatletSpecificationCmdlet
 
     protected override void ProcessRecord()
     {
-        foreach (var id in Id)
+        foreach (var nameOrId in Id)
         {
-            CatletSpecification specification;
-            try
+            foreach (var specification in ResolveByNameOrId(nameOrId, GetSingleCatletSpecification,
+                         () => Factory.CreateCatletSpecificationsClient().List(),
+                         s => s.Name, "catlet specification"))
             {
-                specification = Factory.CreateCatletSpecificationsClient().Get(id);
-            }
-            catch (Exception ex)
-            {
-                WriteError(new ErrorRecord(ex, "CatletSpecificationNotFound", ErrorCategory.ObjectNotFound, id));
-                continue;
-            }
+                if (Stopping) break;
 
-            if (!Force && !ShouldContinue($"Catlet specification '{specification.Name}' (Id:{id}) will be deleted!", "Warning!",
-                    ref _yesToAll, ref _noToAll))
-            {
-                continue;
+                if (!Force && !ShouldContinue($"Catlet specification '{specification.Name}' (Id:{specification.Id}) will be deleted!", "Warning!",
+                        ref _yesToAll, ref _noToAll))
+                {
+                    continue;
+                }
+
+                WaitForOperation(Factory.CreateCatletSpecificationsClient().Delete(
+                        specification.Id,
+                        new DeleteCatletSpecificationRequestBody
+                        {
+                            DeleteCatlet = RemoveCatlet,
+                        }),
+                    NoWait,
+                    false,
+                    specification.Id);
+
+                if (PassThru)
+                    WriteObject(specification);
             }
-
-            WaitForOperation(Factory.CreateCatletSpecificationsClient().Delete(
-                    id,
-                    new DeleteCatletSpecificationRequestBody
-                    {
-                        DeleteCatlet = RemoveCatlet,
-                    }),
-                NoWait,
-                false,
-                id);
-
-            if (PassThru)
-                WriteObject(specification);
         }
     }
 }

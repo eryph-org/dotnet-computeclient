@@ -15,6 +15,7 @@ public class RemoveProjectCommand : ProjectCmdlet
         ValueFromPipeline = true,
         Mandatory = true,
         ValueFromPipelineByPropertyName = true)]
+    [Alias("Name")]
     public string[] Id { get; set; }
 
     [Parameter]
@@ -28,26 +29,23 @@ public class RemoveProjectCommand : ProjectCmdlet
 
     protected override void ProcessRecord()
     {
-        foreach (var id in Id)
+        foreach (var nameOrId in Id)
         {
-            Project project;
-            try
+            foreach (var project in ResolveByNameOrId(nameOrId,
+                         id => Factory.CreateProjectsClient().Get(id).Value,
+                         () => Factory.CreateProjectsClient().List(),
+                         p => p.Name, "project"))
             {
-                project = Factory.CreateProjectsClient().Get(id);
-            }
-            catch (Exception ex)
-            {
-                WriteError(new ErrorRecord(ex, "ProjectNotFound", ErrorCategory.ObjectNotFound, id));
-                continue;
-            }
+                if (Stopping) break;
 
-            if (!Force && !ShouldContinue($"Project '{project.Name}' (Id:{id}) and all catlets in the project will be deleted!", "Warning!",
-                    ref _yesToAll, ref _noToAll))
-            {
-                continue;
-            }
+                if (!Force && !ShouldContinue($"Project '{project.Name}' (Id:{project.Id}) and all catlets in the project will be deleted!", "Warning!",
+                        ref _yesToAll, ref _noToAll))
+                {
+                    continue;
+                }
 
-            WaitForProject(Factory.CreateProjectsClient().Delete(id), NoWait, false, id);
+                WaitForProject(Factory.CreateProjectsClient().Delete(project.Id), NoWait, false, project.Id);
+            }
         }
     }
 }

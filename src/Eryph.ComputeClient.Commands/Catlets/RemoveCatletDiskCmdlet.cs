@@ -19,6 +19,7 @@ public class RemoveCatletDiskCmdlet : CatletDiskCmdlet
         ValueFromPipeline = true,
         Mandatory = true,
         ValueFromPipelineByPropertyName = true)]
+    [Alias("Name")]
     public string[] Id { get; set; }
 
     /// <summary>
@@ -45,29 +46,26 @@ public class RemoveCatletDiskCmdlet : CatletDiskCmdlet
 
     protected override void ProcessRecord()
     {
-        foreach (var id in Id)
+        foreach (var nameOrId in Id)
         {
-            VirtualDisk virtualDisk;
-            try
+            foreach (var virtualDisk in ResolveByNameOrId(nameOrId,
+                         id => Factory.CreateVirtualDisksClient().Get(id).Value,
+                         () => Factory.CreateVirtualDisksClient().List(),
+                         d => d.Name, "catlet disk"))
             {
-                virtualDisk = Factory.CreateVirtualDisksClient().Get(id);
-            }
-            catch (Exception ex)
-            {
-                WriteError(new ErrorRecord(ex, "CatletDiskNotFound", ErrorCategory.ObjectNotFound, id));
-                continue;
-            }
+                if (Stopping) break;
 
-            if (!Force && !ShouldContinue($"Catlet disk '{virtualDisk.Name}' (Id:{id}) will be deleted!", "Warning!",
-                    ref _yesToAll, ref _noToAll))
-            {
-                continue;
+                if (!Force && !ShouldContinue($"Catlet disk '{virtualDisk.Name}' (Id:{virtualDisk.Id}) will be deleted!", "Warning!",
+                        ref _yesToAll, ref _noToAll))
+                {
+                    continue;
+                }
+
+                WaitForOperation(Factory.CreateVirtualDisksClient().Delete(virtualDisk.Id).Value, NoWait, false, virtualDisk.Id);
+
+                if (PassThru)
+                    WriteObject(virtualDisk);
             }
-
-            WaitForOperation(Factory.CreateVirtualDisksClient().Delete(id).Value, NoWait, false, id);
-
-            if (PassThru)
-                WriteObject(virtualDisk);
         }
     }
 }
