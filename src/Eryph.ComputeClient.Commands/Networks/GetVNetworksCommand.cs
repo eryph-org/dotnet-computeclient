@@ -44,6 +44,7 @@ namespace Eryph.ComputeClient.Commands.Networks
         [Parameter(
             ParameterSetName = "getconfig",
             Mandatory = true,
+            ValueFromPipeline = true,
             ValueFromPipelineByPropertyName = true)]
         [Parameter(
             ParameterSetName = "list",

@@ -231,10 +231,19 @@ Describe 'Get-VNetwork name-or-id / -Environment (integration, read-only)' -Skip
         Get-VNetwork -Name $sample | ForEach-Object { $_.Name | Should -BeExactly $sample }
     }
 
-    It 'filters networks by environment' {
+    It 'filters networks by environment (and excludes other environments)' {
         if ($networks.Count -eq 0) { Set-ItResult -Skipped -Because 'no networks present'; return }
         $environment = $networks[0].Environment
-        Get-VNetwork -Environment $environment | ForEach-Object { $_.Environment | Should -Be $environment }
+        $filtered = @(Get-VNetwork -Environment $environment)
+        $filtered | ForEach-Object { $_.Environment | Should -Be $environment }
+        $expected = @($networks | Where-Object Environment -EQ $environment).Count
+        $filtered.Count | Should -Be $expected
+    }
+
+    It '-Config returns the project network configuration as a string' {
+        $config = Get-VNetwork -Config -ProjectName 'default'
+        $config | Should -Not -BeNullOrEmpty
+        $config | Should -BeOfType [string]
     }
 
     It 'resolves a positional GUID to an id lookup' {
@@ -254,10 +263,13 @@ Describe 'Get-CatletDisk name-or-id / -Environment (integration, read-only)' -Sk
         Get-CatletDisk -Name $sample | ForEach-Object { $_.Name | Should -BeExactly $sample }
     }
 
-    It 'filters disks by environment' {
+    It 'filters disks by environment (and excludes other environments)' {
         if ($disks.Count -eq 0) { Set-ItResult -Skipped -Because 'no disks present'; return }
         $environment = $disks[0].Environment
-        Get-CatletDisk -Environment $environment | ForEach-Object { $_.Environment | Should -Be $environment }
+        $filtered = @(Get-CatletDisk -Environment $environment)
+        $filtered | ForEach-Object { $_.Environment | Should -Be $environment }
+        $expected = @($disks | Where-Object Environment -EQ $environment).Count
+        $filtered.Count | Should -Be $expected
     }
 
     It 'resolves a positional GUID to an id lookup' {
