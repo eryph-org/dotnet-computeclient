@@ -37,6 +37,8 @@ Describe 'Get-* -Name parameter surface (no server required)' {
         @{ Cmd = 'Get-CatletSpecification' }
         @{ Cmd = 'Get-CatletGene' }
         @{ Cmd = 'Get-CatletIp' }
+        @{ Cmd = 'Get-VNetwork' }
+        @{ Cmd = 'Get-CatletDisk' }
     ) {
         $p = (Get-Command $Cmd).Parameters['Name']
         $p | Should -Not -BeNullOrEmpty
@@ -50,12 +52,23 @@ Describe 'Get-* -Name parameter surface (no server required)' {
         @{ Cmd = 'Get-CatletSpecification' }
         @{ Cmd = 'Get-CatletGene' }
         @{ Cmd = 'Get-CatletIp' }
+        @{ Cmd = 'Get-VNetwork' }
+        @{ Cmd = 'Get-CatletDisk' }
     ) {
         (Get-Command $Cmd).Parameters['Name'].ParameterSets['list'].Position | Should -Be 0
     }
 
     It "Get-CatletGene exposes an -Architecture filter in the 'list' set" {
         $p = (Get-Command Get-CatletGene).Parameters['Architecture']
+        $p | Should -Not -BeNullOrEmpty
+        $p.ParameterSets.Keys | Should -Contain 'list'
+    }
+
+    It "<Cmd> exposes an -Environment filter in the 'list' set" -ForEach @(
+        @{ Cmd = 'Get-VNetwork' }
+        @{ Cmd = 'Get-CatletDisk' }
+    ) {
+        $p = (Get-Command $Cmd).Parameters['Environment']
         $p | Should -Not -BeNullOrEmpty
         $p.ParameterSets.Keys | Should -Contain 'list'
     }
@@ -205,6 +218,52 @@ Describe 'Action cmdlets name resolution (integration, non-destructive)' -Skip:(
 
     It 'Remove-Catlet with a non-matching wildcard does nothing and does not error' {
         { Remove-Catlet -Name 'zzzz-no-such-catlet-*' -Force -ErrorAction Stop } | Should -Not -Throw
+    }
+}
+
+Describe 'Get-VNetwork name-or-id / -Environment (integration, read-only)' -Skip:(-not $eryphAvailable) {
+
+    BeforeAll { $networks = @(Get-VNetwork) }
+
+    It 'filters networks by name' {
+        if ($networks.Count -eq 0) { Set-ItResult -Skipped -Because 'no networks present'; return }
+        $sample = $networks[0].Name
+        Get-VNetwork -Name $sample | ForEach-Object { $_.Name | Should -BeExactly $sample }
+    }
+
+    It 'filters networks by environment' {
+        if ($networks.Count -eq 0) { Set-ItResult -Skipped -Because 'no networks present'; return }
+        $environment = $networks[0].Environment
+        Get-VNetwork -Environment $environment | ForEach-Object { $_.Environment | Should -Be $environment }
+    }
+
+    It 'resolves a positional GUID to an id lookup' {
+        if ($networks.Count -eq 0) { Set-ItResult -Skipped -Because 'no networks present'; return }
+        $one = $networks[0]
+        (Get-VNetwork $one.Id).Id | Should -Be $one.Id
+    }
+}
+
+Describe 'Get-CatletDisk name-or-id / -Environment (integration, read-only)' -Skip:(-not $eryphAvailable) {
+
+    BeforeAll { $disks = @(Get-CatletDisk) }
+
+    It 'filters disks by name' {
+        if ($disks.Count -eq 0) { Set-ItResult -Skipped -Because 'no disks present'; return }
+        $sample = $disks[0].Name
+        Get-CatletDisk -Name $sample | ForEach-Object { $_.Name | Should -BeExactly $sample }
+    }
+
+    It 'filters disks by environment' {
+        if ($disks.Count -eq 0) { Set-ItResult -Skipped -Because 'no disks present'; return }
+        $environment = $disks[0].Environment
+        Get-CatletDisk -Environment $environment | ForEach-Object { $_.Environment | Should -Be $environment }
+    }
+
+    It 'resolves a positional GUID to an id lookup' {
+        if ($disks.Count -eq 0) { Set-ItResult -Skipped -Because 'no disks present'; return }
+        $one = $disks[0]
+        (Get-CatletDisk $one.Id).Id | Should -Be $one.Id
     }
 }
 
