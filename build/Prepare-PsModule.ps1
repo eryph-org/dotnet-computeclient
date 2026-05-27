@@ -48,3 +48,4 @@ if ($isPrerelease) {
 }
 Set-Content -Path (Join-Path $modulePath "$ModuleName.psd1") -Value $config
 Copy-Item -Path (Join-Path $PSScriptRoot "$ModuleName.psm1") -Destination $modulePath
+Copy-Item -Path (Join-Path $PSScriptRoot "$ModuleName.Format.ps1xml") -Destination $modulePath
