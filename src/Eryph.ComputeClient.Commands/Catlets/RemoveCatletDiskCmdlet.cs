@@ -48,8 +48,7 @@ public class RemoveCatletDiskCmdlet : CatletDiskCmdlet
     {
         foreach (var nameOrId in Id)
         {
-            foreach (var virtualDisk in ResolveByNameOrId(nameOrId,
-                         id => Factory.CreateVirtualDisksClient().Get(id).Value,
+            foreach (var virtualDisk in ResolveByNameOrId(nameOrId, GetSingleCatletDisk,
                          () => Factory.CreateVirtualDisksClient().List(),
                          d => d.Name, "catlet disk"))
             {

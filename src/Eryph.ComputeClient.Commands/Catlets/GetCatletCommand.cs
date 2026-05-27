@@ -74,10 +74,11 @@ namespace Eryph.ComputeClient.Commands.Catlets
             // scope. -Config lives in the 'getconfig' set, so -Name is never set here.
             if (Config.IsPresent)
             {
-                foreach (var catlet in Factory.CreateCatletsClient().List(projectId: projectId))
+                var catletsClient = Factory.CreateCatletsClient();
+                foreach (var catlet in catletsClient.List(projectId: projectId))
                 {
                     if (Stopping) break;
-                    WriteConfig(Factory.CreateCatletsClient().GetConfig(catlet.Id));
+                    WriteConfig(catletsClient.GetConfig(catlet.Id));
                 }
 
                 return;

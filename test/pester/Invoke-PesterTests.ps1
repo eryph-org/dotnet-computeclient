@@ -37,6 +37,10 @@ if (-not $pester) {
 }
 Import-Module $pester.Path -Force
 
+# Make the selected build configuration available to the test discovery so it
+# imports the matching build instead of merely the newest one on disk.
+$env:ERYPH_TEST_CONFIGURATION = $Configuration
+
 $config = New-PesterConfiguration
 $config.Run.Path = $PSScriptRoot
 $config.Output.Verbosity = 'Detailed'

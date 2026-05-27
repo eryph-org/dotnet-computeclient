@@ -15,11 +15,14 @@
 $ErrorActionPreference = 'Stop'
 
 # --- Discovery-time setup: import the freshly built module and probe for eryph ---
-$manifest = Get-ChildItem -Path (Join-Path $PSScriptRoot '..' '..' 'src/Eryph.ComputeClient.Commands/bin') `
-    -Recurse -Filter 'Eryph.ComputeClient.psd1' -ErrorAction SilentlyContinue |
+# Scope the search to the build configuration the runner selected (default Debug)
+# so we import the matching build rather than just the newest one on disk.
+$configuration = if ($env:ERYPH_TEST_CONFIGURATION) { $env:ERYPH_TEST_CONFIGURATION } else { 'Debug' }
+$binDir = Join-Path $PSScriptRoot '..' '..' "src/Eryph.ComputeClient.Commands/bin/$configuration"
+$manifest = Get-ChildItem -Path $binDir -Recurse -Filter 'Eryph.ComputeClient.psd1' -ErrorAction SilentlyContinue |
     Sort-Object LastWriteTime -Descending | Select-Object -First 1
 if (-not $manifest) {
-    throw "Built module not found. Build the Commands project first (Invoke-PesterTests.ps1 -Build)."
+    throw "Built module not found under '$binDir'. Build the Commands project first (Invoke-PesterTests.ps1 -Build)."
 }
 Import-Module $manifest.FullName -Force
 
@@ -188,6 +191,10 @@ Describe 'Get-CatletIp name-or-id (integration, read-only)' -Skip:(-not $eryphAv
         $one = $withIp[0]
         Get-CatletIp $one.Id | ForEach-Object { $_.Id | Should -Be $one.Id }
     }
+
+    It 'returns nothing for a catlet name that matches nothing' {
+        Get-CatletIp -Name 'zzzz-no-such-catlet-*' | Should -BeNullOrEmpty
+    }
 }
 
 Describe 'Action cmdlets name resolution (integration, non-destructive)' -Skip:(-not $eryphAvailable) {
@@ -215,6 +222,15 @@ Describe 'Get-CatletGene -Name / -Architecture (integration, read-only)' -Skip:(
         if ($genes.Count -eq 0) { Set-ItResult -Skipped -Because 'no genes present'; return }
         $arch = $genes[0].Architecture
         Get-CatletGene -Architecture $arch | ForEach-Object { $_.Architecture | Should -Be $arch }
+    }
+
+    It 'filters genes by name and architecture together' {
+        if ($genes.Count -eq 0) { Set-ItResult -Skipped -Because 'no genes present'; return }
+        $g = $genes[0]
+        Get-CatletGene -Name $g.Name -Architecture $g.Architecture | ForEach-Object {
+            $_.Name | Should -BeLike $g.Name
+            $_.Architecture | Should -Be $g.Architecture
+        }
     }
 
     It 'resolves a positional GUID to a gene record (GeneWithUsage)' {

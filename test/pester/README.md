@@ -34,8 +34,11 @@ The integration tests use the ambient eryph credentials (e.g. the eryph-zero
 system-client — run as Administrator on Windows). When no eryph is reachable
 only the parameter-surface tests run.
 
-Requires Pester 5+:
+Requirements:
 
-```powershell
-Install-Module Pester -MinimumVersion 5.0.0 -Scope CurrentUser
-```
+- **PowerShell 7.4+** — the `Invoke-PesterTests.ps1` runner declares `#Requires -Version 7.4`. The tests themselves run under Windows PowerShell 5.1 too (the module's `desktop` build), but use the runner from pwsh 7.4+.
+- **Pester 5+**:
+
+  ```powershell
+  Install-Module Pester -MinimumVersion 5.0.0 -Scope CurrentUser
+  ```

@@ -182,6 +182,11 @@ namespace Eryph.ComputeClient.Commands
         /// while a wildcard pattern simply yields nothing. Used both to write results
         /// (Get-*) and to resolve action targets (Start-/Stop-/Remove-*).
         /// </summary>
+        /// <remarks>
+        /// This is a deferred iterator that calls <c>WriteError</c> while enumerating, so
+        /// it must be consumed synchronously on the pipeline thread (a foreach inside
+        /// ProcessRecord/EndProcessing). Do not capture the result and enumerate it later.
+        /// </remarks>
         protected IEnumerable<T> ResolveByNameOrId<T>(
             string nameOrId,
             Func<string, T> getById,

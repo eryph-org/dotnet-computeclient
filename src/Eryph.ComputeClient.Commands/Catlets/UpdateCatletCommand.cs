@@ -52,6 +52,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
                             "ConfigIsNotInstanceSpecific",
                             ErrorCategory.InvalidOperation,
                             catlet.Id));
+                        continue;
                     }
 
                     if (config.Fodder is not null || config.Variables is not null)
