@@ -27,14 +27,18 @@ namespace Eryph.ComputeClient.Commands.Catlets
         [Parameter]
         public SwitchParameter NoWait { get; set; }
 
+        [Parameter]
+        [ValidateNotNullOrEmpty]
+        public string ProjectName { get; set; }
+
         protected override void ProcessRecord()
         {
             var client = Factory.CreateCatletsClient();
 
             foreach (var nameOrId in Id)
             {
-                foreach (var catlet in ResolveByNameOrId(nameOrId, GetSingleCatlet,
-                             () => client.List(), c => c.Name, "catlet"))
+                foreach (var catlet in ResolveActionTargets(nameOrId, ProjectName, GetSingleCatlet,
+                             projectId => client.List(projectId: projectId), c => c.Name, "catlet"))
                 {
                     if (Stopping) break;
 

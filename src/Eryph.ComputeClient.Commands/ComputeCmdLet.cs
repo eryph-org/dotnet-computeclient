@@ -206,6 +206,51 @@ namespace Eryph.ComputeClient.Commands
         }
 
         /// <summary>
+        /// Resolves the target(s) of a mutating cmdlet from a value that may be a resource
+        /// id (a GUID) or a name. An id is used directly. A name must be scoped to a
+        /// project (<paramref name="projectName"/> is required) so that it cannot fan out
+        /// across projects; within the project a wildcard may still match several
+        /// resources. This keeps destructive operations from acting on same-named
+        /// resources in other projects.
+        /// </summary>
+        /// <remarks>
+        /// Like <see cref="ResolveByNameOrId{T}"/> this is a deferred iterator that calls
+        /// <c>WriteError</c> while enumerating; consume it on the pipeline thread.
+        /// </remarks>
+        protected IEnumerable<T> ResolveActionTargets<T>(
+            string nameOrId,
+            string projectName,
+            Func<string, T> getById,
+            Func<string, IEnumerable<T>> listInProject,
+            Func<T, string> nameSelector,
+            string resourceKind)
+        {
+            if (IsResourceId(nameOrId))
+            {
+                if (TryGetById(nameOrId, getById, resourceKind, out var item))
+                    yield return item;
+                yield break;
+            }
+
+            if (string.IsNullOrWhiteSpace(projectName))
+            {
+                WriteError(new ErrorRecord(
+                    new PSArgumentException(
+                        $"When a {resourceKind} is identified by name, -ProjectName is required "
+                        + "so the name can be resolved within a single project. Specify -ProjectName, "
+                        + "or pass the id instead."),
+                    "ProjectNameRequiredForNameLookup",
+                    ErrorCategory.InvalidArgument,
+                    nameOrId));
+                yield break;
+            }
+
+            var projectId = GetProjectId(projectName);
+            foreach (var item in FilterByName(listInProject(projectId), nameOrId, nameSelector, resourceKind))
+                yield return item;
+        }
+
+        /// <summary>
         /// Filters a listing by a name pattern (PowerShell wildcards, case-insensitive).
         /// An exact name (no wildcards) that matches nothing produces a not-found error;
         /// a wildcard pattern yields nothing; a null/empty pattern yields everything.

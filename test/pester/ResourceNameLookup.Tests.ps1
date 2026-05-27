@@ -101,6 +101,18 @@ Describe 'Action cmdlets accept name-or-id (parameter surface)' {
         $positions = (Get-Command $Cmd).Parameters['Id'].ParameterSets.Values.Position
         $positions | Should -Contain 0
     }
+
+    It "<Cmd> exposes a -ProjectName parameter to scope name resolution" -ForEach @(
+        @{ Cmd = 'Start-Catlet' }
+        @{ Cmd = 'Stop-Catlet' }
+        @{ Cmd = 'Remove-Catlet' }
+        @{ Cmd = 'Update-Catlet' }
+        @{ Cmd = 'Remove-CatletDisk' }
+        @{ Cmd = 'Remove-CatletSpecification' }
+        @{ Cmd = 'Update-CatletSpecification' }
+    ) {
+        (Get-Command $Cmd).Parameters['ProjectName'] | Should -Not -BeNullOrEmpty
+    }
 }
 
 Describe 'Get-EryphProject name-or-id (integration)' -Skip:(-not $eryphAvailable) {
@@ -212,12 +224,26 @@ Describe 'Get-CatletIp name-or-id (integration, read-only)' -Skip:(-not $eryphAv
 
 Describe 'Action cmdlets name resolution (integration, non-destructive)' -Skip:(-not $eryphAvailable) {
 
-    It 'Start-Catlet errors on a non-existent exact name (nothing is started)' {
-        { Start-Catlet -Name "zzz-$([guid]::NewGuid().ToString('N'))" -ErrorAction Stop } | Should -Throw
+    It 'requires -ProjectName when the target is given by name (no cross-project fan-out)' {
+        { Start-Catlet -Name 'some-catlet' -ErrorAction Stop } |
+            Should -Throw -ExpectedMessage '*ProjectName is required*'
     }
 
-    It 'Remove-Catlet with a non-matching wildcard does nothing and does not error' {
-        { Remove-Catlet -Name 'zzzz-no-such-catlet-*' -Force -ErrorAction Stop } | Should -Not -Throw
+    It 'does not require -ProjectName when the target is given by id' {
+        # A random GUID is treated as an id; it should fail with not-found, NOT with the
+        # ProjectName-required error.
+        { Start-Catlet -Id ([guid]::NewGuid().ToString()) -ErrorAction Stop } |
+            Should -Throw -ExpectedMessage '*Cannot find*'
+    }
+
+    It 'Start-Catlet errors on a non-existent exact name within a project (nothing is started)' {
+        { Start-Catlet -Name "zzz-$([guid]::NewGuid().ToString('N'))" -ProjectName 'default' -ErrorAction Stop } |
+            Should -Throw
+    }
+
+    It 'Remove-Catlet with a non-matching wildcard in a project does nothing and does not error' {
+        { Remove-Catlet -Name 'zzzz-no-such-catlet-*' -ProjectName 'default' -Force -ErrorAction Stop } |
+            Should -Not -Throw
     }
 }
 

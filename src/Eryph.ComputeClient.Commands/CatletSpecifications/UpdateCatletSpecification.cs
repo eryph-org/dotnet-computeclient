@@ -43,6 +43,10 @@ public class UpdateCatletSpecification : CatletSpecificationCmdlet
     [Parameter]
     public SwitchParameter NoWait { get; set; }
 
+    [Parameter]
+    [ValidateNotNullOrEmpty]
+    public string ProjectName { get; set; }
+
     private readonly StringBuilder _input = new StringBuilder();
 
     protected override void ProcessRecord()
@@ -70,8 +74,8 @@ public class UpdateCatletSpecification : CatletSpecificationCmdlet
             Json.ToBool() ? "application/json" : "application/yaml",
             input);
 
-        foreach (var specification in ResolveByNameOrId(Id, GetSingleCatletSpecification,
-                     () => Factory.CreateCatletSpecificationsClient().List(),
+        foreach (var specification in ResolveActionTargets(Id, ProjectName, GetSingleCatletSpecification,
+                     projectId => Factory.CreateCatletSpecificationsClient().List(projectId: projectId),
                      s => s.Name, "catlet specification"))
         {
             if (Stopping) break;

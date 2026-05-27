@@ -50,6 +50,10 @@ namespace Eryph.ComputeClient.Commands.Catlets
             set => _nowait = value;
         }
 
+        [Parameter]
+        [ValidateNotNullOrEmpty]
+        public string ProjectName { get; set; }
+
         private bool _force;
         private bool _nowait;
         private bool _passThru;
@@ -62,8 +66,8 @@ namespace Eryph.ComputeClient.Commands.Catlets
         {
             foreach (var nameOrId in Id)
             {
-                foreach (var catlet in ResolveByNameOrId(nameOrId, GetSingleCatlet,
-                             () => Factory.CreateCatletsClient().List(), c => c.Name, "catlet"))
+                foreach (var catlet in ResolveActionTargets(nameOrId, ProjectName, GetSingleCatlet,
+                             projectId => Factory.CreateCatletsClient().List(projectId: projectId), c => c.Name, "catlet"))
                 {
                     if (Stopping) break;
 

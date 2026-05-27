@@ -30,6 +30,10 @@ public class RemoveCatletSpecification : CatletSpecificationCmdlet
     [Parameter]
     public SwitchParameter NoWait { get; set; }
 
+    [Parameter]
+    [ValidateNotNullOrEmpty]
+    public string ProjectName { get; set; }
+
     private bool _yesToAll;
     private bool _noToAll;
 
@@ -37,8 +41,8 @@ public class RemoveCatletSpecification : CatletSpecificationCmdlet
     {
         foreach (var nameOrId in Id)
         {
-            foreach (var specification in ResolveByNameOrId(nameOrId, GetSingleCatletSpecification,
-                         () => Factory.CreateCatletSpecificationsClient().List(),
+            foreach (var specification in ResolveActionTargets(nameOrId, ProjectName, GetSingleCatletSpecification,
+                         projectId => Factory.CreateCatletSpecificationsClient().List(projectId: projectId),
                          s => s.Name, "catlet specification"))
             {
                 if (Stopping) break;

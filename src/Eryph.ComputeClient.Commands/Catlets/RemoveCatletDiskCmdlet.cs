@@ -41,6 +41,10 @@ public class RemoveCatletDiskCmdlet : CatletDiskCmdlet
     [Parameter]
     public SwitchParameter NoWait { get; set; }
 
+    [Parameter]
+    [ValidateNotNullOrEmpty]
+    public string ProjectName { get; set; }
+
     private bool _yesToAll;
     private bool _noToAll;
 
@@ -48,8 +52,8 @@ public class RemoveCatletDiskCmdlet : CatletDiskCmdlet
     {
         foreach (var nameOrId in Id)
         {
-            foreach (var virtualDisk in ResolveByNameOrId(nameOrId, GetSingleCatletDisk,
-                         () => Factory.CreateVirtualDisksClient().List(),
+            foreach (var virtualDisk in ResolveActionTargets(nameOrId, ProjectName, GetSingleCatletDisk,
+                         projectId => Factory.CreateVirtualDisksClient().List(projectId: projectId),
                          d => d.Name, "catlet disk"))
             {
                 if (Stopping) break;

@@ -32,6 +32,10 @@ namespace Eryph.ComputeClient.Commands.Catlets
         [Parameter]
         public CatletStopMode Mode { get; set; }
 
+        [Parameter]
+        [ValidateNotNullOrEmpty]
+        public string ProjectName { get; set; }
+
         private bool _yesToAll;
         private bool _noToAll;
         private bool _yesToKillAll;
@@ -49,8 +53,8 @@ namespace Eryph.ComputeClient.Commands.Catlets
 
             foreach (var nameOrId in Id)
             {
-                foreach (var catlet in ResolveByNameOrId(nameOrId, GetSingleCatlet,
-                             () => Factory.CreateCatletsClient().List(), c => c.Name, "catlet"))
+                foreach (var catlet in ResolveActionTargets(nameOrId, ProjectName, GetSingleCatlet,
+                             projectId => Factory.CreateCatletsClient().List(projectId: projectId), c => c.Name, "catlet"))
                 {
                     if (Stopping) break;
 
