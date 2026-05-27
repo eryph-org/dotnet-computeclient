@@ -6,8 +6,8 @@ the name-based lookup feature (issue #69).
 ## Layers
 
 1. **Parameter surface** — verifies cmdlets expose `-Name` in the `list`
-   parameter set, that it is a string and not positional. Needs **no server**
-   and is safe to run in CI.
+   parameter set, that it is a string and is positional (position 0). Needs
+   **no server** and is safe to run in CI.
 2. **Integration** — exercises the real cmdlet → HTTP → client-side filter path
    against a running eryph. These create a throwaway project (and read existing
    catlets) to assert exact / wildcard / case-insensitive matching and the

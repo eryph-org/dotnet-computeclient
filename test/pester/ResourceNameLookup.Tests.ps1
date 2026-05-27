@@ -33,6 +33,7 @@ Describe 'Get-* -Name parameter surface (no server required)' {
         @{ Cmd = 'Get-EryphProject' }
         @{ Cmd = 'Get-CatletSpecification' }
         @{ Cmd = 'Get-CatletGene' }
+        @{ Cmd = 'Get-CatletIp' }
     ) {
         $p = (Get-Command $Cmd).Parameters['Name']
         $p | Should -Not -BeNullOrEmpty
@@ -45,6 +46,7 @@ Describe 'Get-* -Name parameter surface (no server required)' {
         @{ Cmd = 'Get-EryphProject' }
         @{ Cmd = 'Get-CatletSpecification' }
         @{ Cmd = 'Get-CatletGene' }
+        @{ Cmd = 'Get-CatletIp' }
     ) {
         (Get-Command $Cmd).Parameters['Name'].ParameterSets['list'].Position | Should -Be 0
     }
@@ -107,10 +109,12 @@ Describe 'Get-Catlet name-or-id (integration, read-only)' -Skip:(-not $eryphAvai
 
     BeforeAll { $existing = @(Get-Catlet) }
 
-    It 'returns only catlets whose name matches the pattern' {
+    It 'returns only catlets whose name matches an exact name' {
         if ($existing.Count -eq 0) { Set-ItResult -Skipped -Because 'no catlets present'; return }
         $sample = $existing[0].Name
-        Get-Catlet -Name $sample | ForEach-Object { $_.Name | Should -BeLike $sample }
+        $result = @(Get-Catlet -Name $sample)
+        $result | Should -Not -BeNullOrEmpty
+        $result | ForEach-Object { $_.Name | Should -BeExactly $sample }
     }
 
     It 'resolves a positional GUID to an id lookup' {
@@ -130,6 +134,30 @@ Describe 'Get-Catlet name-or-id (integration, read-only)' -Skip:(-not $eryphAvai
 
     It 'returns nothing for a wildcard with no match' {
         Get-Catlet -Name "zzzz-no-such-catlet-*" | Should -BeNullOrEmpty
+    }
+
+    It '-Config (without -Id) returns YAML config strings, not catlet objects' {
+        if ($existing.Count -eq 0) { Set-ItResult -Skipped -Because 'no catlets present'; return }
+        $config = @(Get-Catlet -Config)
+        $config | Should -Not -BeNullOrEmpty
+        $config[0] | Should -BeOfType [string]
+    }
+}
+
+Describe 'Get-CatletIp name-or-id (integration, read-only)' -Skip:(-not $eryphAvailable) {
+
+    BeforeAll { $withIp = @(Get-Catlet | Where-Object { (Get-CatletIp -Name $_.Name) }) }
+
+    It 'filters by catlet name and returns IPs for that catlet' {
+        if ($withIp.Count -eq 0) { Set-ItResult -Skipped -Because 'no catlet has an IP'; return }
+        $sample = $withIp[0].Name
+        Get-CatletIp -Name $sample | ForEach-Object { $_.Name | Should -BeExactly $sample }
+    }
+
+    It 'resolves a positional GUID to the catlet id' {
+        if ($withIp.Count -eq 0) { Set-ItResult -Skipped -Because 'no catlet has an IP'; return }
+        $one = $withIp[0]
+        Get-CatletIp $one.Id | ForEach-Object { $_.Id | Should -Be $one.Id }
     }
 }
 

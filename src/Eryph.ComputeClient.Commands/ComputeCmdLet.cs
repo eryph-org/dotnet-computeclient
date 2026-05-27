@@ -185,16 +185,19 @@ namespace Eryph.ComputeClient.Commands
             Func<string, T> getById,
             Func<IEnumerable<T>> listFactory,
             Func<T, string> nameSelector,
-            string resourceKind)
+            string resourceKind,
+            Action<T> writeItem = null)
         {
+            writeItem ??= item => WriteObject(item);
+
             if (IsResourceId(nameOrId))
             {
                 if (TryGetById(nameOrId, getById, resourceKind, out var item))
-                    WriteObject(item);
+                    writeItem(item);
                 return;
             }
 
-            WriteFilteredByName(listFactory(), nameOrId, nameSelector, resourceKind);
+            WriteFilteredByName(listFactory(), nameOrId, nameSelector, resourceKind, writeItem);
         }
 
         /// <summary>
@@ -209,8 +212,11 @@ namespace Eryph.ComputeClient.Commands
             IEnumerable<T> items,
             string namePattern,
             Func<T, string> nameSelector,
-            string resourceKind)
+            string resourceKind,
+            Action<T> writeItem = null)
         {
+            writeItem ??= item => WriteObject(item);
+
             var hasWildcards = !string.IsNullOrEmpty(namePattern)
                                && WildcardPattern.ContainsWildcardCharacters(namePattern);
             var pattern = string.IsNullOrWhiteSpace(namePattern)
@@ -230,10 +236,13 @@ namespace Eryph.ComputeClient.Commands
                 }
 
                 matched = true;
-                WriteObject(item);
+                writeItem(item);
             }
 
-            if (!matched && pattern is not null && !hasWildcards)
+            // An exact name (no wildcards) that matches nothing is an error, mirroring
+            // Get-Process/Get-Service. A wildcard pattern simply returns nothing. Do not
+            // raise the error when the pipeline was stopped before a match was found.
+            if (!Stopping && !matched && pattern is not null && !hasWildcards)
                 WriteError(ResourceNotFound(resourceKind, "name", namePattern));
         }
 
@@ -260,12 +269,17 @@ namespace Eryph.ComputeClient.Commands
             }
         }
 
-        protected static ErrorRecord ResourceNotFound(string resourceKind, string by, string value) =>
-            new ErrorRecord(
+        protected static ErrorRecord ResourceNotFound(string resourceKind, string by, string value)
+        {
+            var errorId = string.Concat(resourceKind
+                .Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(word => char.ToUpperInvariant(word[0]) + word.Substring(1)));
+            return new ErrorRecord(
                 new ItemNotFoundException($"Cannot find a {resourceKind} with the {by} '{value}'."),
-                $"{resourceKind.Replace(" ", string.Empty)}NotFound",
+                $"{errorId}NotFound",
                 ErrorCategory.ObjectNotFound,
                 value);
+        }
 
         protected Operation WaitForOperation(Operation operation)
         {

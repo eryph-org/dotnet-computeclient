@@ -27,9 +27,7 @@ public class GetCatletGeneCmdlet : CatletGeneCmdlet
     [ValidateNotNullOrEmpty]
     public string Name { get; set; }
 
-    [Parameter(
-        ParameterSetName = "list",
-        ValueFromPipelineByPropertyName = true)]
+    [Parameter(ParameterSetName = "list")]
     [ValidateNotNullOrEmpty]
     public string Architecture { get; set; }
 

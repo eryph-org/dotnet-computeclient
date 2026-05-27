@@ -69,6 +69,20 @@ namespace Eryph.ComputeClient.Commands.Catlets
             }
 
             var projectId = GetProjectId(ProjectName);
+
+            // 'Get-Catlet -Config' (without -Id) dumps the config of every catlet in
+            // scope. -Config lives in the 'getconfig' set, so -Name is never set here.
+            if (Config.IsPresent)
+            {
+                foreach (var catlet in Factory.CreateCatletsClient().List(projectId: projectId))
+                {
+                    if (Stopping) break;
+                    WriteConfig(Factory.CreateCatletsClient().GetConfig(catlet.Id));
+                }
+
+                return;
+            }
+
             WriteByNameOrId(
                 Name,
                 GetSingleCatlet,
