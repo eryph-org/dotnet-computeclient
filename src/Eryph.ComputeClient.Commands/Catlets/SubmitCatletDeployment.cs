@@ -9,9 +9,10 @@ using JetBrains.Annotations;
 namespace Eryph.ComputeClient.Commands.Catlets;
 
 [PublicAPI]
-[Cmdlet("Deploy", "Catlet")]
+[Cmdlet("Submit", "CatletDeployment")]
+[Alias("Deploy-Catlet")]
 [OutputType(typeof(Operation))]
-public class DeployCatlet : CatletConfigCmdlet
+public class SubmitCatletDeployment : CatletConfigCmdlet
 {
     [Parameter(
         ParameterSetName = "Parameter",
