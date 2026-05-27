@@ -209,6 +209,12 @@ Describe 'Get-Catlet name-or-id (integration, read-only)' -Skip:(-not $eryphAvai
         Get-Catlet -Name "zzzz-no-such-catlet-*" | Should -BeNullOrEmpty
     }
 
+    It 'treats a whitespace-only name as a name (not "list all")' {
+        # '   ' must not be interpreted as an omitted filter; it is an exact,
+        # non-matching name and so produces a not-found error, not every catlet.
+        { Get-Catlet -Name '   ' -ErrorAction Stop } | Should -Throw
+    }
+
     It '-Config (without -Id) returns YAML config strings, not catlet objects' {
         if ($existing.Count -eq 0) { Set-ItResult -Skipped -Because 'no catlets present'; return }
         $config = @(Get-Catlet -Config)

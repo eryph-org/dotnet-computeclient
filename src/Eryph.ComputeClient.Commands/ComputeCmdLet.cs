@@ -314,9 +314,12 @@ namespace Eryph.ComputeClient.Commands
             Func<T, string> nameSelector,
             string resourceKind)
         {
+            // Only a null/empty pattern means "no filter" (yield everything). A
+            // whitespace-only value is a real (if non-matching) name, not "list all" —
+            // ValidateNotNullOrEmpty lets ' ' through, so treat it as a name to match.
             var hasWildcards = !string.IsNullOrEmpty(namePattern)
                                && WildcardPattern.ContainsWildcardCharacters(namePattern);
-            var pattern = string.IsNullOrWhiteSpace(namePattern)
+            var pattern = string.IsNullOrEmpty(namePattern)
                 ? null
                 : new WildcardPattern(namePattern, WildcardOptions.IgnoreCase);
 
