@@ -269,7 +269,33 @@ namespace Eryph.ComputeClient.Commands
             if (!projectResolved)
                 yield break;
 
-            foreach (var item in FilterByName(listInProject(projectId), nameOrId, nameSelector, resourceKind))
+            // A wildcard may intentionally match several resources. An exact name, however,
+            // must resolve to a single target before a mutation: some resource names are
+            // unique only per project + environment, so an exact name could otherwise match
+            // several resources and the command would act on all of them.
+            if (WildcardPattern.ContainsWildcardCharacters(nameOrId))
+            {
+                foreach (var item in FilterByName(listInProject(projectId), nameOrId, nameSelector, resourceKind))
+                    yield return item;
+                yield break;
+            }
+
+            var matches = FilterByName(listInProject(projectId), nameOrId, nameSelector, resourceKind).ToList();
+            if (matches.Count > 1)
+            {
+                WriteError(new ErrorRecord(
+                    new PSArgumentException(
+                        $"The {resourceKind} name '{nameOrId}' is ambiguous in project '{projectName}': "
+                        + $"it matches {matches.Count} resources. Narrow the selection (e.g. with -Environment) "
+                        + "or specify the id."),
+                    "AmbiguousNameInProject",
+                    ErrorCategory.InvalidArgument,
+                    nameOrId));
+                yield break;
+            }
+
+            // 0 matches: FilterByName already emitted the not-found error during enumeration.
+            foreach (var item in matches)
                 yield return item;
         }
 

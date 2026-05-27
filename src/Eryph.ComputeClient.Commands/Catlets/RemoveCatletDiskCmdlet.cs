@@ -45,6 +45,10 @@ public class RemoveCatletDiskCmdlet : CatletDiskCmdlet
     [ValidateNotNullOrEmpty]
     public string ProjectName { get; set; }
 
+    [Parameter]
+    [ValidateNotNullOrEmpty]
+    public string Environment { get; set; }
+
     private bool _yesToAll;
     private bool _noToAll;
 
@@ -53,7 +57,9 @@ public class RemoveCatletDiskCmdlet : CatletDiskCmdlet
         foreach (var nameOrId in Id)
         {
             foreach (var virtualDisk in ResolveActionTargets(nameOrId, ProjectName, GetSingleCatletDisk,
-                         projectId => Factory.CreateVirtualDisksClient().List(projectId: projectId),
+                         projectId => Factory.CreateVirtualDisksClient().List(projectId: projectId)
+                             .Where(d => string.IsNullOrWhiteSpace(Environment)
+                                         || string.Equals(d.Environment, Environment, StringComparison.OrdinalIgnoreCase)),
                          d => d.Name, "catlet disk"))
             {
                 if (Stopping) break;

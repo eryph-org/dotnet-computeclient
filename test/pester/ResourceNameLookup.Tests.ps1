@@ -125,6 +125,10 @@ Describe 'Action cmdlets accept name-or-id (parameter surface)' {
     ) {
         (Get-Command $Cmd).Parameters['ProjectName'] | Should -Not -BeNullOrEmpty
     }
+
+    It 'Remove-CatletDisk exposes an -Environment scope (disk names are unique per project + environment)' {
+        (Get-Command Remove-CatletDisk).Parameters['Environment'] | Should -Not -BeNullOrEmpty
+    }
 }
 
 Describe 'Get-EryphProject name-or-id (integration)' -Skip:(-not $eryphAvailable) {
