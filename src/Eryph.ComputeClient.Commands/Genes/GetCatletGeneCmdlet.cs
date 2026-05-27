@@ -10,21 +10,20 @@ using JetBrains.Annotations;
 namespace Eryph.ComputeClient.Commands.Genes;
 
 [PublicAPI]
-[Cmdlet(VerbsCommon.Get, "CatletGene", DefaultParameterSetName = "get")]
+[Cmdlet(VerbsCommon.Get, "CatletGene", DefaultParameterSetName = "list")]
 [OutputType(typeof(GeneWithUsage), ParameterSetName = ["get"])]
-[OutputType(typeof(Gene), ParameterSetName = ["list"])]
+[OutputType(typeof(Gene), typeof(GeneWithUsage), ParameterSetName = ["list"])]
 public class GetCatletGeneCmdlet : CatletGeneCmdlet
 {
     [Parameter(
         ParameterSetName = "get",
-        Position = 0,
         ValueFromPipeline = true,
         ValueFromPipelineByPropertyName = true)]
     public string[] Id { get; set; }
 
     [Parameter(
         ParameterSetName = "list",
-        ValueFromPipelineByPropertyName = true)]
+        Position = 0)]
     [ValidateNotNullOrEmpty]
     public string Name { get; set; }
 
@@ -40,9 +39,20 @@ public class GetCatletGeneCmdlet : CatletGeneCmdlet
         {
             foreach (var id in Id)
             {
-                WriteObject(GetSingleGene(id));
+                if (Stopping) break;
+                if (TryGetById(id, GetSingleGene, "gene", out var gene))
+                    WriteObject(gene);
             }
 
+            return;
+        }
+
+        // A positional GUID is a gene record id; look it up directly (returns the
+        // richer GeneWithUsage), mirroring -Id.
+        if (IsResourceId(Name))
+        {
+            if (TryGetById(Name, GetSingleGene, "gene", out var geneById))
+                WriteObject(geneById);
             return;
         }
 
@@ -53,6 +63,6 @@ public class GetCatletGeneCmdlet : CatletGeneCmdlet
             genes = genes.Where(gene =>
                 string.Equals(gene.Architecture, Architecture, StringComparison.OrdinalIgnoreCase));
 
-        WriteFilteredByName(genes, Name, gene => gene.Name);
+        WriteFilteredByName(genes, Name, gene => gene.Name, "gene");
     }
 }

@@ -7,20 +7,19 @@ using JetBrains.Annotations;
 namespace Eryph.ComputeClient.Commands.Projects
 {
     [PublicAPI]
-    [Cmdlet(VerbsCommon.Get, "EryphProject", DefaultParameterSetName = "get")]
+    [Cmdlet(VerbsCommon.Get, "EryphProject", DefaultParameterSetName = "list")]
     [OutputType(typeof(Project))]
     public class GetEryphProjectCommand : ProjectCmdlet
     {
         [Parameter(
             ParameterSetName = "get",
-            Position = 0,
             ValueFromPipeline = true,
             ValueFromPipelineByPropertyName = true)]
         public string[] Id { get; set; }
 
         [Parameter(
             ParameterSetName = "list",
-            ValueFromPipelineByPropertyName = true)]
+            Position = 0)]
         [ValidateNotNullOrEmpty]
         public string Name { get; set; }
 
@@ -30,16 +29,20 @@ namespace Eryph.ComputeClient.Commands.Projects
             {
                 foreach (var id in Id)
                 {
-                    WriteObject(Factory.CreateProjectsClient().Get(id).Value);
+                    if (Stopping) break;
+                    if (TryGetById(id, i => Factory.CreateProjectsClient().Get(i).Value, "project", out var project))
+                        WriteObject(project);
                 }
 
                 return;
             }
 
-            WriteFilteredByName(
-                Factory.CreateProjectsClient().List(),
+            WriteByNameOrId(
                 Name,
-                project => project.Name);
+                id => Factory.CreateProjectsClient().Get(id).Value,
+                () => Factory.CreateProjectsClient().List(),
+                project => project.Name,
+                "project");
         }
 
 

@@ -9,7 +9,7 @@ using JetBrains.Annotations;
 namespace Eryph.ComputeClient.Commands.Catlets
 {
     [PublicAPI]
-    [Cmdlet(VerbsCommon.Get, "Catlet", DefaultParameterSetName = "get")]
+    [Cmdlet(VerbsCommon.Get, "Catlet", DefaultParameterSetName = "list")]
     [OutputType(typeof(Catlet), ParameterSetName = new[] { "get" })]
     [OutputType(typeof(Catlet), ParameterSetName = new[] { "list" })]
     [OutputType(typeof(string), ParameterSetName = new[] { "getconfig" })]
@@ -34,14 +34,13 @@ namespace Eryph.ComputeClient.Commands.Catlets
 
         [Parameter(
             ParameterSetName = "list",
-            ValueFromPipeline = true,
             ValueFromPipelineByPropertyName = true)]
         [ValidateNotNullOrEmpty]
         public string ProjectName { get; set; }
 
         [Parameter(
             ParameterSetName = "list",
-            ValueFromPipelineByPropertyName = true)]
+            Position = 0)]
         [ValidateNotNullOrEmpty]
         public string Name { get; set; }
 
@@ -52,20 +51,30 @@ namespace Eryph.ComputeClient.Commands.Catlets
             {
                 foreach (var id in Id)
                 {
+                    if (Stopping) break;
+
                     if (Config.IsPresent)
-                        WriteConfig(Factory.CreateCatletsClient().GetConfig(id));
+                    {
+                        if (TryGetById(id, i => Factory.CreateCatletsClient().GetConfig(i), "catlet", out var config))
+                            WriteConfig(config);
+                    }
                     else
-                        WriteObject(GetSingleCatlet(id));
+                    {
+                        if (TryGetById(id, GetSingleCatlet, "catlet", out var catlet))
+                            WriteObject(catlet);
+                    }
                 }
 
                 return;
             }
 
             var projectId = GetProjectId(ProjectName);
-            WriteFilteredByName(
-                Factory.CreateCatletsClient().List(projectId: projectId),
+            WriteByNameOrId(
                 Name,
-                catlet => catlet.Name);
+                GetSingleCatlet,
+                () => Factory.CreateCatletsClient().List(projectId: projectId),
+                catlet => catlet.Name,
+                "catlet");
         }
 
         private void WriteConfig(CatletConfiguration config)

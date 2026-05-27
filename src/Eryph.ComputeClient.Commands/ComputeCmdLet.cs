@@ -164,34 +164,108 @@ namespace Eryph.ComputeClient.Commands
         }
 
         /// <summary>
-        /// Writes the items of a listing to the pipeline, optionally filtered by
-        /// a name pattern. The pattern supports PowerShell wildcards and is matched
-        /// case-insensitively; a pattern without wildcard characters matches exactly.
+        /// Determines whether a positional value should be treated as a resource id
+        /// rather than a name. Resource ids are GUIDs; a value that parses as a GUID
+        /// and contains no wildcard characters is an id. As resource names are short,
+        /// restricted strings they can never collide with the GUID form.
+        /// </summary>
+        protected static bool IsResourceId(string value) =>
+            !string.IsNullOrWhiteSpace(value)
+            && !WildcardPattern.ContainsWildcardCharacters(value)
+            && Guid.TryParse(value, out _);
+
+        /// <summary>
+        /// Resolves a positional value that may be either a resource id (a GUID) or a
+        /// name pattern and writes the result to the pipeline. A GUID is looked up by
+        /// id; otherwise the listing is filtered by name. Use this when lookup by id
+        /// and listing return the same type.
+        /// </summary>
+        protected void WriteByNameOrId<T>(
+            string nameOrId,
+            Func<string, T> getById,
+            Func<IEnumerable<T>> listFactory,
+            Func<T, string> nameSelector,
+            string resourceKind)
+        {
+            if (IsResourceId(nameOrId))
+            {
+                if (TryGetById(nameOrId, getById, resourceKind, out var item))
+                    WriteObject(item);
+                return;
+            }
+
+            WriteFilteredByName(listFactory(), nameOrId, nameSelector, resourceKind);
+        }
+
+        /// <summary>
+        /// Writes the items of a listing to the pipeline, filtered by a name pattern.
+        /// The pattern supports PowerShell wildcards and is matched case-insensitively.
+        /// Following the convention of cmdlets like Get-Process, an exact name (no
+        /// wildcards) that matches nothing produces a not-found error, while a wildcard
+        /// pattern simply returns nothing. A null/empty pattern returns everything.
         /// As eryph has no server-side search, the filtering is performed client-side.
         /// </summary>
         protected void WriteFilteredByName<T>(
             IEnumerable<T> items,
             string namePattern,
-            Func<T, string> nameSelector)
+            Func<T, string> nameSelector,
+            string resourceKind)
         {
+            var hasWildcards = !string.IsNullOrEmpty(namePattern)
+                               && WildcardPattern.ContainsWildcardCharacters(namePattern);
             var pattern = string.IsNullOrWhiteSpace(namePattern)
                 ? null
                 : new WildcardPattern(namePattern, WildcardOptions.IgnoreCase);
 
+            var matched = false;
             foreach (var item in items)
             {
                 if (Stopping) break;
 
-                if (pattern != null)
+                if (pattern is not null)
                 {
                     var name = nameSelector(item);
                     if (name is null || !pattern.IsMatch(name))
                         continue;
                 }
 
+                matched = true;
                 WriteObject(item);
             }
+
+            if (!matched && pattern is not null && !hasWildcards)
+                WriteError(ResourceNotFound(resourceKind, "name", namePattern));
         }
+
+        /// <summary>
+        /// Looks up a resource by id, translating a 404 into a friendly non-terminating
+        /// not-found error instead of leaking a <see cref="RequestFailedException"/>.
+        /// </summary>
+        protected bool TryGetById<T>(
+            string id,
+            Func<string, T> getById,
+            string resourceKind,
+            out T item)
+        {
+            try
+            {
+                item = getById(id);
+                return true;
+            }
+            catch (RequestFailedException ex) when (ex.Status == (int)HttpStatusCode.NotFound)
+            {
+                WriteError(ResourceNotFound(resourceKind, "id", id));
+                item = default;
+                return false;
+            }
+        }
+
+        protected static ErrorRecord ResourceNotFound(string resourceKind, string by, string value) =>
+            new ErrorRecord(
+                new ItemNotFoundException($"Cannot find a {resourceKind} with the {by} '{value}'."),
+                $"{resourceKind.Replace(" ", string.Empty)}NotFound",
+                ErrorCategory.ObjectNotFound,
+                value);
 
         protected Operation WaitForOperation(Operation operation)
         {

@@ -12,28 +12,26 @@ using JetBrains.Annotations;
 namespace Eryph.ComputeClient.Commands.CatletSpecifications;
 
 [PublicAPI]
-[Cmdlet(VerbsCommon.Get, "CatletSpecification", DefaultParameterSetName = "get")]
+[Cmdlet(VerbsCommon.Get, "CatletSpecification", DefaultParameterSetName = "list")]
 [OutputType(typeof(CatletSpecification), ParameterSetName = ["get"])]
 [OutputType(typeof(CatletSpecification), ParameterSetName = ["list"])]
 public class GetCatletSpecification : CatletSpecificationCmdlet
 {
     [Parameter(
         ParameterSetName = "get",
-        Position = 0,
         ValueFromPipeline = true,
         ValueFromPipelineByPropertyName = true)]
     public string[] Id { get; set; }
 
     [Parameter(
         ParameterSetName = "list",
-        ValueFromPipeline = true,
         ValueFromPipelineByPropertyName = true)]
     [ValidateNotNullOrEmpty]
     public string ProjectName { get; set; }
 
     [Parameter(
         ParameterSetName = "list",
-        ValueFromPipelineByPropertyName = true)]
+        Position = 0)]
     [ValidateNotNullOrEmpty]
     public string Name { get; set; }
 
@@ -43,16 +41,20 @@ public class GetCatletSpecification : CatletSpecificationCmdlet
         {
             foreach (var id in Id)
             {
-                WriteObject(GetSingleCatletSpecification(id));
+                if (Stopping) break;
+                if (TryGetById(id, GetSingleCatletSpecification, "catlet specification", out var specification))
+                    WriteObject(specification);
             }
 
             return;
         }
 
         var projectId = GetProjectId(ProjectName);
-        WriteFilteredByName(
-            Factory.CreateCatletSpecificationsClient().List(projectId: projectId),
+        WriteByNameOrId(
             Name,
-            specification => specification.Name);
+            GetSingleCatletSpecification,
+            () => Factory.CreateCatletSpecificationsClient().List(projectId: projectId),
+            specification => specification.Name,
+            "catlet specification");
     }
 }
