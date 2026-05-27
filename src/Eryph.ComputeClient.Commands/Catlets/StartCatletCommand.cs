@@ -17,6 +17,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
             ValueFromPipeline = true,
             Mandatory = true,
             ValueFromPipelineByPropertyName = true)]
+        [Alias("Name")]
         public string[] Id { get; set; }
 
         /// <summary>
@@ -38,6 +39,10 @@ namespace Eryph.ComputeClient.Commands.Catlets
             set => _nowait = value;
         }
 
+        [Parameter]
+        [ValidateNotNullOrEmpty]
+        public string ProjectName { get; set; }
+
         private bool _force;
         private bool _nowait;
         private bool _yesToAll, _noToAll;
@@ -45,29 +50,22 @@ namespace Eryph.ComputeClient.Commands.Catlets
 
         protected override void ProcessRecord()
         {
-            foreach (var id in Id)
+            foreach (var nameOrId in Id)
             {
-                Catlet catlet;
-                try
+                foreach (var catlet in ResolveActionTargets(nameOrId, ProjectName, GetSingleCatlet,
+                             projectId => Factory.CreateCatletsClient().List(projectId: projectId), c => c.Name, "catlet"))
                 {
-                    catlet = Factory.CreateCatletsClient().Get(id);
-                }
-                catch (Exception ex)
-                {
-                    WriteError(new ErrorRecord(ex, "CatletNotFound", ErrorCategory.ObjectNotFound, id));
-                    continue;
-                }
+                    if (Stopping) break;
 
-                if (!Force && !ShouldContinue($"Catlet '{catlet.Name}' (Id:{id}) will be started!", "Warning!",
-                    ref _yesToAll, ref _noToAll))
-                {
-                    continue;
+                    if (!Force && !ShouldContinue($"Catlet '{catlet.Name}' (Id:{catlet.Id}) will be started!", "Warning!",
+                        ref _yesToAll, ref _noToAll))
+                    {
+                        continue;
+                    }
+
+                    WaitForOperation(Factory.CreateCatletsClient().Start(catlet.Id), _nowait, false, catlet.Id);
                 }
-
-                WaitForOperation(Factory.CreateCatletsClient().Start(id), _nowait, false, id);
-
             }
-
         }
 
     }

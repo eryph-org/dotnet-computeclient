@@ -145,13 +145,42 @@ namespace Eryph.ComputeClient.Commands
             WriteObject(resource);
         }
 
+        private readonly Dictionary<string, string> _projectIdCache = new();
+
         protected string GetProjectId(string projectName)
         {
             if (string.IsNullOrWhiteSpace(projectName))
                 return null;
 
+            if (_projectIdCache.TryGetValue(projectName, out var cachedId))
+                return cachedId;
+
             var project = Factory.CreateProjectsClient().List().FirstOrDefault(x => x.Name == projectName);
-            return project == null ? throw new ProjectNotFoundException(projectName) : project.Id;
+            if (project == null)
+                throw new ProjectNotFoundException(projectName);
+
+            _projectIdCache[projectName] = project.Id;
+            return project.Id;
+        }
+
+        /// <summary>
+        /// Resolves a project name to its id, turning an unknown/inaccessible project into
+        /// a non-terminating error (returning false) instead of a terminating exception.
+        /// A null/empty name yields a null id and true (i.e. "no project filter").
+        /// </summary>
+        protected bool TryGetProjectId(string projectName, out string projectId)
+        {
+            try
+            {
+                projectId = GetProjectId(projectName);
+                return true;
+            }
+            catch (ProjectNotFoundException ex)
+            {
+                WriteError(new ErrorRecord(ex, "ProjectNotFound", ErrorCategory.ObjectNotFound, projectName));
+                projectId = null;
+                return false;
+            }
         }
 
         protected void ListOutput<T>(Pageable<T> pageable)
@@ -161,6 +190,239 @@ namespace Eryph.ComputeClient.Commands
                 if (Stopping) break;
                 WriteObject(page, true);
             }
+        }
+
+        /// <summary>
+        /// Determines whether a positional value should be treated as a resource id
+        /// rather than a name. Resource ids are GUIDs; a value that parses as a GUID
+        /// and contains no wildcard characters is an id. As resource names are short,
+        /// restricted strings they can never collide with the GUID form.
+        /// </summary>
+        protected static bool IsResourceId(string value) =>
+            !string.IsNullOrWhiteSpace(value)
+            && !WildcardPattern.ContainsWildcardCharacters(value)
+            && Guid.TryParse(value, out _);
+
+        /// <summary>
+        /// Resolves a value that may be either a resource id (a GUID) or a name pattern
+        /// into the matching resources. A GUID is looked up by id; otherwise the listing
+        /// is filtered by name. Following the convention of cmdlets like Get-Process, an
+        /// exact name (no wildcards) that matches nothing produces a not-found error,
+        /// while a wildcard pattern simply yields nothing. Used both to write results
+        /// (Get-*) and to resolve action targets (Start-/Stop-/Remove-*).
+        /// </summary>
+        /// <remarks>
+        /// This is a deferred iterator that calls <c>WriteError</c> while enumerating, so
+        /// it must be consumed synchronously on the pipeline thread (a foreach inside
+        /// ProcessRecord/EndProcessing). Do not capture the result and enumerate it later.
+        /// </remarks>
+        protected IEnumerable<T> ResolveByNameOrId<T>(
+            string nameOrId,
+            Func<string, T> getById,
+            Func<IEnumerable<T>> listFactory,
+            Func<T, string> nameSelector,
+            string resourceKind)
+        {
+            if (IsResourceId(nameOrId))
+            {
+                if (TryGetById(nameOrId, getById, resourceKind, out var item))
+                    yield return item;
+                yield break;
+            }
+
+            foreach (var item in FilterByName(listFactory(), nameOrId, nameSelector, resourceKind))
+                yield return item;
+        }
+
+        /// <summary>
+        /// Resolves the target(s) of a mutating cmdlet from a value that may be a resource
+        /// id (a GUID) or a name. An id is used directly. A name must be scoped to a
+        /// project (<paramref name="projectName"/> is required) so that it cannot fan out
+        /// across projects; within the project a wildcard may still match several
+        /// resources. This keeps destructive operations from acting on same-named
+        /// resources in other projects.
+        /// </summary>
+        /// <remarks>
+        /// Like <see cref="ResolveByNameOrId{T}"/> this is a deferred iterator that calls
+        /// <c>WriteError</c> while enumerating; consume it on the pipeline thread.
+        /// </remarks>
+        protected IEnumerable<T> ResolveActionTargets<T>(
+            string nameOrId,
+            string projectName,
+            Func<string, T> getById,
+            Func<string, IEnumerable<T>> listInProject,
+            Func<T, string> nameSelector,
+            string resourceKind,
+            string ambiguityHint = null)
+        {
+            if (IsResourceId(nameOrId))
+            {
+                if (TryGetById(nameOrId, getById, resourceKind, out var item))
+                    yield return item;
+                yield break;
+            }
+
+            if (string.IsNullOrWhiteSpace(projectName))
+            {
+                WriteError(new ErrorRecord(
+                    new PSArgumentException(
+                        $"When a {resourceKind} is identified by name, -ProjectName is required "
+                        + "so the name can be resolved within a single project. Specify -ProjectName, "
+                        + "or pass the id instead."),
+                    "ProjectNameRequiredForNameLookup",
+                    ErrorCategory.InvalidArgument,
+                    nameOrId));
+                yield break;
+            }
+
+            if (!TryGetProjectId(projectName, out var projectId))
+                yield break;
+
+            // A wildcard may intentionally match several resources. An exact name, however,
+            // must resolve to a single target before a mutation: some resource names are
+            // unique only per project + environment, so an exact name could otherwise match
+            // several resources and the command would act on all of them.
+            if (WildcardPattern.ContainsWildcardCharacters(nameOrId))
+            {
+                foreach (var item in FilterByName(listInProject(projectId), nameOrId, nameSelector, resourceKind))
+                    yield return item;
+                yield break;
+            }
+
+            var matches = FilterByName(listInProject(projectId), nameOrId, nameSelector, resourceKind).ToList();
+            if (matches.Count > 1)
+            {
+                var hint = string.IsNullOrWhiteSpace(ambiguityHint)
+                    ? "Specify the id to select one."
+                    : $"Narrow the selection with {ambiguityHint} or specify the id.";
+                WriteError(new ErrorRecord(
+                    new PSArgumentException(
+                        $"The {resourceKind} name '{nameOrId}' is ambiguous in project '{projectName}': "
+                        + $"it matches {matches.Count} resources. {hint}"),
+                    "AmbiguousNameInProject",
+                    ErrorCategory.InvalidArgument,
+                    nameOrId));
+                yield break;
+            }
+
+            // 0 matches: FilterByName already emitted the not-found error during enumeration.
+            foreach (var item in matches)
+                yield return item;
+        }
+
+        /// <summary>
+        /// Filters a listing by a name pattern (PowerShell wildcards, case-insensitive).
+        /// An exact name (no wildcards) that matches nothing produces a not-found error;
+        /// a wildcard pattern yields nothing; a null/empty pattern yields everything.
+        /// As eryph has no server-side search, the filtering is performed client-side.
+        /// </summary>
+        protected IEnumerable<T> FilterByName<T>(
+            IEnumerable<T> items,
+            string namePattern,
+            Func<T, string> nameSelector,
+            string resourceKind)
+        {
+            // Only a null/empty pattern means "no filter" (yield everything). A
+            // whitespace-only value is a real (if non-matching) name, not "list all" —
+            // ValidateNotNullOrEmpty lets ' ' through, so treat it as a name to match.
+            var hasWildcards = !string.IsNullOrEmpty(namePattern)
+                               && WildcardPattern.ContainsWildcardCharacters(namePattern);
+            var pattern = string.IsNullOrEmpty(namePattern)
+                ? null
+                : new WildcardPattern(namePattern, WildcardOptions.IgnoreCase);
+
+            var matched = false;
+            foreach (var item in items)
+            {
+                if (Stopping) yield break;
+
+                if (pattern is not null)
+                {
+                    var name = nameSelector(item);
+                    if (name is null || !pattern.IsMatch(name))
+                        continue;
+                }
+
+                matched = true;
+                yield return item;
+            }
+
+            // An exact name (no wildcards) that matches nothing is an error, mirroring
+            // Get-Process/Get-Service. A wildcard pattern simply yields nothing. Do not
+            // raise the error when the pipeline was stopped before a match was found.
+            if (!Stopping && !matched && pattern is not null && !hasWildcards)
+                WriteError(ResourceNotFound(resourceKind, "name", namePattern));
+        }
+
+        /// <summary>
+        /// Resolves a name-or-id value and writes the matching resources to the pipeline.
+        /// </summary>
+        protected void WriteByNameOrId<T>(
+            string nameOrId,
+            Func<string, T> getById,
+            Func<IEnumerable<T>> listFactory,
+            Func<T, string> nameSelector,
+            string resourceKind,
+            Action<T> writeItem = null)
+        {
+            writeItem ??= item => WriteObject(item);
+            foreach (var item in ResolveByNameOrId(nameOrId, getById, listFactory, nameSelector, resourceKind))
+                writeItem(item);
+        }
+
+        /// <summary>
+        /// Writes the items of a listing to the pipeline, filtered by a name pattern.
+        /// </summary>
+        protected void WriteFilteredByName<T>(
+            IEnumerable<T> items,
+            string namePattern,
+            Func<T, string> nameSelector,
+            string resourceKind,
+            Action<T> writeItem = null)
+        {
+            writeItem ??= item => WriteObject(item);
+            foreach (var item in FilterByName(items, namePattern, nameSelector, resourceKind))
+                writeItem(item);
+        }
+
+        /// <summary>
+        /// Looks up a resource by id, translating a 404 into a friendly non-terminating
+        /// not-found error instead of leaking a <see cref="RequestFailedException"/>.
+        /// </summary>
+        protected bool TryGetById<T>(
+            string id,
+            Func<string, T> getById,
+            string resourceKind,
+            out T item)
+        {
+            try
+            {
+                item = getById(id);
+                return true;
+            }
+            catch (RequestFailedException ex)
+            {
+                // 404 becomes a friendly not-found; other server errors (e.g. 403, 500)
+                // are still surfaced as non-terminating so a loop over several ids can
+                // continue, mirroring the previous behaviour.
+                WriteError(ex.Status == (int)HttpStatusCode.NotFound
+                    ? ResourceNotFound(resourceKind, "id", id)
+                    : new ErrorRecord(ex, "RequestFailed", ErrorCategory.NotSpecified, id));
+                item = default;
+                return false;
+            }
+        }
+
+        protected static ErrorRecord ResourceNotFound(string resourceKind, string by, string value)
+        {
+            var errorId = string.Concat(resourceKind
+                .Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(word => char.ToUpperInvariant(word[0]) + word.Substring(1)));
+            return new ErrorRecord(
+                new ItemNotFoundException($"Cannot find a {resourceKind} with the {by} '{value}'."),
+                $"{errorId}NotFound",
+                ErrorCategory.ObjectNotFound,
+                value);
         }
 
         protected Operation WaitForOperation(Operation operation)

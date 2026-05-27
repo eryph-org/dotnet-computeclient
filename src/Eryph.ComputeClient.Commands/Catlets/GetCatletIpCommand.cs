@@ -7,26 +7,32 @@ using JetBrains.Annotations;
 namespace Eryph.ComputeClient.Commands.Catlets;
 
 [PublicAPI]
-[Cmdlet(VerbsCommon.Get, "CatletIp", DefaultParameterSetName = "get")]
-[OutputType(typeof(NetworkPortIp), ParameterSetName = ["get"])]
+[Cmdlet(VerbsCommon.Get, "CatletIp", DefaultParameterSetName = "list")]
+[OutputType(typeof(NetworkPortIp))]
 public class GetCatletIpCommand : CatletCmdLet
 {
     [Parameter(
         ParameterSetName = "get",
-        Position = 0,
         ValueFromPipeline = true,
         ValueFromPipelineByPropertyName = true)]
-
     public string[] Id { get; set; }
 
     [Parameter(
-        ParameterSetName = "get",
-        Mandatory = false)]
-    public SwitchParameter InternalIp { get; set; }
+        ParameterSetName = "list",
+        Position = 0)]
+    [ValidateNotNullOrEmpty]
+    public string Name { get; set; }
 
     [Parameter(
-        ParameterSetName = "get",
-        Mandatory = false)]
+        ParameterSetName = "list",
+        ValueFromPipelineByPropertyName = true)]
+    [ValidateNotNullOrEmpty]
+    public string ProjectName { get; set; }
+
+    [Parameter]
+    public SwitchParameter InternalIp { get; set; }
+
+    [Parameter]
     public string Network { get; set; }
 
     protected override void ProcessRecord()
@@ -35,20 +41,24 @@ public class GetCatletIpCommand : CatletCmdLet
         {
             foreach (var id in Id)
             {
-                var catlet = GetSingleCatlet(id);
-
-                WriteIp(catlet);
+                if (Stopping) break;
+                if (TryGetById(id, GetSingleCatlet, "catlet", out var catlet))
+                    WriteIp(catlet);
             }
 
             return;
         }
 
-        foreach (var catlet in Factory.CreateCatletsClient().List())
-        {
-            if (Stopping) break;
+        if (!TryGetProjectId(ProjectName, out var projectId))
+            return;
 
-            WriteIp(catlet);
-        }
+        WriteByNameOrId(
+            Name,
+            GetSingleCatlet,
+            () => Factory.CreateCatletsClient().List(projectId: projectId),
+            catlet => catlet.Name,
+            "catlet",
+            WriteIp);
     }
 
     private void WriteIp(Catlet catlet)

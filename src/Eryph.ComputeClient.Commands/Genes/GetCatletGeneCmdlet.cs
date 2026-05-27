@@ -10,17 +10,26 @@ using JetBrains.Annotations;
 namespace Eryph.ComputeClient.Commands.Genes;
 
 [PublicAPI]
-[Cmdlet(VerbsCommon.Get, "CatletGene", DefaultParameterSetName = "get")]
+[Cmdlet(VerbsCommon.Get, "CatletGene", DefaultParameterSetName = "list")]
 [OutputType(typeof(GeneWithUsage), ParameterSetName = ["get"])]
-[OutputType(typeof(Gene), ParameterSetName = ["list"])]
+[OutputType(typeof(Gene), typeof(GeneWithUsage), ParameterSetName = ["list"])]
 public class GetCatletGeneCmdlet : CatletGeneCmdlet
 {
     [Parameter(
         ParameterSetName = "get",
-        Position = 0,
         ValueFromPipeline = true,
         ValueFromPipelineByPropertyName = true)]
     public string[] Id { get; set; }
+
+    [Parameter(
+        ParameterSetName = "list",
+        Position = 0)]
+    [ValidateNotNullOrEmpty]
+    public string Name { get; set; }
+
+    [Parameter(ParameterSetName = "list")]
+    [ValidateNotNullOrEmpty]
+    public string Architecture { get; set; }
 
     protected override void ProcessRecord()
     {
@@ -28,16 +37,30 @@ public class GetCatletGeneCmdlet : CatletGeneCmdlet
         {
             foreach (var id in Id)
             {
-                WriteObject(GetSingleGene(id));
+                if (Stopping) break;
+                if (TryGetById(id, GetSingleGene, "gene", out var gene))
+                    WriteObject(gene);
             }
 
             return;
         }
 
-        foreach (var gene in Factory.CreateGenesClient().List())
+        // A positional GUID is a gene record id; look it up directly (returns the
+        // richer GeneWithUsage), mirroring -Id.
+        if (IsResourceId(Name))
         {
-            if (Stopping) break;
-            WriteObject(gene, true);
+            if (TryGetById(Name, GetSingleGene, "gene", out var geneById))
+                WriteObject(geneById);
+            return;
         }
+
+        // Genes list globally and are identified by GeneSet + Name + Architecture.
+        // Architecture is an exact (case-insensitive) filter; Name supports wildcards.
+        IEnumerable<Gene> genes = Factory.CreateGenesClient().List();
+        if (!string.IsNullOrWhiteSpace(Architecture))
+            genes = genes.Where(gene =>
+                string.Equals(gene.Architecture, Architecture, StringComparison.OrdinalIgnoreCase));
+
+        WriteFilteredByName(genes, Name, gene => gene.Name, "gene");
     }
 }

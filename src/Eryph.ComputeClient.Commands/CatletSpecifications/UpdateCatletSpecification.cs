@@ -25,8 +25,11 @@ public class UpdateCatletSpecification : CatletSpecificationCmdlet
     [ValidateNotNullOrEmpty]
     public string Config { get; set; }
 
+    // Not positional (unlike the other action cmdlets' -Id): position 0 is taken by
+    // -InputObject, the specification content. The target is given via -Id / -Name.
     [Parameter(Mandatory = true)]
     [ValidateNotNullOrEmpty]
+    [Alias("Name")]
     public string Id { get; set; }
 
     [Parameter]
@@ -41,6 +44,10 @@ public class UpdateCatletSpecification : CatletSpecificationCmdlet
 
     [Parameter]
     public SwitchParameter NoWait { get; set; }
+
+    [Parameter]
+    [ValidateNotNullOrEmpty]
+    public string ProjectName { get; set; }
 
     private readonly StringBuilder _input = new StringBuilder();
 
@@ -69,15 +76,22 @@ public class UpdateCatletSpecification : CatletSpecificationCmdlet
             Json.ToBool() ? "application/json" : "application/yaml",
             input);
 
-        WaitForOperation(Factory.CreateCatletSpecificationsClient().Update(
-                Id,
-                new UpdateCatletSpecificationRequestBody(config)
-                {
-                    CorrelationId = Guid.NewGuid(),
-                    Comment = Comment,
-                    Architectures = Architectures,
-                }),
-            NoWait,
-            true);
+        foreach (var specification in ResolveActionTargets(Id, ProjectName, GetSingleCatletSpecification,
+                     projectId => Factory.CreateCatletSpecificationsClient().List(projectId: projectId),
+                     s => s.Name, "catlet specification"))
+        {
+            if (Stopping) break;
+
+            WaitForOperation(Factory.CreateCatletSpecificationsClient().Update(
+                    specification.Id,
+                    new UpdateCatletSpecificationRequestBody(config)
+                    {
+                        CorrelationId = Guid.NewGuid(),
+                        Comment = Comment,
+                        Architectures = Architectures,
+                    }),
+                NoWait,
+                true);
+        }
     }
 }
