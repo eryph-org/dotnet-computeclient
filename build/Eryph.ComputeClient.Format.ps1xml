@@ -141,7 +141,15 @@
               <TableColumnItem><PropertyName>Name</PropertyName></TableColumnItem>
               <TableColumnItem><PropertyName>GeneType</PropertyName></TableColumnItem>
               <TableColumnItem><PropertyName>Architecture</PropertyName></TableColumnItem>
-              <TableColumnItem><PropertyName>Size</PropertyName></TableColumnItem>
+              <TableColumnItem>
+                <ScriptBlock>
+                  $b = $_.Size
+                  if ($b -ge 1GB) { '{0:N2} GB' -f ($b / 1GB) }
+                  elseif ($b -ge 1MB) { '{0:N2} MB' -f ($b / 1MB) }
+                  elseif ($b -ge 1KB) { '{0:N2} KB' -f ($b / 1KB) }
+                  else { "$b B" }
+                </ScriptBlock>
+              </TableColumnItem>
             </TableColumnItems>
           </TableRowEntry>
         </TableRowEntries>
@@ -283,7 +291,15 @@
               <TableColumnItem><PropertyName>Name</PropertyName></TableColumnItem>
               <TableColumnItem><PropertyName>GeneType</PropertyName></TableColumnItem>
               <TableColumnItem><PropertyName>Architecture</PropertyName></TableColumnItem>
-              <TableColumnItem><PropertyName>Size</PropertyName></TableColumnItem>
+              <TableColumnItem>
+                <ScriptBlock>
+                  $b = $_.Size
+                  if ($b -ge 1GB) { '{0:N2} GB' -f ($b / 1GB) }
+                  elseif ($b -ge 1MB) { '{0:N2} MB' -f ($b / 1MB) }
+                  elseif ($b -ge 1KB) { '{0:N2} KB' -f ($b / 1KB) }
+                  else { "$b B" }
+                </ScriptBlock>
+              </TableColumnItem>
             </TableColumnItems>
           </TableRowEntry>
         </TableRowEntries>
