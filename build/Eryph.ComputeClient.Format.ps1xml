@@ -56,14 +56,12 @@
         <TableHeaders>
           <TableColumnHeader><Label>Name</Label></TableColumnHeader>
           <TableColumnHeader><Label>Id</Label><Width>38</Width></TableColumnHeader>
-          <TableColumnHeader><Label>TenantId</Label><Width>38</Width></TableColumnHeader>
         </TableHeaders>
         <TableRowEntries>
           <TableRowEntry>
             <TableColumnItems>
               <TableColumnItem><PropertyName>Name</PropertyName></TableColumnItem>
               <TableColumnItem><PropertyName>Id</PropertyName></TableColumnItem>
-              <TableColumnItem><PropertyName>TenantId</PropertyName></TableColumnItem>
             </TableColumnItems>
           </TableRowEntry>
         </TableRowEntries>
@@ -144,10 +142,11 @@
               <TableColumnItem>
                 <ScriptBlock>
                   $b = $_.Size
-                  if ($b -ge 1GB) { '{0:N2} GB' -f ($b / 1GB) }
-                  elseif ($b -ge 1MB) { '{0:N2} MB' -f ($b / 1MB) }
-                  elseif ($b -ge 1KB) { '{0:N2} KB' -f ($b / 1KB) }
-                  else { "$b B" }
+                  if ($b -ge 1GB) { $n = '{0:N2}' -f ($b / 1GB); $u = 'GB' }
+                  elseif ($b -ge 1MB) { $n = '{0:N2}' -f ($b / 1MB); $u = 'MB' }
+                  elseif ($b -ge 1KB) { $n = '{0:N2}' -f ($b / 1KB); $u = 'KB' }
+                  else { $n = "$b"; $u = 'B' }
+                  '{0,8} {1}' -f $n, $u
                 </ScriptBlock>
               </TableColumnItem>
             </TableColumnItems>
@@ -294,10 +293,11 @@
               <TableColumnItem>
                 <ScriptBlock>
                   $b = $_.Size
-                  if ($b -ge 1GB) { '{0:N2} GB' -f ($b / 1GB) }
-                  elseif ($b -ge 1MB) { '{0:N2} MB' -f ($b / 1MB) }
-                  elseif ($b -ge 1KB) { '{0:N2} KB' -f ($b / 1KB) }
-                  else { "$b B" }
+                  if ($b -ge 1GB) { $n = '{0:N2}' -f ($b / 1GB); $u = 'GB' }
+                  elseif ($b -ge 1MB) { $n = '{0:N2}' -f ($b / 1MB); $u = 'MB' }
+                  elseif ($b -ge 1KB) { $n = '{0:N2}' -f ($b / 1KB); $u = 'KB' }
+                  else { $n = "$b"; $u = 'B' }
+                  '{0,8} {1}' -f $n, $u
                 </ScriptBlock>
               </TableColumnItem>
             </TableColumnItems>
