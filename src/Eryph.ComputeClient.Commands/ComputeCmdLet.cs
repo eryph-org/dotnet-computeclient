@@ -145,13 +145,22 @@ namespace Eryph.ComputeClient.Commands
             WriteObject(resource);
         }
 
+        private readonly Dictionary<string, string> _projectIdCache = new();
+
         protected string GetProjectId(string projectName)
         {
             if (string.IsNullOrWhiteSpace(projectName))
                 return null;
 
+            if (_projectIdCache.TryGetValue(projectName, out var cachedId))
+                return cachedId;
+
             var project = Factory.CreateProjectsClient().List().FirstOrDefault(x => x.Name == projectName);
-            return project == null ? throw new ProjectNotFoundException(projectName) : project.Id;
+            if (project == null)
+                throw new ProjectNotFoundException(projectName);
+
+            _projectIdCache[projectName] = project.Id;
+            return project.Id;
         }
 
         protected void ListOutput<T>(Pageable<T> pageable)
@@ -245,7 +254,21 @@ namespace Eryph.ComputeClient.Commands
                 yield break;
             }
 
-            var projectId = GetProjectId(projectName);
+            string projectId = null;
+            var projectResolved = true;
+            try
+            {
+                projectId = GetProjectId(projectName);
+            }
+            catch (ProjectNotFoundException ex)
+            {
+                WriteError(new ErrorRecord(ex, "ProjectNotFound", ErrorCategory.ObjectNotFound, projectName));
+                projectResolved = false;
+            }
+
+            if (!projectResolved)
+                yield break;
+
             foreach (var item in FilterByName(listInProject(projectId), nameOrId, nameSelector, resourceKind))
                 yield return item;
         }
@@ -337,9 +360,14 @@ namespace Eryph.ComputeClient.Commands
                 item = getById(id);
                 return true;
             }
-            catch (RequestFailedException ex) when (ex.Status == (int)HttpStatusCode.NotFound)
+            catch (RequestFailedException ex)
             {
-                WriteError(ResourceNotFound(resourceKind, "id", id));
+                // 404 becomes a friendly not-found; other server errors (e.g. 403, 500)
+                // are still surfaced as non-terminating so a loop over several ids can
+                // continue, mirroring the previous behaviour.
+                WriteError(ex.Status == (int)HttpStatusCode.NotFound
+                    ? ResourceNotFound(resourceKind, "id", id)
+                    : new ErrorRecord(ex, "RequestFailed", ErrorCategory.NotSpecified, id));
                 item = default;
                 return false;
             }

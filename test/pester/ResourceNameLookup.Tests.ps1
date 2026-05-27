@@ -248,6 +248,11 @@ Describe 'Action cmdlets name resolution (integration, non-destructive)' -Skip:(
             Should -Throw -ExpectedMessage '*Cannot find*'
     }
 
+    It 'errors when -ProjectName does not exist (nothing is started)' {
+        { Start-Catlet -Name 'web' -ProjectName "no-such-project-$([guid]::NewGuid().ToString('N').Substring(0,6))" -ErrorAction Stop } |
+            Should -Throw
+    }
+
     It 'Start-Catlet errors on a non-existent exact name within a project (nothing is started)' {
         { Start-Catlet -Name "zzz-$([guid]::NewGuid().ToString('N'))" -ProjectName 'default' -ErrorAction Stop } |
             Should -Throw
