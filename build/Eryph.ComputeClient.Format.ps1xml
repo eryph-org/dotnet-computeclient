@@ -263,5 +263,70 @@
         </TableRowEntries>
       </TableControl>
     </View>
+    <View>
+      <Name>Eryph.ComputeClient.Models.Gene</Name>
+      <ViewSelectedBy>
+        <TypeName>Eryph.ComputeClient.Models.Gene</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <TableHeaders>
+          <TableColumnHeader><Label>GeneSet</Label></TableColumnHeader>
+          <TableColumnHeader><Label>Name</Label></TableColumnHeader>
+          <TableColumnHeader><Label>GeneType</Label></TableColumnHeader>
+          <TableColumnHeader><Label>Architecture</Label></TableColumnHeader>
+          <TableColumnHeader><Label>Size</Label><Alignment>Right</Alignment></TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem><PropertyName>GeneSet</PropertyName></TableColumnItem>
+              <TableColumnItem><PropertyName>Name</PropertyName></TableColumnItem>
+              <TableColumnItem><PropertyName>GeneType</PropertyName></TableColumnItem>
+              <TableColumnItem><PropertyName>Architecture</PropertyName></TableColumnItem>
+              <TableColumnItem><PropertyName>Size</PropertyName></TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+    <View>
+      <Name>Eryph.ComputeClient.Models.ValidationIssue</Name>
+      <ViewSelectedBy>
+        <TypeName>Eryph.ComputeClient.Models.ValidationIssue</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <TableHeaders>
+          <TableColumnHeader><Label>Member</Label></TableColumnHeader>
+          <TableColumnHeader><Label>Message</Label></TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem><PropertyName>Member</PropertyName></TableColumnItem>
+              <TableColumnItem><PropertyName>Message</PropertyName></TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+    <View>
+      <Name>Eryph.ComputeClient.Models.CatletConfigValidationResult</Name>
+      <ViewSelectedBy>
+        <TypeName>Eryph.ComputeClient.Models.CatletConfigValidationResult</TypeName>
+      </ViewSelectedBy>
+      <ListControl>
+        <ListEntries>
+          <ListEntry>
+            <ListItems>
+              <ListItem><PropertyName>IsValid</PropertyName></ListItem>
+              <ListItem>
+                <Label>Errors</Label>
+                <ScriptBlock>($_.Errors | ForEach-Object { if ($_.Member) { "$($_.Member): $($_.Message)" } else { $_.Message } }) -join [System.Environment]::NewLine</ScriptBlock>
+              </ListItem>
+            </ListItems>
+          </ListEntry>
+        </ListEntries>
+      </ListControl>
+    </View>
   </ViewDefinitions>
 </Configuration>
