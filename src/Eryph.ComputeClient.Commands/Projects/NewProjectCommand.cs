@@ -7,8 +7,9 @@ using JetBrains.Annotations;
 namespace Eryph.ComputeClient.Commands.Projects
 {
     [PublicAPI]
-    [Cmdlet(VerbsCommon.New, "EryphProject")]
-    [OutputType(typeof(Operation), typeof(Project))]
+    [Cmdlet(VerbsCommon.New, "EryphProject", DefaultParameterSetName = "Wait")]
+    [OutputType(typeof(Project), ParameterSetName = new[] { "Wait" })]
+    [OutputType(typeof(Operation), ParameterSetName = new[] { "NoWait" })]
     public class NewProjectCommand : ProjectCmdlet
     {
         [Parameter(
@@ -18,7 +19,7 @@ namespace Eryph.ComputeClient.Commands.Projects
             ValueFromPipelineByPropertyName = true)]
         public string Name { get; set; }
 
-        [Parameter]
+        [Parameter(ParameterSetName = "NoWait")]
         public SwitchParameter NoWait
         {
             get => _nowait;

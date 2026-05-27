@@ -10,8 +10,9 @@ using JetBrains.Annotations;
 namespace Eryph.ComputeClient.Commands.Catlets;
 
 [PublicAPI]
-[Cmdlet(VerbsCommon.Remove, "CatletDisk")]
-[OutputType(typeof(Operation), typeof(VirtualDisk))]
+[Cmdlet(VerbsCommon.Remove, "CatletDisk", DefaultParameterSetName = "Wait")]
+[OutputType(typeof(VirtualDisk), ParameterSetName = new[] { "Wait" })]
+[OutputType(typeof(Operation), ParameterSetName = new[] { "NoWait" })]
 public class RemoveCatletDiskCmdlet : CatletDiskCmdlet
 {
     [Parameter(
@@ -38,7 +39,7 @@ public class RemoveCatletDiskCmdlet : CatletDiskCmdlet
     [Parameter]
     public SwitchParameter PassThru { get; set; }
 
-    [Parameter]
+    [Parameter(ParameterSetName = "NoWait")]
     public SwitchParameter NoWait { get; set; }
 
     [Parameter]

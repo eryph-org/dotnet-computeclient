@@ -11,8 +11,9 @@ using JetBrains.Annotations;
 namespace Eryph.ComputeClient.Commands.Catlets;
 
 [PublicAPI]
-[Cmdlet(VerbsCommon.New, "CatletDisk")]
-[OutputType(typeof(Operation), typeof(VirtualDisk))]
+[Cmdlet(VerbsCommon.New, "CatletDisk", DefaultParameterSetName = "Wait")]
+[OutputType(typeof(VirtualDisk), ParameterSetName = new[] { "Wait" })]
+[OutputType(typeof(Operation), ParameterSetName = new[] { "NoWait" })]
 public class NewCatletDiskCmdlet : CatletDiskCmdlet
 {
     [Parameter(Mandatory = true)]
@@ -39,7 +40,7 @@ public class NewCatletDiskCmdlet : CatletDiskCmdlet
     [ValidateNotNullOrEmpty]
     public string Environment { get; set; }
 
-    [Parameter]
+    [Parameter(ParameterSetName = "NoWait")]
     public SwitchParameter NoWait { get; set; }
 
     protected override void ProcessRecord()
