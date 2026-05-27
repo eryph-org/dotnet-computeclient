@@ -163,6 +163,36 @@ namespace Eryph.ComputeClient.Commands
             }
         }
 
+        /// <summary>
+        /// Writes the items of a listing to the pipeline, optionally filtered by
+        /// a name pattern. The pattern supports PowerShell wildcards and is matched
+        /// case-insensitively; a pattern without wildcard characters matches exactly.
+        /// As eryph has no server-side search, the filtering is performed client-side.
+        /// </summary>
+        protected void WriteFilteredByName<T>(
+            IEnumerable<T> items,
+            string namePattern,
+            Func<T, string> nameSelector)
+        {
+            var pattern = string.IsNullOrWhiteSpace(namePattern)
+                ? null
+                : new WildcardPattern(namePattern, WildcardOptions.IgnoreCase);
+
+            foreach (var item in items)
+            {
+                if (Stopping) break;
+
+                if (pattern != null)
+                {
+                    var name = nameSelector(item);
+                    if (name is null || !pattern.IsMatch(name))
+                        continue;
+                }
+
+                WriteObject(item);
+            }
+        }
+
         protected Operation WaitForOperation(Operation operation)
         {
             var timeStamp = DateTime.Parse("2018-01-01", CultureInfo.InvariantCulture);

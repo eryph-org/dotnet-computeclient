@@ -18,6 +18,12 @@ namespace Eryph.ComputeClient.Commands.Projects
             ValueFromPipelineByPropertyName = true)]
         public string[] Id { get; set; }
 
+        [Parameter(
+            ParameterSetName = "list",
+            ValueFromPipelineByPropertyName = true)]
+        [ValidateNotNullOrEmpty]
+        public string Name { get; set; }
+
         protected override void ProcessRecord()
         {
             if (Id != null)
@@ -30,9 +36,10 @@ namespace Eryph.ComputeClient.Commands.Projects
                 return;
             }
 
-            ListOutput(Factory.CreateProjectsClient().List());
-
-
+            WriteFilteredByName(
+                Factory.CreateProjectsClient().List(),
+                Name,
+                project => project.Name);
         }
 
 

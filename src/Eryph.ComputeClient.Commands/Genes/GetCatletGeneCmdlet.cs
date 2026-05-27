@@ -22,6 +22,18 @@ public class GetCatletGeneCmdlet : CatletGeneCmdlet
         ValueFromPipelineByPropertyName = true)]
     public string[] Id { get; set; }
 
+    [Parameter(
+        ParameterSetName = "list",
+        ValueFromPipelineByPropertyName = true)]
+    [ValidateNotNullOrEmpty]
+    public string Name { get; set; }
+
+    [Parameter(
+        ParameterSetName = "list",
+        ValueFromPipelineByPropertyName = true)]
+    [ValidateNotNullOrEmpty]
+    public string Architecture { get; set; }
+
     protected override void ProcessRecord()
     {
         if (Id != null)
@@ -34,10 +46,13 @@ public class GetCatletGeneCmdlet : CatletGeneCmdlet
             return;
         }
 
-        foreach (var gene in Factory.CreateGenesClient().List())
-        {
-            if (Stopping) break;
-            WriteObject(gene, true);
-        }
+        // Genes list globally and are identified by GeneSet + Name + Architecture.
+        // Architecture is an exact (case-insensitive) filter; Name supports wildcards.
+        IEnumerable<Gene> genes = Factory.CreateGenesClient().List();
+        if (!string.IsNullOrWhiteSpace(Architecture))
+            genes = genes.Where(gene =>
+                string.Equals(gene.Architecture, Architecture, StringComparison.OrdinalIgnoreCase));
+
+        WriteFilteredByName(genes, Name, gene => gene.Name);
     }
 }

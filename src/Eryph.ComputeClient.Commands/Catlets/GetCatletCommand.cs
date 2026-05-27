@@ -39,6 +39,12 @@ namespace Eryph.ComputeClient.Commands.Catlets
         [ValidateNotNullOrEmpty]
         public string ProjectName { get; set; }
 
+        [Parameter(
+            ParameterSetName = "list",
+            ValueFromPipelineByPropertyName = true)]
+        [ValidateNotNullOrEmpty]
+        public string Name { get; set; }
+
         protected override void ProcessRecord()
         {
 
@@ -56,22 +62,10 @@ namespace Eryph.ComputeClient.Commands.Catlets
             }
 
             var projectId = GetProjectId(ProjectName);
-            foreach (var virtualCatlet in Factory.CreateCatletsClient().List(projectId: projectId))
-            {
-                if (Stopping) break;
-
-                if (Config.IsPresent)
-                {
-                    WriteConfig(Factory.CreateCatletsClient().GetConfig(virtualCatlet.Id));
-
-                }
-                else
-                {
-                    WriteObject(virtualCatlet, true);
-                }
-            }
-
-
+            WriteFilteredByName(
+                Factory.CreateCatletsClient().List(projectId: projectId),
+                Name,
+                catlet => catlet.Name);
         }
 
         private void WriteConfig(CatletConfiguration config)

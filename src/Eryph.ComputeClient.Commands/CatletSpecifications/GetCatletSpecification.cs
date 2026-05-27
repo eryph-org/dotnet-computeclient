@@ -31,6 +31,12 @@ public class GetCatletSpecification : CatletSpecificationCmdlet
     [ValidateNotNullOrEmpty]
     public string ProjectName { get; set; }
 
+    [Parameter(
+        ParameterSetName = "list",
+        ValueFromPipelineByPropertyName = true)]
+    [ValidateNotNullOrEmpty]
+    public string Name { get; set; }
+
     protected override void ProcessRecord()
     {
         if (Id is not null)
@@ -44,12 +50,9 @@ public class GetCatletSpecification : CatletSpecificationCmdlet
         }
 
         var projectId = GetProjectId(ProjectName);
-        var specifications = Factory.CreateCatletSpecificationsClient().List(projectId: projectId);
-        foreach (var specification in specifications)
-        {
-            if (Stopping) break;
-
-            WriteObject(specification, true);
-        }
+        WriteFilteredByName(
+            Factory.CreateCatletSpecificationsClient().List(projectId: projectId),
+            Name,
+            specification => specification.Name);
     }
 }
