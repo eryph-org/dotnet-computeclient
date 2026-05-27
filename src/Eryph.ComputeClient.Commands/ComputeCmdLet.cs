@@ -461,6 +461,11 @@ namespace Eryph.ComputeClient.Commands
             var operationsClient = Factory.CreateOperationsClient();
             var currentOperation = operation;
             ProgressRecord masterRecord = null;
+            // Logs are fetched incrementally (the timeStamp advances each poll), so a
+            // poll without new logs returns none. Remember the last phase/message so
+            // quiet polls keep showing them instead of resetting the master bar.
+            string lastPhase = null;
+            string lastMessage = null;
             while (!Stopping)
             {
                 Task.Delay(1000).GetAwaiter().GetResult();
@@ -472,18 +477,24 @@ namespace Eryph.ComputeClient.Commands
                     .FirstOrDefault();
 
                 // The master status text reflects the current phase: the task the
-                // most recent log entry belongs to, falling back to the operation
-                // status when there is no usable task name.
-                var currentPhase = currentOperation.Status.ToString();
-                if (string.IsNullOrWhiteSpace(currentPhase))
-                    currentPhase = "Running"; // ProgressRecord requires a non-empty status description
+                // most recent log entry belongs to. On polls with new logs, refresh
+                // the remembered phase/message; otherwise keep the previous ones so a
+                // quiet poll does not blank the master bar.
                 if (latestLog != null)
                 {
+                    lastMessage = latestLog.Message;
                     var logTask = currentOperation.Tasks.FirstOrDefault(x => x.Id == latestLog.TaskId);
                     var logTaskName = logTask != null ? GetTaskDisplayName(logTask, operation.Id) : null;
                     if (!string.IsNullOrWhiteSpace(logTaskName))
-                        currentPhase = logTaskName;
+                        lastPhase = logTaskName;
                 }
+
+                // Fall back to the operation status until a task name is known.
+                var currentPhase = !string.IsNullOrWhiteSpace(lastPhase)
+                    ? lastPhase
+                    : currentOperation.Status.ToString();
+                if (string.IsNullOrWhiteSpace(currentPhase))
+                    currentPhase = "Running"; // ProgressRecord requires a non-empty status description
 
                 var primaryTask = currentOperation.Tasks
                     .Where(x => x.ParentTaskId == operation.Id)
@@ -500,7 +511,7 @@ namespace Eryph.ComputeClient.Commands
                 {
                     PercentComplete = -1,
                     RecordType = ProgressRecordType.Processing,
-                    CurrentOperation = latestLog?.Message,
+                    CurrentOperation = lastMessage,
                 };
                 WriteProgressIfChanged(masterRecord);
 
