@@ -53,7 +53,8 @@ namespace Eryph.ComputeClient.Commands.Networks
 
         protected override void ProcessRecord()
         {
-            var projectId = GetProjectId(ProjectName);
+            if (!TryGetProjectId(ProjectName, out var projectId))
+                return;
 
             if (Config.IsPresent)
             {

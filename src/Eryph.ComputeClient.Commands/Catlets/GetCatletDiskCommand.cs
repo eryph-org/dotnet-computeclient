@@ -49,7 +49,8 @@ public class GetCatletDiskCommand : CatletDiskCmdlet
             return;
         }
 
-        var projectId = GetProjectId(ProjectName);
+        if (!TryGetProjectId(ProjectName, out var projectId))
+            return;
 
         // Disk names are unique per project + environment, so allow narrowing by
         // environment. The environment filter is applied to the listing; an explicit

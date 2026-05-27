@@ -17,9 +17,11 @@ namespace Eryph.ComputeClient.Commands.Catlets
     {
         [Parameter(
             ParameterSetName = "get",
-            Position = 0,
             ValueFromPipeline = true,
             ValueFromPipelineByPropertyName = true)]
+        // Positional only in the 'getconfig' set, so 'Get-Catlet <id> -Config' works.
+        // The bare positional slot otherwise belongs to -Name in the (default) 'list' set,
+        // consistent with the other Get-* cmdlets.
         [Parameter(
             ParameterSetName = "getconfig",
             Position = 0,
@@ -68,7 +70,8 @@ namespace Eryph.ComputeClient.Commands.Catlets
                 return;
             }
 
-            var projectId = GetProjectId(ProjectName);
+            if (!TryGetProjectId(ProjectName, out var projectId))
+                return;
 
             // 'Get-Catlet -Config' (without -Id) dumps the config of every catlet in
             // scope. -Config lives in the 'getconfig' set, so -Name is never set here.

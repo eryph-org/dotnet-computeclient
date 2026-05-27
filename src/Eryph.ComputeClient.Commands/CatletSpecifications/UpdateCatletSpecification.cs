@@ -25,6 +25,8 @@ public class UpdateCatletSpecification : CatletSpecificationCmdlet
     [ValidateNotNullOrEmpty]
     public string Config { get; set; }
 
+    // Not positional (unlike the other action cmdlets' -Id): position 0 is taken by
+    // -InputObject, the specification content. The target is given via -Id / -Name.
     [Parameter(Mandatory = true)]
     [ValidateNotNullOrEmpty]
     [Alias("Name")]

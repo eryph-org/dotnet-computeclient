@@ -49,7 +49,9 @@ public class GetCatletSpecification : CatletSpecificationCmdlet
             return;
         }
 
-        var projectId = GetProjectId(ProjectName);
+        if (!TryGetProjectId(ProjectName, out var projectId))
+            return;
+
         WriteByNameOrId(
             Name,
             GetSingleCatletSpecification,

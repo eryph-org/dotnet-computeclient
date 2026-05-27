@@ -163,6 +163,26 @@ namespace Eryph.ComputeClient.Commands
             return project.Id;
         }
 
+        /// <summary>
+        /// Resolves a project name to its id, turning an unknown/inaccessible project into
+        /// a non-terminating error (returning false) instead of a terminating exception.
+        /// A null/empty name yields a null id and true (i.e. "no project filter").
+        /// </summary>
+        protected bool TryGetProjectId(string projectName, out string projectId)
+        {
+            try
+            {
+                projectId = GetProjectId(projectName);
+                return true;
+            }
+            catch (ProjectNotFoundException ex)
+            {
+                WriteError(new ErrorRecord(ex, "ProjectNotFound", ErrorCategory.ObjectNotFound, projectName));
+                projectId = null;
+                return false;
+            }
+        }
+
         protected void ListOutput<T>(Pageable<T> pageable)
         {
             foreach (var page in pageable)
@@ -255,19 +275,7 @@ namespace Eryph.ComputeClient.Commands
                 yield break;
             }
 
-            string projectId = null;
-            var projectResolved = true;
-            try
-            {
-                projectId = GetProjectId(projectName);
-            }
-            catch (ProjectNotFoundException ex)
-            {
-                WriteError(new ErrorRecord(ex, "ProjectNotFound", ErrorCategory.ObjectNotFound, projectName));
-                projectResolved = false;
-            }
-
-            if (!projectResolved)
+            if (!TryGetProjectId(projectName, out var projectId))
                 yield break;
 
             // A wildcard may intentionally match several resources. An exact name, however,

@@ -215,6 +215,14 @@ Describe 'Get-Catlet name-or-id (integration, read-only)' -Skip:(-not $eryphAvai
         { Get-Catlet -Name '   ' -ErrorAction Stop } | Should -Throw
     }
 
+    It 'reports an unknown -ProjectName as a non-terminating error' {
+        $bad = "no-such-project-$([guid]::NewGuid().ToString('N').Substring(0,6))"
+        # Non-terminating: SilentlyContinue suppresses it without throwing...
+        { Get-Catlet -ProjectName $bad -ErrorAction SilentlyContinue } | Should -Not -Throw
+        # ...but it is a real error, surfaced when -ErrorAction Stop is used.
+        { Get-Catlet -ProjectName $bad -ErrorAction Stop } | Should -Throw
+    }
+
     It '-Config (without -Id) returns YAML config strings, not catlet objects' {
         if ($existing.Count -eq 0) { Set-ItResult -Skipped -Because 'no catlets present'; return }
         $config = @(Get-Catlet -Config)
