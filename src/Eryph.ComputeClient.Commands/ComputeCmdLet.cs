@@ -430,123 +430,124 @@ namespace Eryph.ComputeClient.Commands
             var timeStamp = DateTime.Parse("2018-01-01", CultureInfo.InvariantCulture);
 
 
-            var processedLogIds = new List<string>();
-            var activityCounter = -1;
-            var activityIds = new Dictionary<string, int> { { operation.Id, activityCounter++ } };
+            var processedLogIds = new HashSet<string>();
 
-            var completedActivities = new List<int>();
+            // The operation is shown as a single, stable master progress bar. It
+            // carries no percentage: the number of tasks is only known at runtime and
+            // most tasks never report progress, so any overall total would be
+            // misleading. Only tasks that actually report progress get a child bar,
+            // and each child bar is removed again as soon as its task stops reporting
+            // progress - the set of progress-bearing tasks changes constantly (e.g.
+            // parallel downloads/extractions), so keeping finished ones would quickly
+            // fill the screen. A stable master plus few, real child bars is what
+            // avoids the flickering described in #78.
+            const int operationActivityId = 0;
+            var taskActivityIds = new Dictionary<string, int>();
+            var nextTaskActivityId = 1;
+            var childRecords = new Dictionary<int, ProgressRecord>();
+            var lastWrittenSignatures = new Dictionary<int, string>();
+
+            void WriteProgressIfChanged(ProgressRecord record)
+            {
+                var signature = GetProgressSignature(record);
+                if (lastWrittenSignatures.TryGetValue(record.ActivityId, out var previous)
+                    && previous == signature)
+                    return;
+
+                lastWrittenSignatures[record.ActivityId] = signature;
+                WriteProgress(record);
+            }
 
             var operationsClient = Factory.CreateOperationsClient();
             var currentOperation = operation;
+            ProgressRecord masterRecord = null;
             while (!Stopping)
             {
                 Task.Delay(1000).GetAwaiter().GetResult();
 
                 currentOperation = operationsClient.Get(operation.Id, timeStamp, expand: "logs,tasks").Value;
 
-                foreach (var operationTask in currentOperation.Tasks)
+                var latestLog = currentOperation.LogEntries
+                    .OrderByDescending(x => x.Timestamp)
+                    .FirstOrDefault();
+
+                // The master status text reflects the current phase: the task the
+                // most recent log entry belongs to, falling back to the operation
+                // status when there is no usable task name.
+                var currentPhase = currentOperation.Status.ToString();
+                if (string.IsNullOrWhiteSpace(currentPhase))
+                    currentPhase = "Running"; // ProgressRecord requires a non-empty status description
+                if (latestLog != null)
                 {
-                    if (!activityIds.ContainsKey(operationTask.Id))
-                        activityIds.Add(operationTask.Id, activityCounter++);
+                    var logTask = currentOperation.Tasks.FirstOrDefault(x => x.Id == latestLog.TaskId);
+                    var logTaskName = logTask != null ? GetTaskDisplayName(logTask, operation.Id) : null;
+                    if (!string.IsNullOrWhiteSpace(logTaskName))
+                        currentPhase = logTaskName;
                 }
 
-                var activities = new Dictionary<string,ProgressRecord>();
-                foreach (var operationTask in currentOperation.Tasks)
+                var primaryTask = currentOperation.Tasks
+                    .Where(x => x.ParentTaskId == operation.Id)
+                    .OrderBy(x => x.Id)
+                    .FirstOrDefault();
+                var operationName = primaryTask != null
+                    ? GetTaskDisplayName(primaryTask, operation.Id)
+                    : null;
+                if (string.IsNullOrWhiteSpace(operationName))
+                    operationName = "Operation";
+
+                masterRecord = new ProgressRecord(operationActivityId,
+                    $"{operationName} (Operation: {operation.Id})", currentPhase)
                 {
-                    var displayName = operationTask.DisplayName;
-                    if(string.IsNullOrWhiteSpace(displayName))
+                    PercentComplete = -1,
+                    RecordType = ProgressRecordType.Processing,
+                    CurrentOperation = latestLog?.Message,
+                };
+                WriteProgressIfChanged(masterRecord);
+
+                // Child bars are shown only for tasks that are currently running and
+                // report a progress value.
+                var activeChildIds = new HashSet<int>();
+                foreach (var operationTask in currentOperation.Tasks
+                             .Where(x => x.Status == OperationTaskStatus.Running && x.Progress > 0))
+                {
+                    if (!taskActivityIds.TryGetValue(operationTask.Id, out var activityId))
                     {
-                        if (operationTask.ParentTaskId == operation.Id)
-                        {
-                            displayName = operationTask.Name;
-                            if(displayName.EndsWith("Command"))
-                                // ReSharper disable once ReplaceSubstringWithRangeIndexer
-                                displayName = displayName.Substring(0, displayName.Length - 7);
-                        }
+                        activityId = nextTaskActivityId++;
+                        taskActivityIds[operationTask.Id] = activityId;
                     }
 
-                    if (!string.IsNullOrWhiteSpace(displayName))
+                    var taskName = GetTaskDisplayName(operationTask, operation.Id);
+                    if (string.IsNullOrWhiteSpace(taskName))
+                        taskName = "Task";
+
+                    var progressRecord = new ProgressRecord(activityId, taskName, $"{operationTask.Progress}%")
                     {
-                        var activityName = operationTask.ParentTaskId == operation.Id
-                            ? $"{displayName} (Operation: {operation.Id})"
-                            : $"{displayName} (Task: {operationTask.Id})";
+                        PercentComplete = operationTask.Progress,
+                        ParentActivityId = operationActivityId,
+                        RecordType = ProgressRecordType.Processing,
+                    };
 
-                        var progressRecord = new ProgressRecord(activityIds[operationTask.Id], activityName,
-                            operationTask.Status.ToString())
-                        {
-                            PercentComplete = operationTask.Status == OperationTaskStatus.Completed
-                                ? 100
-                                : operationTask.Progress,
-                            ParentActivityId = !string.IsNullOrWhiteSpace(operationTask.ParentTaskId)
-                                ? activityIds[operationTask.ParentTaskId]
-                                : 0,
-                            RecordType = operationTask.Status == OperationTaskStatus.Completed
-                                ? ProgressRecordType.Completed
-                                : ProgressRecordType.Processing,
-                        };
-
-                        if (progressRecord.PercentComplete == 0)
-                            progressRecord.PercentComplete = -1;
-
-
-                        var lastTaskLogEntry = currentOperation.LogEntries.Where(x => x.TaskId == operationTask.Id)
-                            .OrderByDescending(x => x.Timestamp)
-                            .FirstOrDefault();
-
-                        if (lastTaskLogEntry != null)
-                            progressRecord.CurrentOperation = lastTaskLogEntry.Message;
-
-                        activities.Add(operationTask.Id,progressRecord);
-                    }
-                }
-
-                // second pass for tasks without display name - to show them as operation of parent task
-                foreach (var operationTask in currentOperation.Tasks.Where(x => x.ParentTaskId != operation.Id))
-                {
-                    var displayName = operationTask.DisplayName;
-                    if (!string.IsNullOrWhiteSpace(displayName))
-                        continue;
-
-                    var lastTaskLogEntry = currentOperation.LogEntries.Where(x => x.TaskId == operationTask.Id)
+                    var lastTaskLogEntry = currentOperation.LogEntries
+                        .Where(x => x.TaskId == operationTask.Id)
                         .OrderByDescending(x => x.Timestamp)
                         .FirstOrDefault();
+                    if (lastTaskLogEntry != null)
+                        progressRecord.CurrentOperation = lastTaskLogEntry.Message;
 
-                    if (lastTaskLogEntry == null) continue; // no log, so no need to update parent
-
-                    var parentId = operationTask.ParentTaskId;
-                    while (parentId!= null)
-                    {
-                        var parentTask = currentOperation.Tasks.FirstOrDefault(x => x.Id == parentId);
-                        if(parentTask == null)
-                            break;
-                        
-                        parentId = parentTask.ParentTaskId;
-
-                        if (!activities.TryGetValue(parentTask.Id, out var activity)) continue;
-                        activity.CurrentOperation = lastTaskLogEntry.Message;
-                        break;
-
-                    }
-
+                    childRecords[activityId] = progressRecord;
+                    activeChildIds.Add(activityId);
+                    WriteProgressIfChanged(progressRecord);
                 }
 
-                foreach (var progressRecord in activities.Values.OrderBy(x=>x.ActivityId))
+                // Remove child bars whose task is no longer running with progress.
+                foreach (var staleId in childRecords.Keys.Except(activeChildIds).ToList())
                 {
-                    if(completedActivities.Contains(progressRecord.ActivityId))
-                        continue;
+                    var staleRecord = childRecords[staleId];
+                    staleRecord.RecordType = ProgressRecordType.Completed;
+                    WriteProgress(staleRecord);
 
-                    //looking for running child - in that case keep parent status to running
-                    var runningChild = activities.Any(x =>
-                        x.Value.ParentActivityId == progressRecord.ActivityId &&
-                        progressRecord.RecordType == ProgressRecordType.Processing);
-
-                    if(runningChild)
-                        progressRecord.RecordType = ProgressRecordType.Processing;
-
-                    WriteProgress(progressRecord);
-
-                    if (progressRecord.RecordType == ProgressRecordType.Completed)
-                        completedActivities.Add(progressRecord.ActivityId);
+                    childRecords.Remove(staleId);
+                    lastWrittenSignatures.Remove(staleId);
                 }
 
                 foreach (var logEntry in currentOperation.LogEntries)
@@ -572,10 +573,53 @@ namespace Eryph.ComputeClient.Commands
                         break;
                 }
 
+                // The operation reached a terminal state. Complete the child bars
+                // first, then the master, so PowerShell clears them cleanly.
+                foreach (var record in childRecords.Values)
+                {
+                    record.RecordType = ProgressRecordType.Completed;
+                    WriteProgress(record);
+                }
+
+                if (masterRecord != null)
+                {
+                    masterRecord.RecordType = ProgressRecordType.Completed;
+                    WriteProgress(masterRecord);
+                }
+
                 break;
             }
 
             return currentOperation;
         }
+
+        private static string GetTaskDisplayName(OperationTask task, string operationId)
+        {
+            var displayName = task.DisplayName;
+            if (string.IsNullOrWhiteSpace(displayName) && task.ParentTaskId == operationId)
+            {
+                displayName = task.Name;
+                if (!string.IsNullOrWhiteSpace(displayName) && displayName.EndsWith("Command"))
+                    // ReSharper disable once ReplaceSubstringWithRangeIndexer
+                    displayName = displayName.Substring(0, displayName.Length - 7);
+            }
+
+            return displayName;
+        }
+
+        // Field separator for progress signatures: a control character that cannot
+        // occur in user-visible progress text, so values containing spaces can never
+        // collide into the same signature and suppress a needed update.
+        private static readonly string ProgressFieldSeparator = ((char)0x1f).ToString();
+
+        private static string GetProgressSignature(ProgressRecord record) =>
+            string.Join(ProgressFieldSeparator,
+                record.ActivityId.ToString(CultureInfo.InvariantCulture),
+                record.ParentActivityId.ToString(CultureInfo.InvariantCulture),
+                record.Activity,
+                record.StatusDescription,
+                record.CurrentOperation,
+                record.PercentComplete.ToString(CultureInfo.InvariantCulture),
+                record.RecordType.ToString());
     }
 }
