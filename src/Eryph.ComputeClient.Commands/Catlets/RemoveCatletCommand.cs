@@ -7,8 +7,9 @@ using Operation = Eryph.ComputeClient.Models.Operation;
 namespace Eryph.ComputeClient.Commands.Catlets
 {
     [PublicAPI]
-    [Cmdlet(VerbsCommon.Remove, "Catlet")]
-    [OutputType(typeof(Operation), typeof(Catlet))]
+    [Cmdlet(VerbsCommon.Remove, "Catlet", DefaultParameterSetName = "Wait")]
+    [OutputType(typeof(Catlet), ParameterSetName = new[] { "Wait" })]
+    [OutputType(typeof(Operation), ParameterSetName = new[] { "NoWait" })]
     public class RemoveCatletCommand : CatletCmdLet
     {
         [Parameter(
@@ -43,7 +44,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
             set => _passThru = value;
         }
 
-        [Parameter]
+        [Parameter(ParameterSetName = "NoWait")]
         public SwitchParameter NoWait
         {
             get => _nowait;

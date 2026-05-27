@@ -6,8 +6,9 @@ using JetBrains.Annotations;
 namespace Eryph.ComputeClient.Commands.Catlets
 {
     [PublicAPI]
-    [Cmdlet(VerbsLifecycle.Stop, "Catlet")]
-    [OutputType(typeof(Operation), typeof(Catlet))]
+    [Cmdlet(VerbsLifecycle.Stop, "Catlet", DefaultParameterSetName = "Wait")]
+    [OutputType(typeof(Catlet), ParameterSetName = new[] { "Wait" })]
+    [OutputType(typeof(Operation), ParameterSetName = new[] { "NoWait" })]
     public class StopCatletCommand : CatletCmdLet
     {
         [Parameter(
@@ -26,7 +27,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
         [Parameter]
         public SwitchParameter Force { get; set; }
 
-        [Parameter]
+        [Parameter(ParameterSetName = "NoWait")]
         public SwitchParameter NoWait { get; set; }
 
         [Parameter]

@@ -8,8 +8,9 @@ using Operation = Eryph.ComputeClient.Models.Operation;
 namespace Eryph.ComputeClient.Commands.Catlets
 {
     [PublicAPI]
-    [Cmdlet(VerbsLifecycle.Start, "Catlet")]
-    [OutputType(typeof(Operation), typeof(Catlet))]
+    [Cmdlet(VerbsLifecycle.Start, "Catlet", DefaultParameterSetName = "Wait")]
+    [OutputType(typeof(Catlet), ParameterSetName = new[] { "Wait" })]
+    [OutputType(typeof(Operation), ParameterSetName = new[] { "NoWait" })]
     public class StartCatletCommand : CatletCmdLet
     {
         [Parameter(
@@ -32,7 +33,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
             set => _force = value;
         }
 
-        [Parameter]
+        [Parameter(ParameterSetName = "NoWait")]
         public SwitchParameter NoWait
         {
             get => _nowait;

@@ -6,8 +6,9 @@ using JetBrains.Annotations;
 namespace Eryph.ComputeClient.Commands.CatletSpecifications;
 
 [PublicAPI]
-[Cmdlet(VerbsCommon.Remove, "CatletSpecification")]
-[OutputType(typeof(Operation), typeof(CatletSpecification))]
+[Cmdlet(VerbsCommon.Remove, "CatletSpecification", DefaultParameterSetName = "Wait")]
+[OutputType(typeof(CatletSpecification), ParameterSetName = new[] { "Wait" })]
+[OutputType(typeof(Operation), ParameterSetName = new[] { "NoWait" })]
 public class RemoveCatletSpecification : CatletSpecificationCmdlet
 {
     [Parameter(
@@ -27,7 +28,7 @@ public class RemoveCatletSpecification : CatletSpecificationCmdlet
     [Parameter]
     public SwitchParameter PassThru { get; set; }
 
-    [Parameter]
+    [Parameter(ParameterSetName = "NoWait")]
     public SwitchParameter NoWait { get; set; }
 
     [Parameter]
