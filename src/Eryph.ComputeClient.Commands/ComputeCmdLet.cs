@@ -503,17 +503,31 @@ namespace Eryph.ComputeClient.Commands
                     }
                 }
 
-                // The latest log message is the actual narration of what is happening
-                // ("Attaching HD Drive sda...", "Updating cloud-init config drive"
-                // etc.). It exists for every step regardless of whether the owning
-                // task carries a DisplayName, so it is the most reliable source of
-                // updates - prefer it as status text. Fall back to the resolved
-                // phase name, then to the operation status.
-                var statusText = !string.IsNullOrWhiteSpace(lastMessage)
-                    ? lastMessage
-                    : !string.IsNullOrWhiteSpace(lastPhase)
-                        ? lastPhase
-                        : currentOperation.Status.ToString();
+                // Master status text:
+                // - If any child bar is active, IT carries the message + percent +
+                //   bar for the current task. The master then only needs the phase
+                //   name; using the full message here would duplicate the child's
+                //   CurrentOperation line in classic view.
+                // - Otherwise (no children -> short config steps with no progress
+                //   value) the master itself is the only thing on screen, so it
+                //   carries the latest log message as narration.
+                // Fall back to the climbed phase, then to the operation status.
+                var hasActiveChild = currentOperation.Tasks
+                    .Any(x => x.Status == OperationTaskStatus.Running && x.Progress > 0);
+
+                string statusText;
+                if (hasActiveChild && !string.IsNullOrWhiteSpace(lastPhase))
+                {
+                    statusText = lastPhase;
+                }
+                else
+                {
+                    statusText = !string.IsNullOrWhiteSpace(lastMessage)
+                        ? lastMessage
+                        : !string.IsNullOrWhiteSpace(lastPhase)
+                            ? lastPhase
+                            : currentOperation.Status.ToString();
+                }
                 if (string.IsNullOrWhiteSpace(statusText))
                     statusText = "Running"; // ProgressRecord requires a non-empty status description
 
@@ -532,9 +546,9 @@ namespace Eryph.ComputeClient.Commands
                 {
                     PercentComplete = -1,
                     RecordType = ProgressRecordType.Processing,
-                    // Phase name (resolved by climbing the task chain) is shown as
-                    // additional context in hosts that render CurrentOperation.
-                    CurrentOperation = lastPhase,
+                    // No CurrentOperation: in classic view this would render as an
+                    // extra line below the master bar duplicating what an active
+                    // child bar already shows in its own Activity line.
                 };
                 WriteProgressIfChanged(masterRecord);
 
