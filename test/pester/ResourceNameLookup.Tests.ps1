@@ -50,12 +50,19 @@ Describe 'Get-* -Name parameter surface (no server required)' {
         @{ Cmd = 'Get-Catlet' }
         @{ Cmd = 'Get-EryphProject' }
         @{ Cmd = 'Get-CatletSpecification' }
-        @{ Cmd = 'Get-CatletGene' }
         @{ Cmd = 'Get-CatletIp' }
         @{ Cmd = 'Get-VNetwork' }
         @{ Cmd = 'Get-CatletDisk' }
     ) {
         (Get-Command $Cmd).Parameters['Name'].ParameterSets['list'].Position | Should -Be 0
+    }
+
+    It "Get-CatletGene takes -GeneSet (the natural identifier) as positional parameter 0, with -Name as a secondary non-positional filter" {
+        $params = (Get-Command Get-CatletGene).Parameters
+        $params['GeneSet'].ParameterType                      | Should -Be ([string])
+        $params['GeneSet'].ParameterSets['list'].Position     | Should -Be 0
+        # Name still exists in the 'list' set but is not positional.
+        $params['Name'].ParameterSets['list'].Position        | Should -BeLessThan 0
     }
 
     It "Get-CatletGene exposes an -Architecture filter in the 'list' set" {
@@ -370,11 +377,17 @@ Describe 'Get-CatletDisk filters (integration, read-only)' -Skip:(-not $eryphAva
     }
 }
 
-Describe 'Get-CatletGene -Name / -Architecture (integration, read-only)' -Skip:(-not $eryphAvailable) {
+Describe 'Get-CatletGene filters (integration, read-only)' -Skip:(-not $eryphAvailable) {
 
     BeforeAll { $genes = @(Get-CatletGene) }
 
-    It 'filters genes by name pattern' {
+    It 'filters genes by positional geneset (the natural identifier)' {
+        if ($genes.Count -eq 0) { Set-ItResult -Skipped -Because 'no genes present'; return }
+        $sample = $genes[0].GeneSet
+        Get-CatletGene $sample | ForEach-Object { $_.GeneSet | Should -BeLike $sample }
+    }
+
+    It 'filters genes by -Name as a refinement filter' {
         if ($genes.Count -eq 0) { Set-ItResult -Skipped -Because 'no genes present'; return }
         $sample = $genes[0].Name
         Get-CatletGene -Name $sample | ForEach-Object { $_.Name | Should -BeLike $sample }
@@ -386,11 +399,12 @@ Describe 'Get-CatletGene -Name / -Architecture (integration, read-only)' -Skip:(
         Get-CatletGene -Architecture $arch | ForEach-Object { $_.Architecture | Should -Be $arch }
     }
 
-    It 'filters genes by name and architecture together' {
+    It 'filters genes by geneset, name and architecture together' {
         if ($genes.Count -eq 0) { Set-ItResult -Skipped -Because 'no genes present'; return }
         $g = $genes[0]
-        Get-CatletGene -Name $g.Name -Architecture $g.Architecture | ForEach-Object {
-            $_.Name | Should -BeLike $g.Name
+        Get-CatletGene $g.GeneSet -Name $g.Name -Architecture $g.Architecture | ForEach-Object {
+            $_.GeneSet      | Should -BeLike $g.GeneSet
+            $_.Name         | Should -BeLike $g.Name
             $_.Architecture | Should -Be $g.Architecture
         }
     }

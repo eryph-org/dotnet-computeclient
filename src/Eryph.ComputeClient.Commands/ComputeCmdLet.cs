@@ -320,7 +320,8 @@ namespace Eryph.ComputeClient.Commands
             IEnumerable<T> items,
             string namePattern,
             Func<T, string> nameSelector,
-            string resourceKind)
+            string resourceKind,
+            string fieldName = "name")
         {
             // Only a null/empty pattern means "no filter" (yield everything). A
             // whitespace-only value is a real (if non-matching) name, not "list all" —
@@ -347,11 +348,13 @@ namespace Eryph.ComputeClient.Commands
                 yield return item;
             }
 
-            // An exact name (no wildcards) that matches nothing is an error, mirroring
+            // An exact value (no wildcards) that matches nothing is an error, mirroring
             // Get-Process/Get-Service. A wildcard pattern simply yields nothing. Do not
             // raise the error when the pipeline was stopped before a match was found.
+            // `fieldName` lets callers that filter by something other than the resource's
+            // `name` property (e.g. a gene's `geneset`) produce a meaningful error.
             if (!Stopping && !matched && pattern is not null && !hasWildcards)
-                WriteError(ResourceNotFound(resourceKind, "name", namePattern));
+                WriteError(ResourceNotFound(resourceKind, fieldName, namePattern));
         }
 
         /// <summary>
@@ -378,10 +381,11 @@ namespace Eryph.ComputeClient.Commands
             string namePattern,
             Func<T, string> nameSelector,
             string resourceKind,
-            Action<T> writeItem = null)
+            Action<T> writeItem = null,
+            string fieldName = "name")
         {
             writeItem ??= item => WriteObject(item);
-            foreach (var item in FilterByName(items, namePattern, nameSelector, resourceKind))
+            foreach (var item in FilterByName(items, namePattern, nameSelector, resourceKind, fieldName))
                 writeItem(item);
         }
 

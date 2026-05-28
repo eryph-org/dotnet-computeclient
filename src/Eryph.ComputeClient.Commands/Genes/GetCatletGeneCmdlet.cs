@@ -21,9 +21,16 @@ public class GetCatletGeneCmdlet : CatletGeneCmdlet
         ValueFromPipelineByPropertyName = true)]
     public string[] Id { get; set; }
 
+    // GeneSet is the natural identifier of a gene (org/set/version reference);
+    // Name is a sub-attribute within a geneset. So the positional filter binds to
+    // GeneSet and Name is offered as a secondary, non-positional refinement.
     [Parameter(
         ParameterSetName = "list",
         Position = 0)]
+    [ValidateNotNullOrEmpty]
+    public string GeneSet { get; set; }
+
+    [Parameter(ParameterSetName = "list")]
     [ValidateNotNullOrEmpty]
     public string Name { get; set; }
 
@@ -47,20 +54,27 @@ public class GetCatletGeneCmdlet : CatletGeneCmdlet
 
         // A positional GUID is a gene record id; look it up directly (returns the
         // richer GeneWithUsage), mirroring -Id.
-        if (IsResourceId(Name))
+        if (IsResourceId(GeneSet))
         {
-            if (TryGetById(Name, GetSingleGene, "gene", out var geneById))
+            if (TryGetById(GeneSet, GetSingleGene, "gene", out var geneById))
                 WriteObject(geneById);
             return;
         }
 
         // Genes list globally and are identified by GeneSet + Name + Architecture.
-        // Architecture is an exact (case-insensitive) filter; Name supports wildcards.
+        // GeneSet supports wildcards (with the standard Get-Process miss-not-found
+        // semantics for an exact pattern); Architecture and Name are case-insensitive
+        // refinement filters.
         IEnumerable<Gene> genes = Factory.CreateGenesClient().List();
         if (!string.IsNullOrWhiteSpace(Architecture))
             genes = genes.Where(gene =>
                 string.Equals(gene.Architecture, Architecture, StringComparison.OrdinalIgnoreCase));
+        if (!string.IsNullOrWhiteSpace(Name))
+        {
+            var namePattern = new WildcardPattern(Name, WildcardOptions.IgnoreCase);
+            genes = genes.Where(gene => gene.Name is not null && namePattern.IsMatch(gene.Name));
+        }
 
-        WriteFilteredByName(genes, Name, gene => gene.Name, "gene");
+        WriteFilteredByName(genes, GeneSet, gene => gene.GeneSet, "gene", fieldName: "geneset");
     }
 }
