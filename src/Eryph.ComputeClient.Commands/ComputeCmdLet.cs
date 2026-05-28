@@ -483,10 +483,24 @@ namespace Eryph.ComputeClient.Commands
                 if (latestLog != null)
                 {
                     lastMessage = latestLog.Message;
+                    // Log entries usually come from deep sub-tasks that carry no
+                    // DisplayName themselves. Walk up the parent chain to find the
+                    // nearest task with a usable display name and use that as the
+                    // current phase. Without this walk the master phase rarely gets
+                    // updated and stays stuck on the operation status (see #78).
                     var logTask = currentOperation.Tasks.FirstOrDefault(x => x.Id == latestLog.TaskId);
-                    var logTaskName = logTask != null ? GetTaskDisplayName(logTask, operation.Id) : null;
-                    if (!string.IsNullOrWhiteSpace(logTaskName))
-                        lastPhase = logTaskName;
+                    while (logTask != null)
+                    {
+                        var name = GetTaskDisplayName(logTask, operation.Id);
+                        if (!string.IsNullOrWhiteSpace(name))
+                        {
+                            lastPhase = name;
+                            break;
+                        }
+                        if (string.IsNullOrWhiteSpace(logTask.ParentTaskId))
+                            break;
+                        logTask = currentOperation.Tasks.FirstOrDefault(x => x.Id == logTask.ParentTaskId);
+                    }
                 }
 
                 // Fall back to the operation status until a task name is known.
