@@ -69,7 +69,9 @@ public class GetCatletGeneCmdlet : CatletGeneCmdlet
         if (!string.IsNullOrWhiteSpace(Architecture))
             genes = genes.Where(gene =>
                 string.Equals(gene.Architecture, Architecture, StringComparison.OrdinalIgnoreCase));
-        if (!string.IsNullOrWhiteSpace(Name))
+        // Gate on null/empty (not whitespace) to match FilterByName: a whitespace-only
+        // value is a real (if non-matching) pattern, not "list all".
+        if (!string.IsNullOrEmpty(Name))
         {
             var namePattern = new WildcardPattern(Name, WildcardOptions.IgnoreCase);
             genes = genes.Where(gene => gene.Name is not null && namePattern.IsMatch(gene.Name));
