@@ -50,12 +50,19 @@ Describe 'Get-* -Name parameter surface (no server required)' {
         @{ Cmd = 'Get-Catlet' }
         @{ Cmd = 'Get-EryphProject' }
         @{ Cmd = 'Get-CatletSpecification' }
-        @{ Cmd = 'Get-CatletGene' }
         @{ Cmd = 'Get-CatletIp' }
         @{ Cmd = 'Get-VNetwork' }
         @{ Cmd = 'Get-CatletDisk' }
     ) {
         (Get-Command $Cmd).Parameters['Name'].ParameterSets['list'].Position | Should -Be 0
+    }
+
+    It "Get-CatletGene takes -GeneSet (the natural identifier) as positional parameter 0, with -Name as a secondary non-positional filter" {
+        $params = (Get-Command Get-CatletGene).Parameters
+        $params['GeneSet'].ParameterType                      | Should -Be ([string])
+        $params['GeneSet'].ParameterSets['list'].Position     | Should -Be 0
+        # Name still exists in the 'list' set but is not positional.
+        $params['Name'].ParameterSets['list'].Position        | Should -BeLessThan 0
     }
 
     It "Get-CatletGene exposes an -Architecture filter in the 'list' set" {
@@ -69,6 +76,15 @@ Describe 'Get-* -Name parameter surface (no server required)' {
         @{ Cmd = 'Get-CatletDisk' }
     ) {
         $p = (Get-Command $Cmd).Parameters['Environment']
+        $p | Should -Not -BeNullOrEmpty
+        $p.ParameterSets.Keys | Should -Contain 'list'
+    }
+
+    It "Get-CatletDisk exposes a -<Param> filter in the 'list' set (Name+Location+DataStore needed to identify a disk)" -ForEach @(
+        @{ Param = 'Location' }
+        @{ Param = 'DataStore' }
+    ) {
+        $p = (Get-Command Get-CatletDisk).Parameters[$Param]
         $p | Should -Not -BeNullOrEmpty
         $p.ParameterSets.Keys | Should -Contain 'list'
     }
@@ -93,7 +109,6 @@ Describe 'Action cmdlets accept name-or-id (parameter surface)' {
         @{ Cmd = 'Stop-Catlet' }
         @{ Cmd = 'Remove-Catlet' }
         @{ Cmd = 'Update-Catlet' }
-        @{ Cmd = 'Remove-CatletDisk' }
         @{ Cmd = 'Remove-CatletSpecification' }
         @{ Cmd = 'Update-CatletSpecification' }
         @{ Cmd = 'Remove-EryphProject' }
@@ -119,15 +134,19 @@ Describe 'Action cmdlets accept name-or-id (parameter surface)' {
         @{ Cmd = 'Stop-Catlet' }
         @{ Cmd = 'Remove-Catlet' }
         @{ Cmd = 'Update-Catlet' }
-        @{ Cmd = 'Remove-CatletDisk' }
         @{ Cmd = 'Remove-CatletSpecification' }
         @{ Cmd = 'Update-CatletSpecification' }
     ) {
         (Get-Command $Cmd).Parameters['ProjectName'] | Should -Not -BeNullOrEmpty
     }
 
-    It 'Remove-CatletDisk exposes an -Environment scope (disk names are unique per project + environment)' {
-        (Get-Command Remove-CatletDisk).Parameters['Environment'] | Should -Not -BeNullOrEmpty
+    It 'Remove-CatletDisk is Id-only (Name+Location+DataStore is required to identify a disk; use Get-CatletDisk to resolve)' {
+        $params = (Get-Command Remove-CatletDisk).Parameters
+        # Keeps -Id positional, but offers no name-based lookup and no scope params.
+        $params['Id'].Aliases             | Should -Not -Contain 'Name'
+        $params['ProjectName']            | Should -BeNullOrEmpty
+        $params['Environment']            | Should -BeNullOrEmpty
+        $params['Id'].ParameterSets.Values.Position | Should -Contain 0
     }
 }
 
@@ -314,7 +333,7 @@ Describe 'Get-VNetwork name-or-id / -Environment (integration, read-only)' -Skip
     }
 }
 
-Describe 'Get-CatletDisk name-or-id / -Environment (integration, read-only)' -Skip:(-not $eryphAvailable) {
+Describe 'Get-CatletDisk filters (integration, read-only)' -Skip:(-not $eryphAvailable) {
 
     BeforeAll { $disks = @(Get-CatletDisk) }
 
@@ -333,6 +352,24 @@ Describe 'Get-CatletDisk name-or-id / -Environment (integration, read-only)' -Sk
         $filtered.Count | Should -Be $expected
     }
 
+    It 'filters disks by location' {
+        if ($disks.Count -eq 0) { Set-ItResult -Skipped -Because 'no disks present'; return }
+        $location = $disks[0].Location
+        $filtered = @(Get-CatletDisk -Location $location)
+        $filtered | ForEach-Object { $_.Location | Should -Be $location }
+        $expected = @($disks | Where-Object Location -EQ $location).Count
+        $filtered.Count | Should -Be $expected
+    }
+
+    It 'filters disks by datastore' {
+        if ($disks.Count -eq 0) { Set-ItResult -Skipped -Because 'no disks present'; return }
+        $datastore = $disks[0].DataStore
+        $filtered = @(Get-CatletDisk -DataStore $datastore)
+        $filtered | ForEach-Object { $_.DataStore | Should -Be $datastore }
+        $expected = @($disks | Where-Object DataStore -EQ $datastore).Count
+        $filtered.Count | Should -Be $expected
+    }
+
     It 'resolves a positional GUID to an id lookup' {
         if ($disks.Count -eq 0) { Set-ItResult -Skipped -Because 'no disks present'; return }
         $one = $disks[0]
@@ -340,11 +377,17 @@ Describe 'Get-CatletDisk name-or-id / -Environment (integration, read-only)' -Sk
     }
 }
 
-Describe 'Get-CatletGene -Name / -Architecture (integration, read-only)' -Skip:(-not $eryphAvailable) {
+Describe 'Get-CatletGene filters (integration, read-only)' -Skip:(-not $eryphAvailable) {
 
     BeforeAll { $genes = @(Get-CatletGene) }
 
-    It 'filters genes by name pattern' {
+    It 'filters genes by positional geneset (the natural identifier)' {
+        if ($genes.Count -eq 0) { Set-ItResult -Skipped -Because 'no genes present'; return }
+        $sample = $genes[0].GeneSet
+        Get-CatletGene $sample | ForEach-Object { $_.GeneSet | Should -BeLike $sample }
+    }
+
+    It 'filters genes by -Name as a refinement filter' {
         if ($genes.Count -eq 0) { Set-ItResult -Skipped -Because 'no genes present'; return }
         $sample = $genes[0].Name
         Get-CatletGene -Name $sample | ForEach-Object { $_.Name | Should -BeLike $sample }
@@ -356,11 +399,12 @@ Describe 'Get-CatletGene -Name / -Architecture (integration, read-only)' -Skip:(
         Get-CatletGene -Architecture $arch | ForEach-Object { $_.Architecture | Should -Be $arch }
     }
 
-    It 'filters genes by name and architecture together' {
+    It 'filters genes by geneset, name and architecture together' {
         if ($genes.Count -eq 0) { Set-ItResult -Skipped -Because 'no genes present'; return }
         $g = $genes[0]
-        Get-CatletGene -Name $g.Name -Architecture $g.Architecture | ForEach-Object {
-            $_.Name | Should -BeLike $g.Name
+        Get-CatletGene $g.GeneSet -Name $g.Name -Architecture $g.Architecture | ForEach-Object {
+            $_.GeneSet      | Should -BeLike $g.GeneSet
+            $_.Name         | Should -BeLike $g.Name
             $_.Architecture | Should -Be $g.Architecture
         }
     }

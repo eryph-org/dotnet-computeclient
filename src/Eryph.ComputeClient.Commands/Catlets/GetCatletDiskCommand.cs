@@ -35,6 +35,14 @@ public class GetCatletDiskCommand : CatletDiskCmdlet
     [ValidateNotNullOrEmpty]
     public string Environment { get; set; }
 
+    [Parameter(ParameterSetName = "list")]
+    [ValidateNotNullOrEmpty]
+    public string Location { get; set; }
+
+    [Parameter(ParameterSetName = "list")]
+    [ValidateNotNullOrEmpty]
+    public string DataStore { get; set; }
+
     protected override void ProcessRecord()
     {
         if (Id != null)
@@ -52,12 +60,17 @@ public class GetCatletDiskCommand : CatletDiskCmdlet
         if (!TryGetProjectId(ProjectName, out var projectId))
             return;
 
-        // Disk names are unique per project + environment, so allow narrowing by
-        // environment. The environment filter is applied to the listing; an explicit
-        // id (GUID) ignores it.
+        // A disk is identified by Name + Location + DataStore (within a project), so
+        // -Name alone may not be unique. Allow narrowing the listing by -Environment,
+        // -Location and -DataStore (case-insensitive exact match). An explicit id
+        // (GUID) bypasses these filters.
         IEnumerable<VirtualDisk> disks = Factory.CreateVirtualDisksClient().List(projectId: projectId);
         if (!string.IsNullOrWhiteSpace(Environment))
             disks = disks.Where(d => string.Equals(d.Environment, Environment, StringComparison.OrdinalIgnoreCase));
+        if (!string.IsNullOrWhiteSpace(Location))
+            disks = disks.Where(d => string.Equals(d.Location, Location, StringComparison.OrdinalIgnoreCase));
+        if (!string.IsNullOrWhiteSpace(DataStore))
+            disks = disks.Where(d => string.Equals(d.DataStore, DataStore, StringComparison.OrdinalIgnoreCase));
 
         WriteByNameOrId(Name, GetSingleCatletDisk, () => disks, d => d.Name, "catlet disk");
     }

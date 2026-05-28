@@ -15,12 +15,16 @@ namespace Eryph.ComputeClient.Commands.Catlets;
 [OutputType(typeof(Operation), ParameterSetName = new[] { "NoWait" })]
 public class RemoveCatletDiskCmdlet : CatletDiskCmdlet
 {
+    // A disk is identified by Name + Location + DataStore (within a project), so
+    // -Name alone cannot uniquely identify the target of a destructive operation.
+    // Remove-CatletDisk therefore accepts only ids; use Get-CatletDisk (which
+    // supports -Name plus -Environment / -Location / -DataStore filters) to find
+    // the disk first and pipe it in.
     [Parameter(
         Position = 0,
         ValueFromPipeline = true,
         Mandatory = true,
         ValueFromPipelineByPropertyName = true)]
-    [Alias("Name")]
     public string[] Id { get; set; }
 
     /// <summary>
@@ -42,40 +46,28 @@ public class RemoveCatletDiskCmdlet : CatletDiskCmdlet
     [Parameter(ParameterSetName = "NoWait")]
     public SwitchParameter NoWait { get; set; }
 
-    [Parameter]
-    [ValidateNotNullOrEmpty]
-    public string ProjectName { get; set; }
-
-    [Parameter]
-    [ValidateNotNullOrEmpty]
-    public string Environment { get; set; }
-
     private bool _yesToAll;
     private bool _noToAll;
 
     protected override void ProcessRecord()
     {
-        foreach (var nameOrId in Id)
+        foreach (var id in Id)
         {
-            foreach (var virtualDisk in ResolveActionTargets(nameOrId, ProjectName, GetSingleCatletDisk,
-                         projectId => Factory.CreateVirtualDisksClient().List(projectId: projectId)
-                             .Where(d => string.IsNullOrWhiteSpace(Environment)
-                                         || string.Equals(d.Environment, Environment, StringComparison.OrdinalIgnoreCase)),
-                         d => d.Name, "catlet disk", ambiguityHint: "-Environment"))
+            if (Stopping) break;
+
+            if (!TryGetById(id, GetSingleCatletDisk, "catlet disk", out var virtualDisk))
+                continue;
+
+            if (!Force && !ShouldContinue($"Catlet disk '{virtualDisk.Name}' (Id:{virtualDisk.Id}) will be deleted!", "Warning!",
+                    ref _yesToAll, ref _noToAll))
             {
-                if (Stopping) break;
-
-                if (!Force && !ShouldContinue($"Catlet disk '{virtualDisk.Name}' (Id:{virtualDisk.Id}) will be deleted!", "Warning!",
-                        ref _yesToAll, ref _noToAll))
-                {
-                    continue;
-                }
-
-                WaitForOperation(Factory.CreateVirtualDisksClient().Delete(virtualDisk.Id).Value, NoWait, false, virtualDisk.Id);
-
-                if (PassThru)
-                    WriteObject(virtualDisk);
+                continue;
             }
+
+            WaitForOperation(Factory.CreateVirtualDisksClient().Delete(virtualDisk.Id).Value, NoWait, false, virtualDisk.Id);
+
+            if (PassThru)
+                WriteObject(virtualDisk);
         }
     }
 }
