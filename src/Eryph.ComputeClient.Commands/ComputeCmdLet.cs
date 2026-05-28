@@ -503,12 +503,19 @@ namespace Eryph.ComputeClient.Commands
                     }
                 }
 
-                // Fall back to the operation status until a task name is known.
-                var currentPhase = !string.IsNullOrWhiteSpace(lastPhase)
-                    ? lastPhase
-                    : currentOperation.Status.ToString();
-                if (string.IsNullOrWhiteSpace(currentPhase))
-                    currentPhase = "Running"; // ProgressRecord requires a non-empty status description
+                // The latest log message is the actual narration of what is happening
+                // ("Attaching HD Drive sda...", "Updating cloud-init config drive"
+                // etc.). It exists for every step regardless of whether the owning
+                // task carries a DisplayName, so it is the most reliable source of
+                // updates - prefer it as status text. Fall back to the resolved
+                // phase name, then to the operation status.
+                var statusText = !string.IsNullOrWhiteSpace(lastMessage)
+                    ? lastMessage
+                    : !string.IsNullOrWhiteSpace(lastPhase)
+                        ? lastPhase
+                        : currentOperation.Status.ToString();
+                if (string.IsNullOrWhiteSpace(statusText))
+                    statusText = "Running"; // ProgressRecord requires a non-empty status description
 
                 var primaryTask = currentOperation.Tasks
                     .Where(x => x.ParentTaskId == operation.Id)
@@ -521,11 +528,13 @@ namespace Eryph.ComputeClient.Commands
                     operationName = "Operation";
 
                 masterRecord = new ProgressRecord(operationActivityId,
-                    $"{operationName} (Operation: {operation.Id})", currentPhase)
+                    $"{operationName} (Operation: {operation.Id})", statusText)
                 {
                     PercentComplete = -1,
                     RecordType = ProgressRecordType.Processing,
-                    CurrentOperation = lastMessage,
+                    // Phase name (resolved by climbing the task chain) is shown as
+                    // additional context in hosts that render CurrentOperation.
+                    CurrentOperation = lastPhase,
                 };
                 WriteProgressIfChanged(masterRecord);
 
