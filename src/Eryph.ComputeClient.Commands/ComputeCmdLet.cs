@@ -466,6 +466,12 @@ namespace Eryph.ComputeClient.Commands
             // quiet polls keep showing them instead of resetting the master bar.
             string lastPhase = null;
             string lastMessage = null;
+            // Detect the progress view mode once; users do not change it mid-operation.
+            // In Minimal view (PS7 default) only one line is shown for all activities,
+            // so the master must carry the rich log message. In Classic view the master
+            // and child render as separate stacked records, so we keep the master
+            // concise when a child is already showing the detail.
+            var isClassicProgressView = IsClassicProgressView();
             while (!Stopping)
             {
                 Task.Delay(1000).GetAwaiter().GetResult();
@@ -504,19 +510,21 @@ namespace Eryph.ComputeClient.Commands
                 }
 
                 // Master status text:
-                // - If any child bar is active, IT carries the message + percent +
-                //   bar for the current task. The master then only needs the phase
-                //   name; using the full message here would duplicate the child's
-                //   CurrentOperation line in classic view.
-                // - Otherwise (no children -> short config steps with no progress
-                //   value) the master itself is the only thing on screen, so it
-                //   carries the latest log message as narration.
-                // Fall back to the climbed phase, then to the operation status.
+                // - Minimal view (PS7 default): only one line is shown for the whole
+                //   progress region, so the master MUST carry the rich log message -
+                //   otherwise the user sees nothing informative during long phases.
+                // - Classic view, child bar active: the child renders its own Activity
+                //   and CurrentOperation lines and carries the message detail. Using
+                //   the full message on the master too would duplicate the child's
+                //   CurrentOperation line. Use the concise climbed phase instead.
+                // - Classic view, no child active: master is the only thing on screen
+                //   for these short config steps, so it carries the log message.
+                // Falls back to the climbed phase, then to the operation status.
                 var hasActiveChild = currentOperation.Tasks
                     .Any(x => x.Status == OperationTaskStatus.Running && x.Progress > 0);
 
                 string statusText;
-                if (hasActiveChild && !string.IsNullOrWhiteSpace(lastPhase))
+                if (isClassicProgressView && hasActiveChild && !string.IsNullOrWhiteSpace(lastPhase))
                 {
                     statusText = lastPhase;
                 }
@@ -639,6 +647,32 @@ namespace Eryph.ComputeClient.Commands
             }
 
             return currentOperation;
+        }
+
+        // PowerShell 7+ exposes the progress view mode via $PSStyle.Progress.View
+        // ('Classic' or 'Minimal'). PowerShell 5.1 has no PSStyle and only renders
+        // classic-style. Reflection avoids a hard reference to PS7-only types.
+        // Returns true for Classic / PS5.1, false for Minimal.
+        private bool IsClassicProgressView()
+        {
+            try
+            {
+                var psStyle = GetVariableValue("PSStyle");
+                if (psStyle == null)
+                    return true;
+
+                var progress = psStyle.GetType().GetProperty("Progress")?.GetValue(psStyle);
+                if (progress == null)
+                    return true;
+
+                var view = progress.GetType().GetProperty("View")?.GetValue(progress);
+                return view == null
+                       || string.Equals(view.ToString(), "Classic", StringComparison.OrdinalIgnoreCase);
+            }
+            catch
+            {
+                return true;
+            }
         }
 
         private static string GetTaskDisplayName(OperationTask task, string operationId)
