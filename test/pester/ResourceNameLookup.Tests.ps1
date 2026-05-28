@@ -73,6 +73,15 @@ Describe 'Get-* -Name parameter surface (no server required)' {
         $p.ParameterSets.Keys | Should -Contain 'list'
     }
 
+    It "Get-CatletDisk exposes a -<Param> filter in the 'list' set (Name+Location+DataStore needed to identify a disk)" -ForEach @(
+        @{ Param = 'Location' }
+        @{ Param = 'DataStore' }
+    ) {
+        $p = (Get-Command Get-CatletDisk).Parameters[$Param]
+        $p | Should -Not -BeNullOrEmpty
+        $p.ParameterSets.Keys | Should -Contain 'list'
+    }
+
     It "<Cmd> exposes an optional -ProjectName filter in the 'list' set" -ForEach @(
         @{ Cmd = 'Get-Catlet' }
         @{ Cmd = 'Get-CatletDisk' }
@@ -93,7 +102,6 @@ Describe 'Action cmdlets accept name-or-id (parameter surface)' {
         @{ Cmd = 'Stop-Catlet' }
         @{ Cmd = 'Remove-Catlet' }
         @{ Cmd = 'Update-Catlet' }
-        @{ Cmd = 'Remove-CatletDisk' }
         @{ Cmd = 'Remove-CatletSpecification' }
         @{ Cmd = 'Update-CatletSpecification' }
         @{ Cmd = 'Remove-EryphProject' }
@@ -119,15 +127,19 @@ Describe 'Action cmdlets accept name-or-id (parameter surface)' {
         @{ Cmd = 'Stop-Catlet' }
         @{ Cmd = 'Remove-Catlet' }
         @{ Cmd = 'Update-Catlet' }
-        @{ Cmd = 'Remove-CatletDisk' }
         @{ Cmd = 'Remove-CatletSpecification' }
         @{ Cmd = 'Update-CatletSpecification' }
     ) {
         (Get-Command $Cmd).Parameters['ProjectName'] | Should -Not -BeNullOrEmpty
     }
 
-    It 'Remove-CatletDisk exposes an -Environment scope (disk names are unique per project + environment)' {
-        (Get-Command Remove-CatletDisk).Parameters['Environment'] | Should -Not -BeNullOrEmpty
+    It 'Remove-CatletDisk is Id-only (Name+Location+DataStore is required to identify a disk; use Get-CatletDisk to resolve)' {
+        $params = (Get-Command Remove-CatletDisk).Parameters
+        # Keeps -Id positional, but offers no name-based lookup and no scope params.
+        $params['Id'].Aliases             | Should -Not -Contain 'Name'
+        $params['ProjectName']            | Should -BeNullOrEmpty
+        $params['Environment']            | Should -BeNullOrEmpty
+        $params['Id'].ParameterSets.Values.Position | Should -Contain 0
     }
 }
 
@@ -314,7 +326,7 @@ Describe 'Get-VNetwork name-or-id / -Environment (integration, read-only)' -Skip
     }
 }
 
-Describe 'Get-CatletDisk name-or-id / -Environment (integration, read-only)' -Skip:(-not $eryphAvailable) {
+Describe 'Get-CatletDisk filters (integration, read-only)' -Skip:(-not $eryphAvailable) {
 
     BeforeAll { $disks = @(Get-CatletDisk) }
 
@@ -330,6 +342,24 @@ Describe 'Get-CatletDisk name-or-id / -Environment (integration, read-only)' -Sk
         $filtered = @(Get-CatletDisk -Environment $environment)
         $filtered | ForEach-Object { $_.Environment | Should -Be $environment }
         $expected = @($disks | Where-Object Environment -EQ $environment).Count
+        $filtered.Count | Should -Be $expected
+    }
+
+    It 'filters disks by location' {
+        if ($disks.Count -eq 0) { Set-ItResult -Skipped -Because 'no disks present'; return }
+        $location = $disks[0].Location
+        $filtered = @(Get-CatletDisk -Location $location)
+        $filtered | ForEach-Object { $_.Location | Should -Be $location }
+        $expected = @($disks | Where-Object Location -EQ $location).Count
+        $filtered.Count | Should -Be $expected
+    }
+
+    It 'filters disks by datastore' {
+        if ($disks.Count -eq 0) { Set-ItResult -Skipped -Because 'no disks present'; return }
+        $datastore = $disks[0].DataStore
+        $filtered = @(Get-CatletDisk -DataStore $datastore)
+        $filtered | ForEach-Object { $_.DataStore | Should -Be $datastore }
+        $expected = @($disks | Where-Object DataStore -EQ $datastore).Count
         $filtered.Count | Should -Be $expected
     }
 
