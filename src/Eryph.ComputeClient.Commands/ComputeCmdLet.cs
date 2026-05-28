@@ -495,7 +495,10 @@ namespace Eryph.ComputeClient.Commands
                     // current phase. Without this walk the master phase rarely gets
                     // updated and stays stuck on the operation status (see #78).
                     var logTask = currentOperation.Tasks.FirstOrDefault(x => x.Id == latestLog.TaskId);
-                    while (logTask != null)
+                    // Track visited ids so an unexpected cycle in the task graph
+                    // cannot loop forever.
+                    var visitedTasks = new HashSet<string>(StringComparer.Ordinal);
+                    while (logTask != null && visitedTasks.Add(logTask.Id))
                     {
                         var name = GetTaskDisplayName(logTask, operation.Id);
                         if (!string.IsNullOrWhiteSpace(name))
@@ -606,7 +609,12 @@ namespace Eryph.ComputeClient.Commands
                     lastWrittenSignatures.Remove(staleId);
                 }
 
-                foreach (var logEntry in currentOperation.LogEntries)
+                // Iterate logs in chronological order so timeStamp always advances
+                // to the newest entry in the batch. Otherwise a later poll could
+                // re-request entries that fell between the last-iterated and the
+                // max timestamp of this batch (still deduped by processedLogIds,
+                // but wasted bandwidth).
+                foreach (var logEntry in currentOperation.LogEntries.OrderBy(x => x.Timestamp))
                 {
                     if (processedLogIds.Contains(logEntry.Id))
                         continue;
