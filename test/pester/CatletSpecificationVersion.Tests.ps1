@@ -58,6 +58,17 @@ Describe 'Get-CatletSpecificationVersion parameter surface (no server required)'
     }
 }
 
+Describe 'Get-CatletSpecification -Config (no server required)' {
+
+    It 'exposes a -Config switch that yields the latest version config as a string' {
+        $cmd = Get-Command Get-CatletSpecification
+        $cmd.Parameters['Config'].ParameterType        | Should -Be ([switch])
+        # Available in both addressing modes (by -Id and by -Name).
+        $cmd.Parameters['Config'].ParameterSets.Keys    | Should -Contain '__AllParameterSets'
+        ($cmd.OutputType | ForEach-Object { $_.Type })  | Should -Contain ([string])
+    }
+}
+
 Describe 'Deploy-Catlet deployment input (no server required)' {
 
     It 'accepts a piped CatletSpecification (deploy its latest version)' {
