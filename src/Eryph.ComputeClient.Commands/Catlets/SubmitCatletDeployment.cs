@@ -2,13 +2,9 @@
 using System.Collections;
 using System.Linq;
 using System.Management.Automation;
-using System.Net;
-using System.Text.Json;
-using Azure;
 using Eryph.ComputeClient.Models;
 using Eryph.ConfigModel.Json;
 using JetBrains.Annotations;
-using Operation = Eryph.ComputeClient.Models.Operation;
 
 namespace Eryph.ComputeClient.Commands.Catlets;
 
@@ -88,6 +84,29 @@ public class SubmitCatletDeployment : CatletConfigCmdlet
         if (specificationId is null || specificationVersionId is null)
             return;
 
+        // A deployed specification carries the id of the catlet it was deployed as.
+        // The piped specification already tells us; for other inputs we ask the server.
+        // Detecting this up front lets us point at -Redeploy instead of failing the
+        // deployment with a backend conflict.
+        if (!Redeploy)
+        {
+            var deployedCatletId = Specification is not null
+                ? Specification.CatletId
+                : Factory.CreateCatletSpecificationsClient().Get(specificationId).Value.CatletId;
+
+            if (!string.IsNullOrEmpty(deployedCatletId))
+            {
+                WriteError(new ErrorRecord(
+                    new InvalidOperationException(
+                        $"The catlet specification is already deployed as catlet {deployedCatletId}. "
+                        + "Re-run with -Redeploy to replace the existing catlet (the existing catlet will be deleted)."),
+                    "CatletSpecificationAlreadyDeployed",
+                    ErrorCategory.ResourceExists,
+                    specificationId));
+                return;
+            }
+        }
+
         var specificationVersion = Factory.CreateCatletSpecificationsClient().GetVersion(
             specificationId,
             specificationVersionId);
@@ -132,54 +151,16 @@ public class SubmitCatletDeployment : CatletConfigCmdlet
         if (!PopulateVariables(variables, Variables, SkipVariablesPrompt, false))
             return;
 
-        Operation operation;
-        try
-        {
-            operation = Factory.CreateCatletSpecificationsClient().Deploy(
+        WaitForCatlet(
+            Factory.CreateCatletSpecificationsClient().Deploy(
                 specificationId,
                 specificationVersionId,
                 new DeployCatletSpecificationRequestBody(variables.ToDictionary(v => v.Name, v => v.Value))
                 {
                     Architecture = Architecture,
                     Redeploy = Redeploy,
-                });
-        }
-        catch (RequestFailedException ex) when (ex.Status == (int)HttpStatusCode.Conflict && !Redeploy)
-        {
-            // The specification is already deployed as a catlet. Surface the server's
-            // detail (it names the existing catlet) and point at the actionable fix
-            // instead of leaking the raw HTTP response.
-            var detail = TryGetProblemDetail(ex) ?? "The catlet specification is already deployed.";
-            WriteError(new ErrorRecord(
-                new InvalidOperationException(
-                    $"{detail} Re-run with -Redeploy to replace the existing catlet (the existing catlet will be deleted)."),
-                "CatletSpecificationAlreadyDeployed",
-                ErrorCategory.ResourceExists,
-                specificationId));
-            return;
-        }
-
-        WaitForCatlet(operation, NoWait);
-    }
-
-    // Extracts the 'detail' field of an RFC 9457 problem+json response, if present.
-    private static string TryGetProblemDetail(RequestFailedException ex)
-    {
-        try
-        {
-            var content = ex.GetRawResponse()?.Content;
-            if (content is null)
-                return null;
-
-            using var document = JsonDocument.Parse(content.ToString());
-            return document.RootElement.TryGetProperty("detail", out var detail)
-                ? detail.GetString()
-                : null;
-        }
-        catch
-        {
-            return null;
-        }
+                }),
+            NoWait);
     }
 
     private void WaitForCatlet(Operation operation, bool noWait)
