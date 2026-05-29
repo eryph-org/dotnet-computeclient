@@ -33,6 +33,15 @@ public class SubmitCatletDeployment : CatletConfigCmdlet
         ValueFromPipeline= true)]
     public CatletSpecificationVersion Version { get; set; }
 
+    // Deploy a specification's latest version directly, e.g.
+    // 'Get-CatletSpecification -Name foo | Deploy-Catlet'.
+    [Parameter(
+        ParameterSetName = "Specification",
+        Position = 0,
+        Mandatory = true,
+        ValueFromPipeline = true)]
+    public CatletSpecification Specification { get; set; }
+
     [Parameter]
     public string Architecture { get; set; }
 
@@ -59,8 +68,19 @@ public class SubmitCatletDeployment : CatletConfigCmdlet
 
     protected override void ProcessRecord()
     {
-        var specificationId = Version?.SpecificationId ?? SpecificationId;
-        var specificationVersionId = Version?.Id ?? SpecificationVersionId;
+        if (Specification is not null && Specification.Latest is null)
+        {
+            WriteError(new ErrorRecord(
+                new InvalidOperationException(
+                    $"The catlet specification '{Specification.Name}' does not have any versions to deploy."),
+                "NoVersions",
+                ErrorCategory.ObjectNotFound,
+                Specification));
+            return;
+        }
+
+        var specificationId = Version?.SpecificationId ?? Specification?.Id ?? SpecificationId;
+        var specificationVersionId = Version?.Id ?? Specification?.Latest?.Id ?? SpecificationVersionId;
         if (specificationId is null || specificationVersionId is null)
             return;
 
