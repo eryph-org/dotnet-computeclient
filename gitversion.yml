@@ -1,7 +1,7 @@
 assembly-versioning-scheme: MajorMinor
 branches:
   main:
-    label: preview
+    label: ci
     mode: ContinuousDelivery
 ignore:
   sha: []
