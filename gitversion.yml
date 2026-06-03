@@ -1,6 +1,8 @@
 assembly-versioning-scheme: MajorMinor
-mode: ContinuousDeployment
-branches: {}
+branches:
+  main:
+    label: preview
+    deployment-mode: ContinuousDeployment
 ignore:
   sha: []
 merge-message-formats: {}
