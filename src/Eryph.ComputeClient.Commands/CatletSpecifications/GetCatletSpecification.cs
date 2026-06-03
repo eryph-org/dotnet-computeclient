@@ -15,6 +15,8 @@ namespace Eryph.ComputeClient.Commands.CatletSpecifications;
 [Cmdlet(VerbsCommon.Get, "CatletSpecification", DefaultParameterSetName = "list")]
 [OutputType(typeof(CatletSpecification), ParameterSetName = ["get"])]
 [OutputType(typeof(CatletSpecification), ParameterSetName = ["list"])]
+[OutputType(typeof(string), ParameterSetName = ["get"])]
+[OutputType(typeof(string), ParameterSetName = ["list"])]
 public class GetCatletSpecification : CatletSpecificationCmdlet
 {
     [Parameter(
@@ -35,6 +37,11 @@ public class GetCatletSpecification : CatletSpecificationCmdlet
     [ValidateNotNullOrEmpty]
     public string Name { get; set; }
 
+    // Return the configuration content of each specification's latest version as a
+    // string instead of the specification object (mirrors 'Get-CatletSpecificationVersion -Config').
+    [Parameter]
+    public SwitchParameter Config { get; set; }
+
     protected override void ProcessRecord()
     {
         if (Id is not null)
@@ -43,7 +50,12 @@ public class GetCatletSpecification : CatletSpecificationCmdlet
             {
                 if (Stopping) break;
                 if (TryGetById(id, GetSingleCatletSpecification, "catlet specification", out var specification))
-                    WriteObject(specification);
+                {
+                    if (Config.IsPresent)
+                        WriteSpecificationConfig(specification);
+                    else
+                        WriteObject(specification);
+                }
             }
 
             return;
@@ -52,11 +64,32 @@ public class GetCatletSpecification : CatletSpecificationCmdlet
         if (!TryGetProjectId(ProjectName, out var projectId))
             return;
 
+        Action<CatletSpecification> writeItem = Config.IsPresent ? WriteSpecificationConfig : null;
         WriteByNameOrId(
             Name,
             GetSingleCatletSpecification,
             () => Factory.CreateCatletSpecificationsClient().List(projectId: projectId),
             specification => specification.Name,
-            "catlet specification");
+            "catlet specification",
+            writeItem);
+    }
+
+    // Writes the configuration content of the specification's latest version.
+    private void WriteSpecificationConfig(CatletSpecification specification)
+    {
+        if (specification.Latest is null)
+        {
+            WriteError(new ErrorRecord(
+                new ItemNotFoundException(
+                    $"The catlet specification '{specification.Name}' does not have any versions."),
+                "NoVersions",
+                ErrorCategory.ObjectNotFound,
+                specification));
+            return;
+        }
+
+        var version = Factory.CreateCatletSpecificationsClient()
+            .GetVersion(specification.Id, specification.Latest.Id).Value;
+        WriteObject(version.Configuration.Content);
     }
 }
