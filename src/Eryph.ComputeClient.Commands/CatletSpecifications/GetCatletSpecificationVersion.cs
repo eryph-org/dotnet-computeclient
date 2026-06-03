@@ -56,7 +56,7 @@ public class GetCatletSpecificationVersion : CatletSpecificationCmdlet
 
         if (Config.IsPresent)
         {
-            foreach (var versionId in ResolveVersionIds(specificationsClient))
+            foreach (var versionId in ResolveVersionIds())
             {
                 if (Stopping) break;
 
@@ -90,7 +90,7 @@ public class GetCatletSpecificationVersion : CatletSpecificationCmdlet
 
     // The explicit -VersionId values, or the latest version of the specification when
     // none were given.
-    private string[] ResolveVersionIds(CatletSpecificationsClient specificationsClient)
+    private string[] ResolveVersionIds()
     {
         if (VersionId is not null)
             return VersionId;
