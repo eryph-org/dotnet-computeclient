@@ -25,6 +25,7 @@ namespace Eryph.ComputeClient.Models
                     case "Catlet": return CatletOperationResult.DeserializeCatletOperationResult(element);
                     case "CatletConfig": return CatletConfigOperationResult.DeserializeCatletConfigOperationResult(element);
                     case "CatletSpecification": return CatletSpecificationOperationResult.DeserializeCatletSpecificationOperationResult(element);
+                    case "SshChannel": return SshChannelOperationResult.DeserializeSshChannelOperationResult(element);
                 }
             }
             return UnknownOperationResult.DeserializeUnknownOperationResult(element);

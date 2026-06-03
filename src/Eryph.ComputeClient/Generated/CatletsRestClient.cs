@@ -36,6 +36,162 @@ namespace Eryph.ComputeClient
             _endpoint = endpoint ?? new Uri("https://localhost:8000/compute");
         }
 
+        internal HttpMessage CreateAddSshKeyRequest(string id, AddSshKeyRequestBody body)
+        {
+            var message = _pipeline.CreateMessage();
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/v1/catlets/", false);
+            uri.AppendPath(id, true);
+            uri.AppendPath("/ssh-keys", false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json, application/problem+json");
+            request.Headers.Add("Content-Type", "application/json");
+            var content = new Utf8JsonRequestContent();
+            content.JsonWriter.WriteObjectValue(body);
+            request.Content = content;
+            return message;
+        }
+
+        /// <summary> Authorize an SSH key on a catlet. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="AddSshKeyRequestBody"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="body"/> is null. </exception>
+        /// <remarks> Starts an operation that authorizes the caller's SSH public key in the catlet's guest services so it can be used to connect the SSH channel. </remarks>
+        public async Task<Response<Models.Operation>> AddSshKeyAsync(string id, AddSshKeyRequestBody body, CancellationToken cancellationToken = default)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+            if (body == null)
+            {
+                throw new ArgumentNullException(nameof(body));
+            }
+
+            using var message = CreateAddSshKeyRequest(id, body);
+            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            switch (message.Response.Status)
+            {
+                case 202:
+                    {
+                        Models.Operation value = default;
+                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
+                        value = Models.Operation.DeserializeOperation(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        /// <summary> Authorize an SSH key on a catlet. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="AddSshKeyRequestBody"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="body"/> is null. </exception>
+        /// <remarks> Starts an operation that authorizes the caller's SSH public key in the catlet's guest services so it can be used to connect the SSH channel. </remarks>
+        public Response<Models.Operation> AddSshKey(string id, AddSshKeyRequestBody body, CancellationToken cancellationToken = default)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+            if (body == null)
+            {
+                throw new ArgumentNullException(nameof(body));
+            }
+
+            using var message = CreateAddSshKeyRequest(id, body);
+            _pipeline.Send(message, cancellationToken);
+            switch (message.Response.Status)
+            {
+                case 202:
+                    {
+                        Models.Operation value = default;
+                        using var document = JsonDocument.Parse(message.Response.ContentStream);
+                        value = Models.Operation.DeserializeOperation(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        internal HttpMessage CreateRemoveSshKeyRequest(string id)
+        {
+            var message = _pipeline.CreateMessage();
+            var request = message.Request;
+            request.Method = RequestMethod.Delete;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/v1/catlets/", false);
+            uri.AppendPath(id, true);
+            uri.AppendPath("/ssh-keys", false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json, application/problem+json");
+            return message;
+        }
+
+        /// <summary> Revoke the caller's SSH key on a catlet. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
+        /// <remarks> Starts an operation that removes the caller's authorized SSH key from the catlet's guest. </remarks>
+        public async Task<Response<Models.Operation>> RemoveSshKeyAsync(string id, CancellationToken cancellationToken = default)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            using var message = CreateRemoveSshKeyRequest(id);
+            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            switch (message.Response.Status)
+            {
+                case 202:
+                    {
+                        Models.Operation value = default;
+                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
+                        value = Models.Operation.DeserializeOperation(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        /// <summary> Revoke the caller's SSH key on a catlet. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
+        /// <remarks> Starts an operation that removes the caller's authorized SSH key from the catlet's guest. </remarks>
+        public Response<Models.Operation> RemoveSshKey(string id, CancellationToken cancellationToken = default)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            using var message = CreateRemoveSshKeyRequest(id);
+            _pipeline.Send(message, cancellationToken);
+            switch (message.Response.Status)
+            {
+                case 202:
+                    {
+                        Models.Operation value = default;
+                        using var document = JsonDocument.Parse(message.Response.ContentStream);
+                        value = Models.Operation.DeserializeOperation(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
         internal HttpMessage CreateCreateRequest(NewCatletRequest body)
         {
             var message = _pipeline.CreateMessage();
@@ -379,6 +535,91 @@ namespace Eryph.ComputeClient
             }
         }
 
+        internal HttpMessage CreateExpandConfigRequest(string id, ExpandCatletConfigRequestBody body)
+        {
+            var message = _pipeline.CreateMessage();
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/v1/catlets/", false);
+            uri.AppendPath(id, true);
+            uri.AppendPath("/config/expand", false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json, application/problem+json");
+            request.Headers.Add("Content-Type", "application/json");
+            var content = new Utf8JsonRequestContent();
+            content.JsonWriter.WriteObjectValue(body);
+            request.Content = content;
+            return message;
+        }
+
+        /// <summary> Expand catlet config. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="ExpandCatletConfigRequestBody"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="body"/> is null. </exception>
+        /// <remarks> Expand the supplied config in the context of an existing catlet. Deprecated: existing catlet state is no longer factored into the expansion; the supplied config is expanded as if for a new catlet. Retained for compatibility with Eryph.ComputeClient v0.12 / v0.13 (`Test-Catlet -Id`). New clients should use POST /catlets/config/expand. </remarks>
+        public async Task<Response<Models.Operation>> ExpandConfigAsync(string id, ExpandCatletConfigRequestBody body, CancellationToken cancellationToken = default)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+            if (body == null)
+            {
+                throw new ArgumentNullException(nameof(body));
+            }
+
+            using var message = CreateExpandConfigRequest(id, body);
+            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            switch (message.Response.Status)
+            {
+                case 202:
+                    {
+                        Models.Operation value = default;
+                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
+                        value = Models.Operation.DeserializeOperation(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        /// <summary> Expand catlet config. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="ExpandCatletConfigRequestBody"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="body"/> is null. </exception>
+        /// <remarks> Expand the supplied config in the context of an existing catlet. Deprecated: existing catlet state is no longer factored into the expansion; the supplied config is expanded as if for a new catlet. Retained for compatibility with Eryph.ComputeClient v0.12 / v0.13 (`Test-Catlet -Id`). New clients should use POST /catlets/config/expand. </remarks>
+        public Response<Models.Operation> ExpandConfig(string id, ExpandCatletConfigRequestBody body, CancellationToken cancellationToken = default)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+            if (body == null)
+            {
+                throw new ArgumentNullException(nameof(body));
+            }
+
+            using var message = CreateExpandConfigRequest(id, body);
+            _pipeline.Send(message, cancellationToken);
+            switch (message.Response.Status)
+            {
+                case 202:
+                    {
+                        Models.Operation value = default;
+                        using var document = JsonDocument.Parse(message.Response.ContentStream);
+                        value = Models.Operation.DeserializeOperation(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
         internal HttpMessage CreateExpandNewConfigRequest(ExpandNewCatletConfigRequest body)
         {
             var message = _pipeline.CreateMessage();
@@ -509,6 +750,168 @@ namespace Eryph.ComputeClient
                         value = CatletConfiguration.DeserializeCatletConfiguration(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        internal HttpMessage CreateOpenSshChannelRequest(string id, string publicKey, int? ttl)
+        {
+            var message = _pipeline.CreateMessage();
+            var request = message.Request;
+            request.Method = RequestMethod.Put;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/v1/catlets/", false);
+            uri.AppendPath(id, true);
+            uri.AppendPath("/ssh-channel", false);
+            if (publicKey != null)
+            {
+                uri.AppendQuery("publicKey", publicKey, true);
+            }
+            if (ttl != null)
+            {
+                uri.AppendQuery("ttl", ttl.Value, true);
+            }
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json, application/problem+json");
+            return message;
+        }
+
+        /// <summary> Open an SSH channel to a catlet. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="publicKey">
+        /// Optional operator public key (OpenSSH authorized_keys form) to authorize in the guest. When
+        /// omitted, no key is written (the pre-injected-key flow).
+        /// </param>
+        /// <param name="ttl">
+        /// Optional time-to-live in seconds for the injected key. Only applies when
+        /// Eryph.Modules.ComputeApi.Endpoints.V1.Catlets.OpenSshChannelRequest.PublicKey is supplied.
+        /// </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
+        /// <remarks> Starts an operation that prepares a one-time SSH channel to the catlet's guest services. Track the returned operation; its result carries the channel token. Then connect the data-plane WebSocket at catlets/{id}/ssh-channel/connect with that token. </remarks>
+        public async Task<Response<Models.Operation>> OpenSshChannelAsync(string id, string publicKey = null, int? ttl = null, CancellationToken cancellationToken = default)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            using var message = CreateOpenSshChannelRequest(id, publicKey, ttl);
+            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            switch (message.Response.Status)
+            {
+                case 202:
+                    {
+                        Models.Operation value = default;
+                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
+                        value = Models.Operation.DeserializeOperation(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        /// <summary> Open an SSH channel to a catlet. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="publicKey">
+        /// Optional operator public key (OpenSSH authorized_keys form) to authorize in the guest. When
+        /// omitted, no key is written (the pre-injected-key flow).
+        /// </param>
+        /// <param name="ttl">
+        /// Optional time-to-live in seconds for the injected key. Only applies when
+        /// Eryph.Modules.ComputeApi.Endpoints.V1.Catlets.OpenSshChannelRequest.PublicKey is supplied.
+        /// </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
+        /// <remarks> Starts an operation that prepares a one-time SSH channel to the catlet's guest services. Track the returned operation; its result carries the channel token. Then connect the data-plane WebSocket at catlets/{id}/ssh-channel/connect with that token. </remarks>
+        public Response<Models.Operation> OpenSshChannel(string id, string publicKey = null, int? ttl = null, CancellationToken cancellationToken = default)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            using var message = CreateOpenSshChannelRequest(id, publicKey, ttl);
+            _pipeline.Send(message, cancellationToken);
+            switch (message.Response.Status)
+            {
+                case 202:
+                    {
+                        Models.Operation value = default;
+                        using var document = JsonDocument.Parse(message.Response.ContentStream);
+                        value = Models.Operation.DeserializeOperation(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        internal HttpMessage CreateConnectSshChannelRequest(string id, string token)
+        {
+            var message = _pipeline.CreateMessage();
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/v1/catlets/", false);
+            uri.AppendPath(id, true);
+            uri.AppendPath("/ssh-channel/connect", false);
+            if (token != null)
+            {
+                uri.AppendQuery("token", token, true);
+            }
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/problem+json");
+            return message;
+        }
+
+        /// <summary> Connect the SSH channel data plane. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="token"> The <see cref="string"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
+        /// <remarks> WebSocket endpoint that reverse-proxies an SSH channel to a catlet's guest services. Requires the one-time token from a completed OpenSshChannel operation. </remarks>
+        public async Task<Response> ConnectSshChannelAsync(string id, string token = null, CancellationToken cancellationToken = default)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            using var message = CreateConnectSshChannelRequest(id, token);
+            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    return message.Response;
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        /// <summary> Connect the SSH channel data plane. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="token"> The <see cref="string"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
+        /// <remarks> WebSocket endpoint that reverse-proxies an SSH channel to a catlet's guest services. Requires the one-time token from a completed OpenSshChannel operation. </remarks>
+        public Response ConnectSshChannel(string id, string token = null, CancellationToken cancellationToken = default)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            using var message = CreateConnectSshChannelRequest(id, token);
+            _pipeline.Send(message, cancellationToken);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    return message.Response;
                 default:
                     throw new RequestFailedException(message.Response);
             }

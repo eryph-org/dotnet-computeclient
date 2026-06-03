@@ -25,7 +25,7 @@ namespace Eryph.ComputeClient.Models
         /// <param name="tasks"></param>
         /// <param name="result">
         /// Please note <see cref="OperationResult"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-        /// The available derived classes include <see cref="Models.CatletOperationResult"/>, <see cref="CatletConfigOperationResult"/> and <see cref="Models.CatletSpecificationOperationResult"/>.
+        /// The available derived classes include <see cref="Models.CatletOperationResult"/>, <see cref="CatletConfigOperationResult"/>, <see cref="Models.CatletSpecificationOperationResult"/> and <see cref="Models.SshChannelOperationResult"/>.
         /// </param>
         /// <returns> A new <see cref="Models.Operation"/> instance for mocking. </returns>
         public static Operation Operation(string id = null, OperationStatus status = default, string statusMessage = null, IEnumerable<OperationResource> resources = null, IEnumerable<OperationLogEntry> logEntries = null, IEnumerable<Project> projects = null, IEnumerable<OperationTask> tasks = null, OperationResult result = null)
@@ -628,6 +628,15 @@ namespace Eryph.ComputeClient.Models
             genes ??= new Dictionary<string, string>();
 
             return new CatletSpecificationOperationResult("CatletSpecification", configuration, genes);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.SshChannelOperationResult"/>. </summary>
+        /// <param name="token"></param>
+        /// <param name="expiresAt"></param>
+        /// <returns> A new <see cref="Models.SshChannelOperationResult"/> instance for mocking. </returns>
+        public static SshChannelOperationResult SshChannelOperationResult(string token = null, DateTimeOffset expiresAt = default)
+        {
+            return new SshChannelOperationResult("SshChannel", token, expiresAt);
         }
     }
 }
