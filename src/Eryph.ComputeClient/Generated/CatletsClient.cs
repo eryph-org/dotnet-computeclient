@@ -40,6 +40,84 @@ namespace Eryph.ComputeClient
             _pipeline = pipeline;
         }
 
+        /// <summary> Authorize an SSH key on a catlet. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="AddSshKeyRequestBody"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Starts an operation that authorizes the caller's SSH public key in the catlet's guest services so it can be used to connect the SSH channel. </remarks>
+        public virtual async Task<Response<Models.Operation>> AddSshKeyAsync(string id, AddSshKeyRequestBody body, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("CatletsClient.AddSshKey");
+            scope.Start();
+            try
+            {
+                return await RestClient.AddSshKeyAsync(id, body, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Authorize an SSH key on a catlet. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="AddSshKeyRequestBody"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Starts an operation that authorizes the caller's SSH public key in the catlet's guest services so it can be used to connect the SSH channel. </remarks>
+        public virtual Response<Models.Operation> AddSshKey(string id, AddSshKeyRequestBody body, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("CatletsClient.AddSshKey");
+            scope.Start();
+            try
+            {
+                return RestClient.AddSshKey(id, body, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Revoke the caller's SSH key on a catlet. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Starts an operation that removes the caller's authorized SSH key from the catlet's guest. </remarks>
+        public virtual async Task<Response<Models.Operation>> RemoveSshKeyAsync(string id, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("CatletsClient.RemoveSshKey");
+            scope.Start();
+            try
+            {
+                return await RestClient.RemoveSshKeyAsync(id, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Revoke the caller's SSH key on a catlet. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Starts an operation that removes the caller's authorized SSH key from the catlet's guest. </remarks>
+        public virtual Response<Models.Operation> RemoveSshKey(string id, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("CatletsClient.RemoveSshKey");
+            scope.Start();
+            try
+            {
+                return RestClient.RemoveSshKey(id, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
         /// <summary> Create a new catlet. </summary>
         /// <param name="body"> The <see cref="NewCatletRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
@@ -190,6 +268,46 @@ namespace Eryph.ComputeClient
             }
         }
 
+        /// <summary> Expand catlet config. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="ExpandCatletConfigRequestBody"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Expand the supplied config in the context of an existing catlet. Deprecated: existing catlet state is no longer factored into the expansion; the supplied config is expanded as if for a new catlet. Retained for compatibility with Eryph.ComputeClient v0.12 / v0.13 (`Test-Catlet -Id`). New clients should use POST /catlets/config/expand. </remarks>
+        public virtual async Task<Response<Models.Operation>> ExpandConfigAsync(string id, ExpandCatletConfigRequestBody body, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("CatletsClient.ExpandConfig");
+            scope.Start();
+            try
+            {
+                return await RestClient.ExpandConfigAsync(id, body, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Expand catlet config. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="ExpandCatletConfigRequestBody"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Expand the supplied config in the context of an existing catlet. Deprecated: existing catlet state is no longer factored into the expansion; the supplied config is expanded as if for a new catlet. Retained for compatibility with Eryph.ComputeClient v0.12 / v0.13 (`Test-Catlet -Id`). New clients should use POST /catlets/config/expand. </remarks>
+        public virtual Response<Models.Operation> ExpandConfig(string id, ExpandCatletConfigRequestBody body, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("CatletsClient.ExpandConfig");
+            scope.Start();
+            try
+            {
+                return RestClient.ExpandConfig(id, body, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
         /// <summary> Expand new catlet config. </summary>
         /// <param name="body"> The <see cref="ExpandNewCatletConfigRequest"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
@@ -258,6 +376,100 @@ namespace Eryph.ComputeClient
             try
             {
                 return RestClient.GetConfig(id, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Open an SSH channel to a catlet. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="publicKey">
+        /// Optional operator public key (OpenSSH authorized_keys form) to authorize in the guest. When
+        /// omitted, no key is written (the pre-injected-key flow).
+        /// </param>
+        /// <param name="ttl">
+        /// Optional time-to-live in seconds for the injected key. Only applies when
+        /// Eryph.Modules.ComputeApi.Endpoints.V1.Catlets.OpenSshChannelRequest.PublicKey is supplied.
+        /// </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Starts an operation that prepares a one-time SSH channel to the catlet's guest services. Track the returned operation; its result carries the channel token. Then connect the data-plane WebSocket at catlets/{id}/ssh-channel/connect with that token. </remarks>
+        public virtual async Task<Response<Models.Operation>> OpenSshChannelAsync(string id, string publicKey = null, int? ttl = null, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("CatletsClient.OpenSshChannel");
+            scope.Start();
+            try
+            {
+                return await RestClient.OpenSshChannelAsync(id, publicKey, ttl, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Open an SSH channel to a catlet. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="publicKey">
+        /// Optional operator public key (OpenSSH authorized_keys form) to authorize in the guest. When
+        /// omitted, no key is written (the pre-injected-key flow).
+        /// </param>
+        /// <param name="ttl">
+        /// Optional time-to-live in seconds for the injected key. Only applies when
+        /// Eryph.Modules.ComputeApi.Endpoints.V1.Catlets.OpenSshChannelRequest.PublicKey is supplied.
+        /// </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Starts an operation that prepares a one-time SSH channel to the catlet's guest services. Track the returned operation; its result carries the channel token. Then connect the data-plane WebSocket at catlets/{id}/ssh-channel/connect with that token. </remarks>
+        public virtual Response<Models.Operation> OpenSshChannel(string id, string publicKey = null, int? ttl = null, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("CatletsClient.OpenSshChannel");
+            scope.Start();
+            try
+            {
+                return RestClient.OpenSshChannel(id, publicKey, ttl, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Connect the SSH channel data plane. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="token"> The <see cref="string"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> WebSocket endpoint that reverse-proxies an SSH channel to a catlet's guest services. Requires the one-time token from a completed OpenSshChannel operation. </remarks>
+        public virtual async Task<Response> ConnectSshChannelAsync(string id, string token = null, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("CatletsClient.ConnectSshChannel");
+            scope.Start();
+            try
+            {
+                return await RestClient.ConnectSshChannelAsync(id, token, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Connect the SSH channel data plane. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="token"> The <see cref="string"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> WebSocket endpoint that reverse-proxies an SSH channel to a catlet's guest services. Requires the one-time token from a completed OpenSshChannel operation. </remarks>
+        public virtual Response ConnectSshChannel(string id, string token = null, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("CatletsClient.ConnectSshChannel");
+            scope.Start();
+            try
+            {
+                return RestClient.ConnectSshChannel(id, token, cancellationToken);
             }
             catch (Exception e)
             {
