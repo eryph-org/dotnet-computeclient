@@ -2,7 +2,7 @@ assembly-versioning-scheme: MajorMinor
 branches:
   main:
     label: preview
-    deployment-mode: ContinuousDeployment
+    mode: ContinuousDelivery
 ignore:
   sha: []
 merge-message-formats: {}
