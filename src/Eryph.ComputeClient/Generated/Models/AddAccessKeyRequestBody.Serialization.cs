@@ -10,7 +10,7 @@ using Azure.Core;
 
 namespace Eryph.ComputeClient.Models
 {
-    public partial class AddSshKeyRequestBody : IUtf8JsonSerializable
+    public partial class AddAccessKeyRequestBody : IUtf8JsonSerializable
     {
         void IUtf8JsonSerializable.Write(Utf8JsonWriter writer)
         {
