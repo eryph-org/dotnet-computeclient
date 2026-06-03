@@ -9,24 +9,24 @@ using System;
 
 namespace Eryph.ComputeClient.Models
 {
-    /// <summary> The AddSshKeyRequestBody. </summary>
-    public partial class AddSshKeyRequestBody
+    /// <summary> The AddAccessKeyRequestBody. </summary>
+    public partial class AddAccessKeyRequestBody
     {
-        /// <summary> Initializes a new instance of <see cref="AddSshKeyRequestBody"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="AddAccessKeyRequestBody"/>. </summary>
         /// <param name="publicKey"> The operator's SSH public key in OpenSSH authorized_keys form. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="publicKey"/> is null. </exception>
-        public AddSshKeyRequestBody(string publicKey)
+        public AddAccessKeyRequestBody(string publicKey)
         {
             Argument.AssertNotNull(publicKey, nameof(publicKey));
 
             PublicKey = publicKey;
         }
 
-        /// <summary> Initializes a new instance of <see cref="AddSshKeyRequestBody"/>. </summary>
+        /// <summary> Initializes a new instance of <see cref="AddAccessKeyRequestBody"/>. </summary>
         /// <param name="publicKey"> The operator's SSH public key in OpenSSH authorized_keys form. </param>
-        /// <param name="ttl"> Optional ISO 8601 duration (informational); the server applies Eryph.Modules.ComputeApi.Endpoints.V1.Catlets.AddSshKeyRequestBody.ExpiresAt. </param>
+        /// <param name="ttl"> Optional ISO 8601 duration (informational); the server applies Eryph.Modules.ComputeApi.Endpoints.V1.Catlets.AddAccessKeyRequestBody.ExpiresAt. </param>
         /// <param name="expiresAt"> When the key should stop authorizing. Null = no expiry. </param>
-        internal AddSshKeyRequestBody(string publicKey, string ttl, DateTimeOffset? expiresAt)
+        internal AddAccessKeyRequestBody(string publicKey, string ttl, DateTimeOffset? expiresAt)
         {
             PublicKey = publicKey;
             Ttl = ttl;
@@ -35,7 +35,7 @@ namespace Eryph.ComputeClient.Models
 
         /// <summary> The operator's SSH public key in OpenSSH authorized_keys form. </summary>
         public string PublicKey { get; }
-        /// <summary> Optional ISO 8601 duration (informational); the server applies Eryph.Modules.ComputeApi.Endpoints.V1.Catlets.AddSshKeyRequestBody.ExpiresAt. </summary>
+        /// <summary> Optional ISO 8601 duration (informational); the server applies Eryph.Modules.ComputeApi.Endpoints.V1.Catlets.AddAccessKeyRequestBody.ExpiresAt. </summary>
         public string Ttl { get; set; }
         /// <summary> When the key should stop authorizing. Null = no expiry. </summary>
         public DateTimeOffset? ExpiresAt { get; set; }

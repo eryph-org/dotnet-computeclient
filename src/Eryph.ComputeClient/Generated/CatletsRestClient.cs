@@ -33,10 +33,10 @@ namespace Eryph.ComputeClient
         {
             ClientDiagnostics = clientDiagnostics ?? throw new ArgumentNullException(nameof(clientDiagnostics));
             _pipeline = pipeline ?? throw new ArgumentNullException(nameof(pipeline));
-            _endpoint = endpoint ?? new Uri("https://localhost:8000/compute");
+            _endpoint = endpoint ?? new Uri("https://localhost:56865/compute");
         }
 
-        internal HttpMessage CreateAddSshKeyRequest(string id, AddSshKeyRequestBody body)
+        internal HttpMessage CreateAddAccessKeyRequest(string id, AddAccessKeyRequestBody body)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -45,7 +45,7 @@ namespace Eryph.ComputeClient
             uri.Reset(_endpoint);
             uri.AppendPath("/v1/catlets/", false);
             uri.AppendPath(id, true);
-            uri.AppendPath("/ssh-keys", false);
+            uri.AppendPath("/guest-services/access-keys", false);
             request.Uri = uri;
             request.Headers.Add("Accept", "application/json, application/problem+json");
             request.Headers.Add("Content-Type", "application/json");
@@ -55,13 +55,13 @@ namespace Eryph.ComputeClient
             return message;
         }
 
-        /// <summary> Authorize an SSH key on a catlet. </summary>
+        /// <summary> Authorize a guest-services access key on a catlet. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
-        /// <param name="body"> The <see cref="AddSshKeyRequestBody"/> to use. </param>
+        /// <param name="body"> The <see cref="AddAccessKeyRequestBody"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="body"/> is null. </exception>
         /// <remarks> Starts an operation that authorizes the caller's SSH public key in the catlet's guest services so it can be used to connect the SSH channel. </remarks>
-        public async Task<Response<Models.Operation>> AddSshKeyAsync(string id, AddSshKeyRequestBody body, CancellationToken cancellationToken = default)
+        public async Task<Response<Models.Operation>> AddAccessKeyAsync(string id, AddAccessKeyRequestBody body, CancellationToken cancellationToken = default)
         {
             if (id == null)
             {
@@ -72,7 +72,7 @@ namespace Eryph.ComputeClient
                 throw new ArgumentNullException(nameof(body));
             }
 
-            using var message = CreateAddSshKeyRequest(id, body);
+            using var message = CreateAddAccessKeyRequest(id, body);
             await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             switch (message.Response.Status)
             {
@@ -88,13 +88,13 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Authorize an SSH key on a catlet. </summary>
+        /// <summary> Authorize a guest-services access key on a catlet. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
-        /// <param name="body"> The <see cref="AddSshKeyRequestBody"/> to use. </param>
+        /// <param name="body"> The <see cref="AddAccessKeyRequestBody"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="body"/> is null. </exception>
         /// <remarks> Starts an operation that authorizes the caller's SSH public key in the catlet's guest services so it can be used to connect the SSH channel. </remarks>
-        public Response<Models.Operation> AddSshKey(string id, AddSshKeyRequestBody body, CancellationToken cancellationToken = default)
+        public Response<Models.Operation> AddAccessKey(string id, AddAccessKeyRequestBody body, CancellationToken cancellationToken = default)
         {
             if (id == null)
             {
@@ -105,7 +105,7 @@ namespace Eryph.ComputeClient
                 throw new ArgumentNullException(nameof(body));
             }
 
-            using var message = CreateAddSshKeyRequest(id, body);
+            using var message = CreateAddAccessKeyRequest(id, body);
             _pipeline.Send(message, cancellationToken);
             switch (message.Response.Status)
             {
@@ -121,7 +121,7 @@ namespace Eryph.ComputeClient
             }
         }
 
-        internal HttpMessage CreateRemoveSshKeyRequest(string id)
+        internal HttpMessage CreateRemoveAccessKeyRequest(string id)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -130,25 +130,25 @@ namespace Eryph.ComputeClient
             uri.Reset(_endpoint);
             uri.AppendPath("/v1/catlets/", false);
             uri.AppendPath(id, true);
-            uri.AppendPath("/ssh-keys", false);
+            uri.AppendPath("/guest-services/access-keys", false);
             request.Uri = uri;
             request.Headers.Add("Accept", "application/json, application/problem+json");
             return message;
         }
 
-        /// <summary> Revoke the caller's SSH key on a catlet. </summary>
+        /// <summary> Revoke the caller's guest-services access key on a catlet. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
         /// <remarks> Starts an operation that removes the caller's authorized SSH key from the catlet's guest. </remarks>
-        public async Task<Response<Models.Operation>> RemoveSshKeyAsync(string id, CancellationToken cancellationToken = default)
+        public async Task<Response<Models.Operation>> RemoveAccessKeyAsync(string id, CancellationToken cancellationToken = default)
         {
             if (id == null)
             {
                 throw new ArgumentNullException(nameof(id));
             }
 
-            using var message = CreateRemoveSshKeyRequest(id);
+            using var message = CreateRemoveAccessKeyRequest(id);
             await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             switch (message.Response.Status)
             {
@@ -164,19 +164,19 @@ namespace Eryph.ComputeClient
             }
         }
 
-        /// <summary> Revoke the caller's SSH key on a catlet. </summary>
+        /// <summary> Revoke the caller's guest-services access key on a catlet. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
         /// <remarks> Starts an operation that removes the caller's authorized SSH key from the catlet's guest. </remarks>
-        public Response<Models.Operation> RemoveSshKey(string id, CancellationToken cancellationToken = default)
+        public Response<Models.Operation> RemoveAccessKey(string id, CancellationToken cancellationToken = default)
         {
             if (id == null)
             {
                 throw new ArgumentNullException(nameof(id));
             }
 
-            using var message = CreateRemoveSshKeyRequest(id);
+            using var message = CreateRemoveAccessKeyRequest(id);
             _pipeline.Send(message, cancellationToken);
             switch (message.Response.Status)
             {
@@ -755,6 +755,77 @@ namespace Eryph.ComputeClient
             }
         }
 
+        internal HttpMessage CreateGetGuestServicesRequest(string id)
+        {
+            var message = _pipeline.CreateMessage();
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/v1/catlets/", false);
+            uri.AppendPath(id, true);
+            uri.AppendPath("/guest-services", false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json, application/problem+json");
+            return message;
+        }
+
+        /// <summary> Get the guest services of a catlet. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
+        /// <remarks> Starts an operation that reads the catlet guest's services state: the agent status and version, the provisioning state and the current shell. Track the returned operation; its result carries the state. </remarks>
+        public async Task<Response<Models.Operation>> GetGuestServicesAsync(string id, CancellationToken cancellationToken = default)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            using var message = CreateGetGuestServicesRequest(id);
+            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            switch (message.Response.Status)
+            {
+                case 202:
+                    {
+                        Models.Operation value = default;
+                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
+                        value = Models.Operation.DeserializeOperation(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        /// <summary> Get the guest services of a catlet. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
+        /// <remarks> Starts an operation that reads the catlet guest's services state: the agent status and version, the provisioning state and the current shell. Track the returned operation; its result carries the state. </remarks>
+        public Response<Models.Operation> GetGuestServices(string id, CancellationToken cancellationToken = default)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            using var message = CreateGetGuestServicesRequest(id);
+            _pipeline.Send(message, cancellationToken);
+            switch (message.Response.Status)
+            {
+                case 202:
+                    {
+                        Models.Operation value = default;
+                        using var document = JsonDocument.Parse(message.Response.ContentStream);
+                        value = Models.Operation.DeserializeOperation(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
         internal HttpMessage CreateOpenSshChannelRequest(string id, string publicKey, int? ttl)
         {
             var message = _pipeline.CreateMessage();
@@ -764,7 +835,7 @@ namespace Eryph.ComputeClient
             uri.Reset(_endpoint);
             uri.AppendPath("/v1/catlets/", false);
             uri.AppendPath(id, true);
-            uri.AppendPath("/ssh-channel", false);
+            uri.AppendPath("/guest-services/ssh-channel", false);
             if (publicKey != null)
             {
                 uri.AppendQuery("publicKey", publicKey, true);
@@ -859,7 +930,7 @@ namespace Eryph.ComputeClient
             uri.Reset(_endpoint);
             uri.AppendPath("/v1/catlets/", false);
             uri.AppendPath(id, true);
-            uri.AppendPath("/ssh-channel/connect", false);
+            uri.AppendPath("/guest-services/ssh-channel/connect", false);
             if (token != null)
             {
                 uri.AppendQuery("token", token, true);
@@ -966,6 +1037,91 @@ namespace Eryph.ComputeClient
         public Response<Models.Operation> PopulateConfigVariables(PopulateCatletConfigVariablesRequest body = null, CancellationToken cancellationToken = default)
         {
             using var message = CreatePopulateConfigVariablesRequest(body);
+            _pipeline.Send(message, cancellationToken);
+            switch (message.Response.Status)
+            {
+                case 202:
+                    {
+                        Models.Operation value = default;
+                        using var document = JsonDocument.Parse(message.Response.ContentStream);
+                        value = Models.Operation.DeserializeOperation(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        internal HttpMessage CreateSetGuestServicesSettingsRequest(string id, GuestServicesSettingsBody body)
+        {
+            var message = _pipeline.CreateMessage();
+            var request = message.Request;
+            request.Method = RequestMethod.Patch;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/v1/catlets/", false);
+            uri.AppendPath(id, true);
+            uri.AppendPath("/guest-services/settings", false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json, application/problem+json");
+            request.Headers.Add("Content-Type", "application/json");
+            var content = new Utf8JsonRequestContent();
+            content.JsonWriter.WriteObjectValue(body);
+            request.Content = content;
+            return message;
+        }
+
+        /// <summary> Update the guest services settings of a catlet. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="GuestServicesSettingsBody"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="body"/> is null. </exception>
+        /// <remarks> Starts an operation that updates the catlet's guest-services settings (the SSH session shell). A null field is left unchanged; an empty field clears the override. </remarks>
+        public async Task<Response<Models.Operation>> SetGuestServicesSettingsAsync(string id, GuestServicesSettingsBody body, CancellationToken cancellationToken = default)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+            if (body == null)
+            {
+                throw new ArgumentNullException(nameof(body));
+            }
+
+            using var message = CreateSetGuestServicesSettingsRequest(id, body);
+            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            switch (message.Response.Status)
+            {
+                case 202:
+                    {
+                        Models.Operation value = default;
+                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
+                        value = Models.Operation.DeserializeOperation(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        /// <summary> Update the guest services settings of a catlet. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="GuestServicesSettingsBody"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/> or <paramref name="body"/> is null. </exception>
+        /// <remarks> Starts an operation that updates the catlet's guest-services settings (the SSH session shell). A null field is left unchanged; an empty field clears the override. </remarks>
+        public Response<Models.Operation> SetGuestServicesSettings(string id, GuestServicesSettingsBody body, CancellationToken cancellationToken = default)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+            if (body == null)
+            {
+                throw new ArgumentNullException(nameof(body));
+            }
+
+            using var message = CreateSetGuestServicesSettingsRequest(id, body);
             _pipeline.Send(message, cancellationToken);
             switch (message.Response.Status)
             {
