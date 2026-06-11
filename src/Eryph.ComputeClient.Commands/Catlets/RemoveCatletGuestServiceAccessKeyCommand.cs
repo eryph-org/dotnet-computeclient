@@ -7,7 +7,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
 {
     [PublicAPI]
     [Cmdlet(VerbsCommon.Remove, "CatletGuestServiceAccessKey", DefaultParameterSetName = "Wait")]
-    [OutputType(typeof(Catlet))]
+    [OutputType(typeof(Catlet), ParameterSetName = new[] { "Wait" })]
     [OutputType(typeof(Operation), ParameterSetName = new[] { "NoWait" })]
     public class RemoveCatletGuestServiceAccessKeyCommand : CatletCmdLet
     {

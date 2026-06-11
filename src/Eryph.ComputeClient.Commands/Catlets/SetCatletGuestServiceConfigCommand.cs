@@ -95,8 +95,9 @@ namespace Eryph.ComputeClient.Commands.Catlets
                         continue;
                     }
 
-                    // A null field is left unchanged by the server; only send the values
-                    // the caller actually specified (an empty string clears the override).
+                    // Only the settings the caller specified are sent. An unset property
+                    // stays null and is omitted from the request, so the server leaves it
+                    // unchanged; an empty string is sent and clears the override.
                     var body = new GuestServicesSettingsBody();
                     if (_shellBound)
                         body.Shell = Shell;
