@@ -26,44 +26,52 @@
       </TableControl>
     </View>
     <View>
-      <Name>Eryph.ComputeClient.GuestServiceStatus</Name>
+      <Name>Eryph.ComputeClient.Commands.Catlets.CatletGuestServiceStatus</Name>
       <ViewSelectedBy>
-        <TypeName>Eryph.ComputeClient.GuestServiceStatus</TypeName>
+        <TypeName>Eryph.ComputeClient.Commands.Catlets.CatletGuestServiceStatus</TypeName>
       </ViewSelectedBy>
       <TableControl>
         <TableHeaders>
-          <TableColumnHeader><Label>CatletName</Label></TableColumnHeader>
+          <TableColumnHeader><Label>Name</Label></TableColumnHeader>
           <TableColumnHeader><Label>GuestServicesStatus</Label></TableColumnHeader>
           <TableColumnHeader><Label>GuestServicesVersion</Label></TableColumnHeader>
           <TableColumnHeader><Label>ProvisioningState</Label></TableColumnHeader>
+          <TableColumnHeader><Label>Project</Label></TableColumnHeader>
+          <TableColumnHeader><Label>Id</Label><Width>38</Width></TableColumnHeader>
         </TableHeaders>
         <TableRowEntries>
           <TableRowEntry>
             <TableColumnItems>
-              <TableColumnItem><PropertyName>CatletName</PropertyName></TableColumnItem>
+              <TableColumnItem><PropertyName>Name</PropertyName></TableColumnItem>
               <TableColumnItem><PropertyName>GuestServicesStatus</PropertyName></TableColumnItem>
               <TableColumnItem><PropertyName>GuestServicesVersion</PropertyName></TableColumnItem>
               <TableColumnItem><PropertyName>ProvisioningState</PropertyName></TableColumnItem>
+              <TableColumnItem><PropertyName>Project</PropertyName></TableColumnItem>
+              <TableColumnItem><PropertyName>Id</PropertyName></TableColumnItem>
             </TableColumnItems>
           </TableRowEntry>
         </TableRowEntries>
       </TableControl>
     </View>
     <View>
-      <Name>Eryph.ComputeClient.GuestServiceConfig</Name>
+      <Name>Eryph.ComputeClient.Commands.Catlets.CatletGuestServiceConfig</Name>
       <ViewSelectedBy>
-        <TypeName>Eryph.ComputeClient.GuestServiceConfig</TypeName>
+        <TypeName>Eryph.ComputeClient.Commands.Catlets.CatletGuestServiceConfig</TypeName>
       </ViewSelectedBy>
       <TableControl>
         <TableHeaders>
-          <TableColumnHeader><Label>CatletName</Label></TableColumnHeader>
+          <TableColumnHeader><Label>Name</Label></TableColumnHeader>
           <TableColumnHeader><Label>Shell</Label></TableColumnHeader>
+          <TableColumnHeader><Label>Project</Label></TableColumnHeader>
+          <TableColumnHeader><Label>Id</Label><Width>38</Width></TableColumnHeader>
         </TableHeaders>
         <TableRowEntries>
           <TableRowEntry>
             <TableColumnItems>
-              <TableColumnItem><PropertyName>CatletName</PropertyName></TableColumnItem>
+              <TableColumnItem><PropertyName>Name</PropertyName></TableColumnItem>
               <TableColumnItem><PropertyName>Shell</PropertyName></TableColumnItem>
+              <TableColumnItem><PropertyName>Project</PropertyName></TableColumnItem>
+              <TableColumnItem><PropertyName>Id</PropertyName></TableColumnItem>
             </TableColumnItems>
           </TableRowEntry>
         </TableRowEntries>

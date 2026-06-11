@@ -6,21 +6,38 @@ namespace Eryph.ComputeClient.Commands.Catlets
 {
     [PublicAPI]
     [Cmdlet(VerbsCommon.Get, "CatletGuestServiceStatus", DefaultParameterSetName = "list")]
-    [OutputType(typeof(PSObject))]
+    [OutputType(typeof(CatletGuestServiceStatus))]
     public class GetCatletGuestServiceStatusCommand : CatletGuestServiceGetCmdlet
     {
         // Reports only the runtime state reported by the guest agent. The configured
         // shell is configuration, not status, and is surfaced by Get-CatletGuestServiceConfig.
         protected override void WriteResult(Catlet catlet, GuestServicesStatusOperationResult result)
         {
-            var output = new PSObject();
-            output.TypeNames.Insert(0, "Eryph.ComputeClient.GuestServiceStatus");
-            output.Properties.Add(new PSNoteProperty("CatletId", catlet.Id));
-            output.Properties.Add(new PSNoteProperty("CatletName", catlet.Name));
-            output.Properties.Add(new PSNoteProperty("GuestServicesStatus", result.GuestServicesStatus));
-            output.Properties.Add(new PSNoteProperty("GuestServicesVersion", result.GuestServicesVersion));
-            output.Properties.Add(new PSNoteProperty("ProvisioningState", result.ProvisioningState));
-            WriteObject(output);
+            WriteObject(new CatletGuestServiceStatus
+            {
+                Id = catlet.Id,
+                Name = catlet.Name,
+                Project = catlet.Project?.Name,
+                GuestServicesStatus = result.GuestServicesStatus,
+                GuestServicesVersion = result.GuestServicesVersion,
+                ProvisioningState = result.ProvisioningState,
+            });
         }
+    }
+
+    [PublicAPI]
+    public class CatletGuestServiceStatus
+    {
+        public string Id { get; set; }
+
+        public string Name { get; set; }
+
+        public string Project { get; set; }
+
+        public string GuestServicesStatus { get; set; }
+
+        public string GuestServicesVersion { get; set; }
+
+        public string ProvisioningState { get; set; }
     }
 }

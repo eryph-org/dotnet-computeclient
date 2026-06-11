@@ -6,7 +6,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
 {
     [PublicAPI]
     [Cmdlet(VerbsCommon.Get, "CatletGuestServiceConfig", DefaultParameterSetName = "list")]
-    [OutputType(typeof(PSObject))]
+    [OutputType(typeof(CatletGuestServiceConfig))]
     public class GetCatletGuestServiceConfigCommand : CatletGuestServiceGetCmdlet
     {
         // Reports the guest-services configuration. Only the shell is readable: the
@@ -14,12 +14,25 @@ namespace Eryph.ComputeClient.Commands.Catlets
         // so ShellArgs can be set (Set-CatletGuestServiceConfig) but not read back here.
         protected override void WriteResult(Catlet catlet, GuestServicesStatusOperationResult result)
         {
-            var output = new PSObject();
-            output.TypeNames.Insert(0, "Eryph.ComputeClient.GuestServiceConfig");
-            output.Properties.Add(new PSNoteProperty("CatletId", catlet.Id));
-            output.Properties.Add(new PSNoteProperty("CatletName", catlet.Name));
-            output.Properties.Add(new PSNoteProperty("Shell", result.Shell));
-            WriteObject(output);
+            WriteObject(new CatletGuestServiceConfig
+            {
+                Id = catlet.Id,
+                Name = catlet.Name,
+                Project = catlet.Project?.Name,
+                Shell = result.Shell,
+            });
         }
+    }
+
+    [PublicAPI]
+    public class CatletGuestServiceConfig
+    {
+        public string Id { get; set; }
+
+        public string Name { get; set; }
+
+        public string Project { get; set; }
+
+        public string Shell { get; set; }
     }
 }
