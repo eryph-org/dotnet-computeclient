@@ -101,7 +101,11 @@ CmdletsToExport = @(
     "New-CatletSpecification",
     "Update-CatletSpecification",
     "Remove-CatletSpecification",
-    "Get-CatletSpecificationVersion"
+    "Get-CatletSpecificationVersion",
+    "Get-CatletGuestServiceStatus",
+    "Get-CatletGuestServiceConfig",
+    "Set-CatletGuestServiceConfig",
+    "Remove-CatletGuestServiceAccessKey"
 )
 
 # Variables to export from this module
