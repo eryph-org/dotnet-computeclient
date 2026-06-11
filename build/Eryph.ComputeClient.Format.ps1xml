@@ -36,8 +36,6 @@
           <TableColumnHeader><Label>GuestServicesStatus</Label></TableColumnHeader>
           <TableColumnHeader><Label>GuestServicesVersion</Label></TableColumnHeader>
           <TableColumnHeader><Label>ProvisioningState</Label></TableColumnHeader>
-          <TableColumnHeader><Label>Project</Label></TableColumnHeader>
-          <TableColumnHeader><Label>Id</Label><Width>38</Width></TableColumnHeader>
         </TableHeaders>
         <TableRowEntries>
           <TableRowEntry>
@@ -46,8 +44,6 @@
               <TableColumnItem><PropertyName>GuestServicesStatus</PropertyName></TableColumnItem>
               <TableColumnItem><PropertyName>GuestServicesVersion</PropertyName></TableColumnItem>
               <TableColumnItem><PropertyName>ProvisioningState</PropertyName></TableColumnItem>
-              <TableColumnItem><PropertyName>Project</PropertyName></TableColumnItem>
-              <TableColumnItem><PropertyName>Id</PropertyName></TableColumnItem>
             </TableColumnItems>
           </TableRowEntry>
         </TableRowEntries>
@@ -62,16 +58,12 @@
         <TableHeaders>
           <TableColumnHeader><Label>Name</Label></TableColumnHeader>
           <TableColumnHeader><Label>Shell</Label></TableColumnHeader>
-          <TableColumnHeader><Label>Project</Label></TableColumnHeader>
-          <TableColumnHeader><Label>Id</Label><Width>38</Width></TableColumnHeader>
         </TableHeaders>
         <TableRowEntries>
           <TableRowEntry>
             <TableColumnItems>
               <TableColumnItem><PropertyName>Name</PropertyName></TableColumnItem>
               <TableColumnItem><PropertyName>Shell</PropertyName></TableColumnItem>
-              <TableColumnItem><PropertyName>Project</PropertyName></TableColumnItem>
-              <TableColumnItem><PropertyName>Id</PropertyName></TableColumnItem>
             </TableColumnItems>
           </TableRowEntry>
         </TableRowEntries>
