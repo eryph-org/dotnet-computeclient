@@ -26,6 +26,50 @@
       </TableControl>
     </View>
     <View>
+      <Name>Eryph.ComputeClient.Commands.Catlets.CatletGuestServiceStatus</Name>
+      <ViewSelectedBy>
+        <TypeName>Eryph.ComputeClient.Commands.Catlets.CatletGuestServiceStatus</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <TableHeaders>
+          <TableColumnHeader><Label>Name</Label></TableColumnHeader>
+          <TableColumnHeader><Label>GuestServicesStatus</Label></TableColumnHeader>
+          <TableColumnHeader><Label>GuestServicesVersion</Label></TableColumnHeader>
+          <TableColumnHeader><Label>ProvisioningState</Label></TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem><PropertyName>Name</PropertyName></TableColumnItem>
+              <TableColumnItem><PropertyName>GuestServicesStatus</PropertyName></TableColumnItem>
+              <TableColumnItem><PropertyName>GuestServicesVersion</PropertyName></TableColumnItem>
+              <TableColumnItem><PropertyName>ProvisioningState</PropertyName></TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+    <View>
+      <Name>Eryph.ComputeClient.Commands.Catlets.CatletGuestServiceConfig</Name>
+      <ViewSelectedBy>
+        <TypeName>Eryph.ComputeClient.Commands.Catlets.CatletGuestServiceConfig</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <TableHeaders>
+          <TableColumnHeader><Label>Name</Label></TableColumnHeader>
+          <TableColumnHeader><Label>Shell</Label></TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem><PropertyName>Name</PropertyName></TableColumnItem>
+              <TableColumnItem><PropertyName>Shell</PropertyName></TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+    <View>
       <Name>Eryph.ComputeClient.Models.Operation</Name>
       <ViewSelectedBy>
         <TypeName>Eryph.ComputeClient.Models.Operation</TypeName>
