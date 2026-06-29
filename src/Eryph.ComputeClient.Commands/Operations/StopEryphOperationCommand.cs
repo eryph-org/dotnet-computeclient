@@ -31,6 +31,12 @@ namespace Eryph.ComputeClient.Commands.Operations
         private bool _yesToAll;
         private bool _noToAll;
 
+        protected override void BeginProcessing()
+        {
+            base.BeginProcessing();
+            RequireApiVersion(1, 2, "Stop-EryphOperation");
+        }
+
         protected override void ProcessRecord()
         {
             if (Id is null)
