@@ -18,30 +18,49 @@ namespace Eryph.ComputeClient.Models
         /// <summary> Initializes a new instance of <see cref="CatletSpecificationVersionVariant"/>. </summary>
         /// <param name="architecture"></param>
         /// <param name="builtConfig"> Anything. </param>
+        /// <param name="variables">
+        /// The variable definitions of the built variant, resolved during the spec
+        /// build (i.e. bred from the parent chain). Exposed so deployment can collect
+        /// variable values without re-resolving the config.
+        /// </param>
         /// <param name="pinnedGenes"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="architecture"/> is null. </exception>
-        internal CatletSpecificationVersionVariant(string architecture, JsonElement builtConfig, IEnumerable<CatletSpecificationVersionVariantGene> pinnedGenes)
+        /// <exception cref="ArgumentNullException"> <paramref name="architecture"/> or <paramref name="variables"/> is null. </exception>
+        internal CatletSpecificationVersionVariant(string architecture, JsonElement builtConfig, IEnumerable<CatletVariable> variables, IEnumerable<CatletSpecificationVersionVariantGene> pinnedGenes)
         {
             Argument.AssertNotNull(architecture, nameof(architecture));
+            Argument.AssertNotNull(variables, nameof(variables));
 
             Architecture = architecture;
             BuiltConfig = builtConfig;
+            Variables = variables.ToList();
             PinnedGenes = pinnedGenes?.ToList();
         }
 
         /// <summary> Initializes a new instance of <see cref="CatletSpecificationVersionVariant"/>. </summary>
         /// <param name="architecture"></param>
         /// <param name="builtConfig"> Anything. </param>
+        /// <param name="variables">
+        /// The variable definitions of the built variant, resolved during the spec
+        /// build (i.e. bred from the parent chain). Exposed so deployment can collect
+        /// variable values without re-resolving the config.
+        /// </param>
         /// <param name="pinnedGenes"></param>
-        internal CatletSpecificationVersionVariant(string architecture, JsonElement builtConfig, IReadOnlyList<CatletSpecificationVersionVariantGene> pinnedGenes)
+        internal CatletSpecificationVersionVariant(string architecture, JsonElement builtConfig, IReadOnlyList<CatletVariable> variables, IReadOnlyList<CatletSpecificationVersionVariantGene> pinnedGenes)
         {
             Architecture = architecture;
             BuiltConfig = builtConfig;
+            Variables = variables;
             PinnedGenes = pinnedGenes;
         }
 
         /// <summary> Gets the architecture. </summary>
         public string Architecture { get; }
+        /// <summary>
+        /// The variable definitions of the built variant, resolved during the spec
+        /// build (i.e. bred from the parent chain). Exposed so deployment can collect
+        /// variable values without re-resolving the config.
+        /// </summary>
+        public IReadOnlyList<CatletVariable> Variables { get; }
         /// <summary> Gets the pinned genes. </summary>
         public IReadOnlyList<CatletSpecificationVersionVariantGene> PinnedGenes { get; }
     }

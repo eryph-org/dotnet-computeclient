@@ -433,7 +433,7 @@ namespace Eryph.ComputeClient
         /// Eryph.Modules.ComputeApi.Endpoints.V1.Catlets.OpenSshChannelRequest.PublicKey is supplied.
         /// </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <remarks> Starts an operation that prepares a one-time SSH channel to the catlet's guest services. Track the returned operation; its result carries the channel token. Then connect the data-plane WebSocket at catlets/{id}/ssh-channel/connect with that token. </remarks>
+        /// <remarks> Starts an operation that prepares a one-time SSH channel to the catlet's guest services. Track the returned operation; its result carries the channel token. Then connect the data-plane WebSocket at catlets/{id}/guest-services/ssh-channel/connect with that token. </remarks>
         public virtual async Task<Response<Models.Operation>> OpenSshChannelAsync(string id, string publicKey = null, int? ttl = null, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("CatletsClient.OpenSshChannel");
@@ -460,7 +460,7 @@ namespace Eryph.ComputeClient
         /// Eryph.Modules.ComputeApi.Endpoints.V1.Catlets.OpenSshChannelRequest.PublicKey is supplied.
         /// </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <remarks> Starts an operation that prepares a one-time SSH channel to the catlet's guest services. Track the returned operation; its result carries the channel token. Then connect the data-plane WebSocket at catlets/{id}/ssh-channel/connect with that token. </remarks>
+        /// <remarks> Starts an operation that prepares a one-time SSH channel to the catlet's guest services. Track the returned operation; its result carries the channel token. Then connect the data-plane WebSocket at catlets/{id}/guest-services/ssh-channel/connect with that token. </remarks>
         public virtual Response<Models.Operation> OpenSshChannel(string id, string publicKey = null, int? ttl = null, CancellationToken cancellationToken = default)
         {
             using var scope = _clientDiagnostics.CreateScope("CatletsClient.OpenSshChannel");

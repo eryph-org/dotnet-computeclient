@@ -22,12 +22,14 @@ namespace Eryph.ComputeClient.Models
         /// <param name="guestServicesVersion"></param>
         /// <param name="provisioningState"></param>
         /// <param name="shell"></param>
-        internal GuestServicesStatusOperationResult(string resultType, string guestServicesStatus, string guestServicesVersion, string provisioningState, string shell) : base(resultType)
+        /// <param name="shellArgs"></param>
+        internal GuestServicesStatusOperationResult(string resultType, string guestServicesStatus, string guestServicesVersion, string provisioningState, string shell, string shellArgs) : base(resultType)
         {
             GuestServicesStatus = guestServicesStatus;
             GuestServicesVersion = guestServicesVersion;
             ProvisioningState = provisioningState;
             Shell = shell;
+            ShellArgs = shellArgs;
             ResultType = resultType ?? "GuestServicesStatus";
         }
 
@@ -39,5 +41,7 @@ namespace Eryph.ComputeClient.Models
         public string ProvisioningState { get; }
         /// <summary> Gets the shell. </summary>
         public string Shell { get; }
+        /// <summary> Gets the shell args. </summary>
+        public string ShellArgs { get; }
     }
 }

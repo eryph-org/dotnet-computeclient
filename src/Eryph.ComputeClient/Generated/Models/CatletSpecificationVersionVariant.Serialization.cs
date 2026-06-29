@@ -21,6 +21,7 @@ namespace Eryph.ComputeClient.Models
             }
             string architecture = default;
             JsonElement builtConfig = default;
+            IReadOnlyList<CatletVariable> variables = default;
             IReadOnlyList<CatletSpecificationVersionVariantGene> pinnedGenes = default;
             foreach (var property in element.EnumerateObject())
             {
@@ -32,6 +33,16 @@ namespace Eryph.ComputeClient.Models
                 if (property.NameEquals("built_config"u8))
                 {
                     builtConfig = property.Value.Clone();
+                    continue;
+                }
+                if (property.NameEquals("variables"u8))
+                {
+                    List<CatletVariable> array = new List<CatletVariable>();
+                    foreach (var item in property.Value.EnumerateArray())
+                    {
+                        array.Add(CatletVariable.DeserializeCatletVariable(item));
+                    }
+                    variables = array;
                     continue;
                 }
                 if (property.NameEquals("pinned_genes"u8))
@@ -50,7 +61,7 @@ namespace Eryph.ComputeClient.Models
                     continue;
                 }
             }
-            return new CatletSpecificationVersionVariant(architecture, builtConfig, pinnedGenes);
+            return new CatletSpecificationVersionVariant(architecture, builtConfig, variables, pinnedGenes);
         }
 
         /// <summary> Deserializes the model from a raw response. </summary>

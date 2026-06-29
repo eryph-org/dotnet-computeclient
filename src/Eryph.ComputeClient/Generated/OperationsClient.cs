@@ -40,6 +40,44 @@ namespace Eryph.ComputeClient
             _pipeline = pipeline;
         }
 
+        /// <summary> Cancel an operation. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Requests cancellation of a running operation. Best-effort: only tasks whose handlers support cancellation are interrupted. </remarks>
+        public virtual async Task<Response> CancelAsync(string id, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("OperationsClient.Cancel");
+            scope.Start();
+            try
+            {
+                return await RestClient.CancelAsync(id, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Cancel an operation. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Requests cancellation of a running operation. Best-effort: only tasks whose handlers support cancellation are interrupted. </remarks>
+        public virtual Response Cancel(string id, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("OperationsClient.Cancel");
+            scope.Start();
+            try
+            {
+                return RestClient.Cancel(id, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
         /// <summary> Get an operation. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="logTimeStamp"> Filters returned log entries by the requested timestamp. </param>

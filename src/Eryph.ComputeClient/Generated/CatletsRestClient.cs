@@ -33,7 +33,7 @@ namespace Eryph.ComputeClient
         {
             ClientDiagnostics = clientDiagnostics ?? throw new ArgumentNullException(nameof(clientDiagnostics));
             _pipeline = pipeline ?? throw new ArgumentNullException(nameof(pipeline));
-            _endpoint = endpoint ?? new Uri("https://localhost:56865/compute");
+            _endpoint = endpoint ?? new Uri("https://localhost:8000/compute");
         }
 
         internal HttpMessage CreateAddAccessKeyRequest(string id, AddAccessKeyRequestBody body)
@@ -861,7 +861,7 @@ namespace Eryph.ComputeClient
         /// </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
-        /// <remarks> Starts an operation that prepares a one-time SSH channel to the catlet's guest services. Track the returned operation; its result carries the channel token. Then connect the data-plane WebSocket at catlets/{id}/ssh-channel/connect with that token. </remarks>
+        /// <remarks> Starts an operation that prepares a one-time SSH channel to the catlet's guest services. Track the returned operation; its result carries the channel token. Then connect the data-plane WebSocket at catlets/{id}/guest-services/ssh-channel/connect with that token. </remarks>
         public async Task<Response<Models.Operation>> OpenSshChannelAsync(string id, string publicKey = null, int? ttl = null, CancellationToken cancellationToken = default)
         {
             if (id == null)
@@ -897,7 +897,7 @@ namespace Eryph.ComputeClient
         /// </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="id"/> is null. </exception>
-        /// <remarks> Starts an operation that prepares a one-time SSH channel to the catlet's guest services. Track the returned operation; its result carries the channel token. Then connect the data-plane WebSocket at catlets/{id}/ssh-channel/connect with that token. </remarks>
+        /// <remarks> Starts an operation that prepares a one-time SSH channel to the catlet's guest services. Track the returned operation; its result carries the channel token. Then connect the data-plane WebSocket at catlets/{id}/guest-services/ssh-channel/connect with that token. </remarks>
         public Response<Models.Operation> OpenSshChannel(string id, string publicKey = null, int? ttl = null, CancellationToken cancellationToken = default)
         {
             if (id == null)

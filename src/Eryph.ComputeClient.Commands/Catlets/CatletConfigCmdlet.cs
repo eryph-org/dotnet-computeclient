@@ -11,6 +11,7 @@ using Eryph.ConfigModel.Yaml;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using Eryph.ComputeClient.Models;
+using VariableType = Eryph.ConfigModel.Variables.VariableType;
 
 namespace Eryph.ComputeClient.Commands.Catlets
 {

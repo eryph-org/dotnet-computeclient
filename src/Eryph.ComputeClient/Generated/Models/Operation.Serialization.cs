@@ -5,6 +5,7 @@
 
 #nullable disable
 
+using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using Azure;
@@ -22,6 +23,10 @@ namespace Eryph.ComputeClient.Models
             string id = default;
             OperationStatus status = default;
             string statusMessage = default;
+            string requestedBy = default;
+            DateTimeOffset? created = default;
+            DateTimeOffset? startedAt = default;
+            DateTimeOffset? endedAt = default;
             IReadOnlyList<OperationResource> resources = default;
             IReadOnlyList<OperationLogEntry> logEntries = default;
             IReadOnlyList<Project> projects = default;
@@ -47,6 +52,45 @@ namespace Eryph.ComputeClient.Models
                         continue;
                     }
                     statusMessage = property.Value.GetString();
+                    continue;
+                }
+                if (property.NameEquals("requested_by"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        requestedBy = null;
+                        continue;
+                    }
+                    requestedBy = property.Value.GetString();
+                    continue;
+                }
+                if (property.NameEquals("created"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    created = property.Value.GetDateTimeOffset("O");
+                    continue;
+                }
+                if (property.NameEquals("started_at"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        startedAt = null;
+                        continue;
+                    }
+                    startedAt = property.Value.GetDateTimeOffset("O");
+                    continue;
+                }
+                if (property.NameEquals("ended_at"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        endedAt = null;
+                        continue;
+                    }
+                    endedAt = property.Value.GetDateTimeOffset("O");
                     continue;
                 }
                 if (property.NameEquals("resources"u8))
@@ -119,6 +163,10 @@ namespace Eryph.ComputeClient.Models
                 id,
                 status,
                 statusMessage,
+                requestedBy,
+                created,
+                startedAt,
+                endedAt,
                 resources ?? new ChangeTrackingList<OperationResource>(),
                 logEntries ?? new ChangeTrackingList<OperationLogEntry>(),
                 projects ?? new ChangeTrackingList<Project>(),

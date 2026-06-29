@@ -19,6 +19,10 @@ namespace Eryph.ComputeClient.Models
         /// <param name="id"></param>
         /// <param name="status"></param>
         /// <param name="statusMessage"></param>
+        /// <param name="requestedBy"></param>
+        /// <param name="created"></param>
+        /// <param name="startedAt"></param>
+        /// <param name="endedAt"></param>
         /// <param name="resources"></param>
         /// <param name="logEntries"></param>
         /// <param name="projects"></param>
@@ -28,7 +32,7 @@ namespace Eryph.ComputeClient.Models
         /// The available derived classes include <see cref="Models.CatletOperationResult"/>, <see cref="CatletConfigOperationResult"/>, <see cref="Models.CatletSpecificationOperationResult"/>, <see cref="Models.GuestServicesStatusOperationResult"/> and <see cref="Models.SshChannelOperationResult"/>.
         /// </param>
         /// <returns> A new <see cref="Models.Operation"/> instance for mocking. </returns>
-        public static Operation Operation(string id = null, OperationStatus status = default, string statusMessage = null, IEnumerable<OperationResource> resources = null, IEnumerable<OperationLogEntry> logEntries = null, IEnumerable<Project> projects = null, IEnumerable<OperationTask> tasks = null, OperationResult result = null)
+        public static Operation Operation(string id = null, OperationStatus status = default, string statusMessage = null, string requestedBy = null, DateTimeOffset? created = null, DateTimeOffset? startedAt = null, DateTimeOffset? endedAt = null, IEnumerable<OperationResource> resources = null, IEnumerable<OperationLogEntry> logEntries = null, IEnumerable<Project> projects = null, IEnumerable<OperationTask> tasks = null, OperationResult result = null)
         {
             resources ??= new List<OperationResource>();
             logEntries ??= new List<OperationLogEntry>();
@@ -39,6 +43,10 @@ namespace Eryph.ComputeClient.Models
                 id,
                 status,
                 statusMessage,
+                requestedBy,
+                created,
+                startedAt,
+                endedAt,
                 resources?.ToList(),
                 logEntries?.ToList(),
                 projects?.ToList(),
@@ -109,8 +117,11 @@ namespace Eryph.ComputeClient.Models
         /// <param name="progress"></param>
         /// <param name="status"></param>
         /// <param name="reference"></param>
+        /// <param name="created"></param>
+        /// <param name="startedAt"></param>
+        /// <param name="endedAt"></param>
         /// <returns> A new <see cref="Models.OperationTask"/> instance for mocking. </returns>
-        public static OperationTask OperationTask(string id = null, string parentTaskId = null, string name = null, string displayName = null, int progress = default, OperationTaskStatus status = default, OperationTaskReference reference = null)
+        public static OperationTask OperationTask(string id = null, string parentTaskId = null, string name = null, string displayName = null, int progress = default, OperationTaskStatus status = default, OperationTaskReference reference = null, DateTimeOffset? created = null, DateTimeOffset? startedAt = null, DateTimeOffset? endedAt = null)
         {
             return new OperationTask(
                 id,
@@ -119,7 +130,10 @@ namespace Eryph.ComputeClient.Models
                 displayName,
                 progress,
                 status,
-                reference);
+                reference,
+                created,
+                startedAt,
+                endedAt);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.OperationTaskReference"/>. </summary>
@@ -419,20 +433,13 @@ namespace Eryph.ComputeClient.Models
         /// <summary> Initializes a new instance of <see cref="Models.CatletSpecification"/>. </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
-        /// <param name="architecture"></param>
         /// <param name="project"></param>
         /// <param name="latest"></param>
         /// <param name="catletId"></param>
         /// <returns> A new <see cref="Models.CatletSpecification"/> instance for mocking. </returns>
-        public static CatletSpecification CatletSpecification(string id = null, string name = null, string architecture = null, Project project = null, CatletSpecificationVersionInfo latest = null, string catletId = null)
+        public static CatletSpecification CatletSpecification(string id = null, string name = null, Project project = null, CatletSpecificationVersionInfo latest = null, string catletId = null)
         {
-            return new CatletSpecification(
-                id,
-                name,
-                architecture,
-                project,
-                latest,
-                catletId);
+            return new CatletSpecification(id, name, project, latest, catletId);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.CatletSpecificationVersionInfo"/>. </summary>
@@ -540,13 +547,31 @@ namespace Eryph.ComputeClient.Models
         /// <summary> Initializes a new instance of <see cref="Models.CatletSpecificationVersionVariant"/>. </summary>
         /// <param name="architecture"></param>
         /// <param name="builtConfig"> Anything. </param>
+        /// <param name="variables">
+        /// The variable definitions of the built variant, resolved during the spec
+        /// build (i.e. bred from the parent chain). Exposed so deployment can collect
+        /// variable values without re-resolving the config.
+        /// </param>
         /// <param name="pinnedGenes"></param>
         /// <returns> A new <see cref="Models.CatletSpecificationVersionVariant"/> instance for mocking. </returns>
-        public static CatletSpecificationVersionVariant CatletSpecificationVersionVariant(string architecture = null, JsonElement builtConfig = default, IEnumerable<CatletSpecificationVersionVariantGene> pinnedGenes = null)
+        public static CatletSpecificationVersionVariant CatletSpecificationVersionVariant(string architecture = null, JsonElement builtConfig = default, IEnumerable<CatletVariable> variables = null, IEnumerable<CatletSpecificationVersionVariantGene> pinnedGenes = null)
         {
+            variables ??= new List<CatletVariable>();
             pinnedGenes ??= new List<CatletSpecificationVersionVariantGene>();
 
-            return new CatletSpecificationVersionVariant(architecture, builtConfig, pinnedGenes?.ToList());
+            return new CatletSpecificationVersionVariant(architecture, builtConfig, variables?.ToList(), pinnedGenes?.ToList());
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.CatletVariable"/>. </summary>
+        /// <param name="name"></param>
+        /// <param name="type"></param>
+        /// <param name="value"></param>
+        /// <param name="secret"></param>
+        /// <param name="required"></param>
+        /// <returns> A new <see cref="Models.CatletVariable"/> instance for mocking. </returns>
+        public static CatletVariable CatletVariable(string name = null, VariableType? type = null, string value = null, bool? secret = null, bool? required = null)
+        {
+            return new CatletVariable(name, type, value, secret, required);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.CatletSpecificationVersionVariantGene"/>. </summary>
@@ -635,10 +660,17 @@ namespace Eryph.ComputeClient.Models
         /// <param name="guestServicesVersion"></param>
         /// <param name="provisioningState"></param>
         /// <param name="shell"></param>
+        /// <param name="shellArgs"></param>
         /// <returns> A new <see cref="Models.GuestServicesStatusOperationResult"/> instance for mocking. </returns>
-        public static GuestServicesStatusOperationResult GuestServicesStatusOperationResult(string guestServicesStatus = null, string guestServicesVersion = null, string provisioningState = null, string shell = null)
+        public static GuestServicesStatusOperationResult GuestServicesStatusOperationResult(string guestServicesStatus = null, string guestServicesVersion = null, string provisioningState = null, string shell = null, string shellArgs = null)
         {
-            return new GuestServicesStatusOperationResult("GuestServicesStatus", guestServicesStatus, guestServicesVersion, provisioningState, shell);
+            return new GuestServicesStatusOperationResult(
+                "GuestServicesStatus",
+                guestServicesStatus,
+                guestServicesVersion,
+                provisioningState,
+                shell,
+                shellArgs);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.SshChannelOperationResult"/>. </summary>

@@ -24,7 +24,11 @@ $settings = Get-Content -Raw -Path "$PSScriptRoot/config.json" | ConvertFrom-Jso
 $tag = $settings.tag
 $spec = $settings.spec
 
-npm exec --package="autorest@3.7.1" -- `
+# The doubled `--` is intentional: PowerShell 7.4+ strips the first bare `--`
+# token before invoking a native command, so without the second one npm would
+# never receive the end-of-options marker and would interpret autorest's
+# `--version`/`--verbose` flags as its own (printing the npm version and exiting).
+npm exec --package="autorest@3.7.1" -- -- `
     autorest `
     --version="3.10.3" `
     --use="@autorest/csharp@$autoRestCSharpVersion" `

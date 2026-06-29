@@ -37,7 +37,10 @@ namespace Eryph.ComputeClient.Models
         /// <param name="progress"></param>
         /// <param name="status"></param>
         /// <param name="reference"></param>
-        internal OperationTask(string id, string parentTaskId, string name, string displayName, int progress, OperationTaskStatus status, OperationTaskReference reference)
+        /// <param name="created"></param>
+        /// <param name="startedAt"></param>
+        /// <param name="endedAt"></param>
+        internal OperationTask(string id, string parentTaskId, string name, string displayName, int progress, OperationTaskStatus status, OperationTaskReference reference, DateTimeOffset? created, DateTimeOffset? startedAt, DateTimeOffset? endedAt)
         {
             Id = id;
             ParentTaskId = parentTaskId;
@@ -46,6 +49,9 @@ namespace Eryph.ComputeClient.Models
             Progress = progress;
             Status = status;
             Reference = reference;
+            Created = created;
+            StartedAt = startedAt;
+            EndedAt = endedAt;
         }
 
         /// <summary> Gets the id. </summary>
@@ -62,5 +68,11 @@ namespace Eryph.ComputeClient.Models
         public OperationTaskStatus Status { get; }
         /// <summary> Gets the reference. </summary>
         public OperationTaskReference Reference { get; }
+        /// <summary> Gets the created. </summary>
+        public DateTimeOffset? Created { get; }
+        /// <summary> Gets the started at. </summary>
+        public DateTimeOffset? StartedAt { get; }
+        /// <summary> Gets the ended at. </summary>
+        public DateTimeOffset? EndedAt { get; }
     }
 }

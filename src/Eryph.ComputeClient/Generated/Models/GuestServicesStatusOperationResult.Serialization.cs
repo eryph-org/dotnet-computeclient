@@ -22,6 +22,7 @@ namespace Eryph.ComputeClient.Models
             string guestServicesVersion = default;
             string provisioningState = default;
             string shell = default;
+            string shellArgs = default;
             string resultType = default;
             foreach (var property in element.EnumerateObject())
             {
@@ -65,13 +66,29 @@ namespace Eryph.ComputeClient.Models
                     shell = property.Value.GetString();
                     continue;
                 }
+                if (property.NameEquals("shell_args"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        shellArgs = null;
+                        continue;
+                    }
+                    shellArgs = property.Value.GetString();
+                    continue;
+                }
                 if (property.NameEquals("result_type"u8))
                 {
                     resultType = property.Value.GetString();
                     continue;
                 }
             }
-            return new GuestServicesStatusOperationResult(resultType, guestServicesStatus, guestServicesVersion, provisioningState, shell);
+            return new GuestServicesStatusOperationResult(
+                resultType,
+                guestServicesStatus,
+                guestServicesVersion,
+                provisioningState,
+                shell,
+                shellArgs);
         }
 
         /// <summary> Deserializes the model from a raw response. </summary>

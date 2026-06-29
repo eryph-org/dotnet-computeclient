@@ -5,6 +5,7 @@
 
 #nullable disable
 
+using System;
 using System.Text.Json;
 using Azure;
 
@@ -25,6 +26,9 @@ namespace Eryph.ComputeClient.Models
             int progress = default;
             OperationTaskStatus status = default;
             OperationTaskReference reference = default;
+            DateTimeOffset? created = default;
+            DateTimeOffset? startedAt = default;
+            DateTimeOffset? endedAt = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("id"u8))
@@ -76,6 +80,35 @@ namespace Eryph.ComputeClient.Models
                     reference = OperationTaskReference.DeserializeOperationTaskReference(property.Value);
                     continue;
                 }
+                if (property.NameEquals("created"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        continue;
+                    }
+                    created = property.Value.GetDateTimeOffset("O");
+                    continue;
+                }
+                if (property.NameEquals("started_at"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        startedAt = null;
+                        continue;
+                    }
+                    startedAt = property.Value.GetDateTimeOffset("O");
+                    continue;
+                }
+                if (property.NameEquals("ended_at"u8))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        endedAt = null;
+                        continue;
+                    }
+                    endedAt = property.Value.GetDateTimeOffset("O");
+                    continue;
+                }
             }
             return new OperationTask(
                 id,
@@ -84,7 +117,10 @@ namespace Eryph.ComputeClient.Models
                 displayName,
                 progress,
                 status,
-                reference);
+                reference,
+                created,
+                startedAt,
+                endedAt);
         }
 
         /// <summary> Deserializes the model from a raw response. </summary>
