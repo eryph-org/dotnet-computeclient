@@ -20,7 +20,6 @@ namespace Eryph.ComputeClient.Models
             }
             string id = default;
             string name = default;
-            string architecture = default;
             Project project = default;
             CatletSpecificationVersionInfo latest = default;
             string catletId = default;
@@ -34,11 +33,6 @@ namespace Eryph.ComputeClient.Models
                 if (property.NameEquals("name"u8))
                 {
                     name = property.Value.GetString();
-                    continue;
-                }
-                if (property.NameEquals("architecture"u8))
-                {
-                    architecture = property.Value.GetString();
                     continue;
                 }
                 if (property.NameEquals("project"u8))
@@ -62,13 +56,7 @@ namespace Eryph.ComputeClient.Models
                     continue;
                 }
             }
-            return new CatletSpecification(
-                id,
-                name,
-                architecture,
-                project,
-                latest,
-                catletId);
+            return new CatletSpecification(id, name, project, latest, catletId);
         }
 
         /// <summary> Deserializes the model from a raw response. </summary>

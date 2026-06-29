@@ -33,7 +33,7 @@ namespace Eryph.ComputeClient
         {
             ClientDiagnostics = clientDiagnostics ?? throw new ArgumentNullException(nameof(clientDiagnostics));
             _pipeline = pipeline ?? throw new ArgumentNullException(nameof(pipeline));
-            _endpoint = endpoint ?? new Uri("https://localhost:56865/compute");
+            _endpoint = endpoint ?? new Uri("https://localhost:8000/compute");
         }
 
         internal HttpMessage CreateGetRequest(string id)

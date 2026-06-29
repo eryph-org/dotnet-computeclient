@@ -33,6 +33,10 @@ namespace Eryph.ComputeClient.Models
         /// <param name="id"></param>
         /// <param name="status"></param>
         /// <param name="statusMessage"></param>
+        /// <param name="requestedBy"></param>
+        /// <param name="created"></param>
+        /// <param name="startedAt"></param>
+        /// <param name="endedAt"></param>
         /// <param name="resources"></param>
         /// <param name="logEntries"></param>
         /// <param name="projects"></param>
@@ -41,11 +45,15 @@ namespace Eryph.ComputeClient.Models
         /// Please note <see cref="OperationResult"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
         /// The available derived classes include <see cref="CatletOperationResult"/>, <see cref="CatletConfigOperationResult"/>, <see cref="CatletSpecificationOperationResult"/>, <see cref="GuestServicesStatusOperationResult"/> and <see cref="SshChannelOperationResult"/>.
         /// </param>
-        internal Operation(string id, OperationStatus status, string statusMessage, IReadOnlyList<OperationResource> resources, IReadOnlyList<OperationLogEntry> logEntries, IReadOnlyList<Project> projects, IReadOnlyList<OperationTask> tasks, OperationResult result)
+        internal Operation(string id, OperationStatus status, string statusMessage, string requestedBy, DateTimeOffset? created, DateTimeOffset? startedAt, DateTimeOffset? endedAt, IReadOnlyList<OperationResource> resources, IReadOnlyList<OperationLogEntry> logEntries, IReadOnlyList<Project> projects, IReadOnlyList<OperationTask> tasks, OperationResult result)
         {
             Id = id;
             Status = status;
             StatusMessage = statusMessage;
+            RequestedBy = requestedBy;
+            Created = created;
+            StartedAt = startedAt;
+            EndedAt = endedAt;
             Resources = resources;
             LogEntries = logEntries;
             Projects = projects;
@@ -59,6 +67,14 @@ namespace Eryph.ComputeClient.Models
         public OperationStatus Status { get; }
         /// <summary> Gets the status message. </summary>
         public string StatusMessage { get; }
+        /// <summary> Gets the requested by. </summary>
+        public string RequestedBy { get; }
+        /// <summary> Gets the created. </summary>
+        public DateTimeOffset? Created { get; }
+        /// <summary> Gets the started at. </summary>
+        public DateTimeOffset? StartedAt { get; }
+        /// <summary> Gets the ended at. </summary>
+        public DateTimeOffset? EndedAt { get; }
         /// <summary> Gets the resources. </summary>
         public IReadOnlyList<OperationResource> Resources { get; }
         /// <summary> Gets the log entries. </summary>

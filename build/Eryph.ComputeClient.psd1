@@ -87,6 +87,7 @@ CmdletsToExport = @(
     "Get-CatletGene",
     "Remove-CatletGene",
     "Get-EryphOperation",
+    "Stop-EryphOperation",
     "Get-VNetwork",
     "Set-VNetwork",
     "Get-EryphProject",

@@ -26,6 +26,7 @@ namespace Eryph.ComputeClient.Models
         private const string RunningValue = "Running";
         private const string FailedValue = "Failed";
         private const string CompletedValue = "Completed";
+        private const string CancelledValue = "Cancelled";
 
         /// <summary> Queued. </summary>
         public static OperationTaskStatus Queued { get; } = new OperationTaskStatus(QueuedValue);
@@ -35,6 +36,8 @@ namespace Eryph.ComputeClient.Models
         public static OperationTaskStatus Failed { get; } = new OperationTaskStatus(FailedValue);
         /// <summary> Completed. </summary>
         public static OperationTaskStatus Completed { get; } = new OperationTaskStatus(CompletedValue);
+        /// <summary> Cancelled. </summary>
+        public static OperationTaskStatus Cancelled { get; } = new OperationTaskStatus(CancelledValue);
         /// <summary> Determines if two <see cref="OperationTaskStatus"/> values are the same. </summary>
         public static bool operator ==(OperationTaskStatus left, OperationTaskStatus right) => left.Equals(right);
         /// <summary> Determines if two <see cref="OperationTaskStatus"/> values are not the same. </summary>
