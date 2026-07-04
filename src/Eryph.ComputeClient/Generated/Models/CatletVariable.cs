@@ -5,21 +5,14 @@
 
 #nullable disable
 
-using System;
-
 namespace Eryph.ComputeClient.Models
 {
     /// <summary> The CatletVariable. </summary>
     public partial class CatletVariable
     {
         /// <summary> Initializes a new instance of <see cref="CatletVariable"/>. </summary>
-        /// <param name="name"></param>
-        /// <exception cref="ArgumentNullException"> <paramref name="name"/> is null. </exception>
-        internal CatletVariable(string name)
+        internal CatletVariable()
         {
-            Argument.AssertNotNull(name, nameof(name));
-
-            Name = name;
         }
 
         /// <summary> Initializes a new instance of <see cref="CatletVariable"/>. </summary>

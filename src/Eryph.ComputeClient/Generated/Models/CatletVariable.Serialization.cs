@@ -27,6 +27,11 @@ namespace Eryph.ComputeClient.Models
             {
                 if (property.NameEquals("name"u8))
                 {
+                    if (property.Value.ValueKind == JsonValueKind.Null)
+                    {
+                        name = null;
+                        continue;
+                    }
                     name = property.Value.GetString();
                     continue;
                 }
@@ -53,6 +58,7 @@ namespace Eryph.ComputeClient.Models
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
+                        secret = null;
                         continue;
                     }
                     secret = property.Value.GetBoolean();
@@ -62,6 +68,7 @@ namespace Eryph.ComputeClient.Models
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
+                        required = null;
                         continue;
                     }
                     required = property.Value.GetBoolean();
