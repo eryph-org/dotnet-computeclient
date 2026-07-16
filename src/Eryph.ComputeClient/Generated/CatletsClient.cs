@@ -422,6 +422,44 @@ namespace Eryph.ComputeClient
             }
         }
 
+        /// <summary> Get the provisioning log of a catlet. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Starts an operation that reads the catlet's provisioning log from the guest's cloud-init telemetry. Track the returned operation; its result carries both a rendered, human-readable text log and the reassembled raw events. </remarks>
+        public virtual async Task<Response<Models.Operation>> GetProvisioningLogAsync(string id, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("CatletsClient.GetProvisioningLog");
+            scope.Start();
+            try
+            {
+                return await RestClient.GetProvisioningLogAsync(id, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Get the provisioning log of a catlet. </summary>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Starts an operation that reads the catlet's provisioning log from the guest's cloud-init telemetry. Track the returned operation; its result carries both a rendered, human-readable text log and the reassembled raw events. </remarks>
+        public virtual Response<Models.Operation> GetProvisioningLog(string id, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("CatletsClient.GetProvisioningLog");
+            scope.Start();
+            try
+            {
+                return RestClient.GetProvisioningLog(id, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
         /// <summary> Open an SSH channel to a catlet. </summary>
         /// <param name="id"> The <see cref="string"/> to use. </param>
         /// <param name="publicKey">

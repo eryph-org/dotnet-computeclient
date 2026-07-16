@@ -27,6 +27,18 @@ namespace Eryph.ComputeClient.Models
                     writer.WriteNull("architecture");
                 }
             }
+            if (Optional.IsDefined(Environment))
+            {
+                if (Environment != null)
+                {
+                    writer.WritePropertyName("environment"u8);
+                    writer.WriteStringValue(Environment);
+                }
+                else
+                {
+                    writer.WriteNull("environment");
+                }
+            }
             if (Optional.IsDefined(Redeploy))
             {
                 if (Redeploy != null)

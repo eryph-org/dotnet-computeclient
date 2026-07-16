@@ -25,17 +25,27 @@ namespace Eryph.ComputeClient.Models
 
         /// <summary> Initializes a new instance of <see cref="DeployCatletSpecificationRequestBody"/>. </summary>
         /// <param name="architecture"></param>
+        /// <param name="environment">
+        /// The environment to deploy into; the default environment when omitted. A specification is
+        /// project level and can be deployed into several environments, at most once into each.
+        /// </param>
         /// <param name="redeploy"></param>
         /// <param name="variables"> Dictionary of &lt;string&gt;. </param>
-        internal DeployCatletSpecificationRequestBody(string architecture, bool? redeploy, IDictionary<string, string> variables)
+        internal DeployCatletSpecificationRequestBody(string architecture, string environment, bool? redeploy, IDictionary<string, string> variables)
         {
             Architecture = architecture;
+            Environment = environment;
             Redeploy = redeploy;
             Variables = variables;
         }
 
         /// <summary> Gets or sets the architecture. </summary>
         public string Architecture { get; set; }
+        /// <summary>
+        /// The environment to deploy into; the default environment when omitted. A specification is
+        /// project level and can be deployed into several environments, at most once into each.
+        /// </summary>
+        public string Environment { get; set; }
         /// <summary> Gets or sets the redeploy. </summary>
         public bool? Redeploy { get; set; }
         /// <summary> Dictionary of &lt;string&gt;. </summary>

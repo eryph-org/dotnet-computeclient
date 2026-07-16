@@ -23,7 +23,9 @@ namespace Eryph.ComputeClient.Models
             string name = default;
             string vmId = default;
             Project project = default;
+            string environment = default;
             CatletStatus status = default;
+            CatletProvisioningStatus provisioningStatus = default;
             bool isDeprecated = default;
             IReadOnlyList<CatletNetwork> networks = default;
             IReadOnlyList<CatletNetworkAdapter> networkAdapters = default;
@@ -51,9 +53,19 @@ namespace Eryph.ComputeClient.Models
                     project = Project.DeserializeProject(property.Value);
                     continue;
                 }
+                if (property.NameEquals("environment"u8))
+                {
+                    environment = property.Value.GetString();
+                    continue;
+                }
                 if (property.NameEquals("status"u8))
                 {
                     status = new CatletStatus(property.Value.GetString());
+                    continue;
+                }
+                if (property.NameEquals("provisioning_status"u8))
+                {
+                    provisioningStatus = new CatletProvisioningStatus(property.Value.GetString());
                     continue;
                 }
                 if (property.NameEquals("is_deprecated"u8))
@@ -118,7 +130,9 @@ namespace Eryph.ComputeClient.Models
                 name,
                 vmId,
                 project,
+                environment,
                 status,
+                provisioningStatus,
                 isDeprecated,
                 networks ?? new ChangeTrackingList<CatletNetwork>(),
                 networkAdapters ?? new ChangeTrackingList<CatletNetworkAdapter>(),
