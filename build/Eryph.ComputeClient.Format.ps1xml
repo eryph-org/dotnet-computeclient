@@ -11,6 +11,7 @@
           <TableColumnHeader><Label>Name</Label></TableColumnHeader>
           <TableColumnHeader><Label>Status</Label></TableColumnHeader>
           <TableColumnHeader><Label>Project</Label></TableColumnHeader>
+          <TableColumnHeader><Label>Environment</Label></TableColumnHeader>
           <TableColumnHeader><Label>Id</Label><Width>38</Width></TableColumnHeader>
         </TableHeaders>
         <TableRowEntries>
@@ -19,6 +20,7 @@
               <TableColumnItem><PropertyName>Name</PropertyName></TableColumnItem>
               <TableColumnItem><PropertyName>Status</PropertyName></TableColumnItem>
               <TableColumnItem><ScriptBlock>$_.Project.Name</ScriptBlock></TableColumnItem>
+              <TableColumnItem><PropertyName>Environment</PropertyName></TableColumnItem>
               <TableColumnItem><PropertyName>Id</PropertyName></TableColumnItem>
             </TableColumnItems>
           </TableRowEntry>
@@ -149,6 +151,7 @@
           <TableColumnHeader><Label>Size(GB)</Label><Alignment>Right</Alignment></TableColumnHeader>
           <TableColumnHeader><Label>DataStore</Label></TableColumnHeader>
           <TableColumnHeader><Label>Project</Label></TableColumnHeader>
+          <TableColumnHeader><Label>Environment</Label></TableColumnHeader>
         </TableHeaders>
         <TableRowEntries>
           <TableRowEntry>
@@ -158,6 +161,7 @@
               <TableColumnItem><ScriptBlock>if ($null -ne $_.SizeBytes) { [math]::Round($_.SizeBytes / 1GB, 2) }</ScriptBlock></TableColumnItem>
               <TableColumnItem><PropertyName>DataStore</PropertyName></TableColumnItem>
               <TableColumnItem><ScriptBlock>$_.Project.Name</ScriptBlock></TableColumnItem>
+              <TableColumnItem><PropertyName>Environment</PropertyName></TableColumnItem>
             </TableColumnItems>
           </TableRowEntry>
         </TableRowEntries>
@@ -206,16 +210,16 @@
       <TableControl>
         <TableHeaders>
           <TableColumnHeader><Label>Name</Label></TableColumnHeader>
-          <TableColumnHeader><Label>Architecture</Label></TableColumnHeader>
           <TableColumnHeader><Label>Project</Label></TableColumnHeader>
+          <TableColumnHeader><Label>Environments</Label></TableColumnHeader>
           <TableColumnHeader><Label>Id</Label><Width>38</Width></TableColumnHeader>
         </TableHeaders>
         <TableRowEntries>
           <TableRowEntry>
             <TableColumnItems>
               <TableColumnItem><PropertyName>Name</PropertyName></TableColumnItem>
-              <TableColumnItem><PropertyName>Architecture</PropertyName></TableColumnItem>
               <TableColumnItem><ScriptBlock>$_.Project.Name</ScriptBlock></TableColumnItem>
+              <TableColumnItem><ScriptBlock>($_.Deployments | ForEach-Object { $_.Environment }) -join ', '</ScriptBlock></TableColumnItem>
               <TableColumnItem><PropertyName>Id</PropertyName></TableColumnItem>
             </TableColumnItems>
           </TableRowEntry>

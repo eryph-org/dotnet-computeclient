@@ -5,6 +5,7 @@
 
 #nullable disable
 
+using System.Collections.Generic;
 using System.Text.Json;
 using Azure;
 
@@ -22,7 +23,7 @@ namespace Eryph.ComputeClient.Models
             string name = default;
             Project project = default;
             CatletSpecificationVersionInfo latest = default;
-            string catletId = default;
+            IReadOnlyList<CatletSpecificationDeployment> deployments = default;
             foreach (var property in element.EnumerateObject())
             {
                 if (property.NameEquals("id"u8))
@@ -45,18 +46,22 @@ namespace Eryph.ComputeClient.Models
                     latest = CatletSpecificationVersionInfo.DeserializeCatletSpecificationVersionInfo(property.Value);
                     continue;
                 }
-                if (property.NameEquals("catlet_id"u8))
+                if (property.NameEquals("deployments"u8))
                 {
                     if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        catletId = null;
                         continue;
                     }
-                    catletId = property.Value.GetString();
+                    List<CatletSpecificationDeployment> array = new List<CatletSpecificationDeployment>();
+                    foreach (var item in property.Value.EnumerateArray())
+                    {
+                        array.Add(CatletSpecificationDeployment.DeserializeCatletSpecificationDeployment(item));
+                    }
+                    deployments = array;
                     continue;
                 }
             }
-            return new CatletSpecification(id, name, project, latest, catletId);
+            return new CatletSpecification(id, name, project, latest, deployments ?? new ChangeTrackingList<CatletSpecificationDeployment>());
         }
 
         /// <summary> Deserializes the model from a raw response. </summary>

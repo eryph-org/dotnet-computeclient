@@ -29,7 +29,7 @@ namespace Eryph.ComputeClient.Models
         /// <param name="tasks"></param>
         /// <param name="result">
         /// Please note <see cref="OperationResult"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-        /// The available derived classes include <see cref="Models.CatletOperationResult"/>, <see cref="CatletConfigOperationResult"/>, <see cref="Models.CatletSpecificationOperationResult"/>, <see cref="Models.GuestServicesStatusOperationResult"/> and <see cref="Models.SshChannelOperationResult"/>.
+        /// The available derived classes include <see cref="Models.CatletOperationResult"/>, <see cref="CatletConfigOperationResult"/>, <see cref="Models.CatletSpecificationOperationResult"/>, <see cref="Models.GuestServicesStatusOperationResult"/>, <see cref="Models.ProvisioningLogOperationResult"/> and <see cref="Models.SshChannelOperationResult"/>.
         /// </param>
         /// <returns> A new <see cref="Models.Operation"/> instance for mocking. </returns>
         public static Operation Operation(string id = null, OperationStatus status = default, string statusMessage = null, string requestedBy = null, DateTimeOffset? created = null, DateTimeOffset? startedAt = null, DateTimeOffset? endedAt = null, IEnumerable<OperationResource> resources = null, IEnumerable<OperationLogEntry> logEntries = null, IEnumerable<Project> projects = null, IEnumerable<OperationTask> tasks = null, OperationResult result = null)
@@ -319,7 +319,12 @@ namespace Eryph.ComputeClient.Models
         /// <param name="name"></param>
         /// <param name="vmId"> The ID of the corresponding Hyper-V virtual machine. </param>
         /// <param name="project"></param>
+        /// <param name="environment">
+        /// The environment the catlet is deployed in. Together with the project and the name it
+        /// identifies the catlet: the same name can exist in different environments of one project.
+        /// </param>
         /// <param name="status"></param>
+        /// <param name="provisioningStatus"></param>
         /// <param name="isDeprecated">
         /// Indicates that the catlet has been created with an old
         /// version of eryph and is missing some metadata. Hence,
@@ -330,7 +335,7 @@ namespace Eryph.ComputeClient.Models
         /// <param name="drives"></param>
         /// <param name="specification"></param>
         /// <returns> A new <see cref="Models.Catlet"/> instance for mocking. </returns>
-        public static Catlet Catlet(string id = null, string name = null, string vmId = null, Project project = null, CatletStatus status = default, bool isDeprecated = default, IEnumerable<CatletNetwork> networks = null, IEnumerable<CatletNetworkAdapter> networkAdapters = null, IEnumerable<CatletDrive> drives = null, CatletSpecificationInfo specification = null)
+        public static Catlet Catlet(string id = null, string name = null, string vmId = null, Project project = null, string environment = null, CatletStatus status = default, CatletProvisioningStatus provisioningStatus = default, bool isDeprecated = default, IEnumerable<CatletNetwork> networks = null, IEnumerable<CatletNetworkAdapter> networkAdapters = null, IEnumerable<CatletDrive> drives = null, CatletSpecificationInfo specification = null)
         {
             networks ??= new List<CatletNetwork>();
             networkAdapters ??= new List<CatletNetworkAdapter>();
@@ -341,7 +346,9 @@ namespace Eryph.ComputeClient.Models
                 name,
                 vmId,
                 project,
+                environment,
                 status,
+                provisioningStatus,
                 isDeprecated,
                 networks?.ToList(),
                 networkAdapters?.ToList(),
@@ -435,11 +442,16 @@ namespace Eryph.ComputeClient.Models
         /// <param name="name"></param>
         /// <param name="project"></param>
         /// <param name="latest"></param>
-        /// <param name="catletId"></param>
+        /// <param name="deployments">
+        /// The deployments of this specification, one per environment it is deployed into. Empty when it
+        /// is not deployed anywhere.
+        /// </param>
         /// <returns> A new <see cref="Models.CatletSpecification"/> instance for mocking. </returns>
-        public static CatletSpecification CatletSpecification(string id = null, string name = null, Project project = null, CatletSpecificationVersionInfo latest = null, string catletId = null)
+        public static CatletSpecification CatletSpecification(string id = null, string name = null, Project project = null, CatletSpecificationVersionInfo latest = null, IEnumerable<CatletSpecificationDeployment> deployments = null)
         {
-            return new CatletSpecification(id, name, project, latest, catletId);
+            deployments ??= new List<CatletSpecificationDeployment>();
+
+            return new CatletSpecification(id, name, project, latest, deployments?.ToList());
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.CatletSpecificationVersionInfo"/>. </summary>
@@ -450,6 +462,25 @@ namespace Eryph.ComputeClient.Models
         public static CatletSpecificationVersionInfo CatletSpecificationVersionInfo(string id = null, DateTimeOffset createdAt = default, string comment = null)
         {
             return new CatletSpecificationVersionInfo(id, createdAt, comment);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.CatletSpecificationDeployment"/>. </summary>
+        /// <param name="environment"></param>
+        /// <param name="catletId"></param>
+        /// <exception cref="ArgumentNullException"> <paramref name="environment"/> or <paramref name="catletId"/> is null. </exception>
+        /// <returns> A new <see cref="Models.CatletSpecificationDeployment"/> instance for mocking. </returns>
+        public static CatletSpecificationDeployment CatletSpecificationDeployment(string environment = null, string catletId = null)
+        {
+            if (environment == null)
+            {
+                throw new ArgumentNullException(nameof(environment));
+            }
+            if (catletId == null)
+            {
+                throw new ArgumentNullException(nameof(catletId));
+            }
+
+            return new CatletSpecificationDeployment(environment, catletId);
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.GeneWithUsage"/>. </summary>
@@ -671,6 +702,29 @@ namespace Eryph.ComputeClient.Models
                 provisioningState,
                 shell,
                 shellArgs);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.ProvisioningLogEntry"/>. </summary>
+        /// <param name="name"></param>
+        /// <param name="type"></param>
+        /// <param name="result"></param>
+        /// <param name="message"></param>
+        /// <param name="timestamp"></param>
+        /// <returns> A new <see cref="Models.ProvisioningLogEntry"/> instance for mocking. </returns>
+        public static ProvisioningLogEntry ProvisioningLogEntry(string name = null, string type = null, string result = null, string message = null, DateTimeOffset? timestamp = null)
+        {
+            return new ProvisioningLogEntry(name, type, result, message, timestamp);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.ProvisioningLogOperationResult"/>. </summary>
+        /// <param name="renderedLog"></param>
+        /// <param name="events"></param>
+        /// <returns> A new <see cref="Models.ProvisioningLogOperationResult"/> instance for mocking. </returns>
+        public static ProvisioningLogOperationResult ProvisioningLogOperationResult(string renderedLog = null, IEnumerable<ProvisioningLogEntry> events = null)
+        {
+            events ??= new List<ProvisioningLogEntry>();
+
+            return new ProvisioningLogOperationResult("ProvisioningLog", renderedLog, events?.ToList());
         }
 
         /// <summary> Initializes a new instance of <see cref="Models.SshChannelOperationResult"/>. </summary>

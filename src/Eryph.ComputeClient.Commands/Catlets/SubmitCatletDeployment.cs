@@ -45,6 +45,11 @@ public class SubmitCatletDeployment : CatletConfigCmdlet
     [Parameter]
     public string Architecture { get; set; }
 
+    // A specification is project level and deploys into many environments, so the environment
+    // belongs to the deployment rather than to the specification.
+    [Parameter]
+    public string Environment { get; set; }
+
     [Parameter]
     public Hashtable Variables { get; set; }
 
@@ -84,22 +89,30 @@ public class SubmitCatletDeployment : CatletConfigCmdlet
         if (specificationId is null || specificationVersionId is null)
             return;
 
-        // A deployed specification carries the id of the catlet it was deployed as.
-        // The piped specification already tells us; for other inputs we ask the server.
-        // Detecting this up front lets us point at -Redeploy instead of failing the
-        // deployment with a backend conflict.
+        // A specification has one deployment per environment it is deployed into, so only a
+        // deployment in the environment we are targeting is a conflict — the same specification in
+        // another environment is exactly what deploying per environment is for. The piped
+        // specification already tells us; for other inputs we ask the server. Detecting this up
+        // front lets us point at -Redeploy instead of failing the deployment with a backend conflict.
         if (!Redeploy)
         {
-            var deployedCatletId = Specification is not null
-                ? Specification.CatletId
-                : Factory.CreateCatletSpecificationsClient().Get(specificationId).Value.CatletId;
+            var deployments = Specification is not null
+                ? Specification.Deployments
+                : Factory.CreateCatletSpecificationsClient().Get(specificationId).Value.Deployments;
+
+            var deployedCatletId = deployments?
+                .FirstOrDefault(d => string.Equals(
+                    d.Environment, TargetEnvironment, StringComparison.OrdinalIgnoreCase))
+                ?.CatletId;
 
             if (!string.IsNullOrEmpty(deployedCatletId))
             {
                 WriteError(new ErrorRecord(
                     new InvalidOperationException(
-                        $"The catlet specification is already deployed as catlet {deployedCatletId}. "
-                        + "Re-run with -Redeploy to replace the existing catlet (the existing catlet will be deleted)."),
+                        $"The catlet specification is already deployed in the environment "
+                        + $"'{TargetEnvironment}' as catlet {deployedCatletId}. Re-run with -Redeploy "
+                        + "to replace the existing catlet (the existing catlet will be deleted), or "
+                        + "deploy into another environment with -Environment."),
                     "CatletSpecificationAlreadyDeployed",
                     ErrorCategory.ResourceExists,
                     specificationId));
@@ -159,9 +172,17 @@ public class SubmitCatletDeployment : CatletConfigCmdlet
                 {
                     Architecture = Architecture,
                     Redeploy = Redeploy,
+                    Environment = Environment,
                 }),
             NoWait);
     }
+
+    /// <summary>
+    /// The environment this deployment targets. Left unset, the server deploys into the default
+    /// environment, so the conflict check has to compare against the same name.
+    /// </summary>
+    private string TargetEnvironment =>
+        string.IsNullOrWhiteSpace(Environment) ? "default" : Environment;
 
     private void WaitForCatlet(Operation operation, bool noWait)
     {

@@ -18,25 +18,33 @@ namespace Eryph.ComputeClient.Models
         /// <param name="name"></param>
         /// <param name="vmId"> The ID of the corresponding Hyper-V virtual machine. </param>
         /// <param name="project"></param>
+        /// <param name="environment">
+        /// The environment the catlet is deployed in. Together with the project and the name it
+        /// identifies the catlet: the same name can exist in different environments of one project.
+        /// </param>
         /// <param name="status"></param>
+        /// <param name="provisioningStatus"></param>
         /// <param name="isDeprecated">
         /// Indicates that the catlet has been created with an old
         /// version of eryph and is missing some metadata. Hence,
         /// it cannot be edited and its configuration cannot be inspected.
         /// </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="name"/>, <paramref name="vmId"/> or <paramref name="project"/> is null. </exception>
-        internal Catlet(string id, string name, string vmId, Project project, CatletStatus status, bool isDeprecated)
+        /// <exception cref="ArgumentNullException"> <paramref name="id"/>, <paramref name="name"/>, <paramref name="vmId"/>, <paramref name="project"/> or <paramref name="environment"/> is null. </exception>
+        internal Catlet(string id, string name, string vmId, Project project, string environment, CatletStatus status, CatletProvisioningStatus provisioningStatus, bool isDeprecated)
         {
             Argument.AssertNotNull(id, nameof(id));
             Argument.AssertNotNull(name, nameof(name));
             Argument.AssertNotNull(vmId, nameof(vmId));
             Argument.AssertNotNull(project, nameof(project));
+            Argument.AssertNotNull(environment, nameof(environment));
 
             Id = id;
             Name = name;
             VmId = vmId;
             Project = project;
+            Environment = environment;
             Status = status;
+            ProvisioningStatus = provisioningStatus;
             IsDeprecated = isDeprecated;
             Networks = new ChangeTrackingList<CatletNetwork>();
             NetworkAdapters = new ChangeTrackingList<CatletNetworkAdapter>();
@@ -48,7 +56,12 @@ namespace Eryph.ComputeClient.Models
         /// <param name="name"></param>
         /// <param name="vmId"> The ID of the corresponding Hyper-V virtual machine. </param>
         /// <param name="project"></param>
+        /// <param name="environment">
+        /// The environment the catlet is deployed in. Together with the project and the name it
+        /// identifies the catlet: the same name can exist in different environments of one project.
+        /// </param>
         /// <param name="status"></param>
+        /// <param name="provisioningStatus"></param>
         /// <param name="isDeprecated">
         /// Indicates that the catlet has been created with an old
         /// version of eryph and is missing some metadata. Hence,
@@ -58,13 +71,15 @@ namespace Eryph.ComputeClient.Models
         /// <param name="networkAdapters"></param>
         /// <param name="drives"></param>
         /// <param name="specification"></param>
-        internal Catlet(string id, string name, string vmId, Project project, CatletStatus status, bool isDeprecated, IReadOnlyList<CatletNetwork> networks, IReadOnlyList<CatletNetworkAdapter> networkAdapters, IReadOnlyList<CatletDrive> drives, CatletSpecificationInfo specification)
+        internal Catlet(string id, string name, string vmId, Project project, string environment, CatletStatus status, CatletProvisioningStatus provisioningStatus, bool isDeprecated, IReadOnlyList<CatletNetwork> networks, IReadOnlyList<CatletNetworkAdapter> networkAdapters, IReadOnlyList<CatletDrive> drives, CatletSpecificationInfo specification)
         {
             Id = id;
             Name = name;
             VmId = vmId;
             Project = project;
+            Environment = environment;
             Status = status;
+            ProvisioningStatus = provisioningStatus;
             IsDeprecated = isDeprecated;
             Networks = networks;
             NetworkAdapters = networkAdapters;
@@ -80,8 +95,15 @@ namespace Eryph.ComputeClient.Models
         public string VmId { get; }
         /// <summary> Gets the project. </summary>
         public Project Project { get; }
+        /// <summary>
+        /// The environment the catlet is deployed in. Together with the project and the name it
+        /// identifies the catlet: the same name can exist in different environments of one project.
+        /// </summary>
+        public string Environment { get; }
         /// <summary> Gets the status. </summary>
         public CatletStatus Status { get; }
+        /// <summary> Gets the provisioning status. </summary>
+        public CatletProvisioningStatus ProvisioningStatus { get; }
         /// <summary>
         /// Indicates that the catlet has been created with an old
         /// version of eryph and is missing some metadata. Hence,

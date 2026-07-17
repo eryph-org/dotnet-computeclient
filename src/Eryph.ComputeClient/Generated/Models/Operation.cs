@@ -43,7 +43,7 @@ namespace Eryph.ComputeClient.Models
         /// <param name="tasks"></param>
         /// <param name="result">
         /// Please note <see cref="OperationResult"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-        /// The available derived classes include <see cref="CatletOperationResult"/>, <see cref="CatletConfigOperationResult"/>, <see cref="CatletSpecificationOperationResult"/>, <see cref="GuestServicesStatusOperationResult"/> and <see cref="SshChannelOperationResult"/>.
+        /// The available derived classes include <see cref="CatletOperationResult"/>, <see cref="CatletConfigOperationResult"/>, <see cref="CatletSpecificationOperationResult"/>, <see cref="GuestServicesStatusOperationResult"/>, <see cref="ProvisioningLogOperationResult"/> and <see cref="SshChannelOperationResult"/>.
         /// </param>
         internal Operation(string id, OperationStatus status, string statusMessage, string requestedBy, DateTimeOffset? created, DateTimeOffset? startedAt, DateTimeOffset? endedAt, IReadOnlyList<OperationResource> resources, IReadOnlyList<OperationLogEntry> logEntries, IReadOnlyList<Project> projects, IReadOnlyList<OperationTask> tasks, OperationResult result)
         {
@@ -86,7 +86,7 @@ namespace Eryph.ComputeClient.Models
         /// <summary>
         /// Gets the result
         /// Please note <see cref="OperationResult"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-        /// The available derived classes include <see cref="CatletOperationResult"/>, <see cref="CatletConfigOperationResult"/>, <see cref="CatletSpecificationOperationResult"/>, <see cref="GuestServicesStatusOperationResult"/> and <see cref="SshChannelOperationResult"/>.
+        /// The available derived classes include <see cref="CatletOperationResult"/>, <see cref="CatletConfigOperationResult"/>, <see cref="CatletSpecificationOperationResult"/>, <see cref="GuestServicesStatusOperationResult"/>, <see cref="ProvisioningLogOperationResult"/> and <see cref="SshChannelOperationResult"/>.
         /// </summary>
         public OperationResult Result { get; }
     }

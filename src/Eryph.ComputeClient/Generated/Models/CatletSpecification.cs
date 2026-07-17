@@ -6,6 +6,7 @@
 #nullable disable
 
 using System;
+using System.Collections.Generic;
 
 namespace Eryph.ComputeClient.Models
 {
@@ -29,6 +30,7 @@ namespace Eryph.ComputeClient.Models
             Name = name;
             Project = project;
             Latest = latest;
+            Deployments = new ChangeTrackingList<CatletSpecificationDeployment>();
         }
 
         /// <summary> Initializes a new instance of <see cref="CatletSpecification"/>. </summary>
@@ -36,14 +38,17 @@ namespace Eryph.ComputeClient.Models
         /// <param name="name"></param>
         /// <param name="project"></param>
         /// <param name="latest"></param>
-        /// <param name="catletId"></param>
-        internal CatletSpecification(string id, string name, Project project, CatletSpecificationVersionInfo latest, string catletId)
+        /// <param name="deployments">
+        /// The deployments of this specification, one per environment it is deployed into. Empty when it
+        /// is not deployed anywhere.
+        /// </param>
+        internal CatletSpecification(string id, string name, Project project, CatletSpecificationVersionInfo latest, IReadOnlyList<CatletSpecificationDeployment> deployments)
         {
             Id = id;
             Name = name;
             Project = project;
             Latest = latest;
-            CatletId = catletId;
+            Deployments = deployments;
         }
 
         /// <summary> Gets the id. </summary>
@@ -54,7 +59,10 @@ namespace Eryph.ComputeClient.Models
         public Project Project { get; }
         /// <summary> Gets the latest. </summary>
         public CatletSpecificationVersionInfo Latest { get; }
-        /// <summary> Gets the catlet id. </summary>
-        public string CatletId { get; }
+        /// <summary>
+        /// The deployments of this specification, one per environment it is deployed into. Empty when it
+        /// is not deployed anywhere.
+        /// </summary>
+        public IReadOnlyList<CatletSpecificationDeployment> Deployments { get; }
     }
 }
