@@ -72,6 +72,58 @@
       </TableControl>
     </View>
     <View>
+      <Name>Eryph.ComputeClient.Commands.Catlets.CatletProvisioningStatusInfo</Name>
+      <ViewSelectedBy>
+        <TypeName>Eryph.ComputeClient.Commands.Catlets.CatletProvisioningStatusInfo</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <TableHeaders>
+          <TableColumnHeader><Label>Name</Label></TableColumnHeader>
+          <TableColumnHeader><Label>Status</Label></TableColumnHeader>
+          <TableColumnHeader><Label>ProvisioningStatus</Label></TableColumnHeader>
+          <TableColumnHeader><Label>Project</Label></TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem><PropertyName>Name</PropertyName></TableColumnItem>
+              <TableColumnItem><PropertyName>Status</PropertyName></TableColumnItem>
+              <TableColumnItem><PropertyName>ProvisioningStatus</PropertyName></TableColumnItem>
+              <TableColumnItem><PropertyName>Project</PropertyName></TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+    <View>
+      <Name>Eryph.ComputeClient.Commands.Catlets.CatletProvisioningLogEntry</Name>
+      <ViewSelectedBy>
+        <TypeName>Eryph.ComputeClient.Commands.Catlets.CatletProvisioningLogEntry</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <TableHeaders>
+          <TableColumnHeader><Label>Catlet</Label></TableColumnHeader>
+          <TableColumnHeader><Label>Timestamp</Label></TableColumnHeader>
+          <TableColumnHeader><Label>Type</Label></TableColumnHeader>
+          <TableColumnHeader><Label>Name</Label></TableColumnHeader>
+          <TableColumnHeader><Label>Result</Label></TableColumnHeader>
+          <TableColumnHeader><Label>Message</Label></TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem><PropertyName>CatletName</PropertyName></TableColumnItem>
+              <TableColumnItem><PropertyName>Timestamp</PropertyName></TableColumnItem>
+              <TableColumnItem><PropertyName>Type</PropertyName></TableColumnItem>
+              <TableColumnItem><PropertyName>Name</PropertyName></TableColumnItem>
+              <TableColumnItem><PropertyName>Result</PropertyName></TableColumnItem>
+              <TableColumnItem><PropertyName>Message</PropertyName></TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+    <View>
       <Name>Eryph.ComputeClient.Models.Operation</Name>
       <ViewSelectedBy>
         <TypeName>Eryph.ComputeClient.Models.Operation</TypeName>
