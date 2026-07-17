@@ -29,6 +29,10 @@ public class GetCatletIpCommand : CatletCmdLet
     [ValidateNotNullOrEmpty]
     public string ProjectName { get; set; }
 
+    [Parameter(ParameterSetName = "list")]
+    [ValidateNotNullOrEmpty]
+    public string Environment { get; set; }
+
     [Parameter]
     public SwitchParameter InternalIp { get; set; }
 
@@ -42,7 +46,7 @@ public class GetCatletIpCommand : CatletCmdLet
             foreach (var id in Id)
             {
                 if (Stopping) break;
-                if (TryGetById(id, GetSingleCatlet, "catlet", out var catlet))
+                if (TryGetById(id, GetSingleCatlet, CatletResourceKind, out var catlet))
                     WriteIp(catlet);
             }
 
@@ -55,9 +59,9 @@ public class GetCatletIpCommand : CatletCmdLet
         WriteByNameOrId(
             Name,
             GetSingleCatlet,
-            () => Factory.CreateCatletsClient().List(projectId: projectId),
+            () => ListCatlets(projectId, Environment),
             catlet => catlet.Name,
-            "catlet",
+            CatletResourceKind,
             WriteIp);
     }
 

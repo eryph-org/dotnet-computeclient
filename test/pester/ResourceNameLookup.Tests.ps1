@@ -39,6 +39,10 @@ Describe 'Get-* -Name parameter surface (no server required)' {
         @{ Cmd = 'Get-CatletIp' }
         @{ Cmd = 'Get-VNetwork' }
         @{ Cmd = 'Get-CatletDisk' }
+        @{ Cmd = 'Get-CatletGuestServiceStatus' }
+        @{ Cmd = 'Get-CatletGuestServiceConfig' }
+        @{ Cmd = 'Get-CatletProvisioningStatus' }
+        @{ Cmd = 'Get-CatletProvisioningLog' }
     ) {
         $p = (Get-Command $Cmd).Parameters['Name']
         $p | Should -Not -BeNullOrEmpty
@@ -53,6 +57,10 @@ Describe 'Get-* -Name parameter surface (no server required)' {
         @{ Cmd = 'Get-CatletIp' }
         @{ Cmd = 'Get-VNetwork' }
         @{ Cmd = 'Get-CatletDisk' }
+        @{ Cmd = 'Get-CatletGuestServiceStatus' }
+        @{ Cmd = 'Get-CatletGuestServiceConfig' }
+        @{ Cmd = 'Get-CatletProvisioningStatus' }
+        @{ Cmd = 'Get-CatletProvisioningLog' }
     ) {
         (Get-Command $Cmd).Parameters['Name'].ParameterSets['list'].Position | Should -Be 0
     }
@@ -74,6 +82,12 @@ Describe 'Get-* -Name parameter surface (no server required)' {
     It "<Cmd> exposes an -Environment filter in the 'list' set" -ForEach @(
         @{ Cmd = 'Get-VNetwork' }
         @{ Cmd = 'Get-CatletDisk' }
+        @{ Cmd = 'Get-Catlet' }
+        @{ Cmd = 'Get-CatletIp' }
+        @{ Cmd = 'Get-CatletGuestServiceStatus' }
+        @{ Cmd = 'Get-CatletGuestServiceConfig' }
+        @{ Cmd = 'Get-CatletProvisioningStatus' }
+        @{ Cmd = 'Get-CatletProvisioningLog' }
     ) {
         $p = (Get-Command $Cmd).Parameters['Environment']
         $p | Should -Not -BeNullOrEmpty
@@ -95,6 +109,10 @@ Describe 'Get-* -Name parameter surface (no server required)' {
         @{ Cmd = 'Get-CatletIp' }
         @{ Cmd = 'Get-VNetwork' }
         @{ Cmd = 'Get-CatletSpecification' }
+        @{ Cmd = 'Get-CatletGuestServiceStatus' }
+        @{ Cmd = 'Get-CatletGuestServiceConfig' }
+        @{ Cmd = 'Get-CatletProvisioningStatus' }
+        @{ Cmd = 'Get-CatletProvisioningLog' }
     ) {
         $p = (Get-Command $Cmd).Parameters['ProjectName']
         $p | Should -Not -BeNullOrEmpty
@@ -129,15 +147,32 @@ Describe 'Action cmdlets accept name-or-id (parameter surface)' {
         $positions | Should -Contain 0
     }
 
-    It "<Cmd> exposes a -ProjectName parameter to scope name resolution" -ForEach @(
+    It "<Cmd> exposes an optional -ProjectName parameter to narrow name resolution" -ForEach @(
         @{ Cmd = 'Start-Catlet' }
         @{ Cmd = 'Stop-Catlet' }
         @{ Cmd = 'Remove-Catlet' }
         @{ Cmd = 'Update-Catlet' }
+        @{ Cmd = 'Set-CatletGuestServiceConfig' }
+        @{ Cmd = 'Remove-CatletGuestServiceAccessKey' }
         @{ Cmd = 'Remove-CatletSpecification' }
         @{ Cmd = 'Update-CatletSpecification' }
     ) {
-        (Get-Command $Cmd).Parameters['ProjectName'] | Should -Not -BeNullOrEmpty
+        $p = (Get-Command $Cmd).Parameters['ProjectName']
+        $p | Should -Not -BeNullOrEmpty
+        # -ProjectName is a narrowing filter, not required: an exact name resolves across
+        # projects, so it must not be mandatory in any parameter set.
+        $p.ParameterSets.Values.IsMandatory | Should -Not -Contain $true
+    }
+
+    It "<Cmd> exposes an -Environment parameter to narrow name resolution" -ForEach @(
+        @{ Cmd = 'Start-Catlet' }
+        @{ Cmd = 'Stop-Catlet' }
+        @{ Cmd = 'Remove-Catlet' }
+        @{ Cmd = 'Update-Catlet' }
+        @{ Cmd = 'Set-CatletGuestServiceConfig' }
+        @{ Cmd = 'Remove-CatletGuestServiceAccessKey' }
+    ) {
+        (Get-Command $Cmd).Parameters['Environment'] | Should -Not -BeNullOrEmpty
     }
 
     It 'Remove-CatletDisk is Id-only (Name+Location+DataStore is required to identify a disk; use Get-CatletDisk to resolve)' {
@@ -228,6 +263,15 @@ Describe 'Get-Catlet name-or-id (integration, read-only)' -Skip:(-not $eryphAvai
         Get-Catlet -Name "zzzz-no-such-catlet-*" | Should -BeNullOrEmpty
     }
 
+    It 'filters catlets by environment (and excludes other environments)' {
+        if ($existing.Count -eq 0) { Set-ItResult -Skipped -Because 'no catlets present'; return }
+        $environment = $existing[0].Environment
+        $filtered = @(Get-Catlet -Environment $environment)
+        $filtered | ForEach-Object { $_.Environment | Should -Be $environment }
+        $expected = @($existing | Where-Object Environment -EQ $environment).Count
+        $filtered.Count | Should -Be $expected
+    }
+
     It 'treats a whitespace-only name as a name (not "list all")' {
         # '   ' must not be interpreted as an omitted filter; it is an exact,
         # non-matching name and so produces a not-found error, not every catlet.
@@ -273,9 +317,19 @@ Describe 'Get-CatletIp name-or-id (integration, read-only)' -Skip:(-not $eryphAv
 
 Describe 'Action cmdlets name resolution (integration, non-destructive)' -Skip:(-not $eryphAvailable) {
 
-    It 'requires -ProjectName when the target is given by name (no cross-project fan-out)' {
-        { Start-Catlet -Name 'some-catlet' -ErrorAction Stop } |
-            Should -Throw -ExpectedMessage '*ProjectName is required*'
+    BeforeAll { $existing = @(Get-Catlet) }
+
+    It 'resolves an exact name without -ProjectName (searches across projects)' {
+        # An exact name no longer requires -ProjectName: it is resolved across every project
+        # the caller can access. A random, non-existent name must therefore fail with a
+        # not-found error, NOT a "ProjectName is required" error.
+        { Start-Catlet -Name "zzz-$([guid]::NewGuid().ToString('N'))" -ErrorAction Stop } |
+            Should -Throw -ExpectedMessage '*Cannot find*'
+    }
+
+    It 'requires -ProjectName for a WILDCARD name (no cross-project fan-out)' {
+        { Start-Catlet -Name 'zzz-no-such-*' -ErrorAction Stop } |
+            Should -Throw -ExpectedMessage '*-ProjectName*'
     }
 
     It 'does not require -ProjectName when the target is given by id' {
@@ -298,6 +352,22 @@ Describe 'Action cmdlets name resolution (integration, non-destructive)' -Skip:(
     It 'Remove-Catlet with a non-matching wildcard in a project does nothing and does not error' {
         { Remove-Catlet -Name 'zzzz-no-such-catlet-*' -ProjectName 'default' -Force -ErrorAction Stop } |
             Should -Not -Throw
+    }
+
+    It 'rejects an empty target instead of matching every catlet' {
+        # An empty name/id element must error, not fall through to an empty filter that
+        # would match (and act on) every catlet the caller can see.
+        { Start-Catlet -Id '' -ErrorAction Stop } | Should -Throw
+    }
+
+    It 'errors as ambiguous (with a narrowing hint) when an exact name matches several catlets' {
+        # A catlet name is unique only per project + environment, so the same name can exist
+        # in several environments/projects. Use existing data if it contains a duplicate
+        # name; the suite does not create catlets, so skip when none is present.
+        $dup = $existing | Group-Object Name | Where-Object Count -GT 1 | Select-Object -First 1
+        if (-not $dup) { Set-ItResult -Skipped -Because 'no duplicate catlet name present'; return }
+        { Start-Catlet -Name $dup.Name -ErrorAction Stop } |
+            Should -Throw -ExpectedMessage '*ambiguous*'
     }
 }
 

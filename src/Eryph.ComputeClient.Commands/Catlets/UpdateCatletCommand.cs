@@ -31,6 +31,10 @@ namespace Eryph.ComputeClient.Commands.Catlets
         [ValidateNotNullOrEmpty]
         public string ProjectName { get; set; }
 
+        [Parameter]
+        [ValidateNotNullOrEmpty]
+        public string Environment { get; set; }
+
         protected override void ProcessRecord()
         {
             var client = Factory.CreateCatletsClient();
@@ -38,7 +42,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
             foreach (var nameOrId in Id)
             {
                 foreach (var catlet in ResolveActionTargets(nameOrId, ProjectName, GetSingleCatlet,
-                             projectId => client.List(projectId: projectId), c => c.Name, "catlet"))
+                             projectId => ListCatlets(projectId, Environment), c => c.Name, CatletResourceKind, EnvironmentHintIfUnset(Environment)))
                 {
                     if (Stopping) break;
 

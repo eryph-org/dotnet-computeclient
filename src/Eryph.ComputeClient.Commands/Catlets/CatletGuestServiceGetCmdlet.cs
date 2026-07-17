@@ -33,6 +33,10 @@ namespace Eryph.ComputeClient.Commands.Catlets
         [ValidateNotNullOrEmpty]
         public string ProjectName { get; set; }
 
+        [Parameter(ParameterSetName = "list")]
+        [ValidateNotNullOrEmpty]
+        public string Environment { get; set; }
+
         protected override void BeginProcessing()
         {
             base.BeginProcessing();
@@ -46,7 +50,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
                 foreach (var id in Id)
                 {
                     if (Stopping) break;
-                    if (TryGetById(id, GetSingleCatlet, "catlet", out var catlet))
+                    if (TryGetById(id, GetSingleCatlet, CatletResourceKind, out var catlet))
                         EmitCatlet(catlet);
                 }
 
@@ -59,9 +63,9 @@ namespace Eryph.ComputeClient.Commands.Catlets
             WriteByNameOrId(
                 Name,
                 GetSingleCatlet,
-                () => Factory.CreateCatletsClient().List(projectId: projectId),
+                () => ListCatlets(projectId, Environment),
                 catlet => catlet.Name,
-                "catlet",
+                CatletResourceKind,
                 EmitCatlet);
         }
 
