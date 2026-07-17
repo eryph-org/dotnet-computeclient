@@ -106,7 +106,9 @@ CmdletsToExport = @(
     "Get-CatletGuestServiceStatus",
     "Get-CatletGuestServiceConfig",
     "Set-CatletGuestServiceConfig",
-    "Remove-CatletGuestServiceAccessKey"
+    "Remove-CatletGuestServiceAccessKey",
+    "Get-CatletProvisioningStatus",
+    "Get-CatletProvisioningLog"
 )
 
 # Variables to export from this module
