@@ -1,3 +1,4 @@
+using System;
 using System.Management.Automation;
 using Eryph.ComputeClient.Models;
 using JetBrains.Annotations;
@@ -8,12 +9,14 @@ namespace Eryph.ComputeClient.Commands.Catlets
     /// Reads the catlet's provisioning log, reassembled from the guest's cloud-init
     /// telemetry. The log is not returned directly: <c>GetProvisioningLog</c> starts an
     /// operation whose result carries both a rendered, human-readable text log and the
-    /// structured events. By default the structured <see cref="ProvisioningLogEntry"/>
-    /// events are written to the pipeline; <c>-AsText</c> emits the text log instead.
+    /// structured events. By default the structured events are written to the pipeline
+    /// as <see cref="CatletProvisioningLogEntry"/> objects (each carrying the catlet it
+    /// belongs to, so output stays correlatable when several catlets are targeted);
+    /// <c>-AsText</c> emits the rendered text log instead, prefixed with a catlet header.
     /// </summary>
     [PublicAPI]
     [Cmdlet(VerbsCommon.Get, "CatletProvisioningLog", DefaultParameterSetName = "list")]
-    [OutputType(typeof(ProvisioningLogEntry))]
+    [OutputType(typeof(CatletProvisioningLogEntry))]
     [OutputType(typeof(string))]
     public class GetCatletProvisioningLogCommand : CatletCmdLet
     {
@@ -86,15 +89,52 @@ namespace Eryph.ComputeClient.Commands.Catlets
 
             if (AsText.IsPresent)
             {
-                WriteObject(result.RenderedLog);
+                // Prefix a header so the text blocks stay attributable to their catlet
+                // when several catlets are targeted in one invocation.
+                var header = $"# Catlet {catlet.Name} ({catlet.Id})";
+                WriteObject(header + Environment.NewLine + result.RenderedLog);
                 return;
             }
 
             foreach (var entry in result.Events)
             {
                 if (Stopping) break;
-                WriteObject(entry);
+                WriteObject(new CatletProvisioningLogEntry
+                {
+                    CatletId = catlet.Id,
+                    CatletName = catlet.Name,
+                    Project = catlet.Project?.Name,
+                    Timestamp = entry.Timestamp,
+                    Type = entry.Type,
+                    Name = entry.Name,
+                    Result = entry.Result,
+                    Message = entry.Message,
+                });
             }
         }
+    }
+
+    /// <summary>
+    /// A single provisioning-log event, tagged with the catlet it belongs to so the
+    /// pipeline output can be correlated back to a catlet when several are targeted.
+    /// </summary>
+    [PublicAPI]
+    public class CatletProvisioningLogEntry
+    {
+        public string CatletId { get; set; }
+
+        public string CatletName { get; set; }
+
+        public string Project { get; set; }
+
+        public DateTimeOffset? Timestamp { get; set; }
+
+        public string Type { get; set; }
+
+        public string Name { get; set; }
+
+        public string Result { get; set; }
+
+        public string Message { get; set; }
     }
 }

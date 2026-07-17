@@ -96,12 +96,13 @@
       </TableControl>
     </View>
     <View>
-      <Name>Eryph.ComputeClient.Models.ProvisioningLogEntry</Name>
+      <Name>Eryph.ComputeClient.Commands.Catlets.CatletProvisioningLogEntry</Name>
       <ViewSelectedBy>
-        <TypeName>Eryph.ComputeClient.Models.ProvisioningLogEntry</TypeName>
+        <TypeName>Eryph.ComputeClient.Commands.Catlets.CatletProvisioningLogEntry</TypeName>
       </ViewSelectedBy>
       <TableControl>
         <TableHeaders>
+          <TableColumnHeader><Label>Catlet</Label></TableColumnHeader>
           <TableColumnHeader><Label>Timestamp</Label></TableColumnHeader>
           <TableColumnHeader><Label>Type</Label></TableColumnHeader>
           <TableColumnHeader><Label>Name</Label></TableColumnHeader>
@@ -111,6 +112,7 @@
         <TableRowEntries>
           <TableRowEntry>
             <TableColumnItems>
+              <TableColumnItem><PropertyName>CatletName</PropertyName></TableColumnItem>
               <TableColumnItem><PropertyName>Timestamp</PropertyName></TableColumnItem>
               <TableColumnItem><PropertyName>Type</PropertyName></TableColumnItem>
               <TableColumnItem><PropertyName>Name</PropertyName></TableColumnItem>
