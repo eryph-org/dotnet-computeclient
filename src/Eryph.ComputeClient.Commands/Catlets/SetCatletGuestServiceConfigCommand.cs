@@ -23,6 +23,10 @@ namespace Eryph.ComputeClient.Commands.Catlets
         [ValidateNotNullOrEmpty]
         public string ProjectName { get; set; }
 
+        [Parameter]
+        [ValidateNotNullOrEmpty]
+        public string Environment { get; set; }
+
         /// <summary>
         /// Shell command for interactive SSH sessions. An empty string clears the
         /// override; omitting the parameter leaves the current value unchanged.
@@ -84,7 +88,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
             foreach (var nameOrId in Id)
             {
                 foreach (var catlet in ResolveActionTargets(nameOrId, ProjectName, GetSingleCatlet,
-                             projectId => Factory.CreateCatletsClient().List(projectId: projectId), c => c.Name, "catlet"))
+                             projectId => ListCatlets(projectId, Environment), c => c.Name, CatletResourceKind, EnvironmentHintIfUnset(Environment)))
                 {
                     if (Stopping) break;
 

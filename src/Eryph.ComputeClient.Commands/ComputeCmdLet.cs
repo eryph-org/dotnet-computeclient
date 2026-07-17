@@ -236,11 +236,13 @@ namespace Eryph.ComputeClient.Commands
 
         /// <summary>
         /// Resolves the target(s) of a mutating cmdlet from a value that may be a resource
-        /// id (a GUID) or a name. An id is used directly. A name must be scoped to a
-        /// project (<paramref name="projectName"/> is required) so that it cannot fan out
-        /// across projects; within the project a wildcard may still match several
-        /// resources. This keeps destructive operations from acting on same-named
-        /// resources in other projects.
+        /// id (a GUID) or a name. An id is used directly. An exact name is resolved across
+        /// every project the caller can access; <paramref name="projectName"/> (and filters
+        /// such as -Environment) only narrow the search. Because some names are unique only
+        /// per project + environment, an exact name that resolves to more than one resource
+        /// is rejected as ambiguous rather than mutated, so a mutation never silently fans
+        /// out. A wildcard, which matches many by design, still requires
+        /// <paramref name="projectName"/> so it cannot fan out across projects.
         /// </summary>
         /// <remarks>
         /// Like <see cref="ResolveByNameOrId{T}"/> this is a deferred iterator that calls
@@ -255,6 +257,20 @@ namespace Eryph.ComputeClient.Commands
             string resourceKind,
             string ambiguityHint = null)
         {
+            // An empty/whitespace target must never be treated as a name: as an empty
+            // filter it would match every resource, and since an exact name now resolves
+            // across all accessible projects, a stray empty array element (e.g. piped from
+            // an object with a blank name) could silently act on an unrelated resource.
+            if (string.IsNullOrWhiteSpace(nameOrId))
+            {
+                WriteError(new ErrorRecord(
+                    new PSArgumentException($"A {resourceKind} name or id must be specified; it must not be empty."),
+                    "EmptyTarget",
+                    ErrorCategory.InvalidArgument,
+                    nameOrId));
+                yield break;
+            }
+
             if (IsResourceId(nameOrId))
             {
                 if (TryGetById(nameOrId, getById, resourceKind, out var item))
@@ -262,44 +278,56 @@ namespace Eryph.ComputeClient.Commands
                 yield break;
             }
 
-            if (string.IsNullOrWhiteSpace(projectName))
-            {
-                WriteError(new ErrorRecord(
-                    new PSArgumentException(
-                        $"When a {resourceKind} is identified by name, -ProjectName is required "
-                        + "so the name can be resolved within a single project. Specify -ProjectName, "
-                        + "or pass the id instead."),
-                    "ProjectNameRequiredForNameLookup",
-                    ErrorCategory.InvalidArgument,
-                    nameOrId));
-                yield break;
-            }
+            var hasProject = !string.IsNullOrWhiteSpace(projectName);
 
-            if (!TryGetProjectId(projectName, out var projectId))
-                yield break;
-
-            // A wildcard may intentionally match several resources. An exact name, however,
-            // must resolve to a single target before a mutation: some resource names are
-            // unique only per project + environment, so an exact name could otherwise match
-            // several resources and the command would act on all of them.
+            // A wildcard matches many resources by design, so the ambiguity guard below
+            // cannot protect it. Without a project to scope it, it could fan out across
+            // every project the caller can access, so a wildcard still requires -ProjectName.
             if (WildcardPattern.ContainsWildcardCharacters(nameOrId))
             {
-                foreach (var item in FilterByName(listInProject(projectId), nameOrId, nameSelector, resourceKind))
+                if (!hasProject)
+                {
+                    WriteError(new ErrorRecord(
+                        new PSArgumentException(
+                            $"A wildcard {resourceKind} name requires -ProjectName so it cannot fan out "
+                            + "across projects. Specify -ProjectName, or use an exact name or the id."),
+                        "ProjectNameRequiredForWildcard",
+                        ErrorCategory.InvalidArgument,
+                        nameOrId));
+                    yield break;
+                }
+
+                if (!TryGetProjectId(projectName, out var wildcardProjectId))
+                    yield break;
+
+                foreach (var item in FilterByName(listInProject(wildcardProjectId), nameOrId, nameSelector, resourceKind))
                     yield return item;
                 yield break;
             }
 
+            // An exact name needs no project: a null projectId lists across all projects.
+            // -ProjectName only narrows the search when supplied.
+            string projectId = null;
+            if (hasProject && !TryGetProjectId(projectName, out projectId))
+                yield break;
+
             var matches = FilterByName(listInProject(projectId), nameOrId, nameSelector, resourceKind).ToList();
             if (matches.Count > 1)
             {
-                var hint = string.IsNullOrWhiteSpace(ambiguityHint)
-                    ? "Specify the id to select one."
-                    : $"Narrow the selection with {ambiguityHint} or specify the id.";
+                var narrowers = new List<string>();
+                if (!hasProject)
+                    narrowers.Add("-ProjectName");
+                if (!string.IsNullOrWhiteSpace(ambiguityHint))
+                    narrowers.Add(ambiguityHint);
+                var hint = narrowers.Count > 0
+                    ? $"Narrow the selection with {string.Join(" / ", narrowers)} or specify the id."
+                    : "Specify the id to select one.";
+                var scope = hasProject ? $" in project '{projectName}'" : "";
                 WriteError(new ErrorRecord(
                     new PSArgumentException(
-                        $"The {resourceKind} name '{nameOrId}' is ambiguous in project '{projectName}': "
+                        $"The {resourceKind} name '{nameOrId}' is ambiguous{scope}: "
                         + $"it matches {matches.Count} resources. {hint}"),
-                    "AmbiguousNameInProject",
+                    "AmbiguousName",
                     ErrorCategory.InvalidArgument,
                     nameOrId));
                 yield break;

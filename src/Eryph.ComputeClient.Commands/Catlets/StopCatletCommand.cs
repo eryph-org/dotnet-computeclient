@@ -37,6 +37,10 @@ namespace Eryph.ComputeClient.Commands.Catlets
         [ValidateNotNullOrEmpty]
         public string ProjectName { get; set; }
 
+        [Parameter]
+        [ValidateNotNullOrEmpty]
+        public string Environment { get; set; }
+
         private bool _yesToAll;
         private bool _noToAll;
         private bool _yesToKillAll;
@@ -55,7 +59,7 @@ namespace Eryph.ComputeClient.Commands.Catlets
             foreach (var nameOrId in Id)
             {
                 foreach (var catlet in ResolveActionTargets(nameOrId, ProjectName, GetSingleCatlet,
-                             projectId => Factory.CreateCatletsClient().List(projectId: projectId), c => c.Name, "catlet"))
+                             projectId => ListCatlets(projectId, Environment), c => c.Name, CatletResourceKind, EnvironmentHintIfUnset(Environment)))
                 {
                     if (Stopping) break;
 

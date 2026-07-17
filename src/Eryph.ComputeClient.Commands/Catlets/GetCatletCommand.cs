@@ -46,6 +46,10 @@ namespace Eryph.ComputeClient.Commands.Catlets
         [ValidateNotNullOrEmpty]
         public string Name { get; set; }
 
+        [Parameter(ParameterSetName = "list")]
+        [ValidateNotNullOrEmpty]
+        public string Environment { get; set; }
+
         protected override void ProcessRecord()
         {
 
@@ -57,12 +61,12 @@ namespace Eryph.ComputeClient.Commands.Catlets
 
                     if (Config.IsPresent)
                     {
-                        if (TryGetById(id, i => Factory.CreateCatletsClient().GetConfig(i), "catlet", out var config))
+                        if (TryGetById(id, i => Factory.CreateCatletsClient().GetConfig(i), CatletResourceKind, out var config))
                             WriteConfig(config);
                     }
                     else
                     {
-                        if (TryGetById(id, GetSingleCatlet, "catlet", out var catlet))
+                        if (TryGetById(id, GetSingleCatlet, CatletResourceKind, out var catlet))
                             WriteObject(catlet);
                     }
                 }
@@ -90,9 +94,9 @@ namespace Eryph.ComputeClient.Commands.Catlets
             WriteByNameOrId(
                 Name,
                 GetSingleCatlet,
-                () => Factory.CreateCatletsClient().List(projectId: projectId),
+                () => ListCatlets(projectId, Environment),
                 catlet => catlet.Name,
-                "catlet");
+                CatletResourceKind);
         }
 
         private void WriteConfig(CatletConfiguration config)
