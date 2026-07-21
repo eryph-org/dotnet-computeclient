@@ -45,5 +45,14 @@ namespace Eryph.ComputeClient
 
         public VersionClient CreateVersionClient(string? scopes = null) =>
             new(new ClientDiagnostics(_options), _options.BuildHttpPipeline(_options.ClientCredentials, scopes), _endpoint);
+
+        public EnvironmentsClient CreateEnvironmentsClient(string? scopes = null) =>
+            new(new ClientDiagnostics(_options), _options.BuildHttpPipeline(_options.ClientCredentials, scopes), _endpoint);
+
+        public SitesClient CreateSitesClient(string? scopes = null) =>
+            new(new ClientDiagnostics(_options), _options.BuildHttpPipeline(_options.ClientCredentials, scopes), _endpoint);
+
+        public DatastoresClient CreateDatastoresClient(string? scopes = null) =>
+            new(new ClientDiagnostics(_options), _options.BuildHttpPipeline(_options.ClientCredentials, scopes), _endpoint);
     }
 }
