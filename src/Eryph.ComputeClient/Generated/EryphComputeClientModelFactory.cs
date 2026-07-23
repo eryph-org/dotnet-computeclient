@@ -643,6 +643,53 @@ namespace Eryph.ComputeClient.Models
             return new VirtualNetworkConfiguration(configuration);
         }
 
+        /// <summary> Initializes a new instance of <see cref="Models.Datastore"/>. </summary>
+        /// <param name="name"> The datastore name. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="name"/> is null. </exception>
+        /// <returns> A new <see cref="Models.Datastore"/> instance for mocking. </returns>
+        public static Datastore Datastore(string name = null)
+        {
+            if (name == null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            return new Datastore(name);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.Environment"/>. </summary>
+        /// <param name="name"> The environment name. </param>
+        /// <param name="site"> The name of the site which realizes this environment. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="site"/> is null. </exception>
+        /// <returns> A new <see cref="Models.Environment"/> instance for mocking. </returns>
+        public static Environment Environment(string name = null, string site = null)
+        {
+            if (name == null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            if (site == null)
+            {
+                throw new ArgumentNullException(nameof(site));
+            }
+
+            return new Environment(name, site);
+        }
+
+        /// <summary> Initializes a new instance of <see cref="Models.Site"/>. </summary>
+        /// <param name="name"> The site name. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="name"/> is null. </exception>
+        /// <returns> A new <see cref="Models.Site"/> instance for mocking. </returns>
+        public static Site Site(string name = null)
+        {
+            if (name == null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            return new Site(name);
+        }
+
         /// <summary> Initializes a new instance of <see cref="Models.CatletConfigValidationResult"/>. </summary>
         /// <param name="isValid"> Indicates whether the catlet configuration is valid. </param>
         /// <param name="errors"> Contains a list of the issues when the configuration is invalid. </param>

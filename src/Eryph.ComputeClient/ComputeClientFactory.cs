@@ -45,5 +45,8 @@ namespace Eryph.ComputeClient
 
         public VersionClient CreateVersionClient(string? scopes = null) =>
             new(new ClientDiagnostics(_options), _options.BuildHttpPipeline(_options.ClientCredentials, scopes), _endpoint);
+
+        public ConfigClient CreateConfigClient(string? scopes = null) =>
+            new(new ClientDiagnostics(_options), _options.BuildHttpPipeline(_options.ClientCredentials, scopes), _endpoint);
     }
 }
