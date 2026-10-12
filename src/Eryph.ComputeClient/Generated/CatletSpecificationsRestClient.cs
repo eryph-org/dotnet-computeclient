@@ -486,6 +486,103 @@ namespace Eryph.ComputeClient
             }
         }
 
+        internal HttpMessage CreateExportUserDataRequest(string specificationId, string id, ExportCatletSpecificationUserDataRequestBody body)
+        {
+            var message = _pipeline.CreateMessage();
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(_endpoint);
+            uri.AppendPath("/v1/catlet_specifications/", false);
+            uri.AppendPath(specificationId, true);
+            uri.AppendPath("/versions/", false);
+            uri.AppendPath(id, true);
+            uri.AppendPath("/user_data", false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json, application/problem+json");
+            request.Headers.Add("Content-Type", "application/json");
+            var content = new Utf8JsonRequestContent();
+            content.JsonWriter.WriteObjectValue(body);
+            request.Content = content;
+            return message;
+        }
+
+        /// <summary> Export the user-data of a catlet specification. </summary>
+        /// <param name="specificationId"> The <see cref="string"/> to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="ExportCatletSpecificationUserDataRequestBody"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="specificationId"/>, <paramref name="id"/> or <paramref name="body"/> is null. </exception>
+        /// <remarks> Renders the fodder of a catlet specification version as cloud-init user-data. The user-data is the same as a deployment of the specification version would write to the config drive. It contains secrets in plain text. </remarks>
+        public async Task<Response<CatletSpecificationUserData>> ExportUserDataAsync(string specificationId, string id, ExportCatletSpecificationUserDataRequestBody body, CancellationToken cancellationToken = default)
+        {
+            if (specificationId == null)
+            {
+                throw new ArgumentNullException(nameof(specificationId));
+            }
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+            if (body == null)
+            {
+                throw new ArgumentNullException(nameof(body));
+            }
+
+            using var message = CreateExportUserDataRequest(specificationId, id, body);
+            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        CatletSpecificationUserData value = default;
+                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
+                        value = CatletSpecificationUserData.DeserializeCatletSpecificationUserData(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
+        /// <summary> Export the user-data of a catlet specification. </summary>
+        /// <param name="specificationId"> The <see cref="string"/> to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="ExportCatletSpecificationUserDataRequestBody"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="specificationId"/>, <paramref name="id"/> or <paramref name="body"/> is null. </exception>
+        /// <remarks> Renders the fodder of a catlet specification version as cloud-init user-data. The user-data is the same as a deployment of the specification version would write to the config drive. It contains secrets in plain text. </remarks>
+        public Response<CatletSpecificationUserData> ExportUserData(string specificationId, string id, ExportCatletSpecificationUserDataRequestBody body, CancellationToken cancellationToken = default)
+        {
+            if (specificationId == null)
+            {
+                throw new ArgumentNullException(nameof(specificationId));
+            }
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+            if (body == null)
+            {
+                throw new ArgumentNullException(nameof(body));
+            }
+
+            using var message = CreateExportUserDataRequest(specificationId, id, body);
+            _pipeline.Send(message, cancellationToken);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        CatletSpecificationUserData value = default;
+                        using var document = JsonDocument.Parse(message.Response.ContentStream);
+                        value = CatletSpecificationUserData.DeserializeCatletSpecificationUserData(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw new RequestFailedException(message.Response);
+            }
+        }
+
         internal HttpMessage CreateGetVersionRequest(string specificationId, string id)
         {
             var message = _pipeline.CreateMessage();

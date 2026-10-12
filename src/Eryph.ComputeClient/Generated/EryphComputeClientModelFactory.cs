@@ -511,6 +511,24 @@ namespace Eryph.ComputeClient.Models
                 disks?.ToList());
         }
 
+        /// <summary> Initializes a new instance of <see cref="Models.CatletSpecificationUserData"/>. </summary>
+        /// <param name="userData">
+        /// The user-data as multipart MIME text, as it is written to the config drive of
+        /// a deployed catlet. The parts are base64-encoded. The user-data contains secret
+        /// fodder and secret variable values in plain text.
+        /// </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="userData"/> is null. </exception>
+        /// <returns> A new <see cref="Models.CatletSpecificationUserData"/> instance for mocking. </returns>
+        public static CatletSpecificationUserData CatletSpecificationUserData(string userData = null)
+        {
+            if (userData == null)
+            {
+                throw new ArgumentNullException(nameof(userData));
+            }
+
+            return new CatletSpecificationUserData(userData);
+        }
+
         /// <summary> Initializes a new instance of <see cref="Models.VirtualNetwork"/>. </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>

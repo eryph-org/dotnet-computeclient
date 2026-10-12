@@ -230,6 +230,48 @@ namespace Eryph.ComputeClient
             }
         }
 
+        /// <summary> Export the user-data of a catlet specification. </summary>
+        /// <param name="specificationId"> The <see cref="string"/> to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="ExportCatletSpecificationUserDataRequestBody"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Renders the fodder of a catlet specification version as cloud-init user-data. The user-data is the same as a deployment of the specification version would write to the config drive. It contains secrets in plain text. </remarks>
+        public virtual async Task<Response<CatletSpecificationUserData>> ExportUserDataAsync(string specificationId, string id, ExportCatletSpecificationUserDataRequestBody body, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("CatletSpecificationsClient.ExportUserData");
+            scope.Start();
+            try
+            {
+                return await RestClient.ExportUserDataAsync(specificationId, id, body, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Export the user-data of a catlet specification. </summary>
+        /// <param name="specificationId"> The <see cref="string"/> to use. </param>
+        /// <param name="id"> The <see cref="string"/> to use. </param>
+        /// <param name="body"> The <see cref="ExportCatletSpecificationUserDataRequestBody"/> to use. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <remarks> Renders the fodder of a catlet specification version as cloud-init user-data. The user-data is the same as a deployment of the specification version would write to the config drive. It contains secrets in plain text. </remarks>
+        public virtual Response<CatletSpecificationUserData> ExportUserData(string specificationId, string id, ExportCatletSpecificationUserDataRequestBody body, CancellationToken cancellationToken = default)
+        {
+            using var scope = _clientDiagnostics.CreateScope("CatletSpecificationsClient.ExportUserData");
+            scope.Start();
+            try
+            {
+                return RestClient.ExportUserData(specificationId, id, body, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
         /// <summary> Get a catlet specification version. </summary>
         /// <param name="specificationId"> The <see cref="string"/> to use. </param>
         /// <param name="id"> The <see cref="string"/> to use. </param>
