@@ -90,3 +90,25 @@ Describe 'Deploy-Catlet deployment input (no server required)' {
         $params['SpecificationVersionId'] | Should -Not -BeNullOrEmpty
     }
 }
+
+Describe 'Export-CatletSpecificationUserData input (no server required)' {
+
+    It 'accepts a piped CatletSpecification (export its latest version)' {
+        $p = (Get-Command Export-CatletSpecificationUserData).Parameters['Specification']
+        $p.ParameterType.Name                     | Should -Be 'CatletSpecification'
+        $p.ParameterSets.Values.ValueFromPipeline | Should -Contain $true
+    }
+
+    It 'accepts a piped CatletSpecificationVersion' {
+        $p = (Get-Command Export-CatletSpecificationUserData).Parameters['Version']
+        $p.ParameterType.Name                     | Should -Be 'CatletSpecificationVersion'
+        $p.ParameterSets.Values.ValueFromPipeline | Should -Contain $true
+    }
+
+    It 'accepts optional catlet and VM IDs and an output path' {
+        $params = (Get-Command Export-CatletSpecificationUserData).Parameters
+        $params['CatletId'].ParameterType         | Should -Be ([Nullable[guid]])
+        $params['VmId'].ParameterType             | Should -Be ([Nullable[guid]])
+        $params['Path'].ParameterType             | Should -Be ([string])
+    }
+}
