@@ -41,6 +41,16 @@ namespace Eryph.ComputeClient.Commands.Catlets
             CatletSpecificationVersion specificationVersion,
             string architecture)
         {
+            if (specificationVersion.Variants is not { Count: > 0 })
+            {
+                WriteError(new ErrorRecord(
+                    new InvalidOperationException("The specification version does not contain any variants."),
+                    "NoVariants",
+                    ErrorCategory.InvalidData,
+                    specificationVersion));
+                return null;
+            }
+
             if (architecture is not null)
             {
                 var variant = specificationVersion.Variants.FirstOrDefault(v => v.Architecture == architecture);

@@ -124,7 +124,35 @@ public class ExportCatletSpecificationUserData : CatletConfigCmdlet
             return;
         }
 
-        var filePath = GetUnresolvedProviderPathFromPSPath(Path);
-        File.WriteAllText(filePath, result.Value.UserData, new UTF8Encoding(false));
+        WriteUserData(GetUnresolvedProviderPathFromPSPath(Path), result.Value.UserData);
+    }
+
+    // The user-data contains secrets in plain text. On Unix, the file is restricted to
+    // the current user, like e.g. ssh-keygen does it. On Windows, the file inherits the
+    // ACL of its directory.
+    private static void WriteUserData(string filePath, string userData)
+    {
+        var encoding = new UTF8Encoding(false);
+#if NET8_0_OR_GREATER
+        if (!OperatingSystem.IsWindows())
+        {
+            const UnixFileMode userOnly = UnixFileMode.UserRead | UnixFileMode.UserWrite;
+            // The create mode only applies to new files. An existing file must be
+            // restricted before the secrets are written to it.
+            if (File.Exists(filePath))
+                File.SetUnixFileMode(filePath, userOnly);
+
+            using var stream = new FileStream(filePath, new FileStreamOptions
+            {
+                Mode = FileMode.Create,
+                Access = FileAccess.Write,
+                UnixCreateMode = userOnly,
+            });
+            using var writer = new StreamWriter(stream, encoding);
+            writer.Write(userData);
+            return;
+        }
+#endif
+        File.WriteAllText(filePath, userData, encoding);
     }
 }
