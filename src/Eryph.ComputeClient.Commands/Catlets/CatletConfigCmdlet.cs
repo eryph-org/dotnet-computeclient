@@ -32,6 +32,54 @@ namespace Eryph.ComputeClient.Commands.Catlets
         }
 
         /// <summary>
+        /// Selects the variant of the <paramref name="specificationVersion"/> for the given
+        /// <paramref name="architecture"/>. Without an architecture, the version must have
+        /// exactly one variant. Writes an error and returns <see langword="null"/> when no
+        /// variant can be selected.
+        /// </summary>
+        protected CatletSpecificationVersionVariant SelectVariant(
+            CatletSpecificationVersion specificationVersion,
+            string architecture)
+        {
+            if (specificationVersion.Variants is not { Count: > 0 })
+            {
+                WriteError(new ErrorRecord(
+                    new InvalidOperationException("The specification version does not contain any variants."),
+                    "NoVariants",
+                    ErrorCategory.InvalidData,
+                    specificationVersion));
+                return null;
+            }
+
+            if (architecture is not null)
+            {
+                var variant = specificationVersion.Variants.FirstOrDefault(v => v.Architecture == architecture);
+                if (variant is null)
+                {
+                    WriteError(new ErrorRecord(
+                        new InvalidOperationException($"The specification version does not support the architecture '{architecture}'."),
+                        "ArchitectureNotFound",
+                        ErrorCategory.ObjectNotFound,
+                        architecture));
+                }
+
+                return variant;
+            }
+
+            if (specificationVersion.Variants.Count > 1)
+            {
+                WriteError(new ErrorRecord(
+                    new InvalidOperationException("The specification supports multiple architectures. Please specify the architecture."),
+                    "ArchitectureNotSpecified",
+                    ErrorCategory.InvalidOperation,
+                    specificationVersion));
+                return null;
+            }
+
+            return specificationVersion.Variants[0];
+        }
+
+        /// <summary>
         /// Populates the variables in the given <paramref name="catletConfig"/> by
         /// applying the values from the <paramref name="variables"/> hashtable and
         /// interactively asking the user for the values. Returns <see langword="false"/>

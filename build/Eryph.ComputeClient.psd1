@@ -103,6 +103,7 @@ CmdletsToExport = @(
     "Update-CatletSpecification",
     "Remove-CatletSpecification",
     "Get-CatletSpecificationVersion",
+    "Export-CatletSpecificationUserData",
     "Get-CatletGuestServiceStatus",
     "Get-CatletGuestServiceConfig",
     "Set-CatletGuestServiceConfig",

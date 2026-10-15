@@ -124,34 +124,9 @@ public class SubmitCatletDeployment : CatletConfigCmdlet
             specificationId,
             specificationVersionId);
 
-        CatletSpecificationVersionVariant variant;
-        if (Architecture is not null)
-        {
-            variant = specificationVersion.Value.Variants.FirstOrDefault(v => v.Architecture == Architecture);
-            if (variant is null)
-            {
-                WriteError(new ErrorRecord(
-                    new InvalidOperationException($"The specification version does not support the architecture '{Architecture}'."),
-                    "ArchitectureNotFound",
-                    ErrorCategory.ObjectNotFound,
-                    Architecture));
-                return;
-            }
-        }
-        else
-        {
-            if (specificationVersion.Value.Variants.Count > 1)
-            {
-                WriteError(new ErrorRecord(
-                    new InvalidOperationException("The specification supports multiple architectures. Please specify the architecture."),
-                    "ArchitectureNotSpecified",
-                    ErrorCategory.InvalidOperation,
-                    specificationVersion));
-                return;
-            }
-
-            variant = specificationVersion.Value.Variants[0];
-        }
+        var variant = SelectVariant(specificationVersion.Value, Architecture);
+        if (variant is null)
+            return;
 
         if (Redeploy && !Force && !ShouldContinue("Catlet specification will be redeployed. An existing catlet might be deleted!", "Warning!"))
         {
